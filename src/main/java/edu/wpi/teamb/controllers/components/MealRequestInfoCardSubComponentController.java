@@ -1,7 +1,7 @@
 package edu.wpi.teamb.controllers.components;
 import edu.wpi.teamb.DBAccess.FullMealRequest;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
-import edu.wpi.teamb.entities.components.MealRequestInfoCardSubComponent;
+import edu.wpi.teamb.entities.components.MealRequestInfoCardSubComponentE;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.fxml.FXML;
@@ -27,11 +27,11 @@ public class MealRequestInfoCardSubComponentController implements IInfoCardSubCo
     private MFXTextField mealModificationTextField;
 
     //field entity object
-    private MealRequestInfoCardSubComponent mealRequestInfoCardSubComponent;
+    private MealRequestInfoCardSubComponentE mealRequestInfoCardSubComponentE;
 
     private boolean editable;
     @FXML public void initialize() throws IOException {
-        mealRequestInfoCardSubComponent = new MealRequestInfoCardSubComponent();
+        mealRequestInfoCardSubComponentE = new MealRequestInfoCardSubComponentE();
         editable = false;
     }
 
@@ -87,7 +87,7 @@ public class MealRequestInfoCardSubComponentController implements IInfoCardSubCo
             mealRequestInfoSubComponentAnchorPane.getChildren().add(index, orderFromComboBox);
 
             //get the list of location
-            ArrayList<LocationName> locationNames = mealRequestInfoCardSubComponent.getLocationNames();
+            ArrayList<LocationName> locationNames = mealRequestInfoCardSubComponentE.getLocationNames();
             ArrayList<String> locationNamesAsString = new ArrayList<>();
             for (LocationName location: locationNames) {
                 locationNamesAsString.add(location.getLongName());
@@ -141,7 +141,7 @@ public class MealRequestInfoCardSubComponentController implements IInfoCardSubCo
             mealRequestInfoSubComponentAnchorPane.getChildren().add(index, foodComboBox);
 
             //get the list of foods
-            ArrayList<String> foodsList = mealRequestInfoCardSubComponent.getFoodList();
+            ArrayList<String> foodsList = mealRequestInfoCardSubComponentE.getFoodList();
             //add it to the comboBox
             foodComboBox.getItems().addAll(foodsList);
 
@@ -187,7 +187,7 @@ public class MealRequestInfoCardSubComponentController implements IInfoCardSubCo
             mealRequestInfoSubComponentAnchorPane.getChildren().add(index, snackComboBox);
 
             //get the list of snacks
-            ArrayList<String> snacksList = mealRequestInfoCardSubComponent.getSnackList();
+            ArrayList<String> snacksList = mealRequestInfoCardSubComponentE.getSnackList();
             //add it to the comboBox
             snackComboBox.getItems().addAll(snacksList);
 
@@ -233,7 +233,7 @@ public class MealRequestInfoCardSubComponentController implements IInfoCardSubCo
             mealRequestInfoSubComponentAnchorPane.getChildren().add(index, drinkComboBox);
 
             //get the list of drinks
-            ArrayList<String> drinksList = mealRequestInfoCardSubComponent.getDrinksList();
+            ArrayList<String> drinksList = mealRequestInfoCardSubComponentE.getDrinksList();
             //add it to the comboBox
             drinkComboBox.getItems().addAll(drinksList);
 

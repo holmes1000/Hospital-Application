@@ -3,7 +3,7 @@ package edu.wpi.teamb.controllers.requests;
 
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
-import edu.wpi.teamb.entities.requests.FlowerRequest;
+import edu.wpi.teamb.entities.requests.FlowerRequestE;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.*;
@@ -51,10 +51,10 @@ public class FlowerRequestController {
 
     @FXML private MFXFilterComboBox<String> cbLongName;
 
-    private FlowerRequest flowerRequest;
+    private FlowerRequestE flowerRequestE;
 
     public FlowerRequestController() {
-        this.flowerRequest = new FlowerRequest();
+        this.flowerRequestE = new FlowerRequestE();
     }
 
     @FXML
@@ -88,13 +88,13 @@ public class FlowerRequestController {
 
                 //Set the gathered fields into a string array
                 String[] output = {employee, floor, roomnumber, requeststatus, flowerrequesttype, orderfrom, flower, color, deliverytype, message, longName, notes};
-                flowerRequest.submitRequest(output);
+                flowerRequestE.submitRequest(output);
                 clickResetForm();
                 Navigation.navigate(Screen.CREATE_NEW_REQUEST);
             }else{
 
                 //If the required fields are not filled, bring up pop-over indicating such
-                final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/NotAllFieldsCompleteError.fxml"));
+                final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/NotAllFieldsCompleteError.fxml"));
                 PopOver popOver = new PopOver();
                 popOver.setDetachable(true);
                 popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
@@ -166,7 +166,7 @@ public class FlowerRequestController {
         //Set list of employees
         ObservableList<String> employees =
                 FXCollections.observableArrayList();
-        employees.addAll(flowerRequest.getUsernames());
+        employees.addAll(flowerRequestE.getUsernames());
         cbEmployeesToAssign.setItems(employees);
     }
 
@@ -174,7 +174,7 @@ public class FlowerRequestController {
         //TODO -> Must fix the help
         helpIcon.setOnMouseClicked(
                 event -> {
-                    final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/FlowerRequestHelpPopOver.fxml"));
+                    final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/FlowerRequestHelpPopOver.fxml"));
                     PopOver popOver = new PopOver();
                     popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_RIGHT);
                     popOver.setArrowSize(0.0);

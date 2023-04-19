@@ -1,6 +1,6 @@
 package edu.wpi.teamb.controllers;
 
-import edu.wpi.teamb.entities.Login;
+import edu.wpi.teamb.entities.LoginE;
 import edu.wpi.teamb.exceptions.EmptyLoginCredentialsException;
 import edu.wpi.teamb.exceptions.IncorrectPasswordException;
 import edu.wpi.teamb.navigation.Navigation;
@@ -23,10 +23,10 @@ public class LoginController {
   @FXML private MFXTextField textUsername;
   @FXML private MFXTextField textPassword;
   @FXML private Text errorMsg;
-  private Login login;
+  private LoginE loginE;
 
   public LoginController() {
-    this.login = Login.getLogin();
+    this.loginE = LoginE.getLogin();
   }
 
   @FXML
@@ -52,7 +52,7 @@ public class LoginController {
     // otherwise send the username and password data over to Login entity to be checked with
     // database
     try {
-      if (login.checkLogin(textUsername.getText(), textPassword.getText())) {
+      if (loginE.checkLogin(textUsername.getText(), textPassword.getText())) {
         errorMsg.setText("Logged in Successful!");
         Navigation.navigate(Screen.HOME);
       } else {

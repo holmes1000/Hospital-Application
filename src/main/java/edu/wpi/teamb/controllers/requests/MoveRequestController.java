@@ -4,7 +4,7 @@ import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.ORMs.Move;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
-import edu.wpi.teamb.entities.requests.MoveRequest;
+import edu.wpi.teamb.entities.requests.MoveRequestE;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.*;
@@ -59,12 +59,12 @@ public class MoveRequestController {
     @FXML
     private MFXRadioButton radPastMove;
 
-    private MoveRequest moveRequest;
+    private MoveRequestE moveRequestE;
 
     private int tableSize = 0;
 
     public MoveRequestController() {
-        this.moveRequest = new MoveRequest();
+        this.moveRequestE = new MoveRequestE();
     }
 
     @FXML
@@ -165,7 +165,7 @@ public class MoveRequestController {
                 if (!tbFutureMoves.getItems().contains(new Move(where, what, when))) {
                     if (when.after(new Date(System.currentTimeMillis()-1000*60*60*24))) {
                         String[] output = { where.toString(), what, when.toString() };
-                        moveRequest.submitRequest(output);
+                        moveRequestE.submitRequest(output);
                         clickResetForm();
 
                         updateTable();
@@ -181,7 +181,7 @@ public class MoveRequestController {
 
             } else {
                 final FXMLLoader popupLoader = new FXMLLoader(
-                        Bapp.class.getResource("views/components/NotAllFieldsCompleteError.fxml"));
+                        Bapp.class.getResource("views/components/popovers/NotAllFieldsCompleteError.fxml"));
                 PopOver popOver = new PopOver();
                 popOver.setDetachable(true);
                 popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
@@ -236,8 +236,8 @@ public class MoveRequestController {
         btnRemoveMove.setOnMouseClicked(event -> {
             if (tbFutureMoves.getSelectionModel().getSelectedItem() != null) {
                 Move move = tbFutureMoves.getSelectionModel().getSelectedItem();
-                moveRequest = new MoveRequest(move);
-                moveRequest.removeRequest();
+                moveRequestE = new MoveRequestE(move);
+                moveRequestE.removeRequest();
                 tbFutureMoves.getItems().remove(move);
                 tableSize--;
                 clickResetForm();
@@ -258,11 +258,11 @@ public class MoveRequestController {
             if (tbFutureMoves.getSelectionModel().getSelectedItem() != null) {
                 Move move = tbFutureMoves.getSelectionModel().getSelectedItem();
                 tbFutureMoves.getItems().remove(move);
-                moveRequest = new MoveRequest(move);
+                moveRequestE = new MoveRequestE(move);
                 // set values of move request from form info
-                moveRequest.updateRequest();
+                moveRequestE.updateRequest();
 
-                moveRequest.updateRequest();
+                moveRequestE.updateRequest();
 
                 tableSize--;
                 clickResetForm();

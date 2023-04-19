@@ -2,7 +2,7 @@ package edu.wpi.teamb.controllers.requests;
 
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
-import edu.wpi.teamb.entities.requests.MealRequest;
+import edu.wpi.teamb.entities.requests.MealRequestE;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.*;
@@ -33,10 +33,10 @@ public class MealRequestController {
   @FXML private MFXComboBox<String> cbFloorSelect; // Floor
     @FXML private MFXFilterComboBox<String> cbLongName;
 
-    private MealRequest mealRequest;
+    private MealRequestE mealRequestE;
 
     public MealRequestController(){
-        this.mealRequest = new MealRequest();
+        this.mealRequestE = new MealRequestE();
     }
   @FXML
   public void initialize() throws IOException, SQLException{
@@ -66,13 +66,13 @@ public class MealRequestController {
 
             //Set the gathered fields into a string array
             String[] output = {employee, floor, roomnumber, requeststatus, mealtype, orderfrom, food, drink, snack, mealmodification, longName};
-            mealRequest.submitRequest(output);
+            mealRequestE.submitRequest(output);
             clickResetForm();
             Navigation.navigate(Screen.CREATE_NEW_REQUEST);
         } else {
 
             //If the required fields are not filled, bring up pop-over indicating such
-            final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/NotAllFieldsCompleteError.fxml"));
+            final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/NotAllFieldsCompleteError.fxml"));
             PopOver popOver = new PopOver();
             popOver.setDetachable(true);
             popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
@@ -159,7 +159,7 @@ public class MealRequestController {
     // DROPDOWN INITIALIZATION
     ObservableList<String> employees =
             FXCollections.observableArrayList();
-    employees.addAll(mealRequest.getUsernames());
+    employees.addAll(mealRequestE.getUsernames());
     cbEmployeesToAssign.setItems(employees);
 
     // DROPDOWN INITIALIZATION

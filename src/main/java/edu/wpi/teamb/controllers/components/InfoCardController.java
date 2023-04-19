@@ -6,7 +6,7 @@ import edu.wpi.teamb.DBAccess.FullMealRequest;
 import edu.wpi.teamb.DBAccess.FullOfficeRequest;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 import edu.wpi.teamb.DBAccess.ORMs.User;
-import edu.wpi.teamb.entities.components.InfoCard;
+import edu.wpi.teamb.entities.components.InfoCardE;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import javafx.fxml.FXML;
@@ -50,12 +50,12 @@ public class InfoCardController {
   private AnchorPane subComponentRoot;
   IInfoCardSubComponentController subComponentController;
   //object of the entity class that contains all the methods to get the requests
-  private InfoCard infoCard;
+  private InfoCardE infoCardE;
   boolean editable = false;
 
 
   @FXML public void initialize() throws IOException {
-    infoCard = new InfoCard();
+    infoCardE = new InfoCardE();
     editable = false;
     //set margin between buttons in VBox
     buttonContainerVBox.setSpacing(10);
@@ -116,7 +116,7 @@ public class InfoCardController {
       requestInfoAnchorPane.getChildren().add(index, locationNameComboBox);
 
       //get the list of location names
-      ArrayList<LocationName> locationNamesList = infoCard.getLocationNames();
+      ArrayList<LocationName> locationNamesList = infoCardE.getLocationNames();
       ArrayList<String> locationNameStrings = new ArrayList<>();
       for (LocationName locationName: locationNamesList) {
         locationNameStrings.add(locationName.getLongName());
@@ -159,7 +159,7 @@ public class InfoCardController {
       requestInfoAnchorPane.getChildren().add(index, employeeAssignedComboBox);
 
       //get the list of employees
-      ArrayList<User> userList = infoCard.getUsernames();
+      ArrayList<User> userList = infoCardE.getUsernames();
       ArrayList<String> usernamesList = new ArrayList<>();
       for (User user: userList) {
         usernamesList.add(user.getUsername());

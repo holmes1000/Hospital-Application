@@ -2,17 +2,15 @@ package edu.wpi.teamb.controllers.requests;
 
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
-import edu.wpi.teamb.entities.requests.OfficeRequest;
+import edu.wpi.teamb.entities.requests.OfficeRequestE;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import org.controlsfx.control.PopOver;
 
 import java.io.IOException;
@@ -34,10 +32,10 @@ public class OfficeRequestController {
     @FXML private MFXComboBox<String> cbFloorSelect; // Floor
     @FXML private MFXFilterComboBox<String> cbLongName;
 
-    private OfficeRequest officeRequest;
+    private OfficeRequestE officeRequestE;
 
     public OfficeRequestController(){
-        this.officeRequest = new OfficeRequest();
+        this.officeRequestE = new OfficeRequestE();
     }
 
     @FXML
@@ -65,7 +63,7 @@ public class OfficeRequestController {
             String officetype = "Office";
             if((item != null) && (type != null) && (quantity != null) && (notes != null) && (floor != null) && (longName != null) && (roomnumber != null) && (employee != null) && (requeststatus != null) && (location != null)){
                 String[] output = {employee, floor, roomnumber, requeststatus, officetype, item, type, quantity, notes, location};
-                officeRequest.submitRequest(output);
+                officeRequestE.submitRequest(output);
                 clickResetForm();
                 Navigation.navigate(Screen.CREATE_NEW_REQUEST);
             } else {
@@ -133,7 +131,7 @@ public class OfficeRequestController {
 //            cbOrderLocation.setItems(locations);
 
             //DROPDOWN INITIALIZATION
-            ObservableList<String> employees = FXCollections.observableArrayList(officeRequest.getUsernames());
+            ObservableList<String> employees = FXCollections.observableArrayList(officeRequestE.getUsernames());
             cbEmployeesToAssign.setItems(employees);
 
             //DROPDOWN INITIALIZATION

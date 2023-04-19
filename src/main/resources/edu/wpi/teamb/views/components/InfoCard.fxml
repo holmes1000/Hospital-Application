@@ -11,7 +11,7 @@
 
 <AnchorPane fx:id="requestInfoAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="320.0" prefWidth="970.0" style="-fx-background-color: #465777;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.components.InfoCardController">
    <children>
-      <ImageView fx:id="requestTypeIconImageView" fitHeight="121.0" fitWidth="101.0" layoutX="22.0" layoutY="93.0" pickOnBounds="true" preserveRatio="true" style="-fx-border-style: solid; -fx-background-color: #0000000;">
+      <ImageView fx:id="requestTypeIconImageView" fitHeight="121.0" fitWidth="101.0" layoutX="22.0" layoutY="93.0" pickOnBounds="true" preserveRatio="true" style="-fx-border-style: solid; -fx-background-color: #f1f1f1;">
          <image>
             <Image url="@../../img/breakfast.png" />
          </image>

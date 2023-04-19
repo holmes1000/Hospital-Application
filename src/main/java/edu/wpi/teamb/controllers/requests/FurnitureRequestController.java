@@ -3,7 +3,7 @@ package edu.wpi.teamb.controllers.requests;
 
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
-import edu.wpi.teamb.entities.requests.FurnitureRequest;
+import edu.wpi.teamb.entities.requests.FurnitureRequestE;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.*;
@@ -50,10 +50,10 @@ public class FurnitureRequestController {
 
     @FXML private MFXFilterComboBox<String> cbLongName;
 
-    private FurnitureRequest furnitureRequest;
+    private FurnitureRequestE furnitureRequestE;
 
     public FurnitureRequestController() {
-        this.furnitureRequest = new FurnitureRequest();
+        this.furnitureRequestE = new FurnitureRequestE();
     }
 
     @FXML
@@ -83,11 +83,11 @@ public class FurnitureRequestController {
             String furniturerequesttype = ("Furniture");
             if((orderfrom != null) && (furniture != null) && (model != null) && (assembly != null) && (floor != null) && (roomnumber != null) && (longName != null)){
                 String[] output = {employee, floor, roomnumber, requeststatus, furniturerequesttype, orderfrom, furniture, model, message, longName, notes};
-                furnitureRequest.submitRequest(output);
+                furnitureRequestE.submitRequest(output);
                 clickResetForm();
                 Navigation.navigate(Screen.CREATE_NEW_REQUEST);
             }else{
-                final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/NotAllFieldsCompleteError.fxml"));
+                final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/NotAllFieldsCompleteError.fxml"));
                 PopOver popOver = new PopOver();
                 popOver.setDetachable(true);
                 popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
@@ -153,7 +153,7 @@ public class FurnitureRequestController {
         //Set list of employees
         ObservableList<String> employees =
                 FXCollections.observableArrayList();
-        employees.addAll(furnitureRequest.getUsernames());
+        employees.addAll(furnitureRequestE.getUsernames());
         cbEmployeesToAssign.setItems(employees);
     }
 
@@ -161,7 +161,7 @@ public class FurnitureRequestController {
         //TODO -> Must fix the help
         helpIcon.setOnMouseClicked(
                 event -> {
-                    final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/FurnitureRequestHelpPopOver.fxml"));
+                    final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/FurnitureRequestHelpPopOver.fxml"));
                     PopOver popOver = new PopOver();
                     popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_RIGHT);
                     popOver.setArrowSize(0.0);

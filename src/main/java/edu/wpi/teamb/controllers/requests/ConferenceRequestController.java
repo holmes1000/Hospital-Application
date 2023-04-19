@@ -4,7 +4,7 @@ import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
-import edu.wpi.teamb.entities.requests.ConferenceRequest;
+import edu.wpi.teamb.entities.requests.ConferenceRequestE;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.*;
@@ -41,10 +41,10 @@ public class ConferenceRequestController {
   @FXML private ImageView helpIcon;
   @FXML private MFXFilterComboBox<String> cbLongName;
 
-  private ConferenceRequest conferenceRequest;
+  private ConferenceRequestE conferenceRequestE;
 
   public ConferenceRequestController(){
-        this.conferenceRequest = new ConferenceRequest();
+        this.conferenceRequestE = new ConferenceRequestE();
     }
   @FXML
   public void initialize() throws IOException, SQLException {
@@ -64,7 +64,7 @@ public class ConferenceRequestController {
       //Dropdown for employee selection
       ObservableList<String> employees =
               FXCollections.observableArrayList();
-      employees.addAll(conferenceRequest.getUsernames());
+      employees.addAll(conferenceRequestE.getUsernames());
       cbEmployeesToAssign.setItems(employees);
 
     // Dropdown for reservationHour
@@ -149,13 +149,13 @@ public class ConferenceRequestController {
 
                 //Set the gathered fields into a string array
                 String[] output = {employee, floor, roomnumber, requeststatus, requesttype, timeStamp, eventname, bookingreason, longName};
-                conferenceRequest.submitRequest(output);
+                conferenceRequestE.submitRequest(output);
                 clickReset();
                 Navigation.navigate(Screen.CREATE_NEW_REQUEST);
             } else {
 
                 //If the required fields are not filled, bring up pop-over indicating such
-                final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/NotAllFieldsCompleteError.fxml"));
+                final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/NotAllFieldsCompleteError.fxml"));
                 PopOver popOver = new PopOver();
                 popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
                 popOver.setArrowSize(0.0);
@@ -210,7 +210,7 @@ public class ConferenceRequestController {
   public void clickHelp() {
     helpIcon.setOnMouseClicked(
         event -> {
-            final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/ConferenceRequestHelpPopOver.fxml"));
+            final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/ConferenceRequestHelpPopOver.fxml"));
             PopOver popOver = new PopOver();
             popOver.setDetachable(true);
             popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_RIGHT);

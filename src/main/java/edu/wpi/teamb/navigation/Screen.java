@@ -6,14 +6,14 @@ public enum Screen {
   LOGIN("views/Login.fxml"),
   MEAL_REQUEST("views/requests/MealRequest.fxml"),
   CONFERENCE_REQUEST("views/requests/ConferenceRequest.fxml"),
-  ALL_REQUEST("views/requests/AllRequests.fxml"),
+  ALL_REQUEST("views/requests/SubmittedRequests.fxml"),
   CREATE_NEW_REQUEST("views/requests/CreateNewRequest.fxml"),
-  SETTINGS("views/Settings.fxml"),
-  EDIT_USERS("views/requests/EditUsers.fxml"),
-  PATHFINDER("views/Pathfinder.fxml"),
-  MAP_EDITOR("views/MapEditor.fxml"),
+  SETTINGS("views/settings/Settings.fxml"),
+  EDIT_USERS("views/settings/EditUsers.fxml"),
+  PATHFINDER("views/pathfinder/Pathfinder.fxml"),
+  MAP_EDITOR("views/mapeditor/MapEditor.fxml"),
   EXIT("views/Root.fxml"),
-  SIGNAGE("views/Signage.fxml"),
+  SIGNAGE("views/signage/Signage.fxml"),
   MOVE("views/requests/MoveRequest.fxml");
 
   private final String filename;
