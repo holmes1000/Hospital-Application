@@ -9,6 +9,7 @@ public enum Screen {
   ALL_REQUEST("views/requests/SubmittedRequests.fxml"),
   CREATE_NEW_REQUEST("views/requests/CreateNewRequest.fxml"),
   SETTINGS("views/settings/Settings.fxml"),
+  EDIT_ACCOUNT("views/settings/EditAccount.fxml"),
   EDIT_USERS("views/settings/EditUsers.fxml"),
   PATHFINDER("views/pathfinder/Pathfinder.fxml"),
   MAP_EDITOR("views/mapeditor/MapEditor.fxml"),

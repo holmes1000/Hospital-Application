@@ -13,7 +13,12 @@ import java.sql.SQLException;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class LoginController {
   @FXML private MFXButton btnLogin;
@@ -35,11 +40,17 @@ public class LoginController {
   }
 
   public void clickForgotPassword(ActionEvent event) throws IOException {
-    System.out.println("Not yet implemented");
-  }
-
-  public void clickCreateAccount(ActionEvent event) throws IOException {
-    System.out.println("Not yet implemented");
+    Parent root;
+    try {
+      root = FXMLLoader.load(getClass().getClassLoader().getResource("edu/wpi/teamb/views/settings/ForgotPassword.fxml"));
+      Stage stage = new Stage();
+      stage.setTitle("Forgot Password");
+      stage.setScene(new Scene(root, 400, 600));
+      stage.show();
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   /**

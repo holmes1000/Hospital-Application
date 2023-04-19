@@ -20,18 +20,20 @@ public class SettingsController {
     @FXML private JFXDrawer menuDrawer;
     LoginE.PermissionLevel adminTest;
     @FXML private MFXButton btnEditUsers;
+    @FXML private MFXButton btnEditAccount;
 
     @FXML
     public void initialize() throws IOException {
         initNavBar();
+        initButtons();
         adminTest = LoginE.getLogin().getPermissionLevel();
         if (adminTest != LoginE.PermissionLevel.ADMIN) {
             btnEditUsers.setVisible(false);
         }
     }
 
-    @FXML
-    public void clickEditUsers() {
+    public void initButtons() {
+        btnEditAccount.setOnMouseClicked(event -> Navigation.navigate(Screen.EDIT_ACCOUNT));
         btnEditUsers.setOnMouseClicked(event -> Navigation.navigate(Screen.EDIT_USERS));
     }
 
