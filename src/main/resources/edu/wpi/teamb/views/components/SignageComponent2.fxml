@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="442.0" prefWidth="778.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.components.SignageComponent2Controller">
+    <children>
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#465777" height="315.0" layoutX="42.0" layoutY="47.0" stroke="BLACK" strokeType="INSIDE" width="695.0" />
+      <Text fill="#f1f1f1" layoutX="268.0" layoutY="104.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Stop here for:" wrappingWidth="243.001953125">
+         <font>
+            <Font name="System Bold" size="36.0" />
+         </font>
+      </Text>
+      <Text fill="#f1f1f1" layoutX="291.0" layoutY="180.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Information" wrappingWidth="197.001953125">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Text>
+      <Text fill="#f1f1f1" layoutX="239.0" layoutY="252.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Shapiro Admitting" wrappingWidth="301.001953125">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Text>
+      <Text fill="#f1f1f1" layoutX="149.0" layoutY="326.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Shapiro Procedural Check-in" wrappingWidth="481.001953125">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Text>
+    </children>
+</Pane>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="730.0" prefWidth="200.0" style="-fx-background-color: #012d5a; -fx-opacity: 60;" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.NavDrawerController">
+    <children>
+        <ImageView fitHeight="100.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../img/bwh-logo.jpg" />
+         </image>
+         <VBox.margin>
+            <Insets left="20.0" top="40.0" />
+         </VBox.margin></ImageView>
+      <ImageView fitHeight="25.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="25.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+        <JFXButton fx:id="btnHome" alignment="TOP_LEFT" contentDisplay="RIGHT" graphicTextGap="80.0" onAction="#clickHome" prefHeight="59.0" prefWidth="200.0" style="-fx-background-color: #012d5a; -fx-content-display: right;" text="Home" textAlignment="CENTER" textFill="#f6bd38">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+            <graphic>
+                <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../../img/home.png" />
+                    </image>
+                    <effect>
+                        <ColorAdjust brightness="1.0" />
+                    </effect>
+                </ImageView>
+            </graphic></JFXButton>
+        <JFXButton fx:id="btnRequests" alignment="TOP_LEFT" onAction="#clickRequests" prefHeight="59.0" prefWidth="200.0" style="-fx-background-color: #012d5a; -fx-content-display: right; -fx-opacity: 60;" text="Requests" textAlignment="CENTER" textFill="#f6bd38">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+            <graphic>
+                <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" translateX="50.0">
+                    <image>
+                        <Image url="@../../img/send.png" />
+                    </image>
+                    <effect>
+                        <ColorAdjust brightness="1.0" />
+                    </effect>
+                </ImageView>
+            </graphic></JFXButton>
+        <JFXButton fx:id="btnPathfinder" alignment="TOP_LEFT" onAction="#clickPathfinder" prefHeight="59.0" prefWidth="200.0" style="-fx-background-color: #012d5a; -fx-content-display: right; -fx-opacity: 60;" text="Pathfinder" textAlignment="CENTER" textFill="#f6bd38">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+            <graphic>
+                <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" translateX="40.0">
+                    <image>
+                        <Image url="@../../img/directions.png" />
+                    </image>
+                    <effect>
+                        <ColorAdjust brightness="1.0" />
+                    </effect>
+                </ImageView>
+            </graphic>
+        </JFXButton>
+        <JFXButton fx:id="btnMapEditor" alignment="TOP_LEFT" onAction="#clickMapEditor" prefHeight="59.0" prefWidth="200.0" style="-fx-background-color: #012d5a; -fx-content-display: right; -fx-opacity: 60;" text="Map Editor" textAlignment="CENTER" textFill="#f6bd38">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+            <graphic>
+                <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" translateX="35.0">
+                    <image>
+                        <Image url="@../../img/map.png" />
+                    </image>
+                    <effect>
+                        <ColorAdjust brightness="1.0" />
+                    </effect>
+                </ImageView>
+            </graphic></JFXButton>
+        <JFXButton fx:id="btnSignage" alignment="TOP_LEFT" onAction="#clickSignage" prefHeight="59.0" prefWidth="200.0" style="-fx-background-color: #012d5a; -fx-content-display: right; -fx-opacity: 60;" text="Signage" textAlignment="CENTER" textFill="#f6bd38">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+            <graphic>
+                <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" translateX="60.0">
+                    <image>
+                        <Image url="@../../img/street-sign.png" />
+                    </image>
+                    <effect>
+                        <ColorAdjust brightness="1.0" />
+                    </effect>
+                </ImageView>
+            </graphic></JFXButton>
+        <JFXButton fx:id="btnSettings" alignment="TOP_LEFT" onAction="#clickSettings" prefHeight="59.0" prefWidth="200.0" style="-fx-background-color: #012d5a; -fx-content-display: right; -fx-opacity: 60;" text="Settings" textAlignment="CENTER" textFill="#f6bd38">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+            <graphic>
+                <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" translateX="60.0">
+                    <image>
+                        <Image url="@../../img/cog-wheel-silhouette.png" />
+                    </image>
+                    <effect>
+                        <ColorAdjust brightness="1.0" />
+                    </effect>
+                </ImageView>
+            </graphic></JFXButton>
+        <JFXButton fx:id="btnLogout" alignment="TOP_LEFT" onAction="#clickLogout" prefHeight="59.0" prefWidth="200.0" style="-fx-background-color: #012d5a; -fx-content-display: right; -fx-opacity: 60;" text="Logout" textAlignment="CENTER" textFill="#f6bd38">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+            <graphic>
+                <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" translateX="70.0">
+                    <image>
+                        <Image url="@../../img/logout.png" />
+                    </image>
+                    <effect>
+                        <ColorAdjust brightness="1.0" />
+                    </effect>
+                </ImageView>
+            </graphic></JFXButton>
+        <JFXButton fx:id="btnExit" alignment="TOP_LEFT" onAction="#clickExit" prefHeight="59.0" prefWidth="200.0" style="-fx-background-color: #012d5a; -fx-content-display: right; -fx-opacity: 60;" text="Exit" textAlignment="CENTER" textFill="#ff4848">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+            <graphic>
+                <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" translateX="95.0">
+                    <image>
+                        <Image url="@../../img/reject.png" />
+                    </image>
+                    <effect>
+                        <ColorAdjust brightness="1.0" />
+                    </effect>
+                </ImageView>
+            </graphic>
+        </JFXButton>
+    </children>
+</VBox>

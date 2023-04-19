@@ -1,0 +1,11 @@
+text {
+    -fx-fill: #f1f1f1;
+}
+
+label {
+    -fx-text-fill: #f1f1f1;
+}
+
+#errorMsg {
+    -fx-text-fill: red;
+}

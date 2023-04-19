@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane prefHeight="80.0" prefWidth="150.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.components.NotAllFieldsCompleteErrorController">
+   <children>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#465777" height="70.0" layoutX="5.0" layoutY="5.0" stroke="BLACK" strokeType="INSIDE" width="140.0" />
+      <Text fill="#f6bd38" layoutX="14.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PLEASE FILL ALL REQUIRED FIELDS" wrappingWidth="127.51287841796875">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>
