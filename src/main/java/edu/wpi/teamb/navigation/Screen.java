@@ -13,6 +13,7 @@ public enum Screen {
   EDIT_USERS("views/settings/EditUsers.fxml"),
   PATHFINDER("views/pathfinder/Pathfinder.fxml"),
   MAP_EDITOR("views/mapeditor/MapEditor.fxml"),
+  MOVE_MAP("views/requests/MoveMap.fxml"),
   EXIT("views/Root.fxml"),
   SIGNAGE("views/signage/Signage.fxml"),
   MOVE("views/requests/MoveRequest.fxml");

@@ -7,14 +7,9 @@ import edu.wpi.teamb.DBAccess.ORMs.Node;
 import edu.wpi.teamb.entities.requests.EMoveRequest;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
-import io.github.palexdev.materialfx.controls.*;
-
-import java.io.IOException;
-import java.sql.Date;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-
+import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXRadioButton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -27,43 +22,33 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.PopOver;
 
-public class MoveRequestController {
+import java.io.IOException;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
-    @FXML
-    private MFXButton btnSubmit;
-    @FXML
-    private MFXButton btnCancel;
-    @FXML
-    private MFXButton btnReset;
-    // @FXML private MFXTextField roomTextBox;
-    @FXML
-    private ImageView helpIcon;
-    @FXML
-    private VBox tableVbox;
-    // @FXML private MFXComboBox<String> cbOrderLocation;
-    // @FXML private MFXComboBox<String> cbEmployeesToAssign;
-    // @FXML private MFXComboBox<String> cbFloorSelect; // Floor
+public class MoveRequestControllerI implements IRequestController{
 
-    @FXML
-    private MFXComboBox<String> cdRoomToMove;
-    @FXML
-    private MFXComboBox<Integer> cdWheretoMove;
-    @FXML
-    private DatePicker dateOfMove;
-    @FXML
-    private TableView<Move> tbFutureMoves;
-    @FXML
-    private MFXButton btnRemoveMove;
-    @FXML
-    private MFXButton btnEditRequuest;
-    @FXML
-    private MFXRadioButton radPastMove;
+    @FXML private MFXButton btnSubmit;
+    @FXML private MFXButton btnCancel;
+    @FXML private MFXButton btnReset;
+    @FXML private ImageView helpIcon;
+    @FXML private VBox tableVbox;
+    @FXML private MFXComboBox<String> cdRoomToMove;
+    @FXML private MFXComboBox<Integer> cdWheretoMove;
+    @FXML private DatePicker dateOfMove;
+    @FXML private TableView<Move> tbFutureMoves;
+    @FXML private MFXButton btnRemoveMove;
+    @FXML private MFXButton btnEditRequest;
+    @FXML private MFXRadioButton radPastMove;
+    @FXML private MFXButton btnViewMoveMap;
 
     private EMoveRequest EMoveRequest;
-
     private int tableSize = 0;
+    private boolean changeRequest = false;
 
-    public MoveRequestController() {
+    public MoveRequestControllerI() {
         this.EMoveRequest = new EMoveRequest();
     }
 
@@ -83,9 +68,107 @@ public class MoveRequestController {
         // start with radiobutton unchecked
         radPastMove.setSelected(false);
         btnRemoveMove.setDisable(true);
-        btnEditRequuest.setDisable(true);
+        btnEditRequest.setDisable(true);
         initializeFields();
-        hoverHelp();
+        initBtns();
+    }
+
+    @Override
+    public void initBtns() {
+        btnSubmit.setOnAction(e -> handleSubmit());
+        btnReset.setOnAction(e -> handleReset());
+        btnCancel.setOnAction(e -> handleCancel());
+        helpIcon.setOnMouseClicked(e -> handleHelp());
+        btnRemoveMove.setOnMouseClicked(e -> handleRemoveMove());
+        btnEditRequest.setOnMouseClicked(e -> handleEditRequest());
+        btnViewMoveMap.setOnMouseClicked(e -> Navigation.navigate(Screen.MOVE_MAP));
+    }
+
+    @Override
+    public void initializeFields() throws SQLException {
+        cdRoomToMove.setValue("");
+        cdRoomToMove.setPromptText("Room to Move");
+        cdWheretoMove.setValue(-1);
+        cdWheretoMove.setPromptText("Where to Move");
+        dateOfMove.setValue(LocalDate.now());
+        // initialize date picker
+        dateOfMove.setPromptText("Date of Move");
+    }
+
+    @Override
+    public void handleSubmit() {
+        String what = cdRoomToMove.getSelectedItem();
+        Integer where = cdWheretoMove.getSelectedItem();
+        Date when = Date.valueOf(dateOfMove.getValue());
+
+        // popup error when not all fields are filled or when date is before current
+        // date or when the move is already in the table
+        if (what != null && where != null && when != null) {
+            if (!tbFutureMoves.getItems().contains(new Move(where, what, when))) {
+                if (when.after(new Date(System.currentTimeMillis()-1000*60*60*24))) {
+                    String[] output = { where.toString(), what, when.toString() };
+                    EMoveRequest.submitRequest(output);
+                    handleReset();
+
+                    updateTable();
+
+                } else {
+                    // TODO popup error when entered date is before current date
+                }
+            } else {
+                // TODO popup error when entered value is already in table
+            }
+
+            handleReset();
+
+        } else {
+            final FXMLLoader popupLoader = new FXMLLoader(
+                    Bapp.class.getResource("views/components/popovers/NotAllFieldsCompleteError.fxml"));
+            PopOver popOver = new PopOver();
+            popOver.setDetachable(true);
+            popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
+            popOver.setArrowSize(0.0);
+            try {
+                popOver.setContentNode(popupLoader.load());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            popOver.show(btnSubmit);
+        }
+    }
+
+    @Override
+    public void handleReset() {
+        cdRoomToMove.clear();
+        cdRoomToMove.replaceSelection("Room to Move");
+        cdWheretoMove.clear();
+        cdWheretoMove.replaceSelection("Where to Move");
+        dateOfMove.setValue(null);
+        btnRemoveMove.setDisable(true);
+        changeRequest = false;
+        btnEditRequest.setDisable(true);
+        updateTable();
+    }
+
+    @Override
+    public void handleCancel() {
+        Navigation.navigate(Screen.HOME);
+    }
+
+    @Override
+    public void handleHelp() {
+        final FXMLLoader popupLoader = new FXMLLoader(
+                // TODO: add Move request help popup
+                Bapp.class.getResource("views/components/MealRequestHelpPopOver.fxml"));
+        PopOver popOver = new PopOver();
+        popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_RIGHT);
+        popOver.setArrowSize(0.0);
+        try {
+            popOver.setContentNode(popupLoader.load());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        popOver.show(helpIcon);
     }
 
     private void moveTable() {
@@ -146,63 +229,11 @@ public class MoveRequestController {
         return parts[1] + "/" + parts[2] + "/" + parts[0];
     }
 
-    @FXML 
+    @FXML
     public void viewMoves()
     {
         updateTable();
     }
-
-    @FXML
-    public void clickSubmit() {
-        btnSubmit.setOnMouseClicked(event -> {
-            String what = cdRoomToMove.getSelectedItem();
-            Integer where = cdWheretoMove.getSelectedItem();
-            Date when = Date.valueOf(dateOfMove.getValue());
-
-            // popup error when not all fields are filled or when date is before current
-            // date or when the move is already in the table
-            if (what != null && where != null && when != null) {
-                if (!tbFutureMoves.getItems().contains(new Move(where, what, when))) {
-                    if (when.after(new Date(System.currentTimeMillis()-1000*60*60*24))) {
-                        String[] output = { where.toString(), what, when.toString() };
-                        EMoveRequest.submitRequest(output);
-                        clickResetForm();
-
-                        updateTable();
-
-                    } else {
-                        // TODO popup error when entered date is before current date
-                    }
-                } else {
-                    // TODO popup error when entered value is already in table
-                }
-
-                clickResetForm();
-
-            } else {
-                final FXMLLoader popupLoader = new FXMLLoader(
-                        Bapp.class.getResource("views/components/popovers/NotAllFieldsCompleteError.fxml"));
-                PopOver popOver = new PopOver();
-                popOver.setDetachable(true);
-                popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
-                popOver.setArrowSize(0.0);
-                try {
-                    popOver.setContentNode(popupLoader.load());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                popOver.show(btnSubmit);
-            }
-
-        });
-    }
-
-    @FXML
-    public void clickCancel() {
-        btnCancel.setOnMouseClicked(event -> Navigation.navigate(Screen.HOME));
-    }
-
-    private boolean changeRequest = false;
 
     @FXML
     public void tbSetAlter() {
@@ -213,7 +244,7 @@ public class MoveRequestController {
 
                 btnRemoveMove.setDisable(false);
                 // TODO: enable edit button
-                // btnEditRequuest.setDisable(false);
+                // btnEditRequest.setDisable(false);
 
                 Move move = tbFutureMoves.getSelectionModel().getSelectedItem();
                 // make roomtomove box empty
@@ -222,39 +253,32 @@ public class MoveRequestController {
                 cdWheretoMove.selectItem(move.getNodeID());
                 // set date value
                 dateOfMove.setValue(LocalDate.parse(ymd2ymd2(move.getDate().toString())));
-                
+
 
             }
         });
 
     }
 
-    @FXML
-    public void RemoveRequest() {
+    public void handleRemoveMove() {
         // when clicking on the remove button, the selected row is removed from the
         // table and the database
-        btnRemoveMove.setOnMouseClicked(event -> {
             if (tbFutureMoves.getSelectionModel().getSelectedItem() != null) {
                 Move move = tbFutureMoves.getSelectionModel().getSelectedItem();
                 EMoveRequest = new EMoveRequest(move);
                 EMoveRequest.removeRequest();
                 tbFutureMoves.getItems().remove(move);
                 tableSize--;
-                clickResetForm();
+                handleReset();
 
             }
-        });
         btnRemoveMove.setDisable(true);
-
-        clickResetForm();
-
+        handleReset();
     }
 
-    @FXML
-    public void EditRequest() {
+    public void handleEditRequest() {
         // when clicking on the edit button, the selected row is removed from the table
         // and the database
-        btnEditRequuest.setOnMouseClicked(event -> {
             if (tbFutureMoves.getSelectionModel().getSelectedItem() != null) {
                 Move move = tbFutureMoves.getSelectionModel().getSelectedItem();
                 tbFutureMoves.getItems().remove(move);
@@ -265,60 +289,7 @@ public class MoveRequestController {
                 EMoveRequest.updateRequest();
 
                 tableSize--;
-                clickResetForm();
+                handleReset();
             }
-        });
-    }
-
-    @FXML
-    public void clickResetForm() {
-        btnReset.setOnMouseClicked(
-                event -> {
-                    cdRoomToMove.clear();
-                    cdRoomToMove.replaceSelection("Room to Move");
-                    cdWheretoMove.clear();
-                    cdWheretoMove.replaceSelection("Where to Move");
-                    dateOfMove.setValue(null);
-                    btnRemoveMove.setDisable(true);
-                    changeRequest = false;
-                    btnEditRequuest.setDisable(true);
-                    updateTable();
-                });
-    }
-
-    @FXML
-    public void hoverHelp() {
-        helpIcon.setOnMouseClicked(
-                event -> {
-                    final FXMLLoader popupLoader = new FXMLLoader(
-                            // TODO: add Move request help popup
-                            Bapp.class.getResource("views/components/MealRequestHelpPopOver.fxml"));
-                    PopOver popOver = new PopOver();
-                    popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_RIGHT);
-                    popOver.setArrowSize(0.0);
-                    try {
-                        popOver.setContentNode(popupLoader.load());
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    popOver.show(helpIcon);
-                });
-        // helpIcon.setOnMouseExited(event -> {});
-    }
-
-    private void initializeFields() throws SQLException {
-        // initialize combo boxes
-        cdRoomToMove.setValue("");
-        cdRoomToMove.setPromptText("Room to Move");
-        cdWheretoMove.setValue(-1);
-        cdWheretoMove.setPromptText("Where to Move");
-        dateOfMove.setValue(LocalDate.now());
-        // initialize date picker
-        dateOfMove.setPromptText("Date of Move");
-    }
-
-    @FXML
-    public void clickExit() {
-        System.exit(0);
     }
 }

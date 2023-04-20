@@ -10,6 +10,7 @@ import io.github.palexdev.materialfx.controls.MFXRadioButton;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Objects;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -41,7 +42,7 @@ public class LoginController {
   public void clickForgotPassword(ActionEvent event) throws IOException {
     Parent root;
     try {
-      root = FXMLLoader.load(getClass().getClassLoader().getResource("edu/wpi/teamb/views/settings/ForgotPassword.fxml"));
+      root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("edu/wpi/teamb/views/settings/ForgotPassword.fxml")));
       Stage stage = new Stage();
       stage.setTitle("Forgot Password");
       stage.setScene(new Scene(root, 400, 600));

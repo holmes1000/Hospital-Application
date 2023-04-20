@@ -2,7 +2,7 @@ package edu.wpi.teamb.controllers.requests;
 
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
-import edu.wpi.teamb.entities.requests.EFlowerRequest;
+import edu.wpi.teamb.entities.requests.EFurnitureRequest;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -19,33 +19,50 @@ import org.controlsfx.control.PopOver;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class FlowerRequestControllerI implements IRequestController {
+public class FurnitureRequestControllerI implements IRequestController{
 
-    @FXML private MFXButton btnSubmit;
-    @FXML private MFXButton btnCancel;
-    @FXML private MFXButton btnReset;
-    @FXML private MFXTextField roomTextBox;
-    @FXML private ImageView helpIcon;
-    @FXML private MFXComboBox<String> cbAvailableFlowers;
-    @FXML private MFXComboBox<String> cdAvailableColor;
-    @FXML private MFXComboBox<String> cdAvailableType;
-    @FXML private MFXTextField txtFldNotes;
-    @FXML private MFXTextField txtFldMessage;
-    @FXML private MFXComboBox<String> cbOrderLocation;
-    @FXML private MFXComboBox<String> cbEmployeesToAssign;
-    @FXML private MFXComboBox<String> cbFloorSelect; // Floor
+    @FXML
+    private MFXButton btnSubmit;
+    @FXML
+    private MFXButton btnCancel;
+    @FXML
+    private MFXButton btnReset;
+    @FXML
+    private MFXTextField roomTextBox;
+    @FXML
+    private ImageView helpIcon;
+    @FXML
+    private MFXComboBox<String> cbAvailableFurniture;
+    @FXML
+    private MFXComboBox<String> cdAvailableModels;
+    @FXML
+    private MFXComboBox<String> cdAssembly;
+    @FXML
+    private MFXTextField txtFldNotes;
+    @FXML
+    private MFXTextField txtFldMessage;
+    @FXML
+    private MFXComboBox<String> cbOrderLocation;
+    @FXML
+    private MFXComboBox<String> cbEmployeesToAssign;
+    @FXML
+    private MFXComboBox<String> cbFloorSelect; // Floor
+
     @FXML private MFXFilterComboBox<String> cbLongName;
 
-    private EFlowerRequest EFlowerRequest;
+    private edu.wpi.teamb.entities.requests.EFurnitureRequest EFurnitureRequest;
 
-    public FlowerRequestControllerI() {
-        this.EFlowerRequest = new EFlowerRequest();
+    public FurnitureRequestControllerI() {
+        this.EFurnitureRequest = new EFurnitureRequest();
     }
 
     @FXML
     public void initialize() throws IOException, SQLException {
-        initBtns();
+        ObservableList<String> longNames = FXCollections.observableArrayList();
+        longNames.addAll(Repository.getRepository().getAllLongNames());
+        cbLongName.setItems(longNames);
         initializeFields();
+        initBtns();
     }
 
     @Override
@@ -58,28 +75,23 @@ public class FlowerRequestControllerI implements IRequestController {
 
     @Override
     public void initializeFields() throws SQLException {
-        //Initialize the list of locations to direct request to via dropdown
-        ObservableList<String> longNames = FXCollections.observableArrayList();
-        longNames.addAll(Repository.getRepository().getAllLongNames());
-        cbLongName.setItems(longNames);
+        //Set list of furniture
+        ObservableList<String> furniture = FXCollections.observableArrayList("Chair", "Couch", "Table", "Desk", "Bed");
+        cbAvailableFurniture.setItems(furniture);
 
-        //Set types of flowers
-        ObservableList<String> flowers = FXCollections.observableArrayList("Rose", "Tulip", "Daisy", "Lily", "Sunflower");
-        cbAvailableFlowers.setItems(flowers);
+        //Set list of models
+        ObservableList<String> models = FXCollections.observableArrayList("Huge", "Big", "Medium", "Small", "Tiny");
+        cdAvailableModels.setItems(models);
 
-        //Set colors of flowers
-        ObservableList<String> colors = FXCollections.observableArrayList("Red", "Orange", "Yellow", "Green", "Blue", "Purple", "Pink", "White", "Black", "Brown", "Other");
-        cdAvailableColor.setItems(colors);
-
-
-        //Set delivery types
-        ObservableList<String> deliveryType = FXCollections.observableArrayList("Bouquet", "Single Flower", "Vase", "Other");
-        cdAvailableType.setItems(deliveryType);
+        //Set list of assembly options
+        ObservableList<String> assembly = FXCollections.observableArrayList("No", "Yes");
+        cdAssembly.setItems(assembly);
         //todo: fix locations
 
-        //Set list of order locations
+        //Set list of locations to order to
         ObservableList<String> orderLocation = FXCollections.observableArrayList("Main Lobby", "ER", "ICU", "Other");
         cbOrderLocation.setItems(orderLocation);
+
 
         //Set list of floors
         ObservableList<String> floors =
@@ -89,17 +101,16 @@ public class FlowerRequestControllerI implements IRequestController {
         //Set list of employees
         ObservableList<String> employees =
                 FXCollections.observableArrayList();
-        employees.addAll(EFlowerRequest.getUsernames());
+        employees.addAll(EFurnitureRequest.getUsernames());
         cbEmployeesToAssign.setItems(employees);
     }
 
     @Override
     public void handleSubmit() {
-        //Get all fields from request
         String orderfrom = cbOrderLocation.getSelectedItem();
-        String flower = cbAvailableFlowers.getSelectedItem();
-        String color = cdAvailableColor.getSelectedItem();
-        String deliverytype = cdAvailableType.getSelectedItem();
+        String furniture = cbAvailableFurniture.getSelectedItem();
+        String model = cdAvailableModels.getSelectedItem();
+        String assembly = cdAssembly.getSelectedItem();
         String message = txtFldMessage.getText();
         String employee = cbEmployeesToAssign.getSelectedItem();
         String floor = cbFloorSelect.getSelectedItem();
@@ -107,19 +118,13 @@ public class FlowerRequestControllerI implements IRequestController {
         String roomnumber = roomTextBox.getText();
         String notes = txtFldNotes.getText();
         String requeststatus =("Pending");
-        String flowerrequesttype = ("Flower");
-
-        //Check for required fields before allowing submittion
-        if((orderfrom != null) && (flower != null) && (color != null) && (deliverytype != null) && (floor != null) && (roomnumber != null) && (longName != null)){
-
-            //Set the gathered fields into a string array
-            String[] output = {employee, floor, roomnumber, requeststatus, flowerrequesttype, orderfrom, flower, color, deliverytype, message, longName, notes};
-            EFlowerRequest.submitRequest(output);
+        String furniturerequesttype = ("Furniture");
+        if((orderfrom != null) && (furniture != null) && (model != null) && (assembly != null) && (floor != null) && (roomnumber != null) && (longName != null)){
+            String[] output = {employee, floor, roomnumber, requeststatus, furniturerequesttype, orderfrom, furniture, model, message, longName, notes};
+            EFurnitureRequest.submitRequest(output);
             handleReset();
             Navigation.navigate(Screen.CREATE_NEW_REQUEST);
         }else{
-
-            //If the required fields are not filled, bring up pop-over indicating such
             final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/NotAllFieldsCompleteError.fxml"));
             PopOver popOver = new PopOver();
             popOver.setDetachable(true);
@@ -136,9 +141,9 @@ public class FlowerRequestControllerI implements IRequestController {
 
     @Override
     public void handleReset() {
-        cbAvailableFlowers.getSelectionModel().clearSelection();
-        cdAvailableColor.getSelectionModel().clearSelection();
-        cdAvailableType.getSelectionModel().clearSelection();
+        cbAvailableFurniture.getSelectionModel().clearSelection();
+        cdAvailableModels.getSelectionModel().clearSelection();
+        cdAssembly.getSelectionModel().clearSelection();
         txtFldMessage.clear();
         txtFldNotes.clear();
         cbEmployeesToAssign.getSelectionModel().clearSelection();
@@ -156,7 +161,7 @@ public class FlowerRequestControllerI implements IRequestController {
 
     @Override
     public void handleHelp() {
-        final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/FlowerRequestHelpPopOver.fxml"));
+        final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/FurnitureRequestHelpPopOver.fxml"));
         PopOver popOver = new PopOver();
         popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_RIGHT);
         popOver.setArrowSize(0.0);

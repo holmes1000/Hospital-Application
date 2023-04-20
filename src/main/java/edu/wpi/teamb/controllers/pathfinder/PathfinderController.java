@@ -65,10 +65,10 @@ public class PathfinderController {
     @FXML private MFXButton btn1;
     @FXML private MFXButton btn2;
     @FXML private MFXButton btn3;
-
-    @FXML private MFXToggleButton toggleAvoidElevators;
+    @FXML private MFXDatePicker datePicker;
     @FXML private MFXToggleButton toggleAvoidStairs;
     private String currentFloor = "1";
+
 
     HashMap<String,ArrayList<Node>> nodes_by_floor = new HashMap<>();
   private EPathfinder EPathfinder;

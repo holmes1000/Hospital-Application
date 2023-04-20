@@ -113,9 +113,7 @@ public class SubmittedRequestsController {
 
     @FXML
     public void clickCancel() {
-        btnCancel.setOnMouseClicked(event -> {
-            Navigation.navigate(Screen.CREATE_NEW_REQUEST);
-        });
+        Navigation.navigate(Screen.CREATE_NEW_REQUEST);
     }
 
     @FXML

@@ -19,18 +19,12 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 
 public class CreateNewRequestController {
-    @FXML
-    MFXButton btnHome;
-    @FXML
-    private JFXHamburger menuBurger;
-    @FXML
-    private JFXDrawer menuDrawer;
-    @FXML
-    private MFXComboBox cbRequestType;
-    @FXML
-    private VBox requestVbox;
-    @FXML
-    MFXButton btnAllRequests;
+    @FXML MFXButton btnHome;
+    @FXML private JFXHamburger menuBurger;
+    @FXML private JFXDrawer menuDrawer;
+    @FXML private MFXComboBox cbRequestType;
+    @FXML private VBox requestVbox;
+    @FXML MFXButton btnAllRequests;
     ELogin.PermissionLevel adminTest;
     private NavDrawerController navDrawerController;
 
