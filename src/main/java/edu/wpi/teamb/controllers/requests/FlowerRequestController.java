@@ -3,7 +3,7 @@ package edu.wpi.teamb.controllers.requests;
 
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
-import edu.wpi.teamb.entities.requests.FlowerRequestE;
+import edu.wpi.teamb.entities.requests.EFlowerRequest;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.*;
@@ -51,15 +51,14 @@ public class FlowerRequestController {
 
     @FXML private MFXFilterComboBox<String> cbLongName;
 
-    private FlowerRequestE flowerRequestE;
+    private EFlowerRequest EFlowerRequest;
 
     public FlowerRequestController() {
-        this.flowerRequestE = new FlowerRequestE();
+        this.EFlowerRequest = new EFlowerRequest();
     }
 
     @FXML
     public void initialize() throws IOException, SQLException {
-
         initializeFields();
         clickHelp();
 
@@ -88,7 +87,7 @@ public class FlowerRequestController {
 
                 //Set the gathered fields into a string array
                 String[] output = {employee, floor, roomnumber, requeststatus, flowerrequesttype, orderfrom, flower, color, deliverytype, message, longName, notes};
-                flowerRequestE.submitRequest(output);
+                EFlowerRequest.submitRequest(output);
                 clickResetForm();
                 Navigation.navigate(Screen.CREATE_NEW_REQUEST);
             }else{
@@ -166,7 +165,7 @@ public class FlowerRequestController {
         //Set list of employees
         ObservableList<String> employees =
                 FXCollections.observableArrayList();
-        employees.addAll(flowerRequestE.getUsernames());
+        employees.addAll(EFlowerRequest.getUsernames());
         cbEmployeesToAssign.setItems(employees);
     }
 

@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class AllRequestsE {
+public class EAllRequests {
     private Request request;
     private MealRequest mealRequest;
     private FlowerRequest flowerRequest;
@@ -19,7 +19,7 @@ public class AllRequestsE {
     private ArrayList<Request> requests;
 
 
-    public AllRequestsE(){
+    public EAllRequests(){
         request = new Request();
         requests = new ArrayList<Request>();
         mealRequest = new MealRequest();

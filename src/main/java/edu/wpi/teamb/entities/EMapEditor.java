@@ -9,7 +9,7 @@ import edu.wpi.teamb.DBAccess.ORMs.Node;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class MapEditorE {
+public class EMapEditor {
   Node node;
   Move move;
   Edge edge;
@@ -20,7 +20,7 @@ public class MapEditorE {
   ArrayList<Edge> edgeList = new ArrayList<>();
   ArrayList<LocationName> locationNameList = new ArrayList<>();
 
-  public MapEditorE() throws SQLException {
+  public EMapEditor() throws SQLException {
     this.node = new Node();
     this.move = new Move();
     this.edge = new Edge();

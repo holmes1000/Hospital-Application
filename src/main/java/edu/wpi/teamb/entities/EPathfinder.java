@@ -17,7 +17,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class PathfinderE {
+public class EPathfinder {
     edu.wpi.teamb.pathfinding.Pathfinder pathfinder;
     ArrayList<Integer> path = new ArrayList<Integer>();
 
@@ -29,7 +29,7 @@ public class PathfinderE {
     String secondFloor = "edu/wpi/teamb/img/FloorMapsNoLocationNames/02_thesecondfloor.png";
     String thirdFloor = "edu/wpi/teamb/img/FloorMapsNoLocationNames/03_thethirdfloor.png";
 
-    public PathfinderE() throws SQLException{
+    public EPathfinder() throws SQLException{
         PathFinding.ASTAR.init_pathfinder();
 //        this.pathfinder = new edu.wpi.teamb.pathfinding.Pathfinder();
         populateFloorsToPNG();

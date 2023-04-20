@@ -17,12 +17,10 @@ import javafx.scene.layout.VBox;
 
 public class SignageController {
 
-  @FXML MFXButton btnHome;
   @FXML private JFXHamburger menuBurger;
   @FXML private JFXDrawer menuDrawer;
   @FXML private MFXComboBox cbLocation;
   @FXML private VBox signVbox;
-  private NavDrawerController navDrawerController;
 
   @FXML
   public void initialize() throws IOException {

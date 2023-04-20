@@ -15,7 +15,7 @@ import edu.wpi.teamb.DBAccess.DB;
 import edu.wpi.teamb.DBAccess.FullNode;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 import edu.wpi.teamb.controllers.NavDrawerController;
-import edu.wpi.teamb.entities.PathfinderE;
+import edu.wpi.teamb.entities.EPathfinder;
 import edu.wpi.teamb.pathfinding.PathFinding;
 import io.github.palexdev.materialfx.controls.*;
 import javafx.animation.Interpolator;
@@ -71,7 +71,7 @@ public class PathfinderController {
     private String currentFloor = "1";
 
     HashMap<String,ArrayList<Node>> nodes_by_floor = new HashMap<>();
-  private PathfinderE pathfinderE;
+  private EPathfinder EPathfinder;
 
     public GesturePane pane = new GesturePane();
     ArrayList<FullNode> fullNodes = new ArrayList<>();
@@ -132,7 +132,7 @@ public class PathfinderController {
               String selectedLongName = listView.getSelectionModel().getSelectedValues().get(0);
               Integer index = listView.getItems().indexOf(selectedLongName);
               System.out.println(index);
-              Node node = PathFinding.ASTAR.get_node_map().get(pathfinderE.getPath().get(index));
+              Node node = PathFinding.ASTAR.get_node_map().get(EPathfinder.getPath().get(index));
 //              String longname = Repository.getRepository().
               FullNode n = filteredFullNodes.get(node.getNodeID());
               String floor = n.getFloor();
@@ -176,7 +176,7 @@ public class PathfinderController {
 
 
   public PathfinderController() throws SQLException {
-        this.pathfinderE = new PathfinderE();
+        this.EPathfinder = new EPathfinder();
   }
 
   public void drawPath(ArrayList<Node> nodes){
@@ -370,20 +370,20 @@ public class PathfinderController {
           try {
 
               if (algorithmDropdown.getSelectedItem() != null) {
-                  if (toggleAvoidStairs.isSelected()) {path = pathfinderE.getShortestPath("AStar","Elevators",start, end);}
+                  if (toggleAvoidStairs.isSelected()) {path = EPathfinder.getShortestPath("AStar","Elevators",start, end);}
 //                  else if (toggleAvoidElevators.isSelected()) {path = pathfinder.getShortestPath("AStar","Stairs",start, end);}
                   else if (algorithmDropdown.getSelectedItem().equals("Breadth First Search")) {
-                      path = pathfinderE.getShortestPath("Breadth First Search", "None",start, end);
+                      path = EPathfinder.getShortestPath("Breadth First Search", "None",start, end);
                   }
                   else if (algorithmDropdown.getSelectedItem().equals("Depth First Search")) {
-                      path = pathfinderE.getShortestPath("Depth First Search", "None", start, end);
+                      path = EPathfinder.getShortestPath("Depth First Search", "None", start, end);
                   }
-                  else {path = pathfinderE.getShortestPath("AStar","None",start, end);}
+                  else {path = EPathfinder.getShortestPath("AStar","None",start, end);}
               }
-              else {path = pathfinderE.getShortestPath("AStar", "None",start, end);}
+              else {path = EPathfinder.getShortestPath("AStar", "None",start, end);}
 
 
-              ArrayList<Integer> int_path = pathfinderE.getPath();
+              ArrayList<Integer> int_path = EPathfinder.getPath();
               ArrayList<Node> nodePath;
               nodes_by_floor = new HashMap<>();
               for (Integer id : int_path){

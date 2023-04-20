@@ -4,7 +4,7 @@ import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import edu.wpi.teamb.controllers.NavDrawerController;
-import edu.wpi.teamb.entities.LoginE;
+import edu.wpi.teamb.entities.ELogin;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -18,7 +18,7 @@ public class SettingsController {
     @FXML
     private JFXHamburger menuBurger;
     @FXML private JFXDrawer menuDrawer;
-    LoginE.PermissionLevel adminTest;
+    ELogin.PermissionLevel adminTest;
     @FXML private MFXButton btnEditUsers;
     @FXML private MFXButton btnEditAccount;
 
@@ -26,8 +26,8 @@ public class SettingsController {
     public void initialize() throws IOException {
         initNavBar();
         initButtons();
-        adminTest = LoginE.getLogin().getPermissionLevel();
-        if (adminTest != LoginE.PermissionLevel.ADMIN) {
+        adminTest = ELogin.getLogin().getPermissionLevel();
+        if (adminTest != ELogin.PermissionLevel.ADMIN) {
             btnEditUsers.setVisible(false);
         }
     }

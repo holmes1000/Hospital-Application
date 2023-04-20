@@ -2,7 +2,7 @@ package edu.wpi.teamb.controllers.requests;
 
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
-import edu.wpi.teamb.entities.requests.OfficeRequestE;
+import edu.wpi.teamb.entities.requests.EOfficeRequest;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.*;
@@ -32,10 +32,10 @@ public class OfficeRequestController {
     @FXML private MFXComboBox<String> cbFloorSelect; // Floor
     @FXML private MFXFilterComboBox<String> cbLongName;
 
-    private OfficeRequestE officeRequestE;
+    private EOfficeRequest EOfficeRequest;
 
     public OfficeRequestController(){
-        this.officeRequestE = new OfficeRequestE();
+        this.EOfficeRequest = new EOfficeRequest();
     }
 
     @FXML
@@ -63,7 +63,7 @@ public class OfficeRequestController {
             String officetype = "Office";
             if((item != null) && (type != null) && (quantity != null) && (notes != null) && (floor != null) && (longName != null) && (roomnumber != null) && (employee != null) && (requeststatus != null) && (location != null)){
                 String[] output = {employee, floor, roomnumber, requeststatus, officetype, item, type, quantity, notes, location};
-                officeRequestE.submitRequest(output);
+                EOfficeRequest.submitRequest(output);
                 clickResetForm();
                 Navigation.navigate(Screen.CREATE_NEW_REQUEST);
             } else {
@@ -131,7 +131,7 @@ public class OfficeRequestController {
 //            cbOrderLocation.setItems(locations);
 
             //DROPDOWN INITIALIZATION
-            ObservableList<String> employees = FXCollections.observableArrayList(officeRequestE.getUsernames());
+            ObservableList<String> employees = FXCollections.observableArrayList(EOfficeRequest.getUsernames());
             cbEmployeesToAssign.setItems(employees);
 
             //DROPDOWN INITIALIZATION

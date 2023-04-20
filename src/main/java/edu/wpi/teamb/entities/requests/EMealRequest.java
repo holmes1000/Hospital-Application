@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
 
-public class MealRequestE extends RequestImpl {
+public class EMealRequest extends RequestImpl {
   private String employee;
   private String floor;
   private String roomNumber;
@@ -27,7 +27,7 @@ public class MealRequestE extends RequestImpl {
   edu.wpi.teamb.DBAccess.ORMs.MealRequest mealRequest;
 
 
-  public MealRequestE(
+  public EMealRequest(
       String employee,
       String floor,
       String roomNumber,
@@ -50,7 +50,7 @@ public class MealRequestE extends RequestImpl {
     this.requestStatus = requestStatus;
   }
 
-  public MealRequestE() {}
+  public EMealRequest() {}
 
   @Override
   public int getRequestID() {
@@ -91,17 +91,17 @@ public class MealRequestE extends RequestImpl {
   public boolean equals(Object obj) {
     if (this == obj) return true;
     if (obj == null || obj.getClass() != this.getClass()) return false;
-    MealRequestE mealRequestE = (MealRequestE) obj;
-    return Objects.equals(this.employee, mealRequestE.employee)
-        && Objects.equals(this.floor, mealRequestE.floor)
-        && Objects.equals(this.roomNumber, mealRequestE.roomNumber)
-        && Objects.equals(this.dateSubmitted, mealRequestE.dateSubmitted)
-        && Objects.equals(this.orderFrom, mealRequestE.orderFrom)
-        && Objects.equals(this.food, mealRequestE.food)
-        && Objects.equals(this.drink, mealRequestE.drink)
-        && Objects.equals(this.snack, mealRequestE.snack)
-        && Objects.equals(this.mealModification, mealRequestE.mealModification)
-        && Objects.equals(this.requestStatus, mealRequestE.requestStatus);
+    EMealRequest EMealRequest = (EMealRequest) obj;
+    return Objects.equals(this.employee, EMealRequest.employee)
+        && Objects.equals(this.floor, EMealRequest.floor)
+        && Objects.equals(this.roomNumber, EMealRequest.roomNumber)
+        && Objects.equals(this.dateSubmitted, EMealRequest.dateSubmitted)
+        && Objects.equals(this.orderFrom, EMealRequest.orderFrom)
+        && Objects.equals(this.food, EMealRequest.food)
+        && Objects.equals(this.drink, EMealRequest.drink)
+        && Objects.equals(this.snack, EMealRequest.snack)
+        && Objects.equals(this.mealModification, EMealRequest.mealModification)
+        && Objects.equals(this.requestStatus, EMealRequest.requestStatus);
   }
 
   public String getEmployee() {

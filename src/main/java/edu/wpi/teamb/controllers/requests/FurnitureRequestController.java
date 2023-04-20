@@ -3,7 +3,7 @@ package edu.wpi.teamb.controllers.requests;
 
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
-import edu.wpi.teamb.entities.requests.FurnitureRequestE;
+import edu.wpi.teamb.entities.requests.EFurnitureRequest;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.*;
@@ -50,10 +50,10 @@ public class FurnitureRequestController {
 
     @FXML private MFXFilterComboBox<String> cbLongName;
 
-    private FurnitureRequestE furnitureRequestE;
+    private EFurnitureRequest EFurnitureRequest;
 
     public FurnitureRequestController() {
-        this.furnitureRequestE = new FurnitureRequestE();
+        this.EFurnitureRequest = new EFurnitureRequest();
     }
 
     @FXML
@@ -83,7 +83,7 @@ public class FurnitureRequestController {
             String furniturerequesttype = ("Furniture");
             if((orderfrom != null) && (furniture != null) && (model != null) && (assembly != null) && (floor != null) && (roomnumber != null) && (longName != null)){
                 String[] output = {employee, floor, roomnumber, requeststatus, furniturerequesttype, orderfrom, furniture, model, message, longName, notes};
-                furnitureRequestE.submitRequest(output);
+                EFurnitureRequest.submitRequest(output);
                 clickResetForm();
                 Navigation.navigate(Screen.CREATE_NEW_REQUEST);
             }else{
@@ -153,7 +153,7 @@ public class FurnitureRequestController {
         //Set list of employees
         ObservableList<String> employees =
                 FXCollections.observableArrayList();
-        employees.addAll(furnitureRequestE.getUsernames());
+        employees.addAll(EFurnitureRequest.getUsernames());
         cbEmployeesToAssign.setItems(employees);
     }
 

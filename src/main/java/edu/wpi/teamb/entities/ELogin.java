@@ -7,19 +7,19 @@ import edu.wpi.teamb.exceptions.IncorrectPasswordException;
 
 import java.sql.SQLException;
 
-public class LoginE {
+public class ELogin {
   // unsure if these fields are even needed
   private String username;
   private String password;
   private PermissionLevel permissionLevel;
   // following field will hold global Login instance
-  private static LoginE loginE;
+  private static ELogin ELogin;
 
   /**
    * This constructor will initialize a global Login instance once at the beginning and then return
    * the same instance thereafter
    */
-  private LoginE() {
+  private ELogin() {
     // need empty private constructor to prevent multiple instantiation
   }
 
@@ -29,11 +29,11 @@ public class LoginE {
    *
    * @return Login instance
    */
-  public static synchronized LoginE getLogin() {
-    if (loginE == null) {
-      loginE = new LoginE();
+  public static synchronized ELogin getLogin() {
+    if (ELogin == null) {
+      ELogin = new ELogin();
     }
-    return loginE;
+    return ELogin;
   }
 
   // possible permission levels
@@ -88,6 +88,6 @@ public class LoginE {
     this.username = null;
     this.password = null;
     this.permissionLevel = null;
-    LoginE.loginE = null;
+    ELogin.ELogin = null;
   }
 }

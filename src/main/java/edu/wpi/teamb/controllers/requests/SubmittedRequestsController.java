@@ -7,7 +7,7 @@ import edu.wpi.teamb.DBAccess.*;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 import edu.wpi.teamb.controllers.NavDrawerController;
 import edu.wpi.teamb.controllers.components.InfoCardController;
-import edu.wpi.teamb.entities.requests.AllRequestsE;
+import edu.wpi.teamb.entities.requests.EAllRequests;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -32,12 +32,12 @@ public class SubmittedRequestsController {
     @FXML private VBox allRequestsContainerVBox;
     @FXML private ScrollPane allRequestsScrollPane;
     //entity object of class that contains all the methods to get the requests
-    private AllRequestsE allRequestsE;
+    private EAllRequests allRequestsE;
 
     @FXML
     public void initialize() throws IOException, SQLException {
         initNavBar();
-        allRequestsE = new AllRequestsE();
+        allRequestsE = new EAllRequests();
         initScrollPane();
         loadRequestsIntoContainer();
     }

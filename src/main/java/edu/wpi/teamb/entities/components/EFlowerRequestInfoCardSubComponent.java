@@ -2,7 +2,7 @@ package edu.wpi.teamb.entities.components;
 
 import java.util.ArrayList;
 
-public class FlowerRequestInfoCardSubComponentE {
+public class EFlowerRequestInfoCardSubComponent {
     public ArrayList<String> getFlowerTypes() {
         ArrayList<String> flowerTypes = new ArrayList<String>();
         flowerTypes.add("Rose");

@@ -5,7 +5,7 @@ import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 
 import java.util.ArrayList;
 
-public class MealRequestInfoCardSubComponentE {
+public class EMealRequestInfoCardSubComponent {
 
     /**
      * This method is used to get all the location names from the database

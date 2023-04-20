@@ -4,7 +4,7 @@ import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import edu.wpi.teamb.controllers.NavDrawerController;
-import edu.wpi.teamb.entities.LoginE;
+import edu.wpi.teamb.entities.ELogin;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -31,7 +31,7 @@ public class CreateNewRequestController {
     private VBox requestVbox;
     @FXML
     MFXButton btnAllRequests;
-    LoginE.PermissionLevel adminTest;
+    ELogin.PermissionLevel adminTest;
     private NavDrawerController navDrawerController;
 
     @FXML
@@ -39,9 +39,9 @@ public class CreateNewRequestController {
         initNavBar();
         requestVbox.getChildren().clear();
         requestVbox.setFillWidth(true);
-        adminTest = LoginE.getLogin().getPermissionLevel();
+        adminTest = ELogin.getLogin().getPermissionLevel();
         initializeFields();
-        if (adminTest != LoginE.PermissionLevel.ADMIN) {
+        if (adminTest != ELogin.PermissionLevel.ADMIN) {
             btnAllRequests.setVisible(false);
         }
         requestVbox.getChildren().clear();
@@ -143,7 +143,7 @@ public class CreateNewRequestController {
         ObservableList<String> locations = FXCollections.observableArrayList("Meal Delivery", "Conference Room",
                 "Flower Delivery", "Furniture Delivery", "Office Supplies", "Other");
         // TODO: only add thise if the user is an admin
-        if (adminTest == LoginE.PermissionLevel.ADMIN) {
+        if (adminTest == ELogin.PermissionLevel.ADMIN) {
             ObservableList<String> AdminOnly = FXCollections.observableArrayList("Move");
             for (String string : AdminOnly) {
                 locations.add(locations.size() - 2, string);

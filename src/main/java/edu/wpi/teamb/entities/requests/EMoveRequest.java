@@ -6,22 +6,22 @@ import java.util.Objects;
 import edu.wpi.teamb.DBAccess.ORMs.Move;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 
-public class MoveRequestE extends RequestImpl {
+public class EMoveRequest extends RequestImpl {
 
     private Move move;
     //private Request request;
 
-    public MoveRequestE(int ID, String longName, Date date, String employee, String floor, String roomNumber, Date dateSubmitted, String requestStatus) {
+    public EMoveRequest(int ID, String longName, Date date, String employee, String floor, String roomNumber, Date dateSubmitted, String requestStatus) {
         this.move = new Move(ID, longName, date);
         //TODO firgour what request ID is
         //this.request = new Request(ID, employee, floor, roomNumber, dateSubmitted, requestStatus, "Move", longName);
     }
 
-    public MoveRequestE(Move move) {
+    public EMoveRequest(Move move) {
         this.move = move;
     }
 
-    public MoveRequestE() {
+    public EMoveRequest() {
         
     }
 
@@ -97,7 +97,7 @@ public class MoveRequestE extends RequestImpl {
             return false;
         }
         //cast the object to the class
-        MoveRequestE other = (MoveRequestE) obj;
+        EMoveRequest other = (EMoveRequest) obj;
         //check if the attributes are equal
         if (move == null) {
             if (other.move != null) {

@@ -9,7 +9,7 @@ import java.util.Objects;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.DB;
 
-public class FlowerRequestE extends RequestImpl {
+public class EFlowerRequest extends RequestImpl {
     private String employee;
     private String floor;
     private String roomNumber;
@@ -21,7 +21,7 @@ public class FlowerRequestE extends RequestImpl {
     private String specialInstructions;
     private RequestStatus requestStatus;
 
-    public FlowerRequestE(String employee,
+    public EFlowerRequest(String employee,
                           String floor,
                           String roomNumber,
                           Date dateSubmitted, String flowerType, String color, String type, String message,
@@ -40,7 +40,7 @@ public class FlowerRequestE extends RequestImpl {
 
     }
 
-    public FlowerRequestE() {
+    public EFlowerRequest() {
     }
 
     // getters and setters
@@ -157,7 +157,7 @@ public class FlowerRequestE extends RequestImpl {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        FlowerRequestE other = (FlowerRequestE) obj;
+        EFlowerRequest other = (EFlowerRequest) obj;
         return Objects.equals(color, other.color) && Objects.equals(dateSubmitted, other.dateSubmitted)
                 && Objects.equals(employee, other.employee) && Objects.equals(floor, other.floor)
                 && Objects.equals(flowerType, other.flowerType)

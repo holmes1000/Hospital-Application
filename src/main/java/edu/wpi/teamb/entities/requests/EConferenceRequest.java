@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-public class ConferenceRequestE extends RequestImpl {
+public class EConferenceRequest extends RequestImpl {
   private String employee;
   private String floor;
   private String roomNumber;
@@ -22,7 +22,7 @@ public class ConferenceRequestE extends RequestImpl {
   private RequestStatus requestStatus;
   private List<String> availableRooms;
 
-  public ConferenceRequestE(
+  public EConferenceRequest(
       String employee,
       String floor,
       String roomNumber,
@@ -43,7 +43,7 @@ public class ConferenceRequestE extends RequestImpl {
     this.requestStatus = requestStatus;
   }
 
-  public ConferenceRequestE() {}
+  public EConferenceRequest() {}
 
   @Override
   public int getRequestID() {
@@ -92,15 +92,15 @@ public class ConferenceRequestE extends RequestImpl {
   public boolean equals(Object obj) {
     if (this == obj) return true;
     if (obj == null || getClass() != obj.getClass()) return false;
-    ConferenceRequestE conferenceRequestE = (ConferenceRequestE) obj;
-    return Objects.equals(employee, conferenceRequestE.employee)
-        && Objects.equals(floor, conferenceRequestE.floor)
-        && Objects.equals(roomNumber, conferenceRequestE.roomNumber)
-        && Objects.equals(dateSubmitted, conferenceRequestE.dateSubmitted)
-        && Objects.equals(dateRequested, conferenceRequestE.dateRequested)
-        && Objects.equals(eventName, conferenceRequestE.eventName)
-        && Objects.equals(bookingReason, conferenceRequestE.bookingReason)
-        && Objects.equals(requestStatus, conferenceRequestE.requestStatus);
+    EConferenceRequest EConferenceRequest = (EConferenceRequest) obj;
+    return Objects.equals(employee, EConferenceRequest.employee)
+        && Objects.equals(floor, EConferenceRequest.floor)
+        && Objects.equals(roomNumber, EConferenceRequest.roomNumber)
+        && Objects.equals(dateSubmitted, EConferenceRequest.dateSubmitted)
+        && Objects.equals(dateRequested, EConferenceRequest.dateRequested)
+        && Objects.equals(eventName, EConferenceRequest.eventName)
+        && Objects.equals(bookingReason, EConferenceRequest.bookingReason)
+        && Objects.equals(requestStatus, EConferenceRequest.requestStatus);
   }
 
   public void setFloor(String floor) {

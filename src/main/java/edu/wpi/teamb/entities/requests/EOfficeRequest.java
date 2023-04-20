@@ -9,7 +9,7 @@ import java.util.Objects;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.DB;
 
-public class OfficeRequestE extends RequestImpl {
+public class EOfficeRequest extends RequestImpl {
     private String employee;
     private String floor;
     private String roomNumber;
@@ -20,7 +20,7 @@ public class OfficeRequestE extends RequestImpl {
     private String type;
     private RequestStatus requestStatus;
 
-    public OfficeRequestE(String employee,
+    public EOfficeRequest(String employee,
                           String floor,
                           String roomNumber,
                           Date dateSubmitted, String item, int quantity, String specialInstructions, String type,
@@ -37,7 +37,7 @@ public class OfficeRequestE extends RequestImpl {
 
     }
 
-    public OfficeRequestE() {
+    public EOfficeRequest() {
     }
 
     // getters and setters
@@ -65,7 +65,7 @@ public class OfficeRequestE extends RequestImpl {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        OfficeRequestE other = (OfficeRequestE) obj;
+        EOfficeRequest other = (EOfficeRequest) obj;
         return Objects.equals(item, other.item) && Objects.equals(dateSubmitted, other.dateSubmitted)
                 && Objects.equals(employee, other.employee) && Objects.equals(floor, other.floor)
                 && Objects.equals(quantity, other.quantity)

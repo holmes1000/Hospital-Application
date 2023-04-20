@@ -4,7 +4,7 @@ import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.ORMs.Move;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
-import edu.wpi.teamb.entities.requests.MoveRequestE;
+import edu.wpi.teamb.entities.requests.EMoveRequest;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.*;
@@ -59,12 +59,12 @@ public class MoveRequestController {
     @FXML
     private MFXRadioButton radPastMove;
 
-    private MoveRequestE moveRequestE;
+    private EMoveRequest EMoveRequest;
 
     private int tableSize = 0;
 
     public MoveRequestController() {
-        this.moveRequestE = new MoveRequestE();
+        this.EMoveRequest = new EMoveRequest();
     }
 
     @FXML
@@ -165,7 +165,7 @@ public class MoveRequestController {
                 if (!tbFutureMoves.getItems().contains(new Move(where, what, when))) {
                     if (when.after(new Date(System.currentTimeMillis()-1000*60*60*24))) {
                         String[] output = { where.toString(), what, when.toString() };
-                        moveRequestE.submitRequest(output);
+                        EMoveRequest.submitRequest(output);
                         clickResetForm();
 
                         updateTable();
@@ -236,8 +236,8 @@ public class MoveRequestController {
         btnRemoveMove.setOnMouseClicked(event -> {
             if (tbFutureMoves.getSelectionModel().getSelectedItem() != null) {
                 Move move = tbFutureMoves.getSelectionModel().getSelectedItem();
-                moveRequestE = new MoveRequestE(move);
-                moveRequestE.removeRequest();
+                EMoveRequest = new EMoveRequest(move);
+                EMoveRequest.removeRequest();
                 tbFutureMoves.getItems().remove(move);
                 tableSize--;
                 clickResetForm();
@@ -258,11 +258,11 @@ public class MoveRequestController {
             if (tbFutureMoves.getSelectionModel().getSelectedItem() != null) {
                 Move move = tbFutureMoves.getSelectionModel().getSelectedItem();
                 tbFutureMoves.getItems().remove(move);
-                moveRequestE = new MoveRequestE(move);
+                EMoveRequest = new EMoveRequest(move);
                 // set values of move request from form info
-                moveRequestE.updateRequest();
+                EMoveRequest.updateRequest();
 
-                moveRequestE.updateRequest();
+                EMoveRequest.updateRequest();
 
                 tableSize--;
                 clickResetForm();

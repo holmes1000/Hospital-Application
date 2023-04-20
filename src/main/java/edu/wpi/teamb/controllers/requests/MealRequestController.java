@@ -2,7 +2,7 @@ package edu.wpi.teamb.controllers.requests;
 
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
-import edu.wpi.teamb.entities.requests.MealRequestE;
+import edu.wpi.teamb.entities.requests.EMealRequest;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.*;
@@ -33,10 +33,10 @@ public class MealRequestController {
   @FXML private MFXComboBox<String> cbFloorSelect; // Floor
     @FXML private MFXFilterComboBox<String> cbLongName;
 
-    private MealRequestE mealRequestE;
+    private EMealRequest EMealRequest;
 
     public MealRequestController(){
-        this.mealRequestE = new MealRequestE();
+        this.EMealRequest = new EMealRequest();
     }
   @FXML
   public void initialize() throws IOException, SQLException{
@@ -66,7 +66,7 @@ public class MealRequestController {
 
             //Set the gathered fields into a string array
             String[] output = {employee, floor, roomnumber, requeststatus, mealtype, orderfrom, food, drink, snack, mealmodification, longName};
-            mealRequestE.submitRequest(output);
+            EMealRequest.submitRequest(output);
             clickResetForm();
             Navigation.navigate(Screen.CREATE_NEW_REQUEST);
         } else {
@@ -159,7 +159,7 @@ public class MealRequestController {
     // DROPDOWN INITIALIZATION
     ObservableList<String> employees =
             FXCollections.observableArrayList();
-    employees.addAll(mealRequestE.getUsernames());
+    employees.addAll(EMealRequest.getUsernames());
     cbEmployeesToAssign.setItems(employees);
 
     // DROPDOWN INITIALIZATION
@@ -180,10 +180,5 @@ public class MealRequestController {
     ObservableList<String> snacks = FXCollections.observableArrayList("Chips", "Apple");
     cbAvailableSnacks.setItems(snacks);
 
-  }
-
-  @FXML
-  public void clickExit() {
-    System.exit(0);
   }
 }

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
 
-public class FurnitureRequestE extends RequestImpl {
+public class EFurnitureRequest extends RequestImpl {
     private String employee;
     private String floor;
     private String roomNumber;
@@ -21,7 +21,7 @@ public class FurnitureRequestE extends RequestImpl {
     private String specialInstructions;
     private RequestStatus requestStatus;
 
-    public FurnitureRequestE(String employee,
+    public EFurnitureRequest(String employee,
                              String floor,
                              String roomNumber,
                              Date dateSubmitted, String furnitureType, String model, String assembly, String message,
@@ -40,7 +40,7 @@ public class FurnitureRequestE extends RequestImpl {
 
     }
 
-    public FurnitureRequestE() {
+    public EFurnitureRequest() {
     }
 
     // getters and setters
@@ -157,7 +157,7 @@ public class FurnitureRequestE extends RequestImpl {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        FurnitureRequestE other = (FurnitureRequestE) obj;
+        EFurnitureRequest other = (EFurnitureRequest) obj;
         return Objects.equals(model, other.model) && Objects.equals(dateSubmitted, other.dateSubmitted)
                 && Objects.equals(employee, other.employee) && Objects.equals(floor, other.floor)
                 && Objects.equals(furnitureType, other.furnitureType)

@@ -4,7 +4,7 @@ import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
-import edu.wpi.teamb.entities.requests.ConferenceRequestE;
+import edu.wpi.teamb.entities.requests.EConferenceRequest;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.*;
@@ -35,16 +35,16 @@ public class ConferenceRequestController {
 
   @FXML private MFXTextField eventNameTextField;
   @FXML private MFXTextField bookingReasonTextField;
-  @FXML private MFXButton resetBtn1;
-  @FXML private MFXButton cancelBtn1;
+  @FXML private MFXButton resetBtn;
+  @FXML private MFXButton cancelBtn;
   @FXML private MFXButton btnSubmit;
   @FXML private ImageView helpIcon;
   @FXML private MFXFilterComboBox<String> cbLongName;
 
-  private ConferenceRequestE conferenceRequestE;
+  private EConferenceRequest EConferenceRequest;
 
   public ConferenceRequestController(){
-        this.conferenceRequestE = new ConferenceRequestE();
+        this.EConferenceRequest = new EConferenceRequest();
     }
   @FXML
   public void initialize() throws IOException, SQLException {
@@ -53,6 +53,7 @@ public class ConferenceRequestController {
       //helpIcon clickHelp setup
       clickHelp();
   }
+
 
   private void initializeFields() throws SQLException {
 
@@ -64,7 +65,7 @@ public class ConferenceRequestController {
       //Dropdown for employee selection
       ObservableList<String> employees =
               FXCollections.observableArrayList();
-      employees.addAll(conferenceRequestE.getUsernames());
+      employees.addAll(EConferenceRequest.getUsernames());
       cbEmployeesToAssign.setItems(employees);
 
     // Dropdown for reservationHour
@@ -115,63 +116,63 @@ public class ConferenceRequestController {
 
   @FXML
   public void clickSubmit() {
-    btnSubmit.setOnMouseClicked(
-        event -> {
+      btnSubmit.setOnMouseClicked(
+              event -> {
 //            String date = datePicker.getText();
 //            System.out.println(date);
-            //Date daterequested = ;
-            String timerequested = "";
-            if (reservationAmPm.getText().equals("AM") && reservationHour.getText().equals("12")) {
-                timerequested = "00:" + reservationMinute.getText() + ":00";
-            } else if (reservationAmPm.getText().equals("AM")) {
-                timerequested = reservationHour.getText() + ":" + reservationMinute.getText() + ":00";
-            }  else if (reservationAmPm.getText().equals("PM") && reservationHour.getText().equals("12")) {
-                timerequested = reservationHour.getText() + ":" + reservationMinute.getText() + ":00";
-            } else if (reservationAmPm.getText().equals("PM")) {
-                int hour = Integer.parseInt(reservationHour.getText()) + 12;
-                timerequested = "" + hour + ":" + reservationMinute.getText() + ":00";
-            }
+                  //Date daterequested = ;
+                  String timerequested = "";
+                  if (reservationAmPm.getText().equals("AM") && reservationHour.getText().equals("12")) {
+                      timerequested = "00:" + reservationMinute.getText() + ":00";
+                  } else if (reservationAmPm.getText().equals("AM")) {
+                      timerequested = reservationHour.getText() + ":" + reservationMinute.getText() + ":00";
+                  }  else if (reservationAmPm.getText().equals("PM") && reservationHour.getText().equals("12")) {
+                      timerequested = reservationHour.getText() + ":" + reservationMinute.getText() + ":00";
+                  } else if (reservationAmPm.getText().equals("PM")) {
+                      int hour = Integer.parseInt(reservationHour.getText()) + 12;
+                      timerequested = "" + hour + ":" + reservationMinute.getText() + ":00";
+                  }
 
-            //Get all fields from request
-            String employee = cbEmployeesToAssign.getSelectedItem();
-            String floor = selectFloorComboBox.getSelectedItem();
-            String roomnumber = availableRoomsComboBox.getSelectedItem();
-            String longName = cbLongName.getSelectedItem();
-            String requeststatus = ("Pending");
-            String daterequested = datePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));;
-            String requesttype = ("Conference");
-            String eventname = eventNameTextField.getText();
-            String bookingreason = bookingReasonTextField.getText();
-            String timeStamp = daterequested + " " + timerequested;
+                  //Get all fields from request
+                  String employee = cbEmployeesToAssign.getSelectedItem();
+                  String floor = selectFloorComboBox.getSelectedItem();
+                  String roomnumber = availableRoomsComboBox.getSelectedItem();
+                  String longName = cbLongName.getSelectedItem();
+                  String requeststatus = ("Pending");
+                  String daterequested = datePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));;
+                  String requesttype = ("Conference");
+                  String eventname = eventNameTextField.getText();
+                  String bookingreason = bookingReasonTextField.getText();
+                  String timeStamp = daterequested + " " + timerequested;
 
-            //Check for required fields before allowing submittion
-            if((employee != null) && ((floor != null) && (roomnumber != null)) && (daterequested != null) && (longName != null) && (eventname != null) && (timerequested != null)){
+                  //Check for required fields before allowing submittion
+                  if((employee != null) && ((floor != null) && (roomnumber != null)) && (daterequested != null) && (longName != null) && (eventname != null) && (timerequested != null)){
 
-                //Set the gathered fields into a string array
-                String[] output = {employee, floor, roomnumber, requeststatus, requesttype, timeStamp, eventname, bookingreason, longName};
-                conferenceRequestE.submitRequest(output);
-                clickReset();
-                Navigation.navigate(Screen.CREATE_NEW_REQUEST);
-            } else {
+                      //Set the gathered fields into a string array
+                      String[] output = {employee, floor, roomnumber, requeststatus, requesttype, timeStamp, eventname, bookingreason, longName};
+                      EConferenceRequest.submitRequest(output);
+                      clickReset();
+                      Navigation.navigate(Screen.CREATE_NEW_REQUEST);
+                  } else {
 
-                //If the required fields are not filled, bring up pop-over indicating such
-                final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/NotAllFieldsCompleteError.fxml"));
-                PopOver popOver = new PopOver();
-                popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
-                popOver.setArrowSize(0.0);
-                try {
-                    popOver.setContentNode(popupLoader.load());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                popOver.show(btnSubmit);
-            }
-        });
+                      //If the required fields are not filled, bring up pop-over indicating such
+                      final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/NotAllFieldsCompleteError.fxml"));
+                      PopOver popOver = new PopOver();
+                      popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
+                      popOver.setArrowSize(0.0);
+                      try {
+                          popOver.setContentNode(popupLoader.load());
+                      } catch (IOException e) {
+                          throw new RuntimeException(e);
+                      }
+                      popOver.show(btnSubmit);
+                  }
+              });
   }
 
   @FXML
   public void clickReset() {
-    resetBtn1.setOnMouseClicked(
+    resetBtn.setOnMouseClicked(
         event -> {
           datePicker.setValue(null);
           reservationHour.setValue(12);
@@ -189,7 +190,7 @@ public class ConferenceRequestController {
 
   @FXML
   public void clickCancel() {
-    cancelBtn1.setOnMouseClicked(
+    cancelBtn.setOnMouseClicked(
         event -> {
           // first reset all values
           datePicker.setValue(null);
@@ -223,10 +224,5 @@ public class ConferenceRequestController {
             popOver.show(helpIcon);
         });
     //helpIcon.setOnMouseExited(event -> {});
-  }
-
-  @FXML
-  public void clickExit() {
-    System.exit(0);
   }
 }

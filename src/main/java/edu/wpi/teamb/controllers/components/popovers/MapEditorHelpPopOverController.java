@@ -1,6 +1,6 @@
 package edu.wpi.teamb.controllers.components.popovers;
 
-import edu.wpi.teamb.entities.LoginE;
+import edu.wpi.teamb.entities.ELogin;
 import javafx.fxml.FXML;
 import javafx.scene.text.Text;
 
@@ -15,7 +15,7 @@ public class MapEditorHelpPopOverController {
     @FXML private Text text6;
 
     public void initialize(){
-        if(LoginE.getLogin().getPermissionLevel() != LoginE.PermissionLevel.ADMIN){
+        if(ELogin.getLogin().getPermissionLevel() != ELogin.PermissionLevel.ADMIN){
             text2.setVisible(false);
             text3.setVisible(false);
             text4.setText("Only Admin can edit the map");

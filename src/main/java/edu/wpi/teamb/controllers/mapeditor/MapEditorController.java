@@ -9,8 +9,8 @@ import edu.wpi.teamb.DBAccess.DBio.DBoutput;
 import edu.wpi.teamb.DBAccess.FullNode;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
-import edu.wpi.teamb.entities.LoginE;
-import edu.wpi.teamb.entities.MapEditorE;
+import edu.wpi.teamb.entities.ELogin;
+import edu.wpi.teamb.entities.EMapEditor;
 import io.github.palexdev.materialfx.controls.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -54,7 +54,7 @@ public class MapEditorController {
   @FXML private ImageView imageViewPathfinder;
   @FXML private StackPane stackPaneMapView;
 
-  private MapEditorE editor;
+  private EMapEditor editor;
   @FXML private MFXButton btnL1;
   @FXML private MFXButton btnL2;
   @FXML private MFXButton btn1;
@@ -123,7 +123,7 @@ public class MapEditorController {
   int fullNodeX;
   int fullNodeY;
   public MapEditorController() throws SQLException {
-    this.editor = new MapEditorE();
+    this.editor = new EMapEditor();
   }
 
   @FXML
@@ -172,7 +172,7 @@ public class MapEditorController {
     //Pane addMenuPane = FXMLLoader.load(getClass().getResource("/edu/wpi/teamb/views/components/AddNodeMenu.fxml"));
     //vboxAddNode.getChildren().add(addMenuPane);
     // Method to allow for triple click to add a new node
-    if(LoginE.getLogin().getPermissionLevel() == LoginE.PermissionLevel.ADMIN) {
+    if(ELogin.getLogin().getPermissionLevel() == ELogin.PermissionLevel.ADMIN) {
       stackPaneMapView.setOnMouseClicked(e -> {
         if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 3) {
           try {
@@ -195,7 +195,7 @@ public class MapEditorController {
     changeButtonColor(currentFloor);
     Platform.runLater(() -> this.pane.centreOn(new Point2D(2190, 910)));
 
-    if(LoginE.getLogin().getPermissionLevel() != LoginE.PermissionLevel.ADMIN) {
+    if(ELogin.getLogin().getPermissionLevel() != ELogin.PermissionLevel.ADMIN) {
       NodeSelector.setVisible(false);
       NodeInfo.setVisible(false);
       exportBtn.setVisible(false);
@@ -205,47 +205,6 @@ public class MapEditorController {
     }
 
     System.out.println("MapEditorController initialized");
-  }
-
-  private void handleSubmitNodeDetails1() {
-    String shortName = tfShortName.getText();
-    String longName = tfLongName.getText();
-    String nodeType = cbNodeType.getValue();
-    FullNode fullNode = null;
-
-    // Get the max ID of the list of nodes
-    int maxID = 0;
-    for (Node n : nodeList) {
-      if (n.getNodeID() > maxID) {
-        maxID = n.getNodeID();
-      }
-    }
-    if (!editingNode) {
-      fullNode = new FullNode(maxID+5, (int) fullNodeX, (int) fullNodeY, currentFloor, "Full Node Building", tfLongName.getText(), tfShortName.getText(), cbNodeType.getSelectedItem());
-      Repository.getRepository().addFullNode(fullNode);
-
-      Node newNode = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
-      nodeList.add(newNode); // Add the node to the nodeList
-      System.out.println("Adding a new node with nodeID: " + newNode.getNodeID());
-    }
-    else
-    {
-        fullNode = new FullNode(Integer.parseInt(tfNodeId.getText()), (int) fullNodeX, (int) fullNodeY, currentFloor, "Full Node Building", tfLongName.getText(), tfShortName.getText(), cbNodeType.getSelectedItem());
-        Repository.getRepository().updateFullNode(fullNode);
-    }
-
-    // Add node to the database
-    //Repository.getRepository().addNode(newNode);
-
-
-    // Refresh the map
-    refreshMap();
-
-    // Reset the fields
-    tfShortName.setText("");
-    tfLongName.setText("");
-    tfNodeId.setText("");
-
   }
 
   private void handleSubmitNodeDetails() {
@@ -499,7 +458,7 @@ public class MapEditorController {
     Circle c = new Circle(n.getxCoord(), n.getyCoord(), 5, RED);
     c.setId(String.valueOf(n.getNodeID())); // Set the circle's ID to the node's ID
     c.setOnMouseClicked(event -> {
-      if (event.getButton() == MouseButton.PRIMARY && LoginE.getLogin().getPermissionLevel() == LoginE.PermissionLevel.ADMIN) {
+      if (event.getButton() == MouseButton.PRIMARY && ELogin.getLogin().getPermissionLevel() == ELogin.PermissionLevel.ADMIN) {
         this.handleNodeClick(event, n);
       }
     });
@@ -955,7 +914,7 @@ public class MapEditorController {
   public void hoverHelp() {
     helpIcon.setOnMouseClicked(
             event -> {
-              final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/MapEditorHelpPopOver.fxml"));
+              final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/MapEditorHelpPopOver.fxml"));
               PopOver popOver = new PopOver();
               popOver.setDetachable(true);
               popOver.setArrowLocation(PopOver.ArrowLocation.TOP_RIGHT);

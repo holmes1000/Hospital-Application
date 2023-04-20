@@ -7,7 +7,7 @@ import edu.wpi.teamb.DBAccess.ORMs.User;
 import java.util.ArrayList;
 
 
-public class InfoCardE {
+public class EInfoCard {
     public ArrayList<User> getUsernames() {
         return Repository.getRepository().getAllUsers();
     }
