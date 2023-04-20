@@ -47,11 +47,16 @@ public class LocationNameDAOImpl implements IDAO {
      *
      * @return A list of all locations
      */
-    public ArrayList<LocationName> getAllHelper() throws SQLException {
-        ResultSet rs = DB.getCol("locationnames", "*");
+    public ArrayList<LocationName> getAllHelper() {
         ArrayList<LocationName> lns = new ArrayList<LocationName>();
-        while (rs.next()) {
-            lns.add(new LocationName(rs));
+        try {
+            ResultSet rs = DB.getCol("locationnames", "*");
+            while (rs.next()) {
+                lns.add(new LocationName(rs));
+            }
+            return lns;
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'LocationNameDAOImpl.getAllHelper': " + e.getMessage());
         }
         return lns;
     }

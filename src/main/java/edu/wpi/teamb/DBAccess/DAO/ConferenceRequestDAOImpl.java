@@ -57,11 +57,16 @@ public class ConferenceRequestDAOImpl implements IDAO {
      *
      * @return list of conference requests
      */
-    public ArrayList<FullConferenceRequest> getAllHelper() throws SQLException {
-        ResultSet rs = getDBRowAllRequests();
+    public ArrayList<FullConferenceRequest> getAllHelper() {
         ArrayList<ConferenceRequest> crs = new ArrayList<ConferenceRequest>();
-        while (rs.next()) {
-            crs.add(new ConferenceRequest(rs));
+        try {
+            ResultSet rs = getDBRowAllRequests();
+            while (rs.next()) {
+                crs.add(new ConferenceRequest(rs));
+            }
+            return FullConferenceRequest.listFullConferenceRequests(crs);
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'ConferenceRequestDAOImpl.getAllHelper': " + e.getMessage());
         }
         return FullConferenceRequest.listFullConferenceRequests(crs);
     }

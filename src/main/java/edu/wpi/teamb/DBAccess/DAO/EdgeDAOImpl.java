@@ -61,11 +61,16 @@ public class EdgeDAOImpl implements IDAO {
      *
      * @return A list of all edges
      */
-    public ArrayList<Edge> getAllHelper() throws SQLException {
-        ResultSet rs = DB.getCol("Edges", "*");
+    public ArrayList<Edge> getAllHelper() {
         ArrayList<Edge> edges = new ArrayList<Edge>();
-        while (rs.next()) {
-            edges.add(new Edge(rs));
+        try {
+            ResultSet rs = DB.getCol("Edges", "*");
+            while (rs.next()) {
+                edges.add(new Edge(rs));
+            }
+            return edges;
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'EdgeDAOImpl.getAllHelper': " + e.getMessage());
         }
         return edges;
     }

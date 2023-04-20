@@ -42,11 +42,16 @@ public class UserDAOImpl implements IDAO {
      *
      * @return A list of all users
      */
-    public ArrayList<User> getAllHelper() throws SQLException {
-        ResultSet rs = DB.getCol("users", "*");
+    public ArrayList<User> getAllHelper() {
         ArrayList<User> users = new ArrayList<User>();
-        while (rs.next()) {
-            users.add(new User(rs));
+        try {
+            ResultSet rs = DB.getCol("users", "*");
+            while (rs.next()) {
+                users.add(new User(rs));
+            }
+            return users;
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'UserDAOImpl.getAllHelper': " + e.getMessage());
         }
         return users;
     }
