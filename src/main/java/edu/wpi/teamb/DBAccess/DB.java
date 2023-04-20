@@ -1,5 +1,7 @@
 package edu.wpi.teamb.DBAccess;
 
+import edu.wpi.teamb.DBAccess.DAO.Repository;
+
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
@@ -7,15 +9,33 @@ import java.util.Arrays;
 
 public class DB {
 
-    public static Connection c = null;
+    private static Connection c = null;
     private static final String url = "jdbc:postgresql://database.cs.wpi.edu/teambdb";
     private static final String username = "teamb";
     private static final String password = "teamb20";
 
+    private static class SingletonHelper {
+        //Nested class is referenced after getRepository() is called
+        private static final DB db = new DB();
+    }
+    public static DB getDB() {
+        return SingletonHelper.db;
+    }
+
+    private DB() {
+        connectToDB();
+    }
+
+    public Connection getConnection() {
+        connectToDB();
+        forceConnect();
+        return c;
+    }
+
     /**
      * Connects to the database if not already connected
      */
-    public static void connectToDB() {
+    public void connectToDB() {
         try {
             if (c == null) {
                 Class.forName("org.postgresql.Driver");
@@ -35,6 +55,9 @@ public class DB {
         }
     }
 
+    /**
+     * Tries forcibly connecting to the database
+     */
     public static void forceConnect () {
         try {
             Class.forName("org.postgresql.Driver");
@@ -215,11 +238,10 @@ public class DB {
     /**
      * Formats the cols and values to work with inserting into the database
      *
-     * @param cols  cols that match up with corresponding value
+     * @param table  the table to insert into
+     * @param columns cols that match up with corresponding value
      * @param value values to match with corresponding cols
-     * @return string
-     * @throws RuntimeException When length of col array and value array are not
-     *                          equal
+     * @return int id of the inserted row
      */
     public static int insertRowRequests(String table, String[] columns, String[] value) {
         int id = 0;
@@ -252,6 +274,13 @@ public class DB {
         return id;
     }
 
+    /**
+     * Formats a String array (DB cols) to work with inserting into the database
+     *
+     * @param arr a String array of values to be formatted
+     * @return a String of the formatted array
+     */
+
     public static String strArray2InsertFormatCol(String[] arr) {
         String formattedStr = "";
         for (int i = 0; i < arr.length; i++) {
@@ -262,6 +291,13 @@ public class DB {
         }
         return formattedStr;
     }
+
+    /**
+     * Formats a String array (such as cols and values) to work with inserting into the database
+     *
+     * @param arr a String array of values to be formatted
+     * @return a String of the formatted array
+     */
 
     public static String strArray2InsertFormat(String[] arr) {
         String formattedStr = "'";
@@ -294,6 +330,12 @@ public class DB {
         }
     }
 
+    /**
+     * Gets the value of the column from the table that matches the condition
+     *
+     * @param nodeID the nodeID to get the longName from
+     * @return the longName of the node
+     */
     public static String getLongNameFromNodeID(int nodeID) {
         try {
             connectToDB();
@@ -312,13 +354,12 @@ public class DB {
     }
 
     /**
-     * Gets the value of the column from the table that matches the condition
+     * Gets a list of all the ids from a certain table
      *
      * @param table Table to get from
      * @param idColName   Column to get ids from
      * @return an array of ints with all the ids from a certain table
      */
-
     public static int[] getIDlist(String table, String idColName) {
         connectToDB();
         String countQuery = "SELECT COUNT(*) FROM " + table;
@@ -358,7 +399,6 @@ public class DB {
      * @param nodeID NodeID to get shortname from
      * @return a String with the shortname associated with the given NodeID
      */
-
     public static String getShortNameFromNodeID(int nodeID) {
         try {
             String longName = getLongNameFromNodeID(nodeID);
@@ -373,26 +413,6 @@ public class DB {
             return set;
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'DB.getShortNameFromNodeID': " + e.getMessage());
-            return null;
-        }
-    }
-
-    /**
-     * Gets the value of the column from the table that matches the condition
-     *
-     * @return a ResultSet containing the full nodes table joined with the moves table and the locationnames table
-     */
-
-    public static ResultSet joinFullNodes() {
-        try{
-            connectToDB();
-            Statement stmt = c.createStatement();
-            String query = "SELECT * FROM nodes, moves, locationnames WHERE nodes.nodeid = moves.nodeid AND moves.longname = locationnames.longname";
-            ResultSet rs = stmt.executeQuery(query);
-            if (c != null) { closeDBconnection();}
-            return rs;
-        } catch (SQLException e) {
-            System.err.println("ERROR Query Failed: " + e.getMessage());
             return null;
         }
     }

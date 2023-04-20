@@ -487,6 +487,24 @@ public class NodeDAOImpl implements IDAO {
         return nodeType;
     }
 
+    /**
+     * Gets the value of the column from the table that matches the condition
+     *
+     * @return a ResultSet containing the full nodes table joined with the moves table and the locationnames table
+     */
+    public static ResultSet joinFullNodes() {
+        Repository.getRepository().connectToDB();
+        try{
+            Statement stmt = Repository.getRepository().getConnection().createStatement();
+            String query = "SELECT * FROM nodes, moves, locationnames WHERE nodes.nodeid = moves.nodeid AND moves.longname = locationnames.longname";
+            ResultSet rs = stmt.executeQuery(query);
+            return rs;
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'DB.joinFullNode's: " + e.getMessage());
+            return null;
+        }
+    }
+
 //    public void addFullNode (Object n) {
 //        Date current = Date.valueOf(LocalDate.now());
 //        FullNode fullNode = (FullNode) n;

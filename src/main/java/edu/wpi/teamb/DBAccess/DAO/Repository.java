@@ -27,6 +27,7 @@ public class Repository {
             furniturerequestDAO = new FurnitureRequestDAOImpl();
             officerequestDAO = new OfficeRequestDAOImpl();
             moveDAOImpl = new MoveDAOImpl();
+            db = DB.getDB();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -40,8 +41,6 @@ public class Repository {
     public static Repository getRepository() {
         return SingletonHelper.repository;
     }
-
-
     private final IDAO edgeDAO;
     private final IDAO conferencerequestDAO;
     private final IDAO flowerrequestDAO;
@@ -56,9 +55,7 @@ public class Repository {
     private final LocationNameDAOImpl locationNameDaoImpl;
     private final IDAO officerequestDAO;
     private final MoveDAOImpl moveDAOImpl;
-
-    //private final Connection c;
-
+    private final DB db;
 
     public void addEdge(Edge e) {
         edgeDAO.add(e);
@@ -291,6 +288,14 @@ public class Repository {
         return officerequestDAO.getAll();
     }
 
+    public Connection getConnection() {
+        return db.getConnection();
+    }
+
+    public void connectToDB() {
+        db.connectToDB();
+    }
+
     public void addFullNode (Object n) {
         Date current = Date.valueOf(LocalDate.now());
         FullNode fullNode = (FullNode) n;
@@ -311,12 +316,7 @@ public class Repository {
         locationNameDaoImpl.delete(new LocationName(fullNode.getLongName(), fullNode.getShortName(), fullNode.getNodeType()));
         moveDAOImpl.delete(new Move(fullNode.getNodeID(), fullNode.getLongName(), current));
     }
-//
-//    public void updateFullNode(Object n) {
-//        FullNode fullNode = (FullNode) n;
-//        Node node = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding());
-//        nodeDAOImpl.update(node);
-//    }
+
     public void updateFullNode(Object n) {
         FullNode fn = (FullNode) n;
         Node node = new Node(fn.getNodeID(), fn.getxCoord(), fn.getyCoord(), fn.getFloor(), fn.getBuilding());
