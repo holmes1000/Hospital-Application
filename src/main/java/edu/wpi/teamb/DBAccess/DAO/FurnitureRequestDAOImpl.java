@@ -41,11 +41,16 @@ public class FurnitureRequestDAOImpl implements IDAO {
             return new FullFurnitureRequest(r, fr);
         }
 
-        public ArrayList<FullFurnitureRequest> getAllHelper() throws SQLException {
-            ResultSet rs = getDBRowAllRequests();
+        public ArrayList<FullFurnitureRequest> getAllHelper() {
             ArrayList<FurnitureRequest> frs = new ArrayList<FurnitureRequest>();
-            while (rs.next()) {
-                frs.add(new FurnitureRequest(rs));
+            try {
+                ResultSet rs = getDBRowAllRequests();
+                while (rs.next()) {
+                    frs.add(new FurnitureRequest(rs));
+                }
+                return FullFurnitureRequest.listFullFurnitureRequests(frs);
+            } catch (SQLException e) {
+                System.err.println("ERROR Query Failed in method 'FurnitureRequestDAOImpl.getAllHelper': " + e.getMessage());
             }
             return FullFurnitureRequest.listFullFurnitureRequests(frs);
         }

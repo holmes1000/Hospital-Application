@@ -48,11 +48,16 @@ public class MealRequestDAOImpl implements IDAO {
      *
      * @return list of Meal requests
      */
-    public ArrayList<FullMealRequest> getAllHelper() throws SQLException {
-        ResultSet rs = getDBRowAllRequests();
+    public ArrayList<FullMealRequest> getAllHelper() {
         ArrayList<MealRequest> mrs = new ArrayList<MealRequest>();
-        while (rs.next()) {
-            mrs.add(new MealRequest(rs));
+        try {
+            ResultSet rs = getDBRowAllRequests();
+            while (rs.next()) {
+                mrs.add(new MealRequest(rs));
+            }
+            return FullMealRequest.listFullMealRequests(mrs);
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'MealRequestDAOImpl.getAllHelper': " + e.getMessage());
         }
         return FullMealRequest.listFullMealRequests(mrs);
     }

@@ -21,11 +21,7 @@ public class RequestDAOImpl implements IDAO {
     }
 
     private RequestDAOImpl() {
-        try{
-            requests = getAllHelper();
-        } catch (SQLException e) {
-            System.out.println("SQL Exception in RequestDAOImpl constructor");
-        }
+        requests = getAllHelper();
     }
 
     private static class SingletonHelper {
@@ -98,12 +94,17 @@ public class RequestDAOImpl implements IDAO {
         return requests;
     }
 
-    public ArrayList<Request> getAllHelper() throws SQLException {
-        ResultSet rs = DB.getCol("requests", "*");
+    public ArrayList<Request> getAllHelper() {
         ArrayList<Request> rqs = new ArrayList<Request>();
-        while (rs.next()) {
-            Request r = new Request(rs);
-            rqs.add(r);
+        try {
+            ResultSet rs = DB.getCol("requests", "*");
+            while (rs.next()) {
+                Request r = new Request(rs);
+                rqs.add(r);
+            }
+            return rqs;
+        } catch (SQLException e) {
+            System.out.println("ERROR Query Failed in method 'RequestDAOImpl.getAllHelper': " + e.getMessage());
         }
         return rqs;
     }

@@ -40,11 +40,16 @@ public class FlowerRequestDAOImpl implements IDAO {
         return new FullFlowerRequest(r, fr);
     }
 
-    public ArrayList<FullFlowerRequest> getAllHelper() throws SQLException {
-        ResultSet rs = getDBRowAllRequests();
+    public ArrayList<FullFlowerRequest> getAllHelper() {
         ArrayList<FlowerRequest> frs = new ArrayList<FlowerRequest>();
-        while (rs.next()) {
-            frs.add(new FlowerRequest(rs));
+        try {
+            ResultSet rs = getDBRowAllRequests();
+            while (rs.next()) {
+                frs.add(new FlowerRequest(rs));
+            }
+            return FullFlowerRequest.listFullFlowerRequests(frs);
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'FlowerRequestDAOImpl.getAllHelper': " + e.getMessage());
         }
         return FullFlowerRequest.listFullFlowerRequests(frs);
     }

@@ -41,11 +41,16 @@ public class OfficeRequestDAOImpl implements IDAO {
         return officeRequests;
     }
 
-    public ArrayList<FullOfficeRequest> getAllHelper() throws SQLException {
-        ResultSet rs = getDBRowAllRequests();
+    public ArrayList<FullOfficeRequest> getAllHelper() {
         ArrayList<OfficeRequest> ors = new ArrayList<OfficeRequest>();
-        while (rs.next()) {
-            ors.add(new OfficeRequest(rs));
+        try {
+            ResultSet rs = getDBRowAllRequests();
+            while (rs.next()) {
+                ors.add(new OfficeRequest(rs));
+            }
+            return FullOfficeRequest.listFullOfficeRequests(ors);
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'OfficeRequestDAOImpl.getAllHelper': " + e.getMessage());
         }
         return FullOfficeRequest.listFullOfficeRequests(ors);
     }

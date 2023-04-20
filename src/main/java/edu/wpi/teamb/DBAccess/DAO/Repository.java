@@ -3,6 +3,7 @@ package edu.wpi.teamb.DBAccess.DAO;
 import edu.wpi.teamb.DBAccess.*;
 import edu.wpi.teamb.DBAccess.ORMs.*;
 
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -55,6 +56,8 @@ public class Repository {
     private final LocationNameDAOImpl locationNameDaoImpl;
     private final IDAO officerequestDAO;
     private final MoveDAOImpl moveDAOImpl;
+
+    //private final Connection c;
 
 
     public void addEdge(Edge e) {

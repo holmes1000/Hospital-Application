@@ -43,11 +43,16 @@ public class MoveDAOImpl implements IDAO {
      *
      * @return A list of all moves
      */
-    public ArrayList<Move> getAllHelper() throws SQLException {
-        ResultSet rs = DB.getCol("moves", "*");
+    public ArrayList<Move> getAllHelper() {
         ArrayList<Move> mvs = new ArrayList<Move>();
-        while (rs.next()) {
-            mvs.add(new Move(rs));
+        try {
+            ResultSet rs = DB.getCol("moves", "*");
+            while (rs.next()) {
+                mvs.add(new Move(rs));
+            }
+            return mvs;
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'MoveDAOImpl.getAllHelper': " + e.getMessage());
         }
         return mvs;
     }

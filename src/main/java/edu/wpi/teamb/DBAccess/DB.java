@@ -6,15 +6,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class DB {
+
     public static Connection c = null;
     private static final String url = "jdbc:postgresql://database.cs.wpi.edu/teambdb";
     private static final String username = "teamb";
     private static final String password = "teamb20";
 
     /**
-     * Connects to the database
-     *
-     * @throws SQLException if the connection fails
+     * Connects to the database if not already connected
      */
     public static void connectToDB() {
         try {
@@ -48,11 +47,9 @@ public class DB {
     }
 
     /**
-     * Closes the database connection
-     *
-     * @throws SQLException if the connection fails
+     * Closes the database connection if it is open
      */
-    public static void closeDBconnection() throws SQLException {
+    public static void closeDBconnection() {
         try {
             if (c != null) {
                 c.close();
@@ -65,12 +62,11 @@ public class DB {
     }
 
     /**
-     * Allows the user to enter an SQL query to be executed
+     * Allows the user to enter an SQL query to be executed (last resort only!)
      *
      * @param query is the query to be executed
-     * @throws SQLException if the query fails
      */
-    public static void freeQuery(String query) throws SQLException {
+    public static void freeQuery(String query) {
         try {
             connectToDB();
             Statement stmt = c.createStatement();
@@ -179,8 +175,10 @@ public class DB {
      * @throws RuntimeException When length of col array and value array are not
      *                          equal
      */
-    private static String strArray2UpdateFormat(String[] cols, String[] value) throws RuntimeException, SQLException {
+    private static String strArray2UpdateFormat(String[] cols, String[] value) throws RuntimeException {
+
         connectToDB();
+
         int length = cols.length;
         if (length != value.length) {
             throw new RuntimeException("Length of columns and value must match");
@@ -190,13 +188,7 @@ public class DB {
             ret += cols[i] + " = '" + value[i] + "',";
         }
         ret += cols[length - 1] + " = '" + value[length - 1] + "'";
-        if (c != null) {
-            try {
-                closeDBconnection();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+
         return ret;
     }
 
@@ -219,6 +211,16 @@ public class DB {
             System.err.println("ERROR Query Failed in method 'DB.insertRow': " + e.getMessage());
         }
     }
+
+    /**
+     * Formats the cols and values to work with inserting into the database
+     *
+     * @param cols  cols that match up with corresponding value
+     * @param value values to match with corresponding cols
+     * @return string
+     * @throws RuntimeException When length of col array and value array are not
+     *                          equal
+     */
     public static int insertRowRequests(String table, String[] columns, String[] value) {
         int id = 0;
         ResultSet rs;
@@ -244,9 +246,6 @@ public class DB {
                 id = currvalResultSet.getInt(1);
             }
             c.commit();
-            if (c != null) {
-                closeDBconnection();
-            }
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'DB.insertRowRequests': " + e.getMessage());
         }
@@ -312,6 +311,13 @@ public class DB {
         }
     }
 
+    /**
+     * Gets the value of the column from the table that matches the condition
+     *
+     * @param table Table to get from
+     * @param idColName   Column to get ids from
+     * @return an array of ints with all the ids from a certain table
+     */
 
     public static int[] getIDlist(String table, String idColName) {
         connectToDB();
@@ -325,7 +331,7 @@ public class DB {
             listSize = countRs.getInt(1);
             countRs.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("ERROR Query Failed in method 'DB.getIDlist': " + e.getMessage());
         }
 
         String idQuery = "SELECT " + idColName + "  FROM " + table;
@@ -343,13 +349,15 @@ public class DB {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        try {
-            if (c != null) { closeDBconnection();}
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         return IDs;
     }
+
+    /**
+     * Gets the value of the column from the table that matches the condition
+     *
+     * @param nodeID NodeID to get shortname from
+     * @return a String with the shortname associated with the given NodeID
+     */
 
     public static String getShortNameFromNodeID(int nodeID) {
         try {
@@ -364,10 +372,16 @@ public class DB {
             rs.close();
             return set;
         } catch (SQLException e) {
-            System.err.println("ERROR Query Failed: " + e.getMessage());
+            System.err.println("ERROR Query Failed in method 'DB.getShortNameFromNodeID': " + e.getMessage());
             return null;
         }
     }
+
+    /**
+     * Gets the value of the column from the table that matches the condition
+     *
+     * @return a ResultSet containing the full nodes table joined with the moves table and the locationnames table
+     */
 
     public static ResultSet joinFullNodes() {
         try{
