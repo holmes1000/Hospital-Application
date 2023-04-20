@@ -59,6 +59,8 @@ public class EditUsersController {
         initButtons();
     }
 
+    //EditUserController editUserController = new EditUserController();
+
     public void initializeFields() {
         ArrayList<User> listOfUsers = Repository.getRepository().getAllUsers();
         ObservableList<String> usernames = FXCollections.observableArrayList();
@@ -99,17 +101,18 @@ public class EditUsersController {
     private void handleEditUser() throws IOException {
         User user = tbUsers.getSelectionModel().getSelectedItem();
         System.out.println("Edit user button");
-        showEditMenu();
+        showEditMenu(user);
         tbUsers.refresh(); // Refresh the table
     }
 
-    private void showEditMenu() throws IOException {
+    private void showEditMenu(User user) throws IOException {
         Parent root;
-            root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("edu/wpi/teamb/views/settings/ForgotPassword.fxml")));
-            Stage stage = new Stage();
-            stage.setTitle("Edit User Details");
-            stage.setScene(new Scene(root, 400, 600));
-            stage.show();
+        EditUserController.setCurrentUser(user);
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("edu/wpi/teamb/views/settings/EditUser.fxml")));
+        Stage stage = new Stage();
+        stage.setTitle("Edit User Details");
+        stage.setScene(new Scene(root, 400, 600));
+        stage.show();
     }
 
     private void handleAddUser() {
