@@ -6,6 +6,9 @@ import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.ORMs.User;
 import edu.wpi.teamb.controllers.NavDrawerController;
+import edu.wpi.teamb.entities.ELogin;
+import edu.wpi.teamb.navigation.Navigation;
+import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
@@ -13,6 +16,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -23,13 +27,13 @@ public class EditAccountController {
     @FXML
     private JFXHamburger menuBurger;
     @FXML private JFXDrawer menuDrawer;
-    @FXML private MFXComboBox<String> cbPermissionLevel;
     @FXML private MFXTextField tfPassword;
     @FXML private MFXTextField tfUsername;
-    @FXML private MFXTextField tfPosition;
     @FXML private MFXTextField tfName;
     @FXML private MFXTextField tfEmail;
     @FXML private MFXButton btnSaveEdits;
+    ELogin eLogin = ELogin.getLogin();
+    private final User currentUser = Repository.getRepository().getUser(eLogin.getUsername());
 
     @FXML
     public void initialize() throws IOException {
@@ -39,23 +43,12 @@ public class EditAccountController {
     }
 
     public void initializeFields() {
-        ArrayList<User> listOfUsers = Repository.getRepository().getAllUsers();
-        ObservableList<String> usernames = FXCollections.observableArrayList();
-        ObservableList<String> permissionLevels = FXCollections.observableArrayList();
-
-        // Initialize the username combo box
-        for (User user : listOfUsers) {
-            usernames.add(user.getUsername());
-        }
-
-        // Initialize the permission level combo boxes
-        permissionLevels.add("ADMIN");
-        permissionLevels.add("EMPLOYEE");
-        cbPermissionLevel.setItems(permissionLevels);
-        cbPermissionLevel.setItems(permissionLevels);
-
-        // Hide the edit vbox
-        //vboxEditUser.setVisible(false);
+        // Initialize the user data
+        tfName.setText(currentUser.getName());
+        tfUsername.setText(currentUser.getUsername());
+        tfUsername.setEditable(false); // cannot change username
+        tfPassword.setText(currentUser.getPassword());
+        tfEmail.setText(currentUser.getEmail());
     }
 
     public void initButtons() {
@@ -63,41 +56,22 @@ public class EditAccountController {
     }
 
     private void handleSaveEdits() {
-        User user = new User();
+        User user = Repository.getRepository().getUser(eLogin.getUsername());
+        user.setName(tfName.getText());
         user.setUsername(tfUsername.getText());
         user.setPassword(tfPassword.getText());
-        user.setPosition(tfPosition.getText());
-        if (cbPermissionLevel != null)
-            user.setPermissionLevel(getPermissionLevel(cbPermissionLevel.getValue()));
+        user.setEmail(tfEmail.getText());
         Repository.getRepository().updateUser(user);
-        initializeFields(); // Refresh the combo box
-    }
 
-    /**
-     * Method to convert string permission level to int
-     * @param permissionLevel
-     * @return
-     */
-    private int getPermissionLevel(String permissionLevel) {
-        if (permissionLevel.equals("ADMIN")) {
-            return 0;
-        }
-        if (permissionLevel.equals("EMPLOYEE")) {
-            return 1;
-        }
-        else
-            return 2; // Error
-    }
+        // Create an alert
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Updated Account Details");
+        alert.setHeaderText(null);
+        alert.setContentText("Successfully Updated Account Details");
+        alert.showAndWait();
 
-    private String setPermissionLevel(int permissionLevel) {
-        if (permissionLevel == 0) {
-            return "ADMIN";
-        }
-        if (permissionLevel == 1) {
-            return "EMPLOYEE";
-        }
-        else
-            return "Error"; // Error
+        // Go home
+        Navigation.navigate(Screen.HOME);
     }
 
     public void initNavBar() {

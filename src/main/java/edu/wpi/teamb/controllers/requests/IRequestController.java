@@ -1,8 +1,11 @@
 package edu.wpi.teamb.controllers.requests;
 
+import edu.wpi.teamb.navigation.Navigation;
+import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 
 import java.sql.SQLException;
 
@@ -31,10 +34,23 @@ public interface IRequestController {
     /**
      * Handles the cancel button
      */
-    void handleCancel();
+    default void handleCancel() {
+        Navigation.navigate(Screen.HOME);
+    };
 
     /**
      * Handles the help button
      */
     void handleHelp();
+
+    default void submissionAlert() {
+        // Create an alert
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Submission Successful");
+        alert.setHeaderText(null);
+        alert.setContentText("Successfully Submitted Request");
+        alert.showAndWait();
+        Navigation.navigate(Screen.HOME);
+    }
 }
+

@@ -137,6 +137,7 @@ public class FurnitureRequestControllerI implements IRequestController{
             }
             popOver.show(btnSubmit);
         }
+        submissionAlert();
     }
 
     @Override
@@ -152,11 +153,6 @@ public class FurnitureRequestControllerI implements IRequestController{
         cbLongName.clear();
         cbLongName.replaceSelection("All Room Names: ");
         cbOrderLocation.getSelectionModel().clearSelection();
-    }
-
-    @Override
-    public void handleCancel() {
-        Navigation.navigate(Screen.HOME);
     }
 
     @Override

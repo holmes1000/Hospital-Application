@@ -48,6 +48,10 @@ public class ELogin {
     return permissionLevel;
   }
 
+  public String getUsername() {
+    return username;
+  }
+
   // unsure yet if getters and setters would make sense here since there does not seem to be any use
   // for them outside
   // the context of checkLogin

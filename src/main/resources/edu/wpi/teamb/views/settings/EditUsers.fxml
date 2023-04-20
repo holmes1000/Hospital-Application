@@ -6,6 +6,7 @@
 <?import io.github.palexdev.materialfx.controls.MFXComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -34,8 +35,16 @@
                         <Font name="System Bold" size="36.0" />
                     </font>
                 </Text>
-            <VBox layoutX="66.0" layoutY="368.0">
+            <VBox layoutX="25.0" layoutY="154.0">
                <children>
+                  <MFXTextField fx:id="textName" floatingText="Name" prefHeight="50.0" prefWidth="362.0">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
+                  </MFXTextField>
                   <MFXTextField fx:id="textUsername" floatingText="Username" prefHeight="50.0" prefWidth="362.0">
                      <opaqueInsets>
                         <Insets />
@@ -52,7 +61,7 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </MFXTextField>
-                  <MFXTextField fx:id="textPosition" floatingText="Position" prefHeight="50.0" prefWidth="362.0">
+                  <MFXTextField fx:id="textEmail" floatingText="Email" prefHeight="50.0" prefWidth="362.0">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
@@ -73,80 +82,36 @@
                   <Insets />
                </opaqueInsets>
             </VBox>
-            <Text fill="#f1f1f1" layoutX="44.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Modify Current User">
+            <Text fill="#f1f1f1" layoutX="502.0" layoutY="127.0" strokeType="OUTSIDE" strokeWidth="0.0" text="User Table">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Text>
-            <Text fill="#f1f1f1" layoutX="41.0" layoutY="343.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add a New User">
+            <Text fill="#f1f1f1" layoutX="25.0" layoutY="128.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add a New User">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Text>
-            <MFXComboBox fx:id="cbUsername" floatingText="Username" layoutX="67.0" layoutY="154.0" prefHeight="50.0" prefWidth="361.0">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </MFXComboBox>
-                <MFXButton fx:id="btnEditUser" layoutX="68.0" layoutY="243.0" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #1C4EFE; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Edit" textFill="WHITE">
+                <MFXButton fx:id="btnEditUser" layoutX="855.0" layoutY="612.0" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #1C4EFE; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Edit" textFill="WHITE">
                     <font>
                         <Font name="System Bold" size="12.0" />
                     </font>
                 </MFXButton>
-                <MFXButton fx:id="btnAddUser" layoutX="504.0" layoutY="549.0" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #1C4EFE; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Add" textFill="WHITE">
+                <MFXButton fx:id="btnAddUser" layoutX="25.0" layoutY="479.0" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #1C4EFE; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Add" textFill="WHITE">
                     <font>
                         <Font name="System Bold" size="12.0" />
                     </font>
                 </MFXButton>
-                <MFXButton fx:id="btnDeleteUser" layoutX="309.0" layoutY="243.0" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #D2374A; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Delete" textFill="WHITE">
+                <MFXButton fx:id="btnDeleteUser" layoutX="502.0" layoutY="612.0" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #D2374A; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Delete" textFill="WHITE">
                     <font>
                         <Font name="System Bold" size="12.0" />
                     </font>
                 </MFXButton>
-            <VBox fx:id="vboxEditUser" layoutX="651.0" layoutY="148.0">
-               <children>
-                  <MFXTextField fx:id="textUsernameEdit" floatingText="Username" prefHeight="50.0" prefWidth="362.0">
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                     <VBox.margin>
-                        <Insets bottom="10.0" />
-                     </VBox.margin>
-                  </MFXTextField>
-                  <MFXTextField fx:id="textPasswordEdit" floatingText="Password" prefHeight="50.0" prefWidth="362.0">
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                     <VBox.margin>
-                        <Insets bottom="10.0" />
-                     </VBox.margin>
-                  </MFXTextField>
-                  <MFXTextField fx:id="textPositionEdit" floatingText="Position" prefHeight="50.0" prefWidth="362.0">
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                     <VBox.margin>
-                        <Insets bottom="10.0" />
-                     </VBox.margin>
-                  </MFXTextField>
-                  <MFXComboBox fx:id="cbPermissionLevelEdit" floatingText="Permission Level" prefHeight="50.0" prefWidth="361.0">
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                     <VBox.margin>
-                        <Insets bottom="10.0" />
-                     </VBox.margin>
-                  </MFXComboBox>
-                  <MFXButton fx:id="btnSaveEdits" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #1C4EFE; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Save Edits" textFill="WHITE">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </MFXButton>
-               </children>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </VBox>
+                <VBox fx:id="tableVbox" layoutX="503.0" layoutY="133.0" prefHeight="460.0" prefWidth="471.0">
+                    <children>
+                        <TableView fx:id="tbUsers" layoutX="613.0" layoutY="117.0" onMouseClicked="#tbItemSelected" prefHeight="460.0" prefWidth="369.0" />
+                    </children>
+                </VBox>
             </children>
         </AnchorPane>
     </center>

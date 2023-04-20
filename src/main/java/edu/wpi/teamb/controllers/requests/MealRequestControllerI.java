@@ -129,6 +129,7 @@ public class MealRequestControllerI implements IRequestController{
             }
             popOver.show(btnSubmit);
         }
+        submissionAlert();
     }
 
     @Override
@@ -153,11 +154,6 @@ public class MealRequestControllerI implements IRequestController{
         roomTextBox.clear();
         roomTextBox.replaceSelection("Room:");
         txtFldNotes.clear();
-    }
-
-    @Override
-    public void handleCancel() {
-        Navigation.navigate(Screen.HOME);
     }
 
     @Override

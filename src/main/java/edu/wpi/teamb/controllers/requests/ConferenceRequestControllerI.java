@@ -160,6 +160,7 @@ public class ConferenceRequestControllerI implements IRequestController{
             }
             popOver.show(btnSubmit);
         }
+        submissionAlert();
     }
 
     @Override
@@ -175,21 +176,6 @@ public class ConferenceRequestControllerI implements IRequestController{
         cbEmployeesToAssign.setText("Employees Available");
         cbLongName.clear();
         cbLongName.replaceSelection("All Room Names: ");
-    }
-
-    @Override
-    public void handleCancel() {
-        datePicker.setValue(null);
-        reservationHour.setValue(12);
-        reservationMinute.setValue("00");
-        reservationAmPm.setValue("AM");
-        selectFloorComboBox.setValue(null);
-        availableRoomsComboBox.setValue(null);
-        eventNameTextField.setText("");
-        bookingReasonTextField.setText("");
-        cbLongName.setText("");
-        // then switch page
-        Navigation.navigate(Screen.HOME);
     }
 
     @Override

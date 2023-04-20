@@ -132,6 +132,7 @@ public class FlowerRequestControllerI implements IRequestController {
             }
             popOver.show(btnSubmit);
         }
+        submissionAlert();
     }
 
     @Override
@@ -147,11 +148,6 @@ public class FlowerRequestControllerI implements IRequestController {
         cbLongName.clear();
         cbLongName.replaceSelection("All Room Names: ");
         cbOrderLocation.getSelectionModel().clearSelection();
-    }
-
-    @Override
-    public void handleCancel() {
-        Navigation.navigate(Screen.HOME);
     }
 
     @Override

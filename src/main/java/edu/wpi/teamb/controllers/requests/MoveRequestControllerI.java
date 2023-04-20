@@ -135,6 +135,7 @@ public class MoveRequestControllerI implements IRequestController{
             }
             popOver.show(btnSubmit);
         }
+        submissionAlert();
     }
 
     @Override
@@ -148,11 +149,6 @@ public class MoveRequestControllerI implements IRequestController{
         changeRequest = false;
         btnEditRequest.setDisable(true);
         updateTable();
-    }
-
-    @Override
-    public void handleCancel() {
-        Navigation.navigate(Screen.HOME);
     }
 
     @Override
@@ -253,8 +249,6 @@ public class MoveRequestControllerI implements IRequestController{
                 cdWheretoMove.selectItem(move.getNodeID());
                 // set date value
                 dateOfMove.setValue(LocalDate.parse(ymd2ymd2(move.getDate().toString())));
-
-
             }
         });
 

@@ -104,6 +104,7 @@ public class OfficeRequestControllerI implements IRequestController{
             }
             popOver.show(btnSubmit);
         }
+        submissionAlert();
     }
 
     @Override
@@ -123,11 +124,6 @@ public class OfficeRequestControllerI implements IRequestController{
         txtFldNotes.clear();
         cbLongName.clear();
         cbLongName.replaceSelection("All Room Names:");
-    }
-
-    @Override
-    public void handleCancel() {
-        Navigation.navigate(Screen.HOME);
     }
 
     @Override

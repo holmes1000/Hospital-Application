@@ -4,39 +4,53 @@ import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
+import edu.wpi.teamb.DBAccess.ORMs.Move;
 import edu.wpi.teamb.DBAccess.ORMs.User;
 import edu.wpi.teamb.controllers.NavDrawerController;
+import edu.wpi.teamb.navigation.Navigation;
+import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class EditUsersController {
     @FXML
     private JFXHamburger menuBurger;
     @FXML private JFXDrawer menuDrawer;
-    @FXML private MFXComboBox<String> cbUsername;
+
     @FXML private MFXComboBox<String> cbPermissionLevel;
     @FXML private MFXTextField textPassword;
     @FXML private MFXTextField textUsername;
-    @FXML private MFXTextField textPosition;
-    @FXML private MFXComboBox<String> cbPermissionLevelEdit;
-    @FXML private MFXTextField textPasswordEdit;
-    @FXML private MFXTextField textUsernameEdit;
-    @FXML private MFXTextField textPositionEdit;
+    @FXML private MFXTextField textEmail;
+    @FXML private MFXTextField textName;
+
     @FXML private MFXButton btnAddUser;
     @FXML private MFXButton btnDeleteUser;
     @FXML private MFXButton btnEditUser;
-    @FXML private MFXButton btnSaveEdits;
     @FXML private VBox vboxEditUser;
+    @FXML private VBox tableVbox;
+    @FXML private TableView<User> tbUsers;
+    private int tableSize = 0;
 
     @FXML
     public void initialize() throws IOException {
@@ -50,65 +64,152 @@ public class EditUsersController {
         ObservableList<String> usernames = FXCollections.observableArrayList();
         ObservableList<String> permissionLevels = FXCollections.observableArrayList();
 
-        // Initialize the username combo box
-        for (User user : listOfUsers) {
-            usernames.add(user.getUsername());
-        }
-        cbUsername.setItems(usernames);
-
         // Initialize the permission level combo boxes
         permissionLevels.add("ADMIN");
         permissionLevels.add("EMPLOYEE");
         cbPermissionLevel.setItems(permissionLevels);
-        cbPermissionLevelEdit.setItems(permissionLevels);
 
+        userTable();
         // Hide the edit vbox
         //vboxEditUser.setVisible(false);
     }
 
     public void initButtons() {
         btnAddUser.setOnMouseClicked(event -> handleAddUser());
-        btnEditUser.setOnMouseClicked(event -> handleEditUser());
+        btnEditUser.setOnMouseClicked(event -> {
+            try {
+                handleEditUser();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
         btnDeleteUser.setOnMouseClicked(event -> handleDeleteUser());
-        btnSaveEdits.setOnMouseClicked(event -> handleSaveEdits());
+        btnEditUser.setDisable(true);
+        btnDeleteUser.setDisable(true);
     }
 
     private void handleDeleteUser() {
-        Repository.getRepository().deleteUser(Repository.getRepository().getUser(cbUsername.getValue())); // Delete the user
-        initializeFields(); // Refresh the combo box
+        User user = tbUsers.getSelectionModel().getSelectedItem();
+        Repository.getRepository().deleteUser(user); // Delete the user
+        //tbUsers.refresh(); // Refresh the table
+        updateTable();
+        createAlert("User Deleted", "User Deleted Successfully");
     }
 
-    private void handleEditUser() {
-        String userToEdit = cbUsername.getSelectedItem();
-        User user = Repository.getRepository().getUser(userToEdit);
-        textUsernameEdit.setText(user.getUsername());
-        textPasswordEdit.setText(user.getPassword());
-        textPositionEdit.setText(user.getPosition());
-        cbPermissionLevelEdit.selectItem(setPermissionLevel(user.getPermissionLevel()));
-        //vboxEditUser.setVisible(true);
+    private void handleEditUser() throws IOException {
+        User user = tbUsers.getSelectionModel().getSelectedItem();
         System.out.println("Edit user button");
-        initializeFields(); // Refresh the combo box
+        showEditMenu();
+        tbUsers.refresh(); // Refresh the table
+    }
+
+    private void showEditMenu() throws IOException {
+        Parent root;
+            root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("edu/wpi/teamb/views/settings/ForgotPassword.fxml")));
+            Stage stage = new Stage();
+            stage.setTitle("Edit User Details");
+            stage.setScene(new Scene(root, 400, 600));
+            stage.show();
     }
 
     private void handleAddUser() {
         User newUser = new User();
+        newUser.setName(textName.getText());
         newUser.setUsername(textUsername.getText());
         newUser.setPassword(textPassword.getText());
-        newUser.setPosition(textPosition.getText());
-        newUser.setPermissionLevel(getPermissionLevel(cbPermissionLevel.getValue()));
-        Repository.getRepository().addUser(newUser);
+        newUser.setEmail(textEmail.getText());
+        newUser.setPermissionLevel(permissionLevelToInt(cbPermissionLevel.getValue()));
+        if (usernameDoesNotExist(newUser)) {
+            Repository.getRepository().addUser(newUser);
+        }
+        else
+        {
+            createAlert("Username already exists", "Please enter a different username");
+        }
         initializeFields(); // Refresh the combo box
+    }
+
+
+    /**
+     * Checks if the username already exists in the database
+     * @param user
+     * @return
+     */
+    boolean usernameDoesNotExist(User user) {
+        ArrayList<User> listOfUsers = Repository.getRepository().getAllUsers();
+        for (User u : listOfUsers) {
+            if (u.getUsername().equals(user.getUsername())) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void handleSaveEdits() {
         User user = new User();
-        user.setUsername(textUsernameEdit.getText());
-        user.setPassword(textPasswordEdit.getText());
-        user.setPosition(textPositionEdit.getText());
-        if (cbPermissionLevel != null)
-            user.setPermissionLevel(getPermissionLevel(cbPermissionLevelEdit.getValue()));
+//        user.setUsername(textUsernameEdit.getText());
+//        user.setPassword(textPasswordEdit.getText());
+//        user.setPosition(textPositionEdit.getText());
+//        if (cbPermissionLevel != null)
+//            user.setPermissionLevel(getPermissionLevel(cbPermissionLevelEdit.getValue()));
         Repository.getRepository().updateUser(user);
         initializeFields(); // Refresh the combo box
+    }
+
+    private void createAlert(String title, String context) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(context);
+        alert.showAndWait();
+    }
+
+    @FXML
+    public void tbItemSelected() {
+        // when clicking on a row in the table, the remove button is enabled and the
+        // data is loaded into the form
+        tbUsers.setOnMouseClicked(event -> {
+            if (tbUsers.getSelectionModel().getSelectedItem() != null) {
+                btnDeleteUser.setDisable(false);
+                btnEditUser.setDisable(false);
+
+                User user = tbUsers.getSelectionModel().getSelectedItem();
+                // Clear fields
+            }
+        });
+
+    }
+
+    private void userTable() {
+        // add User attributes to the table (Name, Username, Password, Email, Permission Level)
+        TableColumn<User, String> names = new TableColumn<>("Name");
+        names.setCellValueFactory(new PropertyValueFactory<User, String>("name"));
+
+        TableColumn<User, String> usernames = new TableColumn<>("Username");
+        usernames.setCellValueFactory(new PropertyValueFactory<User, String>("username"));
+
+        TableColumn<User, String> passwords = new TableColumn<>("Password");
+        passwords.setCellValueFactory(new PropertyValueFactory<User, String>("password"));
+
+        TableColumn<User, String> emails = new TableColumn<>("Email");
+        emails.setCellValueFactory(new PropertyValueFactory<User, String>("email"));
+
+        TableColumn<User, Integer> permissions = new TableColumn<>("Permission Level");
+        permissions.setCellValueFactory(new PropertyValueFactory<User, Integer>("permissionLevel"));
+
+        tbUsers.getColumns().addAll(names, usernames, passwords, emails, permissions);
+        updateTable();
+    }
+
+    private void updateTable() {
+        // empty the table and refill database
+        tbUsers.getItems().clear();
+        ArrayList<User> users = Repository.getRepository().getAllUsers();
+        for (User user : users) {
+            tbUsers.getItems().add(user);
+            tableSize++;
+        }
+        tbUsers.refresh();
     }
 
     /**
@@ -116,7 +217,7 @@ public class EditUsersController {
      * @param permissionLevel
      * @return
      */
-    private int getPermissionLevel(String permissionLevel) {
+    private int permissionLevelToInt(String permissionLevel) {
         if (permissionLevel.equals("ADMIN")) {
             return 0;
         }
@@ -127,7 +228,7 @@ public class EditUsersController {
             return 2; // Error
     }
 
-    private String setPermissionLevel(int permissionLevel) {
+    private String permissionLevelToString(int permissionLevel) {
         if (permissionLevel == 0) {
             return "ADMIN";
         }
