@@ -28,21 +28,13 @@
                         <Font name="System Bold" size="18.0" />
                     </font>
                 </MFXButton>
-                <Text fill="WHITE" layoutX="20.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter the date to reserve:">
-                    <font>
-                        <Font name="System Bold" size="18.0" />
-                    </font>
-                </Text>
                 <Text fill="WHITE" layoutX="288.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter the time of reservation:">
                     <font>
                         <Font name="System Bold" size="18.0" />
                     </font>
                 </Text>
-                <MFXDatePicker fx:id="datePicker" layoutX="20.0" layoutY="117.0" prefHeight="38.0" prefWidth="238.0" />
+                <MFXDatePicker fx:id="datePicker" floatMode="INLINE" floatingText="Date To Reserve" layoutX="20.0" layoutY="117.0" prefHeight="35.0" prefWidth="238.0" />
                 <MFXComboBox fx:id="reservationHour" layoutX="288.0" layoutY="117.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="38.0" prefWidth="73.0" text="12">
-                    <font>
-                        <Font name="System Bold" size="14.0" />
-                    </font>
                 </MFXComboBox>
                 <Text fill="WHITE" layoutX="369.0" layoutY="141.0" strokeType="OUTSIDE" strokeWidth="0.0" text=":">
                     <font>
@@ -50,9 +42,6 @@
                     </font>
                 </Text>
                 <MFXComboBox fx:id="reservationMinute" layoutX="381.0" layoutY="117.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="38.0" prefWidth="73.0" text="00">
-                    <font>
-                        <Font name="System Bold" size="14.0" />
-                    </font>
                 </MFXComboBox>
                 <Text fill="WHITE" layoutX="462.0" layoutY="141.0" strokeType="OUTSIDE" strokeWidth="0.0" text=":">
                     <font>
@@ -60,9 +49,6 @@
                     </font>
                 </Text>
                 <MFXComboBox fx:id="reservationAmPm" layoutX="474.0" layoutY="117.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="38.0" prefWidth="79.0" text="AM">
-                    <font>
-                        <Font name="System Bold" size="14.0" />
-                    </font>
                 </MFXComboBox>
                 <MFXButton fx:id="resetBtn" defaultButton="true" layoutX="20.0" layoutY="481.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #1C4EFE;" text="Reset" textFill="#f1f1f1">
                     <font>
@@ -82,44 +68,16 @@
                         <ColorAdjust brightness="1.0" />
                     </effect>
                 </ImageView>
-                <Text fill="WHITE" layoutX="288.0" layoutY="210.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select an available room:">
-                    <font>
-                        <Font name="System Bold" size="18.0" />
-                    </font>
-                </Text>
-                <MFXComboBox fx:id="availableRoomsComboBox" layoutX="288.0" layoutY="217.0" prefHeight="40.0" prefWidth="216.0" />
-                <Text fill="WHITE" layoutX="20.0" layoutY="210.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select the floor:">
-                    <font>
-                        <Font name="System Bold" size="18.0" />
-                    </font>
-                </Text>
-                <MFXComboBox fx:id="selectFloorComboBox" layoutX="20.0" layoutY="217.0" prefHeight="40.0" prefWidth="238.0" />
-                <MFXTextField fx:id="eventNameTextField" layoutX="20.0" layoutY="317.0" prefHeight="40.0" prefWidth="366.0" />
-                <Text fill="WHITE" layoutX="20.0" layoutY="310.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter the name of the event:">
-                    <font>
-                        <Font name="System Bold" size="18.0" />
-                    </font>
-                </Text>
-                <Text fill="WHITE" layoutX="20.0" layoutY="410.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Reason for Booking: ">
-                    <font>
-                        <Font name="System Bold" size="18.0" />
-                    </font>
-                </Text>
-                <MFXTextField fx:id="bookingReasonTextField" layoutX="20.0" layoutY="417.0" prefHeight="40.0" prefWidth="698.0" />
-            <Text fill="#f1f1f1" layoutX="732.0" layoutY="110.0" nodeOrientation="LEFT_TO_RIGHT" strokeType="OUTSIDE" strokeWidth="0.0" text="Select Employee to Assign to Task:" textAlignment="RIGHT" wrappingWidth="336.9127655029297">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </Text>
-            <MFXComboBox fx:id="cbEmployeesToAssign" floatMode="DISABLED" layoutX="841.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
+                <MFXComboBox fx:id="availableRoomsComboBox" floatingText="Available Room" layoutX="288.0" layoutY="181.0" prefHeight="40.0" prefWidth="216.0" />
+                <MFXComboBox fx:id="selectFloorComboBox" floatingText="Floor" layoutX="21.0" layoutY="181.0" prefHeight="40.0" prefWidth="238.0" />
+                <MFXTextField fx:id="eventNameTextField" floatingText="Event Name" layoutX="20.0" layoutY="307.0" prefHeight="40.0" prefWidth="366.0" />
+                <MFXTextField fx:id="bookingReasonTextField" floatingText="Reason for Booking" layoutX="24.0" layoutY="418.0" prefHeight="40.0" prefWidth="698.0" />
+            <MFXComboBox fx:id="cbEmployeesToAssign" floatingText="Employee Assigned" layoutX="23.0" layoutY="367.0" prefHeight="40.0" prefWidth="233.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXComboBox>
-            <Text fill="RED" layoutX="233.0" layoutY="111.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+            <Text fill="RED" layoutX="264.0" layoutY="154.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
                <font>
                   <Font size="24.0" />
                </font>
@@ -129,32 +87,27 @@
                   <Font size="24.0" />
                </font>
             </Text>
-            <Text fill="RED" layoutX="1068.0" layoutY="112.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+            <Text fill="RED" layoutX="264.0" layoutY="396.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
                <font>
                   <Font size="24.0" />
                </font>
             </Text>
-            <Text fill="RED" layoutX="261.0" layoutY="312.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+            <Text fill="RED" layoutX="391.0" layoutY="350.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
                <font>
                   <Font size="24.0" />
                </font>
             </Text>
-            <Text fill="RED" layoutX="499.0" layoutY="212.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+            <Text fill="RED" layoutX="514.0" layoutY="213.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
                <font>
                   <Font size="24.0" />
                </font>
             </Text>
-            <Text fill="WHITE" layoutX="957.0" layoutY="210.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Room Name: ">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </Text>
-            <Text fill="RED" layoutX="1068.0" layoutY="211.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+            <Text fill="RED" layoutX="436.0" layoutY="283.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
                <font>
                   <Font size="24.0" />
                </font>
             </Text>
-            <MFXFilterComboBox fx:id="cbLongName" layoutX="664.0" layoutY="217.0" prefHeight="40.0" prefWidth="410.0" />
+            <MFXFilterComboBox fx:id="cbLongName" floatingText="Room Name" layoutX="20.0" layoutY="250.0" prefHeight="40.0" prefWidth="410.0" />
             </children>
         </AnchorPane>
     </center>

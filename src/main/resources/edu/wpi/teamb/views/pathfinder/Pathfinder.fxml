@@ -48,7 +48,7 @@
                   <MFXListView fx:id="listView" prefHeight="238.0" prefWidth="254.0" style="-fx-border-color: #1C4EFE;" />
                </children>
             </VBox>
-                <VBox layoutX="944.0" layoutY="407.0" prefHeight="119.0" prefWidth="131.0" style="-fx-background-color: #f1f1f1; -fx-border-color: #1C4EFE;">
+                <VBox layoutX="989.0" layoutY="499.0" prefHeight="119.0" prefWidth="131.0" style="-fx-background-color: #f1f1f1; -fx-border-color: #1C4EFE;">
                     <children>
                         <VBox fx:id="vboxBtns" alignment="CENTER" spacing="10.0">
                             <children>
