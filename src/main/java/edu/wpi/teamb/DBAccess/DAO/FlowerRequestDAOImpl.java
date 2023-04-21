@@ -93,7 +93,7 @@ public class FlowerRequestDAOImpl implements IDAO {
     public void add(Object request) {
         String[] flowerReq = (String[]) request;
 
-        String[] values = {flowerReq[0], flowerReq[1], flowerReq[2], flowerReq[3], flowerReq[4], flowerReq[5], flowerReq[6], flowerReq[7], flowerReq[8], flowerReq[9], flowerReq[10], flowerReq[11]};
+        String[] values = {flowerReq[0], flowerReq[1], "Flower", flowerReq[2], flowerReq[3], flowerReq[4], flowerReq[5], flowerReq[6], flowerReq[7]};
         int id = insertDBRowNewFlowerRequest(values);
         ResultSet rs = DButils.getRowCond("requests", "dateSubmitted", "id = " + id);
         Timestamp dateSubmitted = null;
