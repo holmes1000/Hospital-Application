@@ -90,7 +90,7 @@ public class PathfinderController {
       this.stackPaneMapView = new StackPane(); // no longer @FXML
       this.pathGroup = new Group();
       this.locationCanvas = new Pane();
-      this.fullNodes = Repository.getRepository().getFullNodes();
+      this.fullNodes = Repository.getRepository().getAllFullNodes();
       this.filteredFullNodes = new HashMap<>();
       getFilteredLongnames();
       this.pane.setContent(stackPaneMapView);
@@ -99,7 +99,7 @@ public class PathfinderController {
       this.stackPaneMapView.getChildren().add(this.locationCanvas);
 
       this.locationCanvas.getChildren().add(pathGroup);
-      this.fullNodes = Repository.getRepository().getFullNodes();
+      this.fullNodes = Repository.getRepository().getAllFullNodes();
 //      this.filteredFullNodes = new HashMap<>();
 
       pane.setScrollMode(GesturePane.ScrollMode.ZOOM);
@@ -196,7 +196,7 @@ public class PathfinderController {
               if (n == nodes.get(0)) {
                   Circle circle = new Circle(n.getxCoord(), n.getyCoord(), 5, GREEN);
                   pathGroup.getChildren().add(circle);
-                  Tooltip tooltip = new Tooltip(DButils.getLongNameFromNodeID(n.getNodeID()));
+                  Tooltip tooltip = new Tooltip(Repository.getRepository().getLongNameFromNodeID(n.getNodeID()));
                   Tooltip.install(circle,tooltip);
                   tooltip.setShowDelay(Duration.millis(5));
                   tooltip.setStyle("-fx-font-size: 14px;");
@@ -206,7 +206,7 @@ public class PathfinderController {
               } else if (n == nodes.get(nodes.size() - 1)) {
                   Circle circle = new Circle(n.getxCoord(), n.getyCoord(), 5, PURPLE);
                   pathGroup.getChildren().add(circle);
-                  Tooltip tooltip = new Tooltip(DButils.getLongNameFromNodeID(n.getNodeID()));
+                  Tooltip tooltip = new Tooltip(Repository.getRepository().getLongNameFromNodeID(n.getNodeID()));
                   Tooltip.install(circle,tooltip);
                   tooltip.setShowDelay(Duration.millis(5));
                   tooltip.setStyle("-fx-font-size: 14px;");
@@ -214,7 +214,7 @@ public class PathfinderController {
               } else {
                   Circle circle = new Circle(n.getxCoord(), n.getyCoord(), 5, RED);
                   pathGroup.getChildren().add(circle);
-                  Tooltip tooltip = new Tooltip(DButils.getLongNameFromNodeID(n.getNodeID()));
+                  Tooltip tooltip = new Tooltip(Repository.getRepository().getLongNameFromNodeID(n.getNodeID()));
                   Tooltip.install(circle,tooltip);
                   tooltip.setShowDelay(Duration.millis(5));
                   tooltip.setStyle("-fx-font-size: 14px;");

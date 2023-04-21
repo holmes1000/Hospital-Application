@@ -104,19 +104,4 @@ public class User {
     public String userInfo() {
         return "Username: " + username + "\tPermission Level: " + permissionLevel + "\tPosition: " + position;
     }
-    public User getUser(String username) {
-        ResultSet rs = DButils.getRowCond("Users", "*", "username like '" + username + "'");
-        try {
-            if (rs != null) {
-                if (rs.isBeforeFirst()) {
-                    rs.next();
-                    return new User(rs);
-                } else throw new SQLException("No rows found"); }
-        } catch (SQLException e) {
-            // handle error
-            System.err.println("ERROR Query Failed: " + e.getMessage());
-            return null;
-        }
-        return null;
-    }
 }

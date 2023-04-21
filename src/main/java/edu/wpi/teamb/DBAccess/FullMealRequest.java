@@ -1,5 +1,6 @@
 package edu.wpi.teamb.DBAccess;
 
+import edu.wpi.teamb.DBAccess.DAO.RequestDAOImpl;
 import edu.wpi.teamb.DBAccess.ORMs.MealRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
@@ -143,7 +144,7 @@ public class FullMealRequest {
         ArrayList<FullMealRequest> fmrs = new ArrayList<FullMealRequest>();
         for (int i = 0; i < mrs.size(); i++) {
             MealRequest mr = mrs.get(i);
-            Request r = Request.getRequest(mr.getId());
+            Request r = RequestDAOImpl.getRequest(mr.getId());
             FullMealRequest fmr = new FullMealRequest(r, mr);
             fmrs.add(fmr);
         }

@@ -436,7 +436,7 @@ public class MapEditorController {
       for (int i = 0; i < neighbors.size(); i++) {
 
         //Get the full node of the neighbor, check to see if they're both elevators or stairs
-        Node neighborNode = Node.getNode(neighbors.get(i));
+        Node neighborNode = Repository.getRepository().getNode(neighbors.get(i));
         FullNode neighborFullNode = Repository.getRepository().getFullNode(neighborNode.getNodeID());
         String floor = neighborFullNode.getFloor();
         //If not stair or elevator reset this to null
@@ -936,11 +936,7 @@ public class MapEditorController {
         case "Moves" -> DBoutput.exportMovesToCSV(absolutePath, 2);
         case "Nodes" -> DBoutput.exportNodesToCSV(absolutePath, 2);
         case "Edges" -> {
-          try {
             DBoutput.exportEdgesToCSV(absolutePath, 2);
-          } catch (SQLException e) {
-            throw new RuntimeException(e);
-          }
         }
         case "Location Names" -> {
           try {

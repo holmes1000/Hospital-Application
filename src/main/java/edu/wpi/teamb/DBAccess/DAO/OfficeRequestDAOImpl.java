@@ -18,6 +18,13 @@ public class OfficeRequestDAOImpl implements IDAO {
     public OfficeRequestDAOImpl() throws SQLException {
         officeRequests = getAllHelper();
     }
+
+    /**
+     * Gets a FullOfficeRequest object from the database
+     *
+     * @param id of the OfficeRequest object
+     * @return an OfficeRequest object with information from request and office request tables
+     */
     @Override
     public FullOfficeRequest get(Object id) {
         Integer idInt = (Integer) id;
@@ -36,14 +43,27 @@ public class OfficeRequestDAOImpl implements IDAO {
         return new FullOfficeRequest(r, or);
     }
 
+    /**
+     * Gets all local OfficeRequests objects
+     *
+     * @return list of OfficeRequests objects
+     */
     @Override
     public ArrayList<FullOfficeRequest> getAll() {
         return officeRequests;
     }
 
+    /**
+     * Sets all OfficeRequests using the database
+     */
     @Override
     public void setAll() { officeRequests = getAllHelper(); }
 
+    /**
+     * Gets all OfficeRequests from the database
+     *
+     * @return list of OfficeRequests objects
+     */
     public ArrayList<FullOfficeRequest> getAllHelper() {
         ArrayList<OfficeRequest> ors = new ArrayList<OfficeRequest>();
         try {
@@ -58,6 +78,11 @@ public class OfficeRequestDAOImpl implements IDAO {
         return FullOfficeRequest.listFullOfficeRequests(ors);
     }
 
+    /**
+     * Adds an OfficeRequest to the both the database and the local list
+     *
+     * @param request the OfficeRequest to add
+     */
     @Override
     public void add(Object request) {
         String[] officeReq = (String[]) request;
@@ -72,9 +97,14 @@ public class OfficeRequestDAOImpl implements IDAO {
             e.printStackTrace();
         }
         officeRequests.add(new FullOfficeRequest(id, officeReq[0], officeReq[1], officeReq[2], dateSubmitted, officeReq[3], officeReq[9], officeReq[5], Integer.parseInt(officeReq[7]), officeReq[8], officeReq[4]));
-        RequestDAOImpl.getRequestDaoImpl().getRequests().add(new Request(id, officeReq[0], officeReq[1], officeReq[2], dateSubmitted, officeReq[3], officeReq[4], officeReq[9]));
+        RequestDAOImpl.getRequestDaoImpl().getAll().add(new Request(id, officeReq[0], officeReq[1], officeReq[2], dateSubmitted, officeReq[3], officeReq[4], officeReq[9]));
     }
 
+    /**
+     * Removes an OfficeRequest from the both the database and the local list
+     *
+     * @param request the OfficeRequest object to be removed
+     */
     @Override
     public void delete(Object request) {
         FullOfficeRequest ffr = (FullOfficeRequest) request;
@@ -82,9 +112,14 @@ public class OfficeRequestDAOImpl implements IDAO {
         DButils.deleteRow("requests", "id =" + ffr.getId() + "");
         officeRequests.remove(ffr);
         Request req = new Request(ffr.getId(), ffr.getEmployee(), ffr.getFloor(), ffr.getRoomNumber(), ffr.getDateSubmitted(), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getLocationName());
-        RequestDAOImpl.getRequestDaoImpl().getRequests().remove(req);
+        RequestDAOImpl.getRequestDaoImpl().getAll().remove(req);
     }
 
+    /**
+     * Updates an OfficeRequest in the both the database and the local list
+     *
+     * @param request the OfficeRequest object to be updated
+     */
     @Override
     public void update(Object request) {
         FullOfficeRequest ofr = (FullOfficeRequest) request;
@@ -111,33 +146,59 @@ public class OfficeRequestDAOImpl implements IDAO {
      * @return the result set of the row(s) that matches the given column and value
      */
     private ResultSet getDBRowAllRequests() throws SQLException {
-        return DButils.getCol("officerequests", "*");
+        return DButils.getCol("OfficeRequests", "*");
     }
 
+    /**
+     * Updates the special instructions of a row in the OfficeRequests table
+     *
+     * @param specialInstructions the specialInstructions to update
+     * @param col the column to search for the value
+     * @param val the value to search for in the column
+     */
     public void updateRowSpecialInstructions(String specialInstructions, String[] col, String[] val) {
         updateRows(col, val, "specialInstructions = " + specialInstructions);
     }
 
+    /**
+     * Inserts a new row into the OfficeRequests table
+     *
+     * @param values the values of the OfficeRequest you want to add
+     * @return an int representing the id of the new row
+     */
     public static int insertDBRowNewOfficeRequest(String[] values) {
         String[] colsOffice = {"id", "item", "quantity", "specialInstructions", "type"};
         String[] colsReq = {"employee", "floor", "roomnumber", "requeststatus","requesttype", "location_name"};
         String[] valuesReq = {values[0], values[1], values[2], values[3], values[4], values[9]};
         int id = DButils.insertRowRequests("requests", colsReq, valuesReq);
         String[] valuesOffice = {Integer.toString(id), values[5], values[7], values[8], values[6]};
-        DButils.insertRow("officerequests", colsOffice, valuesOffice);
+        DButils.insertRow("OfficeRequests", colsOffice, valuesOffice);
         return id;
     }
 
+    /**
+     * Returns a ResultSet of the row(s) that matches the given column and value in the OfficeRequests table
+     *
+     * @param col the column to search for the value
+     * @param value the value to search for in the column
+     * @return a ResultSet of the row(s) that matches the given column and value
+     */
     private ResultSet getDBRowFromCol(String col, String value) {
-        return DButils.getRowCond("officerequests", "*", col + " = " + value);
+        return DButils.getRowCond("OfficeRequests", "*", col + " = " + value);
     }
 
+    /**
+     * Returns a ResultSet of the row(s) that matches the given id in the OfficeRequests table
+     *
+     * @param id the id to search for in the column
+     * @return a ResultSet of the row(s) that matches the given id
+     */
     public ResultSet getDBRowID(int id) {
         return getDBRowFromCol("id", Integer.toString(id));
     }
     private void updateRows(String[] col, String[] val, String cond) {
         if (col.length != val.length)
             throw new IllegalArgumentException("Column and value arrays must be the same length");
-        DButils.updateRow("officerequests", col, val, cond);
+        DButils.updateRow("OfficeRequests", col, val, cond);
     }
 }

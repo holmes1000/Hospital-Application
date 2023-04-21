@@ -93,21 +93,6 @@ public class LocationName {
         this.nodeType = nodeType;
     }
 
-    public LocationName getLocationName(String name) throws SQLException {
-        ResultSet rs = DButils.getRowCond("LocationNames", "*", "longname = " + name);
-        try {
-            if (rs.isBeforeFirst()) { // if there is something it found
-                rs.next();
-                return new LocationName(rs); // make the locationName
-            } else
-                throw new SQLException("No rows found");
-        } catch (SQLException e) {
-            // handle error
-
-            System.err.println("ERROR Query Failed: " + e.getMessage());
-            return null;
-        }
-    }
     @Override
     public String toString() {
         return "Long Name: " + longName + " Short Name: " + shortName + " Node Type: " + nodeType;

@@ -1,5 +1,6 @@
 package edu.wpi.teamb.DBAccess;
 
+import edu.wpi.teamb.DBAccess.DAO.RequestDAOImpl;
 import edu.wpi.teamb.DBAccess.ORMs.FlowerRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
@@ -142,7 +143,7 @@ public class FullFlowerRequest {
         ArrayList<FullFlowerRequest> ffrs = new ArrayList<FullFlowerRequest>();
         for (int i = 0; i < frs.size(); i++) {
             FlowerRequest fr = frs.get(i);
-            Request r = Request.getRequest(fr.getId());
+            Request r = RequestDAOImpl.getRequest(fr.getId());
             FullFlowerRequest ffr = new FullFlowerRequest(r, fr);
             ffrs.add(ffr);
         }

@@ -106,19 +106,6 @@ public class Request {
     this.requestType = requestType;
   }
 
-  public static Request getRequest(int id) {
-    ResultSet rs = DButils.getRowCond("requests", "*", "id = " + id);
-    try {
-      if (rs.isBeforeFirst()) {
-        rs.next();
-        return new Request(rs);
-      } else throw new SQLException("No rows found");
-    } catch (Exception e) {
-      e.printStackTrace();
-      return null;
-    }
-  }
-
   public String getLocationName() {
     return locationName;
   }

@@ -15,14 +15,15 @@ import java.util.ArrayList;
 public class ConferenceRequestDAOImpl implements IDAO {
     ArrayList<FullConferenceRequest> conferenceRequests;
 
-    public ConferenceRequestDAOImpl() throws SQLException {
+    public ConferenceRequestDAOImpl() {
         conferenceRequests = getAllHelper();
     }
 
     /**
-     * gets a Conference request including the information from request table
+     * Gets a FullConferenceRequest including the information from request table given an ID
+     *
      * @param id of the request
-     * @return FullConferenceRequest information from request and conference request table
+     * @return a FullConferenceRequest with information from request and conference request tables
      */
     @Override
     public FullConferenceRequest get(Object id) {
@@ -37,30 +38,33 @@ public class ConferenceRequestDAOImpl implements IDAO {
             rs1.next();
             r = new Request(rs1);
         } catch (SQLException e) {
-            throw new RuntimeException("Conference Request not found");
+            System.err.println("ERROR Query Failed in method 'ConferenceRequestDAOImpl.get': " + e.getMessage());
+            return null;
         }
         return new FullConferenceRequest(r, cr);
     }
 
     /**
-     * gets all Conference requests
+     * Gets all local ConferenceRequests objects
      *
-     * @return list of Conference requests
+     * @return list of ConferenceRequests objects
      */
     @Override
     public ArrayList<FullConferenceRequest> getAll() {
         return conferenceRequests;
     }
 
-
+    /**
+     * Sets all ConferenceRequests using the database
+     */
     @Override
     public void setAll() { conferenceRequests = getAllHelper(); }
 
 
     /**
-     * gets all Conference requests including the information from request table from the database
+     * Gets all conference requests including the information from request table from the database
      *
-     * @return list of conference requests
+     * @return an ArrayList of conference requests
      */
     public ArrayList<FullConferenceRequest> getAllHelper() {
         ArrayList<ConferenceRequest> crs = new ArrayList<ConferenceRequest>();
@@ -77,15 +81,15 @@ public class ConferenceRequestDAOImpl implements IDAO {
     }
 
     /**
-     * adds given request
+     * Adds a ConferenceRequest to the both the database and the local list
      *
-     * @param request to add
+     * @param request the ConferenceRequest to add
      */
     @Override
     public void add(Object request) {
         String[] confReq = (String[]) request;
         String[] values = {confReq[0], confReq[1], confReq[2], confReq[3], confReq[4], confReq[5], confReq[6], confReq[7], confReq[8]};
-        int id = insertDbRowNewConferenceRequest(values);
+        int id = insertDBRowNewConferenceRequest(values);
         ResultSet rs = DButils.getRowCond("requests", "dateSubmitted", "id = " + id);
         Date dateSubmitted = null;
         try {
@@ -99,9 +103,9 @@ public class ConferenceRequestDAOImpl implements IDAO {
     }
 
     /**
-     * deletes given request
+     * Removes a ConferenceRequest from the both the database and the local list
      *
-     * @param request to delete
+     * @param request the ConferenceRequest object to be removed
      */
     @Override
     public void delete(Object request) {
@@ -114,9 +118,9 @@ public class ConferenceRequestDAOImpl implements IDAO {
     }
 
     /**
-     * updates given request with the given values
+     * Updates a ConferenceRequest object in both the database and the local list
      *
-     * @param request to update with new values
+     * @param request the ConferenceRequest object to be updated
      */
     @Override
     public void update(Object request) {
@@ -141,9 +145,11 @@ public class ConferenceRequestDAOImpl implements IDAO {
 
     /**
      * inserts a new conference request into the database
+     *
      * @param values to insert
+     * @return the id of the new conference request
      */
-    public static int insertDbRowNewConferenceRequest(String[] values) {
+    public int insertDBRowNewConferenceRequest(String[] values) {
         String[] colsConf = {"id", "daterequested", "eventname", "bookingreason"};
         String[] colsReq = {"employee", "floor", "roomnumber", "requeststatus", "requesttype", "location_name"};
         String[] valuesReq = {values[0], values[1], values[2], values[3], values[4], values[8]};
@@ -153,13 +159,8 @@ public class ConferenceRequestDAOImpl implements IDAO {
         return id;
     }
 
-    // Access from Database Methods
-
-    // Methods to get information about the conference request from the database
-
     /**
-     * Searches through the database for the row(s) that matches the given column
-     * and value
+     * Searches through the ConferenceRequests table for the row(s) that matches the given ID
      *
      * @param id   the id of the conferenceRequest to search for
      * @return the result set of the row(s) that matches the given column and value
@@ -169,27 +170,42 @@ public class ConferenceRequestDAOImpl implements IDAO {
     }
 
     /**
-     * Gets the row(s) from the database that matches the given order from
+     * Returns a ResultSet of the row(s) that matches the given column and value in the ConferenceRequests table
      *
-     * @param col the column to search for
-     * @param value the value to search for
-     * @return the result set of the row that matches the given orderfrom
+     * @param col the column to search for the value
+     * @param value the value to search for in the column
+     * @return a ResultSet of the row(s) that matches the given column and value
      */
-
     private ResultSet getDBRowFromCol(String col, String value) {
         return DButils.getRowCond("ConferenceRequests", "*", col + " = " + value);
     }
 
     /**
-     * Gets all rows from the database of conference requests
+     * Gets all rows from the ConferenceRequests table
      *
      * @return the result set of the row(s) that matches the given column and value
      */
     private ResultSet getDBRowAllRequests() {
+        return DButils.getCol("conferencerequests", "*");
+    }
+
+    /**
+     * Searches through the database for the row(s) that matches the given request ID in the ConferenceRequests table
+     *
+     * @param id the request ID to search for
+     * @return the result set of the row(s) that matches the given column and value
+     */
+    public ConferenceRequest getConfRequest(int id) {
+        ResultSet rs = DButils.getRowCond("ConferenceRequests", "*", "id = '" + id + "'");
         try {
-            return DButils.getCol("conferencerequests", "*");
+            assert rs != null;
+            if (rs.isBeforeFirst()) {
+                rs.next();
+                return new ConferenceRequest(rs);
+            } else
+                throw new SQLException("Error in method 'ConferenceRequestDAOImpl.getConfRequest': No rows found");
         } catch (SQLException e) {
-            System.err.println("ERROR Query Failed in method 'ConferenceRequestDAOImpl.getDBRowAllRequests': " + e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }

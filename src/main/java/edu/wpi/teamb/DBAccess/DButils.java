@@ -54,7 +54,7 @@ public class DButils {
      * @return Returns a ResultSet that contains the information queried. returns
      *         null if an error occurs
      */
-    public static ResultSet getCol(String table, String column) throws SQLException {
+    public static ResultSet getCol(String table, String column) {
         try {
             Statement stmt = Repository.getRepository().getConnection().createStatement();
             String query = "SELECT " + column + " FROM " + table;

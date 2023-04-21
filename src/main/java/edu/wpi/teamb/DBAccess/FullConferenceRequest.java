@@ -1,5 +1,6 @@
 package edu.wpi.teamb.DBAccess;
 
+import edu.wpi.teamb.DBAccess.DAO.RequestDAOImpl;
 import edu.wpi.teamb.DBAccess.ORMs.ConferenceRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
@@ -122,7 +123,7 @@ public class FullConferenceRequest {
     public static ArrayList<FullConferenceRequest> listFullConferenceRequests(ArrayList<ConferenceRequest> crs) {
         ArrayList<FullConferenceRequest> fcrs = new ArrayList<FullConferenceRequest>();
         for (ConferenceRequest cr : crs) {
-            Request r = Request.getRequest(cr.getId());
+            Request r = RequestDAOImpl.getRequest(cr.getId());
             FullConferenceRequest fcr = new FullConferenceRequest(r, cr);
             fcrs.add(fcr);
         }

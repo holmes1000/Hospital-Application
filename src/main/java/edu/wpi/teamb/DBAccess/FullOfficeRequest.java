@@ -1,5 +1,6 @@
 package edu.wpi.teamb.DBAccess;
 
+import edu.wpi.teamb.DBAccess.DAO.RequestDAOImpl;
 import edu.wpi.teamb.DBAccess.ORMs.MealRequest;
 import edu.wpi.teamb.DBAccess.ORMs.OfficeRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
@@ -103,7 +104,7 @@ public class FullOfficeRequest {
         ArrayList<FullOfficeRequest> fors = new ArrayList<FullOfficeRequest>();
         for (int i = 0; i < ors.size(); i++) {
             OfficeRequest or = ors.get(i);
-            Request r = Request.getRequest(or.getId());
+            Request r = RequestDAOImpl.getRequest(or.getId());
             FullOfficeRequest ofr = new FullOfficeRequest(r, or);
             fors.add(ofr);
         }

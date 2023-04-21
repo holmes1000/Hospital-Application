@@ -118,23 +118,6 @@ public class Edge {
             this.endNode = endNode;
         //endNode.addEdge(this);
     }
-
-    public Edge getEdge(String endpoints) {
-        String[] endpointsArray = endpoints.split("_");
-        ResultSet rs = DButils.getRowCond("Edges", "*", "startnode = " + endpointsArray[0] + " AND endnode = " + endpointsArray[1]);
-        try {
-            if (rs.isBeforeFirst()) { // if there is something it found
-                rs.next();
-                return new Edge(rs); // make the edge
-            } else
-                throw new SQLException("No rows found");
-        } catch (SQLException e) {
-            // handle error
-
-            System.err.println("ERROR Query Failed: " + e.getMessage());
-            return null;
-        }
-    }
     @Override
     public String toString() {
         return "StartNodeID: " + endpoints + " EndNodeID: " + endNodeID;

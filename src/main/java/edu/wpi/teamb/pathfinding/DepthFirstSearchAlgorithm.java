@@ -1,5 +1,6 @@
 package edu.wpi.teamb.pathfinding;
 
+import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 
@@ -76,7 +77,7 @@ public class DepthFirstSearchAlgorithm implements PathFindingAlgorithm{
             if (i > 0) {
                 path.append(", ");
             }
-            path.append(DButils.getLongNameFromNodeID(shortestPath.get(i)));
+            path.append(Repository.getRepository().getLongNameFromNodeID(shortestPath.get(i)));
         }
         return path.toString();
     }
@@ -84,7 +85,7 @@ public class DepthFirstSearchAlgorithm implements PathFindingAlgorithm{
     public String[] getPathAsStrings(ArrayList<Integer> shortestPath){
         String[] longNames = new String[shortestPath.size()];
         for (int i = 0; i < shortestPath.size(); i++) {
-            longNames[i] = DButils.getLongNameFromNodeID(shortestPath.get(i));
+            longNames[i] = Repository.getRepository().getLongNameFromNodeID(shortestPath.get(i));
         }
         return longNames;
     }

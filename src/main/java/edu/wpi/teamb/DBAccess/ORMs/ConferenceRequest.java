@@ -71,26 +71,4 @@ public class ConferenceRequest {
     this.bookingReason = bookingReason;
   }
 
-  /**
-   * Searches through the database for the row(s) that matches the given request ID
-   *
-   * @param id the request ID to search for
-   * @return the result set of the row(s) that matches the given column and value
-   */
-  public static ConferenceRequest getConfRequest(int id) {
-    ResultSet rs = DButils.getRowCond("ConferenceRequests", "*", "id = '" + id + "'");
-    try {
-      assert rs != null;
-      if (rs.isBeforeFirst()) {
-        rs.next();
-        return new ConferenceRequest(rs);
-      }else
-        throw new SQLException("No rows found");
-    } catch (Exception e) {
-      e.printStackTrace();
-      return null;
-    }
-  }
-
-
 }

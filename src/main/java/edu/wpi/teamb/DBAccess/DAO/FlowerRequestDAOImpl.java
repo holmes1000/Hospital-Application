@@ -14,18 +14,32 @@ public class FlowerRequestDAOImpl implements IDAO {
 
     ArrayList<FullFlowerRequest> flowerRequests;
 
-    public FlowerRequestDAOImpl() throws SQLException {
+    public FlowerRequestDAOImpl() {
         flowerRequests = getAllHelper();
     }
 
+    /**
+     * Gets all local FlowerRequest objects
+     *
+     * @return an ArrayList of all local FlowerRequest objects
+     */
     @Override
     public ArrayList<FullFlowerRequest> getAll() {
         return flowerRequests;
     }
 
+    /**
+     * Sets all FlowerRequest objects using the database
+     */
     @Override
     public void setAll() { flowerRequests = getAllHelper(); }
 
+    /**
+     * Gets a FullFlowerRequest object from the database
+     *
+     * @param id of the FlowerRequest object
+     * @return a FullFlowerRequest object with information from request and flower request tables
+     */
     @Override
     public FullFlowerRequest get(Object id) {
         Integer idInt = (Integer) id;
@@ -39,11 +53,17 @@ public class FlowerRequestDAOImpl implements IDAO {
             rs1.next();
             r = new Request(rs1);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.err.println("ERROR Query Failed in method 'FlowerRequestDAOImpl.get': " + e.getMessage());
+            return null;
         }
         return new FullFlowerRequest(r, fr);
     }
 
+    /**
+     * Gets all FlowerRequest objects from the database
+     *
+     * @return an ArrayList of all FlowerRequest objects
+     */
     public ArrayList<FullFlowerRequest> getAllHelper() {
         ArrayList<FlowerRequest> frs = new ArrayList<FlowerRequest>();
         try {
@@ -58,17 +78,15 @@ public class FlowerRequestDAOImpl implements IDAO {
         return FullFlowerRequest.listFullFlowerRequests(frs);
     }
 
+    /**
+     * Adds a FlowerRequest object to the both the database and local list
+     *
+     * @param request the FlowerRequest object to be added
+     */
     @Override
     public void add(Object request) {
         String[] flowerReq = (String[]) request;
-//        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//        Date dateSubmitted;
-//        Date dateRequested;
-//        try {
-//            dateSubmitted = (Date) dateFormat.parse(flowerReq[3]);
-//        } catch (ParseException e) {
-//            throw new RuntimeException(e);
-//        }
+
         String[] values = {flowerReq[0], flowerReq[1], flowerReq[2], flowerReq[3], flowerReq[4], flowerReq[5], flowerReq[6], flowerReq[7], flowerReq[8], flowerReq[9], flowerReq[10], flowerReq[11]};
         int id = insertDBRowNewFlowerRequest(values);
         ResultSet rs = DButils.getRowCond("requests", "dateSubmitted", "id = " + id);
@@ -80,9 +98,14 @@ public class FlowerRequestDAOImpl implements IDAO {
             e.printStackTrace();
         }
         flowerRequests.add(new FullFlowerRequest(id, flowerReq[0], flowerReq[1], flowerReq[2], dateSubmitted, flowerReq[4], flowerReq[5], flowerReq[6], flowerReq[7], flowerReq[8], flowerReq[9], flowerReq[10]));
-        RequestDAOImpl.getRequestDaoImpl().getRequests().add(new Request(id, flowerReq[0], flowerReq[1], flowerReq[2], dateSubmitted, flowerReq[4], flowerReq[5], flowerReq[10]));
+        RequestDAOImpl.getRequestDaoImpl().getAll().add(new Request(id, flowerReq[0], flowerReq[1], flowerReq[2], dateSubmitted, flowerReq[4], flowerReq[5], flowerReq[10]));
     }
 
+    /**
+     * Removes a FlowerRequest from both the database and local list
+     *
+     * @param request the FlowerRequest object to be removed
+     */
     @Override
     public void delete(Object request) {
         FullFlowerRequest ffr = (FullFlowerRequest) request;
@@ -90,9 +113,14 @@ public class FlowerRequestDAOImpl implements IDAO {
         DButils.deleteRow("requests", "id =" + ffr.getId() + "");
         flowerRequests.remove(ffr);
         Request req = new Request(ffr.getId(), ffr.getEmployee(), ffr.getFloor(), ffr.getRoomNumber(), ffr.getDateSubmitted(), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getLocation_name());
-        RequestDAOImpl.getRequestDaoImpl().getRequests().remove(req);
+        RequestDAOImpl.getRequestDaoImpl().getAll().remove(req);
     }
 
+    /**
+     * Updates a FlowerRequest object in both the database and the local list
+     *
+     * @param request the FlowerRequest object to be updated
+     */
     @Override
     public void update(Object request) {
         FullFlowerRequest ffr = (FullFlowerRequest) request;
@@ -113,22 +141,41 @@ public class FlowerRequestDAOImpl implements IDAO {
     }
 
     /**
-     * Gets all rows from the database of conference requests
+     * Gets all rows from the database of flower requests
      *
      * @return the result set of the row(s) that matches the given column and value
      */
-    private ResultSet getDBRowAllRequests() throws SQLException {
-        return DButils.getCol("flowerrequests", "*");
+    private ResultSet getDBRowAllRequests() {
+        return DButils.getCol("FlowerRequests", "*");
     }
 
+    /**
+     * Updates the special instructions of a row in the FlowerRequests table
+     *
+     * @param specialInstructions the specialInstructions to update
+     * @param col the column to search for the value
+     * @param val the value to search for in the column
+     */
     public void updateRowSpecialInstructions(String specialInstructions, String[] col, String[] val) {
         updateRows(col, val, "specialInstructions = " + specialInstructions);
     }
 
+    /**
+     * Returns a String representation of a FlowerRequest
+     *
+     * @param request the FlowerRequest to turn into a String
+     * @return the String representation of the FlowerRequest
+     */
     public String toString(FlowerRequest request) {
         return request.getId() + " " + request.getFlowerType() + " " + request.getColor() + " " + request.getType() + " " + request.getMessage() + " " + request.getSpecialInstructions();
     }
 
+    /**
+     * Inserts a new row into the FlowerRequests table
+     *
+     * @param values the values of the FlowerRequest you want to add
+     * @return an int representing the id of the new row
+     */
     public static int insertDBRowNewFlowerRequest(String[] values) {
         String[] colsFlower = {"id", "flowerType", "color", "Type", "message", "specialInstructions"};
         String[] colsReq = {"employee", "floor", "roomnumber", "requeststatus","requesttype", "location_name"};
@@ -139,55 +186,141 @@ public class FlowerRequestDAOImpl implements IDAO {
         return id;
     }
 
+    /**
+     * Returns a ResultSet of the row(s) that matches the given column and value in the FlowerRequests table
+     *
+     * @param col the column to search for the value
+     * @param value the value to search for in the column
+     * @return a ResultSet of the row(s) that matches the given column and value
+     */
     private ResultSet getDBRowFromCol(String col, String value) {
         return DButils.getRowCond("FlowerRequests", "*", col + " = " + value);
     }
 
+    /**
+     * Returns a ResultSet of the row(s) that matches the given ID in the FlowerRequests table
+     *
+     * @param id the id of the row to get
+     * @return a ResultSet of the row(s) that matches the given ID
+     */
     public ResultSet getDBRowID(int id) {
         return getDBRowFromCol("id", Integer.toString(id));
     }
 
+    /**
+     * Returns a ResultSet of the row(s) that matches the given flowerType
+     *
+     * @param flowerType the flowerType of the row to get
+     * @return a ResultSet of the row(s) that matches the given flowerType
+     */
     public ResultSet getDBRowFlowerType(String flowerType) {
         return getDBRowFromCol("flowerType", flowerType);
     }
 
+    /**
+     * Returns a ResultSet of the row(s) that matches the given color
+     *
+     * @param color the color of the row to get
+     * @return a ResultSet of the row(s) that matches the given color
+     */
     public ResultSet getDBRowColor(String color) {
         return getDBRowFromCol("color", color);
     }
 
+    /**
+     * Returns a ResultSet of the row(s) that matches the given type
+     *
+     * @param type the type of the row to get
+     * @return a ResultSet of the row(s) that matches the given type
+     */
     public ResultSet getDBRowType(String type) {
         return getDBRowFromCol("type", type);
     }
 
+    /**
+     * Returns a ResultSet of the row(s) that matches the given message
+     *
+     * @param message the message of the row to get
+     * @return a ResultSet of the row(s) that matches the given message
+     */
     public ResultSet getDBRowMessage(String message) {
         return getDBRowFromCol("message", message);
     }
 
+    /**
+     * Returns a ResultSet of the row(s) that matches the given specialInstructions
+     *
+     * @param specialInstructions the specialInstructions of the row to get
+     * @return a ResultSet of the row(s) that matches the given specialInstructions
+     */
     public ResultSet getDBRowSpecialInstructions(String specialInstructions) {
         return getDBRowFromCol("specialInstructions", specialInstructions);
     }
+
+    /**
+     * Updates the rows in the FlowerRequests table that match the given condition
+     *
+     * @param col the columns to update
+     * @param val the values to update the columns to
+     * @param cond the condition to search for
+     */
     private void updateRows(String[] col, String[] val, String cond) {
         if (col.length != val.length)
             throw new IllegalArgumentException("Column and value arrays must be the same length");
-        DButils.updateRow("flowerrequests", col, val, cond);
+        DButils.updateRow("FlowerRequests", col, val, cond);
     }
 
+    /**
+     * Updates the rows in the FlowerRequests table that match the given ID
+     *
+     * @param id the id of the row to update
+     * @param col the columns to update
+     * @param val the values to update the columns to
+     */
     public void updateRowID(int id, String[] col, String[] val) {
         updateRows(col, val, "id = " + id);
     }
 
+    /**
+     * Updates the rows in the FlowerRequests table that match the given flowerType
+     *
+     * @param flowerType the flowerType of the row to update
+     * @param col the columns to update
+     * @param val the values to update the columns to
+     */
     public void updateRowFlowerType(String flowerType, String[] col, String[] val) {
         updateRows(col, val, "flowerType = " + flowerType);
     }
 
+    /**
+     * Updates the rows in the FlowerRequests table that match the given color
+     *
+     * @param color the color of the row to update
+     * @param col the columns to update
+     * @param val the values to update the columns to
+     */
     public void updateRowColor(String color, String[] col, String[] val) {
         updateRows(col, val, "color = " + color);
     }
 
+    /**
+     * Updates the rows in the FlowerRequests table that match the given type
+     *
+     * @param type the type of the row to update
+     * @param col the columns to update
+     * @param val the values to update the columns to
+     */
     public void updateRowType(String type, String[] col, String[] val) {
         updateRows(col, val, "type = " + type);
     }
 
+    /**
+     * Updates the rows in the FlowerRequests table that match the given message
+     *
+     * @param message the message of the row to update
+     * @param col the columns to update
+     * @param val the values to update the columns to
+     */
     public void updateRowMessage(String message, String[] col, String[] val) {
         updateRows(col, val, "message = " + message);
     }

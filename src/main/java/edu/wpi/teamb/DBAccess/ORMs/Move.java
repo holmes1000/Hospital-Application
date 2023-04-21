@@ -56,7 +56,6 @@ public class Move {
         }
     }
 
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -95,21 +94,6 @@ public class Move {
 
     public void setDate(Date date) {
         this.date = date;
-    }
-    public Move getMove(int id) {
-        ResultSet rs = DButils.getRowCond("Moves", "*", "nodeID = " + id + "");
-        try {
-            if (rs.isBeforeFirst()) {
-                rs.next();
-                return new Move(rs);
-            } else
-                throw new SQLException("No rows found");
-        } catch (SQLException e) {
-            // handle error
-
-            System.err.println("ERROR Query Failed: " + e.getMessage());
-            return null;
-        }
     }
 
     public String toString() {

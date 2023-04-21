@@ -18,7 +18,7 @@ public class EdgeDAOImpl implements IDAO {
         return edges;
     }
 
-    public EdgeDAOImpl() throws SQLException {
+    public EdgeDAOImpl() {
         edges = getAllHelper();
     }
 
@@ -32,7 +32,7 @@ public class EdgeDAOImpl implements IDAO {
     public Edge get(Object id) {
         String endpoints = (String) id;
         String[] endpointsArray = endpoints.split("_");
-        ResultSet rs = DButils.getRowCond("edges", "*", "startnode = " + endpointsArray[0] + " AND endnode = " + endpointsArray[1]);
+        ResultSet rs = DButils.getRowCond("Edges", "*", "startnode = " + endpointsArray[0] + " AND endnode = " + endpointsArray[1]);
         try {
             if (rs.isBeforeFirst()) { // if there is something it found
                 rs.next();
@@ -40,30 +40,31 @@ public class EdgeDAOImpl implements IDAO {
             } else
                 throw new SQLException("No rows found");
         } catch (SQLException e) {
-            // handle error
-
-            System.err.println("ERROR Query Failed: " + e.getMessage());
+            System.err.println("ERROR Query Failed in method 'EdgeDAOImpl.get': " + e.getMessage());
             return null;
         }
     }
 
     /**
-     * Gets all edges
+     * Gets all local Edge objects
      *
-     * @return A list of all edges
+     * @return an ArrayList of all local Edge objects
      */
     @Override
     public ArrayList<Edge> getAll() {
         return edges;
     }
 
+    /**
+     * Sets all Edge objects using the database
+     */
     @Override
     public void setAll() { edges = getAllHelper(); }
 
     /**
      * Gets all edges from the database
      *
-     * @return A list of all edges
+     * @return a list of all edges
      */
     public ArrayList<Edge> getAllHelper() {
         ArrayList<Edge> edges = new ArrayList<Edge>();
@@ -80,9 +81,9 @@ public class EdgeDAOImpl implements IDAO {
     }
 
     /**
-     * Adds an edge
+     * Adds an Edge object to the both the database and local list
      *
-     * @param edge The edge to add
+     * @param edge the Edge object to be added
      */
     @Override
     public void add(Object edge) {
@@ -92,9 +93,9 @@ public class EdgeDAOImpl implements IDAO {
     }
 
     /**
-     * Deletes an edge
+     * Removes an Edge from the both the database and the local list
      *
-     * @param edge The edge to delete
+     * @param edge the Edge object to be removed
      */
     @Override
     public void delete(Object edge) {
@@ -104,11 +105,10 @@ public class EdgeDAOImpl implements IDAO {
     }
 
     /**
-     * Updates an edge
+     * Updates an Edge object in both the database and local list
      *
-     * @param edge The edge to update
+     * @param edge the Edge object to be updated
      */
-    //TODO: figure out how to update an edge
     @Override
     public void update(Object edge) {
         Edge e = (Edge) edge;
@@ -140,37 +140,37 @@ public class EdgeDAOImpl implements IDAO {
             nodes.put(e.getEndNodeID(), node);
         }
     }
+
     /**
-     * Gets the row(s) from the database that matches the startnode
+     * Gets the row(s) from the database that matches the startNode
      *
-     * @param startNode the startnode to search for, make sure there are NO single
-     *                  quotes surrounding the startnode
-     * @return the row(s) that have a matching the startnode
+     * @param startNode the startNode to search for, make sure there are NO single
+     *                  quotes surrounding the startNode
+     * @return the row(s) that have a matching the startNode
      */
     public static ResultSet getDBRowStartNode(String startNode) {
-
         return getRowFromCol("startnode", "" + startNode + "");
     }
 
     /**
-     * Gets the row(s) from the database that matches the endnode
+     * Gets the row(s) from the database that matches the endNode
      *
-     * @param endNode the endnode to search for, make sure there are NO single
-     *                quotes surrounding the endnode
-     * @return the row(s) that have a matching the endnode
+     * @param endNode the endNode to search for, make sure there are NO single
+     *                quotes surrounding the endNode
+     * @return the row(s) that have a matching the endNode
      */
     public static ResultSet getDBRowEndNode(String endNode) {
-        return getRowFromCol("endnode", "" + endNode + "");
+        return getRowFromCol("endNode", "" + endNode + "");
     }
 
     /**
-     * Searches through the database for the row(s) that matches the col and value
+     * Searches through the database for the row(s) that matches the col and value in the Edges table
      *
      * @param col   the column to search for
      * @param value the value to search for
      * @return A ResultSet of the row(s) that match the col and value
      */
-    private static ResultSet getRowFromCol(String col, String value) {
+    static ResultSet getRowFromCol(String col, String value) {
         if (col == null || value == null || col.equals("") || value.equals("")) {
             throw new IllegalArgumentException("col or value is null");
         }
@@ -178,16 +178,17 @@ public class EdgeDAOImpl implements IDAO {
     }
 
     /**
-     * gets all the rows from the database
+     * Gets all the rows from the database
      */
     public ResultSet getDBRowAllEdges() {
         return DButils.getRowCond("edges", "*", "TRUE");
     }
 
     /**
-     * inserts an edge into the database
-     * @param startNode the startnode of the edge
-     * @param endNode the endnode of the edge
+     * Inserts an edge into the database
+     *
+     * @param startNode the startNode of the edge
+     * @param endNode the endNode of the edge
      */
     public void insertEdge(int startNode, int endNode) {
         String[] cols = { "startnode", "endnode" };
@@ -196,12 +197,12 @@ public class EdgeDAOImpl implements IDAO {
     }
 
     /**
-     * Updates the row in the database that matches the edgeid
+     * Updates the row in the database that matches the edgeID
      *
      * @param cols   the columns to update
      * @param values the values to update the columns to
      */
-    private void updateRow(String[] cols, String[] values, Edge e) {
+    void updateRow(String[] cols, String[] values, Edge e) {
         String[] endpointsA= e.endpoints.split("_");
         if (cols == null || values == null) {
             throw new IllegalArgumentException("col or value is null");
@@ -209,24 +210,10 @@ public class EdgeDAOImpl implements IDAO {
         DButils.updateRow("edges", cols, values, "startnode = " + endpointsA[0] + "AND endnode = " + endpointsA[1]);
     }
 
-    // /**
-    // * Updates the edgeid in the database
-    // *
-    // * @param edgeID the new edgeid
-    // */
-    // public void updateDBEdgeID(String edgeID) {
-    // if (edgeID == null || edgeID.equals("")) {
-    // throw new IllegalArgumentException("edgeID is null or empty");
-    // }
-    // String[] cols = { "edgeid" };
-    // String[] values = { "'" + edgeID + "'" };
-    // updateRow(cols, values);
-    // }
-
     /**
-     * Updates the startnode in the database
+     * Updates the startNode in the database
      *
-     * @param startNode the new startnode
+     * @param startNode the new startNode
      */
     public void updateDBStartNode(String startNode, Edge e) {
         if (startNode == null || startNode.equals("")) {
@@ -240,9 +227,10 @@ public class EdgeDAOImpl implements IDAO {
     }
 
     /**
-     * Updates the endnode in the database
+     * Updates the endNode in the database
      *
-     * @param endNode the new endnode
+     * @param endNode the new endNode
+     * @param e the Edge to update
      */
     public void updateDBEndNode(String endNode, Edge e) {
         if (endNode == null || endNode.equals("")) {
@@ -264,10 +252,11 @@ public class EdgeDAOImpl implements IDAO {
     }
 
     /**
-     * Deletes the row in the database that matches the edgeid
+     * Deletes the row in the database that matches the edgeID
      * only use this if you are sure you want to delete the row
      *
      * @param confirm 0 to confirm delete, anything else to cancel
+     * @param e the edge to delete
      */
     public void deleteDBEdge(int confirm, Edge e) {
         String[] endpointsA = e.endpoints.split("_");
@@ -275,6 +264,27 @@ public class EdgeDAOImpl implements IDAO {
             DButils.deleteRow("edges", "startnode = " + endpointsA[0] + "AND endnode = " + endpointsA[1]);
         } else {
             System.out.println("Delete not confirmed");
+        }
+    }
+
+    /**
+     * Gets the edge from the database that matches the edgeID
+     *
+     * @param endpoints a String of endpoints in the format "startNode_endNode"
+     * @return the edge that matches the endpoints
+     */
+    public Edge getEdge(String endpoints) {
+        String[] endpointsArray = endpoints.split("_");
+        ResultSet rs = DButils.getRowCond("Edges", "*", "startnode = " + endpointsArray[0] + " AND endnode = " + endpointsArray[1]);
+        try {
+            if (rs.isBeforeFirst()) { // if there is something it found
+                rs.next();
+                return new Edge(rs); // make the edge
+            } else
+                throw new SQLException("No rows found");
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'EdgeDAOImpl.getEdge': " + e.getMessage());
+            return null;
         }
     }
 

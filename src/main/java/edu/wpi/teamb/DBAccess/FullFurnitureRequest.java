@@ -1,5 +1,6 @@
 package edu.wpi.teamb.DBAccess;
 
+import edu.wpi.teamb.DBAccess.DAO.RequestDAOImpl;
 import edu.wpi.teamb.DBAccess.ORMs.FurnitureRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
@@ -138,7 +139,7 @@ public class FullFurnitureRequest {
         ArrayList<FullFurnitureRequest> ffrs = new ArrayList<FullFurnitureRequest>();
         for (int i = 0; i < frs.size(); i++) {
             FurnitureRequest fr = frs.get(i);
-            Request r = Request.getRequest(fr.getId());
+            Request r = RequestDAOImpl.getRequest(fr.getId());
             FullFurnitureRequest ffr = new FullFurnitureRequest(r, fr);
             ffrs.add(ffr);
         }
