@@ -80,55 +80,46 @@ public class FlowerRequestControllerI implements IRequestController {
         //Set list of employees
         ObservableList<String> employees =
                 FXCollections.observableArrayList();
+        employees.add("Unassigned");
         employees.addAll(EFlowerRequest.getUsernames());
         cbEmployeesToAssign.setItems(employees);
     }
 
     @Override
     public void handleSubmit() {
-        // Get the standard request fields
-        EFlowerRequest.setEmployee(cbEmployeesToAssign.getValue());
-        EFlowerRequest.setLocationName(cbLongName.getValue());
-        EFlowerRequest.setRequestStatus(IRequest.RequestStatus.Pending);
-        EFlowerRequest.setNotes(txtFldNotes.getText());
+        if (nullInputs())
+            showPopOver();
+        else {
+            // Get the standard request fields
+            EFlowerRequest.setEmployee(cbEmployeesToAssign.getValue());
+            EFlowerRequest.setLocationName(cbLongName.getValue());
+            EFlowerRequest.setRequestStatus(IRequest.RequestStatus.Pending);
+            EFlowerRequest.setNotes(txtFldNotes.getText());
 
-        // Get the conference specific fields
-        EFlowerRequest.setFlowerType(cbAvailableFlowers.getValue());
-        EFlowerRequest.setColor(cdAvailableColor.getValue());
-        EFlowerRequest.setSize(cdAvailableType.getValue());
-        EFlowerRequest.setMessage(txtFldMessage.getText());
+            // Get the conference specific fields
+            EFlowerRequest.setFlowerType(cbAvailableFlowers.getValue());
+            EFlowerRequest.setColor(cdAvailableColor.getValue());
+            EFlowerRequest.setSize(cdAvailableType.getValue());
+            EFlowerRequest.setMessage(txtFldMessage.getText());
 
-        //Check for required fields before allowing submittion
-        if(EFlowerRequest.checkRequestFields() && EFlowerRequest.checkSpecialRequestFields()){
-            String[] output = {
-                    EFlowerRequest.getEmployee(),
-                    String.valueOf(EFlowerRequest.getRequestStatus()),
-                    EFlowerRequest.getLocationName(),
-                    EFlowerRequest.getNotes(),
-                    EFlowerRequest.getFlowerType(),
-                    EFlowerRequest.getColor(),
-                    EFlowerRequest.getSize(),
-                    EFlowerRequest.getMessage()
-            };
-            EFlowerRequest.submitRequest(output);
-            handleReset();
-            Navigation.navigate(Screen.CREATE_NEW_REQUEST);
-        }else{
-
-            //If the required fields are not filled, bring up pop-over indicating such
-            final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/NotAllFieldsCompleteError.fxml"));
-            PopOver popOver = new PopOver();
-            popOver.setDetachable(true);
-            popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
-            popOver.setArrowSize(0.0);
-            try {
-                popOver.setContentNode(popupLoader.load());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            //Check for required fields before allowing submittion
+            if (EFlowerRequest.checkRequestFields() && EFlowerRequest.checkSpecialRequestFields()) {
+                String[] output = {
+                        EFlowerRequest.getEmployee(),
+                        String.valueOf(EFlowerRequest.getRequestStatus()),
+                        EFlowerRequest.getLocationName(),
+                        EFlowerRequest.getNotes(),
+                        EFlowerRequest.getFlowerType(),
+                        EFlowerRequest.getColor(),
+                        EFlowerRequest.getSize(),
+                        EFlowerRequest.getMessage()
+                };
+                EFlowerRequest.submitRequest(output);
+                handleReset();
+                Navigation.navigate(Screen.CREATE_NEW_REQUEST);
             }
-            popOver.show(btnSubmit);
+            submissionAlert();
         }
-        submissionAlert();
     }
 
     @Override
@@ -155,5 +146,25 @@ public class FlowerRequestControllerI implements IRequestController {
             throw new RuntimeException(e);
         }
         popOver.show(helpIcon);
+    }
+
+    @Override
+    public boolean nullInputs() {
+        return cbAvailableFlowers.getValue() == null || cdAvailableColor.getValue() == null || cdAvailableType.getValue() == null || txtFldMessage.getText().isEmpty() || txtFldNotes.getText().isEmpty() || cbEmployeesToAssign.getValue() == null || cbLongName.getValue() == null;
+    }
+
+    @Override
+    public void showPopOver() {
+        final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/NotAllFieldsCompleteError.fxml"));
+        PopOver popOver = new PopOver();
+        popOver.setDetachable(true);
+        popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
+        popOver.setArrowSize(0.0);
+        try {
+            popOver.setContentNode(popupLoader.load());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        popOver.show(btnSubmit);
     }
 }
