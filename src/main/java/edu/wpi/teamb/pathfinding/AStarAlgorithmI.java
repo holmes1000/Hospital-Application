@@ -1,7 +1,7 @@
 package edu.wpi.teamb.pathfinding;
 
 import edu.wpi.teamb.DBAccess.DAO.Repository;
-import edu.wpi.teamb.DBAccess.DButils;
+import edu.wpi.teamb.DBAccess.Full.FullNode;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 
 import java.sql.SQLException;
@@ -14,6 +14,7 @@ public class AStarAlgorithmI implements IPathFindingAlgorithm {
 
 
     HashMap<Integer,Node> node_map = new HashMap<Integer,Node>();
+    ArrayList<FullNode> fullNodes = new ArrayList<FullNode>();
 
     public void init_pathfinder() throws SQLException {
         if (node_map.isEmpty()){create_all_nodes();}
@@ -24,6 +25,9 @@ public class AStarAlgorithmI implements IPathFindingAlgorithm {
         return node_map;
     }
 
+    public ArrayList<FullNode> getFullNodes() {
+        return fullNodes;
+    }
 
     public void create_all_nodes() {
         HashMap<Integer,Node> node_map = new HashMap<Integer,Node>();
@@ -36,6 +40,7 @@ public class AStarAlgorithmI implements IPathFindingAlgorithm {
             node_map.put(node_list.get(i).getNodeID(),node_list.get(i));
         }
         this.node_map = node_map;
+        this.fullNodes = Repository.getRepository().getAllFullNodes();
         System.out.println("Initialized all nodes. Ready for pathfinding");
     }
 
@@ -52,7 +57,7 @@ public class AStarAlgorithmI implements IPathFindingAlgorithm {
         startNode.setCost(0.0);
         Node goalNode = node_map.get(goal);
 
-        PriorityQueue<Node> frontier = new PriorityQueue<Node>(new PriorityComparator());
+        PriorityQueue<Node> frontier = new PriorityQueue<Node>(new PriorityComparatorAstar());
         frontier.add(startNode);
         Node current;
         double newCost;
@@ -108,8 +113,10 @@ public class AStarAlgorithmI implements IPathFindingAlgorithm {
 //              System.out.println(nextNode);
                 //newCost = costSoFar.get(current.getNodeID()) + manhattanDistance(current, nextNode) + manhattanDistance(current, goalNode);
                 newCost = costSoFar.get(current.getNodeID()) + manhattanDistance(current, nextNode);
+                Double cost_with_heuristic = newCost + manhattanDistance(current, goalNode);
                 if (!costSoFar.containsKey(next) || newCost < costSoFar.get(next)) {
                     nextNode.setCost(newCost);
+                    nextNode.setCost_and_heuristic(cost_with_heuristic);
                     costSoFar.put(next,newCost);
                     if (cameFrom.containsKey(next)) {cameFrom.replace(next, current.getNodeID());}
                     else {cameFrom.put(next,current.getNodeID());}

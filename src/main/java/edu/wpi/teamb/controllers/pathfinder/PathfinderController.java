@@ -7,10 +7,10 @@ import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import edu.wpi.teamb.Bapp;
-import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.Full.FullNode;
 import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
@@ -77,6 +77,7 @@ public class PathfinderController {
     ArrayList<FullNode> fullNodes = new ArrayList<>();
     HashMap<Integer,FullNode> filteredFullNodes = new HashMap<>();
     HashMap<String,FullNode> fullNodesByLongname = new HashMap<>();
+    HashMap<Integer,FullNode> fullNodesByID = new HashMap<>();
     Group pathGroup;
     Pane locationCanvas;
   @FXML
@@ -91,7 +92,6 @@ public class PathfinderController {
       this.stackPaneMapView = new StackPane(); // no longer @FXML
       this.pathGroup = new Group();
       this.locationCanvas = new Pane();
-      this.fullNodes = Repository.getRepository().getAllFullNodes();
       this.filteredFullNodes = new HashMap<>();
       getFilteredLongnames();
       this.pane.setContent(stackPaneMapView);
@@ -100,7 +100,7 @@ public class PathfinderController {
       this.stackPaneMapView.getChildren().add(this.locationCanvas);
 
       this.locationCanvas.getChildren().add(pathGroup);
-      this.fullNodes = Repository.getRepository().getAllFullNodes();
+      this.fullNodes = PathFinding.ASTAR.getFullNodes();
 //      this.filteredFullNodes = new HashMap<>();
 
       pane.setScrollMode(GesturePane.ScrollMode.ZOOM);
@@ -114,6 +114,8 @@ public class PathfinderController {
       algorithms.add("AStar (Default)");
       algorithms.add("Breadth First Search");
       algorithms.add("Depth First Search");
+      algorithms.add("Dijkstra Search");
+      algorithms.add("BStar");
 
 
       nodes.addAll(getFilteredLongnames());
@@ -129,16 +131,19 @@ public class PathfinderController {
       listView.getSelectionModel().selectionProperty().addListener(new ChangeListener<ObservableMap<Integer, String>>() {
           @Override
           public void changed(ObservableValue<? extends ObservableMap<Integer, String>> observable, ObservableMap<Integer, String> oldValue, ObservableMap<Integer, String> newValue) {
-              String selectedLongName = listView.getSelectionModel().getSelectedValues().get(0);
-              Integer index = listView.getItems().indexOf(selectedLongName);
-              System.out.println(index);
-              Node node = PathFinding.ASTAR.get_node_map().get(EPathfinder.getPath().get(index));
-//              String longname = Repository.getRepository().
-              FullNode n = filteredFullNodes.get(node.getNodeID());
-              String floor = n.getFloor();
-              if (!currentFloor.equals(floor)) {switchFloor(floor);}
-              pane.centreOnX(n.getxCoord());
-              pane.centreOnY(n.getyCoord());
+              if (!listView.getSelectionModel().getSelectedValues().isEmpty()) {
+                  String selectedLongName = listView.getSelectionModel().getSelectedValues().get(0);
+                  Integer index = listView.getItems().indexOf(selectedLongName);
+//                  System.out.println(index);
+                  Node node = PathFinding.ASTAR.get_node_map().get(EPathfinder.getPath().get(index));
+                  FullNode n = filteredFullNodes.get(node.getNodeID());
+                  String floor = n.getFloor();
+                  if (!currentFloor.equals(floor)) {
+                      switchFloor(floor);
+                  }
+                  pane.centreOnX(n.getxCoord());
+                  pane.centreOnY(n.getyCoord());
+              }
           }
       });
 
@@ -151,10 +156,13 @@ public class PathfinderController {
   }
 
   public ArrayList<String> getFilteredLongnames(){
-      ArrayList<String> filtered_names = Repository.getRepository().getAllLongNames();
+      ArrayList<String> filtered_names = new ArrayList<>();
       for (FullNode node : fullNodes){
           filteredFullNodes.put(node.getNodeID(),node);
           fullNodesByLongname.put(node.getLongName(),node);
+          fullNodesByID.put(node.getNodeID(),node);
+
+          filtered_names.add(node.getLongName());
 //          if (node.getNodeType().equals("STAI") || node.getNodeType().equals("ELEV")) {
 //              filtered_names.remove(node.getLongName());
 //
@@ -163,7 +171,7 @@ public class PathfinderController {
 //              filteredFullNodes.put(node.getLongName(),node);
 //          }
       }
-//      Collections.sort(filtered_names);
+      Collections.sort(filtered_names);
       return filtered_names;
   }
 
@@ -197,7 +205,7 @@ public class PathfinderController {
               if (n == nodes.get(0)) {
                   Circle circle = new Circle(n.getxCoord(), n.getyCoord(), 5, GREEN);
                   pathGroup.getChildren().add(circle);
-                  Tooltip tooltip = new Tooltip(Repository.getRepository().getLongNameFromNodeID(n.getNodeID()));
+                  Tooltip tooltip = new Tooltip(fullNodesByID.get(n.getNodeID()).getLongName());
                   Tooltip.install(circle,tooltip);
                   tooltip.setShowDelay(Duration.millis(5));
                   tooltip.setStyle("-fx-font-size: 14px;");
@@ -207,19 +215,20 @@ public class PathfinderController {
               } else if (n == nodes.get(nodes.size() - 1)) {
                   Circle circle = new Circle(n.getxCoord(), n.getyCoord(), 5, PURPLE);
                   pathGroup.getChildren().add(circle);
-                  Tooltip tooltip = new Tooltip(Repository.getRepository().getLongNameFromNodeID(n.getNodeID()));
+                  Tooltip tooltip = new Tooltip(fullNodesByID.get(n.getNodeID()).getLongName());
                   Tooltip.install(circle,tooltip);
                   tooltip.setShowDelay(Duration.millis(5));
                   tooltip.setStyle("-fx-font-size: 14px;");
 
-              } else {
-                  Circle circle = new Circle(n.getxCoord(), n.getyCoord(), 5, RED);
-                  pathGroup.getChildren().add(circle);
-                  Tooltip tooltip = new Tooltip(Repository.getRepository().getLongNameFromNodeID(n.getNodeID()));
-                  Tooltip.install(circle,tooltip);
-                  tooltip.setShowDelay(Duration.millis(5));
-                  tooltip.setStyle("-fx-font-size: 14px;");
               }
+//              else { // Commented out to only draw start and end of a path on a floor
+//                  Circle circle = new Circle(n.getxCoord(), n.getyCoord(), 5, RED);
+//                  pathGroup.getChildren().add(circle);
+//                  Tooltip tooltip = new Tooltip(fullNodesByID.get(n.getNodeID()).getLongName());
+//                  Tooltip.install(circle,tooltip);
+//                  tooltip.setShowDelay(Duration.millis(5));
+//                  tooltip.setStyle("-fx-font-size: 14px;");
+//              }
           }
 
           pathGroup.toFront();
@@ -363,40 +372,48 @@ public class PathfinderController {
   public void clickFindPath() throws SQLException {
       btnFindPath.setOnMouseClicked(event-> {
           VboxPathfinder.getChildren().clear();
-          int start = filteredFullNodes.get(fullNodesByLongname.get(startNode.getSelectedItem()).getNodeID()).getNodeID();
-          int end = filteredFullNodes.get(fullNodesByLongname.get(endNode.getSelectedItem()).getNodeID()).getNodeID();
+          if (!(startNode.getSelectedItem() == null)  && !(endNode.getSelectedItem() == null)) {
+              int start = filteredFullNodes.get(fullNodesByLongname.get(startNode.getSelectedItem()).getNodeID()).getNodeID();
+              int end = filteredFullNodes.get(fullNodesByLongname.get(endNode.getSelectedItem()).getNodeID()).getNodeID();
 
-          String[] path = new String[0];
-          try {
+              String[] path = new String[0];
+              try {
 
-              if (algorithmDropdown.getSelectedItem() != null) {
-                  if (toggleAvoidStairs.isSelected()) {path = EPathfinder.getShortestPath("AStar","Elevators",start, end);}
+                  if (algorithmDropdown.getSelectedItem() != null) {
+                      if (toggleAvoidStairs.isSelected()) {
+                          path = EPathfinder.getShortestPath("AStar", "Elevators", start, end);
+                      }
 //                  else if (toggleAvoidElevators.isSelected()) {path = pathfinder.getShortestPath("AStar","Stairs",start, end);}
-                  else if (algorithmDropdown.getSelectedItem().equals("Breadth First Search")) {
-                      path = EPathfinder.getShortestPath("Breadth First Search", "None",start, end);
+                      else if (algorithmDropdown.getSelectedItem().equals("Breadth First Search")) {
+                          path = EPathfinder.getShortestPath("Breadth First Search", "None", start, end);
+                      } else if (algorithmDropdown.getSelectedItem().equals("Depth First Search")) {
+                          path = EPathfinder.getShortestPath("Depth First Search", "None", start, end);
+                      } else if (algorithmDropdown.getSelectedItem().equals("Dijkstra Search")) {
+                          path = EPathfinder.getShortestPath("Dijkstra Search", "None", start, end);
+                      } else {
+                          path = EPathfinder.getShortestPath("AStar", "None", start, end);
+                      }
+                  } else {
+                      path = EPathfinder.getShortestPath("AStar", "None", start, end);
                   }
-                  else if (algorithmDropdown.getSelectedItem().equals("Depth First Search")) {
-                      path = EPathfinder.getShortestPath("Depth First Search", "None", start, end);
-                  }
-                  else {path = EPathfinder.getShortestPath("AStar","None",start, end);}
-              }
-              else {path = EPathfinder.getShortestPath("AStar", "None",start, end);}
 
 
-              ArrayList<Integer> int_path = EPathfinder.getPath();
-              ArrayList<Node> nodePath;
-              nodes_by_floor = new HashMap<>();
-              for (Integer id : int_path){
-                  Node node = PathFinding.ASTAR.get_node_map().get(id);
-                  nodePath = nodes_by_floor.get(node.getFloor());
+                  ArrayList<Integer> int_path = EPathfinder.getPath();
+                  ArrayList<Node> nodePath;
+                  nodes_by_floor = new HashMap<>();
+                  for (Integer id : int_path) {
+                      Node node = PathFinding.ASTAR.get_node_map().get(id);
+                      nodePath = nodes_by_floor.get(node.getFloor());
 //                  System.out.println(nodePath);
-                  if (nodePath == null) {nodePath = new ArrayList<>();}
-                  nodePath.add(PathFinding.ASTAR.get_node_map().get(id));
-                  nodes_by_floor.put(node.getFloor(),nodePath);
-              }
+                      if (nodePath == null) {
+                          nodePath = new ArrayList<>();
+                      }
+                      nodePath.add(PathFinding.ASTAR.get_node_map().get(id));
+                      nodes_by_floor.put(node.getFloor(), nodePath);
+                  }
 
-              String floor = PathFinding.ASTAR.get_node_map().get(start).getFloor();
-              switchFloor(floor);
+                  String floor = PathFinding.ASTAR.get_node_map().get(start).getFloor();
+                  switchFloor(floor);
 
               } catch (SQLException e) {
                   throw new RuntimeException(e);
@@ -410,7 +427,7 @@ public class PathfinderController {
               listView.setItems(items);
               VboxPathfinder.getChildren().addAll(listView);
               listView.getSelectionModel().clearSelection();
-
+          }
 
       });
   }
