@@ -138,7 +138,7 @@ public class DButils {
                     + strArray2InsertFormat(value) + ")";
             stmt.executeUpdate(update);
         } catch (SQLException e) {
-            System.err.println("ERROR Query Failed in method 'DB.insertRow': " + e.getMessage());
+            System.err.println("ERROR Query Failed in method 'DButils.insertRow': " + e.getMessage());
         }
     }
 
@@ -156,25 +156,29 @@ public class DButils {
         PreparedStatement stmt = null;
         Statement currvalStatement = null;
         ResultSet currvalResultSet = null;
+        Connection c = null;
         try {
-            DBConnection.getDBconnection().getConnection().setAutoCommit(false);
+            c = DBConnection.getDBconnection().getConnection();
+            c.setAutoCommit(false);
             String insert = "INSERT INTO requests(employee, requeststatus, requesttype, locationname, notes) VALUES ( ?, ?, ?, ?, ?)";
-            String query = "SELECT currval(pg_get_serial_sequence('requests','id'))";
-            stmt = DBConnection.getDBconnection().getConnection().prepareStatement(insert);
+            String query = "SELECT nextval(pg_get_serial_sequence('requests','id'))";
+            String query1 = "SELECT currval(pg_get_serial_sequence('requests','id'))";
+            stmt = c.prepareStatement(insert);
             stmt.setString(1, value[0]);
             stmt.setString(2, value[1]);
             stmt.setString(3, value[2]);
             stmt.setString(4, value[3]);
             stmt.setString(5, value[4]);
             stmt.executeUpdate();
-            currvalStatement = DBConnection.getDBconnection().getConnection().createStatement();
-            currvalResultSet = currvalStatement.executeQuery(query);
+            currvalStatement = c.createStatement();
+            //currvalResultSet = currvalStatement.executeQuery(query);
+            currvalResultSet = currvalStatement.executeQuery(query1);
             if (currvalResultSet.next()) {
                 id = currvalResultSet.getInt(1);
             }
-            DBConnection.getDBconnection().getConnection().commit();
+            c.commit();
         } catch (SQLException e) {
-            System.err.println("ERROR Query Failed in method 'DB.insertRowRequests': " + e.getMessage());
+            System.err.println("ERROR Query Failed in method 'DButils.insertRowRequests': " + e.getMessage());
         }
         return id;
     }
@@ -229,7 +233,7 @@ public class DButils {
             String query = "DELETE FROM " + table + " WHERE " + cond;
             stmt.executeUpdate(query);
         } catch (SQLException e) {
-            System.err.println("ERROR Query Failed in method 'DB.deleteRow': " + e.getMessage());
+            System.err.println("ERROR Query Failed in method 'DButils.deleteRow': " + e.getMessage());
         }
     }
 

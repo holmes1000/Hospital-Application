@@ -116,7 +116,7 @@ public class FlowerRequestControllerI implements IRequestController {
         }else{
 
             //If the required fields are not filled, bring up pop-over indicating such
-            final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/NotAllFieldsCompleteError.fxml"));
+            final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/NotAllFieldsCompleteError.fxml"));
             PopOver popOver = new PopOver();
             popOver.setDetachable(true);
             popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
