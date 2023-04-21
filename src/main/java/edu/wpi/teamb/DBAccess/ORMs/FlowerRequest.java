@@ -1,10 +1,6 @@
 package edu.wpi.teamb.DBAccess.ORMs;
 
-import java.lang.ProcessBuilder.Redirect.Type;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import edu.wpi.teamb.DBAccess.DB;
 
 public class FlowerRequest {
     private int id;

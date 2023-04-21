@@ -1,7 +1,6 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
-import edu.wpi.teamb.DBAccess.DB;
-import edu.wpi.teamb.DBAccess.ORMs.LocationName;
+import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.ORMs.Move;
 
 import java.sql.Date;
@@ -19,7 +18,7 @@ public class MoveDAOImpl implements IDAO {
 
     @Override
     public Move get(Object id) {
-        ResultSet rs = DB.getRowCond("Moves", "*", "nodeID = " + id + "");
+        ResultSet rs = DButils.getRowCond("Moves", "*", "nodeID = " + id + "");
         try {
             if (rs.isBeforeFirst()) {
                 rs.next();
@@ -38,6 +37,9 @@ public class MoveDAOImpl implements IDAO {
         return moves;
     }
 
+    @Override
+    public void setAll() { moves = getAllHelper(); }
+
     /**
      * Gets all moves
      *
@@ -46,7 +48,7 @@ public class MoveDAOImpl implements IDAO {
     public ArrayList<Move> getAllHelper() {
         ArrayList<Move> mvs = new ArrayList<Move>();
         try {
-            ResultSet rs = DB.getCol("moves", "*");
+            ResultSet rs = DButils.getCol("moves", "*");
             while (rs.next()) {
                 mvs.add(new Move(rs));
             }
@@ -77,7 +79,7 @@ public class MoveDAOImpl implements IDAO {
     @Override
     public void delete(Object m) {
         Move move = (Move) m;
-        DB.deleteRow("Moves", "nodeID = " + move.getNodeID()+" AND longName = '"+move.getLongName()+"'"+ " AND date = '" + move.getDate() + "'");
+        DButils.deleteRow("Moves", "nodeID = " + move.getNodeID()+" AND longName = '"+move.getLongName()+"'"+ " AND date = '" + move.getDate() + "'");
         moves.remove(move);
     }
 
@@ -91,7 +93,7 @@ public class MoveDAOImpl implements IDAO {
         Move move = (Move) m;
         String[] cols = {"nodeID", "longName", "date"};
         String[] vals = {Integer.toString(move.getNodeID()), move.getLongName(), move.getDate().toString()};
-        DB.updateRow("Moves", cols, vals, "nodeID = " + move.getNodeID());
+        DButils.updateRow("Moves", cols, vals, "nodeID = " + move.getNodeID());
         for (int i = 0; i < moves.size(); i++) {
             if (moves.get(i).getNodeID() == (move.getNodeID())) {
                 moves.set(i, move);
@@ -106,7 +108,7 @@ public class MoveDAOImpl implements IDAO {
      */
 
     public static Move getMoveFromLongName(String longName) {
-        ResultSet rs = DB.getRowCond("Moves", "*", "longName = '" + longName + "'");
+        ResultSet rs = DButils.getRowCond("Moves", "*", "longName = '" + longName + "'");
         try {
             if (rs.isBeforeFirst()) {
                 rs.next();
@@ -121,12 +123,12 @@ public class MoveDAOImpl implements IDAO {
     }
 
     private ResultSet getDBRowFromCol(String col, String value) {
-        return DB.getRowCond("Moves", "*", col + " = " + value);
+        return DButils.getRowCond("Moves", "*", col + " = " + value);
     }
 
 
     public ResultSet getDBRowAllMoves() {
-        return DB.getRowCond("moves", "*", "TRUE");
+        return DButils.getRowCond("moves", "*", "TRUE");
     }
 
     /**
@@ -164,6 +166,6 @@ public class MoveDAOImpl implements IDAO {
     public void insertDBMove(Move m) {
         String[] cols = {"nodeID", "longName", "date"};
         String[] vals = {Integer.toString(m.getNodeID()), m.getLongName(), m.getDate().toString()};
-        DB.insertRow("Moves", cols, vals);
+        DButils.insertRow("Moves", cols, vals);
     }
 }

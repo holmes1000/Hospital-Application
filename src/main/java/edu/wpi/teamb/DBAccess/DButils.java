@@ -1,105 +1,24 @@
 package edu.wpi.teamb.DBAccess;
 
-import edu.wpi.teamb.DBAccess.DAO.Repository;
-
-import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
+import edu.wpi.teamb.DBAccess.*;
+import edu.wpi.teamb.DBAccess.DAO.Repository;
+import oracle.jdbc.replay.ReplayStatistics;
 
-public class DB {
-
-    private static Connection c = null;
-    private static final String url = "jdbc:postgresql://database.cs.wpi.edu/teambdb";
-    private static final String username = "teamb";
-    private static final String password = "teamb20";
-
-    private static class SingletonHelper {
-        //Nested class is referenced after getRepository() is called
-        private static final DB db = new DB();
-    }
-    public static DB getDB() {
-        return SingletonHelper.db;
-    }
-
-    private DB() {
-        connectToDB();
-    }
-
-    public Connection getConnection() {
-        connectToDB();
-        forceConnect();
-        return c;
-    }
-
-    /**
-     * Connects to the database if not already connected
-     */
-    public void connectToDB() {
-        try {
-            if (c == null) {
-                Class.forName("org.postgresql.Driver");
-                c = DriverManager.getConnection(url, username, password);
-            } else if (c.isClosed()) {
-                Class.forName("org.postgresql.Driver");
-                c = DriverManager.getConnection(url, username, password);
-            } else {
-                c.close();
-                Class.forName("org.postgresql.Driver");
-                c = DriverManager.getConnection(url, username, password);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            System.exit(0);
-        }
-    }
-
-    /**
-     * Tries forcibly connecting to the database
-     */
-    public static void forceConnect () {
-        try {
-            Class.forName("org.postgresql.Driver");
-            c = DriverManager.getConnection(url, username, password);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            System.exit(0);
-        }
-    }
-
-    /**
-     * Closes the database connection if it is open
-     */
-    public static void closeDBconnection() {
-        try {
-            if (c != null) {
-                c.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            System.exit(0);
-        }
-    }
+public class DButils {
 
     /**
      * Allows the user to enter an SQL query to be executed (last resort only!)
      *
      * @param query is the query to be executed
      */
-    public static void freeQuery(String query) {
+    void freeQuery(String query) {
         try {
-            connectToDB();
-            Statement stmt = c.createStatement();
+            Statement stmt = Repository.getRepository().getConnection().createStatement();
             stmt.executeQuery(query);
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'DB.freeQuery': " + e.getMessage());
-        } finally {
-            if (c != null) {
-                closeDBconnection();
-            }
         }
     }
 
@@ -115,11 +34,9 @@ public class DB {
     public static ResultSet getRowCond(String table, String columns, String cond) {
         ResultSet rs = null;
         try {
-            connectToDB();
-            Statement stmt = c.createStatement();
+            Statement stmt = Repository.getRepository().getConnection().createStatement();
             String query = "SELECT " + columns + " FROM " + table + " WHERE " + cond;
             rs = stmt.executeQuery(query);
-            if (c != null) { closeDBconnection();}
             if (rs != null) {
                 return rs;
             } else throw new SQLException("No rows found");
@@ -139,11 +56,9 @@ public class DB {
      */
     public static ResultSet getCol(String table, String column) throws SQLException {
         try {
-            connectToDB();
-            Statement stmt = c.createStatement();
+            Statement stmt = Repository.getRepository().getConnection().createStatement();
             String query = "SELECT " + column + " FROM " + table;
             ResultSet rs = stmt.executeQuery(query);
-            if (c != null) { closeDBconnection();}
             return rs;
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'DB.getCol': " + e.getMessage());
@@ -151,19 +66,18 @@ public class DB {
         }
     }
 
-    public static ArrayList<String> colRStoStringArray(ResultSet rs) throws SQLException {
+    public static ArrayList<String> colRStoStringArray(ResultSet rs) {
         int listSize = 0;
-        connectToDB();
         ArrayList<String> stringArray = new ArrayList<>();
-        while (rs.next()) {
-            try {
+        try {
+            while (rs.next()) {
+
                 stringArray.add(rs.getString(1));
-            } catch (SQLException e) {
+            }
+        } catch (SQLException e) {
                 System.err.println("ERROR Query Failed in method 'DB.colRStoStringArray': " + e.getMessage());
                 return null;
             }
-        }
-        if (c != null) {closeDBconnection();}
         return stringArray;
     }
 
@@ -177,12 +91,9 @@ public class DB {
      * @param cond    the condition that determines which rows to update
      */
     public static void updateRow(String table, String[] columns, String[] value, String cond) {
-        connectToDB();
         try {
-            Statement stmt = c.createStatement();
-            forceConnect();
+            Statement stmt = Repository.getRepository().getConnection().createStatement();
             String query = "UPDATE " + table + " SET " + strArray2UpdateFormat(columns, value) + " WHERE " + cond;
-            forceConnect();
             stmt.executeUpdate(query);
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'DB.updateRow': " + e.getMessage());
@@ -199,8 +110,6 @@ public class DB {
      *                          equal
      */
     private static String strArray2UpdateFormat(String[] cols, String[] value) throws RuntimeException {
-
-        connectToDB();
 
         int length = cols.length;
         if (length != value.length) {
@@ -224,12 +133,10 @@ public class DB {
      */
     public static void insertRow(String table, String[] columns, String[] value) {
         try {
-            connectToDB();
-            Statement stmt = c.createStatement();
+            Statement stmt = Repository.getRepository().getConnection().createStatement();
             String update = "INSERT INTO "  + table + " (" + strArray2InsertFormatCol(columns) + ") VALUES ("
                     + strArray2InsertFormat(value) + ")";
             stmt.executeUpdate(update);
-            if (c != null) { closeDBconnection();}
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'DB.insertRow': " + e.getMessage());
         }
@@ -250,11 +157,10 @@ public class DB {
         Statement currvalStatement = null;
         ResultSet currvalResultSet = null;
         try {
-            connectToDB();
-            c.setAutoCommit(false);
+            Repository.getRepository().getConnection().setAutoCommit(false);
             String insert = "INSERT INTO requests(employee, floor, roomnumber, requeststatus, requesttype, location_name) VALUES ( ?, ?, ?, ?, ?, ?)";
             String query = "SELECT currval(pg_get_serial_sequence('requests','id'))";
-            stmt = c.prepareStatement(insert);
+            stmt = Repository.getRepository().getConnection().prepareStatement(insert);
             stmt.setString(1, value[0]);
             stmt.setString(2, value[1]);
             stmt.setString(3, value[2]);
@@ -262,12 +168,12 @@ public class DB {
             stmt.setString(5, value[4]);
             stmt.setString(6, value[5]);
             stmt.executeUpdate();
-            currvalStatement = c.createStatement();
+            currvalStatement = Repository.getRepository().getConnection().createStatement();
             currvalResultSet = currvalStatement.executeQuery(query);
             if (currvalResultSet.next()) {
                 id = currvalResultSet.getInt(1);
             }
-            c.commit();
+            Repository.getRepository().getConnection().commit();
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'DB.insertRowRequests': " + e.getMessage());
         }
@@ -320,36 +226,11 @@ public class DB {
      */
     public static void deleteRow(String table, String cond) {
         try {
-            connectToDB();
-            Statement stmt = c.createStatement();
+            Statement stmt = Repository.getRepository().getConnection().createStatement();
             String query = "DELETE FROM " + table + " WHERE " + cond;
             stmt.executeUpdate(query);
-            if (c != null) { closeDBconnection();}
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'DB.deleteRow': " + e.getMessage());
-        }
-    }
-
-    /**
-     * Gets the value of the column from the table that matches the condition
-     *
-     * @param nodeID the nodeID to get the longName from
-     * @return the longName of the node
-     */
-    public static String getLongNameFromNodeID(int nodeID) {
-        try {
-            connectToDB();
-            Statement stmt = c.createStatement();
-            String query = "SELECT * from nodes join moves m on nodes.nodeid = m.nodeid where nodes.nodeid = " + nodeID;
-            ResultSet rs = stmt.executeQuery(query);
-            rs.next();
-            if (c != null) { closeDBconnection();}
-            String set = rs.getString("longName");
-            rs.close();
-            return set;
-        } catch (SQLException e) {
-            System.err.println("ERROR Query Failed in method 'DB.getLongNameFromNodeID': " + e.getMessage());
-            return null;
         }
     }
 
@@ -361,11 +242,10 @@ public class DB {
      * @return an array of ints with all the ids from a certain table
      */
     public static int[] getIDlist(String table, String idColName) {
-        connectToDB();
         String countQuery = "SELECT COUNT(*) FROM " + table;
         int listSize = 0;
         try {
-            Statement countStmt = c.createStatement();
+            Statement countStmt = Repository.getRepository().getConnection().createStatement();
             ResultSet countRs = countStmt.executeQuery(countQuery);
             countRs.next();
 
@@ -381,7 +261,7 @@ public class DB {
         int[] IDs = new int[listSize];
 
         try {
-            Statement idStmt = c.createStatement();
+            Statement idStmt = Repository.getRepository().getConnection().createStatement();
             idRs = idStmt.executeQuery(idQuery);
             for (int i = 0; i < listSize; i++) {
                 idRs.next();
@@ -393,27 +273,8 @@ public class DB {
         return IDs;
     }
 
-    /**
-     * Gets the value of the column from the table that matches the condition
-     *
-     * @param nodeID NodeID to get shortname from
-     * @return a String with the shortname associated with the given NodeID
-     */
-    public static String getShortNameFromNodeID(int nodeID) {
-        try {
-            String longName = getLongNameFromNodeID(nodeID);
-            connectToDB();
-            Statement stmt = c.createStatement();
-            String query = "SELECT shortname from locationnames join moves m on locationnames.longname = m.longname";
-            ResultSet rs = stmt.executeQuery(query);
-            rs.next();
-            if (c != null) { closeDBconnection();}
-            String set = rs.getString("shortname");
-            rs.close();
-            return set;
-        } catch (SQLException e) {
-            System.err.println("ERROR Query Failed in method 'DB.getShortNameFromNodeID': " + e.getMessage());
-            return null;
-        }
-    }
+    //Put master CSV export function here
+
+    //Put master CSV import function here
+
 }

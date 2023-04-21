@@ -1,10 +1,7 @@
 package edu.wpi.teamb.DBAccess.ORMs;
 
-import edu.wpi.teamb.DBAccess.DAO.RequestDAOImpl;
-import edu.wpi.teamb.DBAccess.DB;
-import edu.wpi.teamb.DBAccess.FullConferenceRequest;
+import edu.wpi.teamb.DBAccess.DButils;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -81,7 +78,7 @@ public class ConferenceRequest {
    * @return the result set of the row(s) that matches the given column and value
    */
   public static ConferenceRequest getConfRequest(int id) {
-    ResultSet rs = DB.getRowCond("ConferenceRequests", "*", "id = '" + id + "'");
+    ResultSet rs = DButils.getRowCond("ConferenceRequests", "*", "id = '" + id + "'");
     try {
       assert rs != null;
       if (rs.isBeforeFirst()) {

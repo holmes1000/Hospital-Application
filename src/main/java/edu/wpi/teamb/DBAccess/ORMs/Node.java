@@ -1,7 +1,6 @@
 package edu.wpi.teamb.DBAccess.ORMs;
 
-import edu.wpi.teamb.DBAccess.DAO.NodeDAOImpl;
-import edu.wpi.teamb.DBAccess.DB;
+import edu.wpi.teamb.DBAccess.DButils;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,7 +10,6 @@ import java.util.Objects;
 
 public class Node {
     private int nodeID;
-    private int oldNodeID;
     private int xCoord;
     private int yCoord;
     private String floor;
@@ -20,7 +18,6 @@ public class Node {
     private Set<Edge> connectedEdges;
     private Double cost; // Alex added a cost value we can mess with to the nodes for A* pathfinding, we may change this implementation later
     private ArrayList<Integer> neighborIds;
-    //private Map<String, Edge> connectedEdges;
 
     private String nodeType = null; // implemented here for elevator vs. stair weighting
 
@@ -29,7 +26,6 @@ public class Node {
      */
     public Node() {
         this.nodeID = 0;
-        this.oldNodeID = 0;
         this.xCoord = 0;
         this.yCoord = 0;
         this.floor = "";
@@ -51,7 +47,6 @@ public class Node {
      */
     public Node(int ID, int xCoord, int yCoord, String floor, String building) {
         this.nodeID = ID;
-        this.oldNodeID = ID;//here to keep track of the old nodeID before we update the db
         this.xCoord = xCoord;
         this.yCoord = yCoord;
         this.floor = floor;
@@ -75,75 +70,6 @@ public class Node {
                 rs.getInt("ycoord"),
                 rs.getString("floor"),
                 rs.getString("building"));
-    }
-
-    /**
-     * Makes a node from the given nodeID
-     *
-     * @param nodeID the nodeID to make the node from
-     * @return the node with the given nodeID. Returns null if the nodeID is not
-     * found
-     */
-
-    public static Node getNode(int nodeID) {
-        ResultSet rs = DB.getRowCond("Nodes", "*", "nodeID = " + nodeID + "");
-        try {
-            if (rs.isBeforeFirst()) {
-                rs.next();
-                Node returnNode = new Node(rs);
-                rs.close();
-                returnNode.setFloorNum();
-                return returnNode;
-            } else
-                rs.close();
-            throw new SQLException("No rows found");
-        } catch (SQLException e) {
-            // handel error
-
-            System.err.println("ERROR Query Failed: " + e.getMessage());
-            return null;
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                System.err.println("ERROR Query Failed: " + e.getMessage());
-            }
-        }
-
-    }
-
-    public static Node nodeFill(int nodeID) throws SQLException {
-        Node node = Node.getNode(nodeID);
-        node.setNeighborIds(node.getNeighborIds());
-        return node;
-    }
-
-    public void setFloorNum(){
-        // turns the floor string into a number for 3D algo cost finding
-        int weight = 150;
-        if(Objects.equals("",this.floor)){
-            this.floorNum = -1;
-        }
-        else if(Objects.equals("L2",this.floor)){
-            this.floorNum = 0*weight;
-        }
-        else if(Objects.equals("L1",this.floor)){
-            this.floorNum = 1*weight;
-        }
-        else if(Objects.equals("L",this.floor)){
-            this.floorNum = 2*weight;
-        }
-        else if(Objects.equals("1",this.floor)){
-            this.floorNum = 3*weight;
-        }
-        else if(Objects.equals("2",this.floor)){
-            this.floorNum = 4*weight;
-        }
-        else if(Objects.equals("3",this.floor)) {
-            this.floorNum = 5* weight;
-        }
     }
 
     // Getters and Setters
@@ -172,12 +98,38 @@ public class Node {
         this.yCoord = yCoord;
     }
 
-    public String getFloor() {
-        return floor;
-    }
-
     public int getFloorNum() {
         return floorNum;
+    }
+
+    public void setFloorNum(){
+        // turns the floor string into a number for 3D algo cost finding
+        int weight = 150;
+        if(Objects.equals("",this.floor)){
+            this.floorNum = -1;
+        }
+        else if(Objects.equals("L2",this.floor)){
+            this.floorNum = 0*weight;
+        }
+        else if(Objects.equals("L1",this.floor)){
+            this.floorNum = 1*weight;
+        }
+        else if(Objects.equals("L",this.floor)){
+            this.floorNum = 2*weight;
+        }
+        else if(Objects.equals("1",this.floor)){
+            this.floorNum = 3*weight;
+        }
+        else if(Objects.equals("2",this.floor)){
+            this.floorNum = 4*weight;
+        }
+        else if(Objects.equals("3",this.floor)) {
+            this.floorNum = 5* weight;
+        }
+    }
+
+    public String getFloor() {
+        return floor;
     }
 
     public void setFloor(String floor) {
@@ -202,24 +154,6 @@ public class Node {
 
     public String getNodeType() {
         return nodeType;
-    }
-
-    // this function kinda sucks I also only want to run it when we're doing shitty pathfinding
-    // so it needs to be called on every node.
-    public static String getNodeType(int nodeID){
-        String name = DB.getShortNameFromNodeID(nodeID);
-        if(name.contains("Stair")){
-            return "STAI";
-        }
-        else if(name.contains("Elevator")){
-            return "ELAV";
-        }
-        else if(name.contains("Hallway")){ // this is also trash
-            return "HALL";
-        }
-        else {
-            return "OTHE"; // this is trash
-        }
     }
 
     public Set<Edge> getConnectedEdges() {

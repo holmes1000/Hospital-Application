@@ -1,6 +1,6 @@
 package edu.wpi.teamb.DBAccess.ORMs;
 
-import edu.wpi.teamb.DBAccess.DB;
+import edu.wpi.teamb.DBAccess.DButils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -91,7 +91,7 @@ public class MealRequest {
   }
 
   public static MealRequest getMealRequest(int id) {
-    ResultSet rs = DB.getRowCond("MealRequests", "*", "id = '" + id + "'");
+    ResultSet rs = DButils.getRowCond("MealRequests", "*", "id = '" + id + "'");
     try {
       if (rs.isBeforeFirst()) {
         rs.next();

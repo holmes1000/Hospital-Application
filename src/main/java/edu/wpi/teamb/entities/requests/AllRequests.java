@@ -45,7 +45,7 @@ public class AllRequests {
 
     public ArrayList<String> getUsernames() {
         try{
-            ResultSet usernames = DB.getCol("users", "username");
+            ResultSet usernames = DButils.getCol("users", "username");
             ArrayList<String> userList = new ArrayList<String>();
             while(usernames.next()){
                 userList.add(usernames.getString("username"));

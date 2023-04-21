@@ -1,6 +1,6 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
-import edu.wpi.teamb.DBAccess.DB;
+import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.FullFlowerRequest;
 import edu.wpi.teamb.DBAccess.ORMs.FlowerRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
@@ -22,13 +22,17 @@ public class FlowerRequestDAOImpl implements IDAO {
     public ArrayList<FullFlowerRequest> getAll() {
         return flowerRequests;
     }
+
+    @Override
+    public void setAll() { flowerRequests = getAllHelper(); }
+
     @Override
     public FullFlowerRequest get(Object id) {
         Integer idInt = (Integer) id;
         FlowerRequest fr = null;
         Request r = null;
         try {
-            ResultSet rs = DB.getRowCond("flowerrequests", "*", "id = " + idInt);
+            ResultSet rs = DButils.getRowCond("flowerrequests", "*", "id = " + idInt);
             rs.next();
             fr = new FlowerRequest(rs);
             ResultSet rs1 = RequestDAOImpl.getDBRowID(idInt);
@@ -67,7 +71,7 @@ public class FlowerRequestDAOImpl implements IDAO {
 //        }
         String[] values = {flowerReq[0], flowerReq[1], flowerReq[2], flowerReq[3], flowerReq[4], flowerReq[5], flowerReq[6], flowerReq[7], flowerReq[8], flowerReq[9], flowerReq[10], flowerReq[11]};
         int id = insertDBRowNewFlowerRequest(values);
-        ResultSet rs = DB.getRowCond("requests", "dateSubmitted", "id = " + id);
+        ResultSet rs = DButils.getRowCond("requests", "dateSubmitted", "id = " + id);
         Date dateSubmitted = null;
         try {
             rs.next();
@@ -82,8 +86,8 @@ public class FlowerRequestDAOImpl implements IDAO {
     @Override
     public void delete(Object request) {
         FullFlowerRequest ffr = (FullFlowerRequest) request;
-        DB.deleteRow("flowerrequests", "id" + ffr.getId() + "");
-        DB.deleteRow("requests", "id =" + ffr.getId() + "");
+        DButils.deleteRow("flowerrequests", "id" + ffr.getId() + "");
+        DButils.deleteRow("requests", "id =" + ffr.getId() + "");
         flowerRequests.remove(ffr);
         Request req = new Request(ffr.getId(), ffr.getEmployee(), ffr.getFloor(), ffr.getRoomNumber(), ffr.getDateSubmitted(), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getLocation_name());
         RequestDAOImpl.getRequestDaoImpl().getRequests().remove(req);
@@ -97,8 +101,8 @@ public class FlowerRequestDAOImpl implements IDAO {
         String[] valuesFlower = { values[6], values[7], values[8], values[9], values[10]};
         String[] colsReq = {"employee", "floor", "roomnumber", "datesubmitted", "requeststatus", "requesttype"};
         String[] valuesReq = {values[1], values[2], values[3], values[4], values[5], values[6]};
-        DB.updateRow("conferencerequests", colsFlower, valuesFlower, "id = " + values[0]);
-        DB.updateRow("requests", colsReq, valuesReq, "id = " + values[0]);
+        DButils.updateRow("conferencerequests", colsFlower, valuesFlower, "id = " + values[0]);
+        DButils.updateRow("requests", colsReq, valuesReq, "id = " + values[0]);
         for (int i = 0; i < flowerRequests.size(); i++) {
             if (flowerRequests.get(i).getId() == ffr.getId()) {
                 flowerRequests.set(i, ffr);
@@ -114,7 +118,7 @@ public class FlowerRequestDAOImpl implements IDAO {
      * @return the result set of the row(s) that matches the given column and value
      */
     private ResultSet getDBRowAllRequests() throws SQLException {
-        return DB.getCol("flowerrequests", "*");
+        return DButils.getCol("flowerrequests", "*");
     }
 
     public void updateRowSpecialInstructions(String specialInstructions, String[] col, String[] val) {
@@ -129,14 +133,14 @@ public class FlowerRequestDAOImpl implements IDAO {
         String[] colsFlower = {"id", "flowerType", "color", "Type", "message", "specialInstructions"};
         String[] colsReq = {"employee", "floor", "roomnumber", "requeststatus","requesttype", "location_name"};
         String[] valuesReq = {values[0], values[1], values[2], values[3], values[4], values[10]};
-        int id = DB.insertRowRequests("requests", colsReq, valuesReq);
+        int id = DButils.insertRowRequests("requests", colsReq, valuesReq);
         String[] valuesFlower = {Integer.toString(id), values[6], values[7], values[8], values[9], values[11]};
-        DB.insertRow("flowerrequests", colsFlower, valuesFlower);
+        DButils.insertRow("flowerrequests", colsFlower, valuesFlower);
         return id;
     }
 
     private ResultSet getDBRowFromCol(String col, String value) {
-        return DB.getRowCond("FlowerRequests", "*", col + " = " + value);
+        return DButils.getRowCond("FlowerRequests", "*", col + " = " + value);
     }
 
     public ResultSet getDBRowID(int id) {
@@ -165,7 +169,7 @@ public class FlowerRequestDAOImpl implements IDAO {
     private void updateRows(String[] col, String[] val, String cond) {
         if (col.length != val.length)
             throw new IllegalArgumentException("Column and value arrays must be the same length");
-        DB.updateRow("flowerrequests", col, val, cond);
+        DButils.updateRow("flowerrequests", col, val, cond);
     }
 
     public void updateRowID(int id, String[] col, String[] val) {

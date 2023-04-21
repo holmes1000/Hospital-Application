@@ -1,31 +1,27 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
-import edu.wpi.teamb.DBAccess.DB;
-import edu.wpi.teamb.DBAccess.FullNode;
+import edu.wpi.teamb.DBAccess.*;
 import edu.wpi.teamb.DBAccess.ORMs.Edge;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 import edu.wpi.teamb.DBAccess.ORMs.Move;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
 public class NodeDAOImpl implements IDAO {
-    private static ArrayList<Node> nodes;
-    private static ArrayList<FullNode> fullNodes;
-
-    static ArrayList<Node> getNodes () {
+    private ArrayList<Node> nodes;
+    private ArrayList<FullNode> fullNodes;
+    ArrayList<Node> getNodes() {
         return nodes;
     }
-    static ArrayList<FullNode> getFullNodes() {
+    ArrayList<FullNode> getFullNodes() {
         return fullNodes;
     }
-
-    static void setNodes (ArrayList<Node> nodes) {
-        NodeDAOImpl.nodes = nodes;
+    void setNodes(ArrayList<Node> newNodes) {
+        nodes = newNodes;
     }
 
     public NodeDAOImpl() throws SQLException {
@@ -33,9 +29,15 @@ public class NodeDAOImpl implements IDAO {
         fullNodes = getFullNodesHelper();
     }
 
+    /**
+     * Gets a node by its ID
+     *
+     * @param id The ID of the node
+     * @return The node with the given ID
+     */
     public Node get(Object id) {
         int nodeID = (int) id;
-        ResultSet rs = DB.getRowCond("Nodes", "*", "nodeID = " + nodeID + "");
+        ResultSet rs = DButils.getRowCond("Nodes", "*", "nodeID = " + nodeID + "");
         try {
             if (rs.isBeforeFirst()) {
                 rs.next();
@@ -71,6 +73,12 @@ public class NodeDAOImpl implements IDAO {
     public ArrayList<Node> getAll() {
         return nodes;
     }
+
+    /**
+     * Sets all nodes
+     */
+    @Override
+    public void setAll () { nodes = getAllHelper(); }
 
     /**
      * Adds a node
@@ -121,7 +129,7 @@ public class NodeDAOImpl implements IDAO {
     public ArrayList<Node> getAllHelper() {
         ArrayList<Node> nds = new ArrayList<Node>();
         try {
-            ResultSet rs = DB.getCol("nodes", "*");
+            ResultSet rs = DButils.getCol("nodes", "*");
             while (rs.next()) {
                 nds.add(new Node(rs));
             }
@@ -131,29 +139,6 @@ public class NodeDAOImpl implements IDAO {
         }
         return nds;
     }
-//    /**
-//     * Sets the list of connected edges to the given map if already initialized
-//     *
-//     * @param connectedEdges Map of connected edges
-//     */
-//    public void setConnectedEdges(Set<Edge> connectedEdges, Node n) {
-//        n.getConnectedEdges = connectedEdges;
-//    }
-
-//    /**
-//     * Adds an edge to the list of connected edges
-//     *
-//     * @param edge Edge to be added
-//     */
-//    void addEdge(Edge edge) {
-//        if (connectedEdges.contains(edge))
-//            return;
-//        connectedEdges.add(edge);
-//    }
-
-    // Access from Database Methods
-
-    // Methods to get information about the node from the database
 
     /**
      * Searches through the database for the row(s) that matches the given column
@@ -164,11 +149,16 @@ public class NodeDAOImpl implements IDAO {
      * @return the result set of the row(s) that matches the given column and value
      */
     private ResultSet getDBRowFromCol(String col, String value) {
-        return DB.getRowCond("Nodes", "*", col + " = " + value);
+        return DButils.getRowCond("Nodes", "*", col + " = " + value);
     }
 
+    /**
+     * Gets all nodes
+     *
+     * @return A list of all nodes
+     */
     public ResultSet getDBRowAllNodes() {
-        return DB.getRowCond("Nodes", "*", "TRUE");
+        return DButils.getRowCond("Nodes", "*", "TRUE");
     }
 
     /**
@@ -211,6 +201,12 @@ public class NodeDAOImpl implements IDAO {
         return getDBRowFromCol("floor", "'" + floor + "'");
     }
 
+    /**
+     * Gets the row(s) from the database that matches the given floor
+     *
+     * @param floor the floor to search for
+     * @return the result set of the row that matches the given floor
+     */
     public ArrayList<Node> getNodesFromFloor(String floor) {
         ResultSet rs = getBDRowFloor(floor);
         ArrayList<Node> nds = new ArrayList<Node>();
@@ -240,8 +236,6 @@ public class NodeDAOImpl implements IDAO {
     }
 
 
-    // Method to Update the Database
-
     /**
      * Updates the database with the information in this node object
      *
@@ -252,10 +246,8 @@ public class NodeDAOImpl implements IDAO {
         String val[] = {value[1], value[2], value[3], value[4]};
         if (col == null || value == null)
             throw new IllegalArgumentException("The column and value arrays must be the same length");
-        DB.updateRow("Nodes", col, val, "nodeID = '" + value[0] + "'");
+        DButils.updateRow("Nodes", col, val, "nodeID = '" + value[0] + "'");
     }
-
-    // Method to Delete the Database
 
     /**
      * Deletes the row in the database that matches the nodeID of this node object
@@ -264,13 +256,11 @@ public class NodeDAOImpl implements IDAO {
      */
     public void deleteDBNode(int confirm, Node n) {
         if (confirm == 0)
-            DB.deleteRow("Nodes", "nodeID = '" + n.getNodeID() + "'");
+            DButils.deleteRow("Nodes", "nodeID = '" + n.getNodeID() + "'");
         else {
             System.out.println("Delete cancelled");
         }
     }
-
-    // list information about this node object
 
     /**
      * Returns a string of all the information about the node
@@ -282,16 +272,22 @@ public class NodeDAOImpl implements IDAO {
                 + node.getBuilding();
     }
 
+    /**
+     * Inserts a node into the database
+     *
+     * @param n the node to insert
+     */
     public void insertDBNode(Node n) {
-        String col[] = { "nodeID", "xCoord", "yCoord", "floor", "building" };
-        String value[] = { Integer.toString(n.getNodeID()), Integer.toString(n.getxCoord()), Integer.toString(n.getyCoord()),
-                n.getFloor() , n.getBuilding() };
-        DB.insertRow("Nodes", col, value);
+        String col[] = {"nodeID", "xCoord", "yCoord", "floor", "building"};
+        String value[] = {Integer.toString(n.getNodeID()), Integer.toString(n.getxCoord()), Integer.toString(n.getyCoord()),
+                n.getFloor(), n.getBuilding()};
+        DButils.insertRow("Nodes", col, value);
     }
 
+    /**
+     * Resets the node, location names, and moves tables using the backup tables
+     */
     public void resetNodesFromBackup() {
-
-        DB.connectToDB();
 
         String dropMove = "DROP TABLE IF EXISTS Moves";
         String dropLocationNames = "DROP TABLE IF EXISTS LocationNames";
@@ -301,7 +297,7 @@ public class NodeDAOImpl implements IDAO {
 
         try {
 
-            dropStatement = DB.c.createStatement();
+            dropStatement = DBConnection.getDBconnection().getConnection().createStatement();
             dropStatement.executeUpdate(dropMove);
             dropStatement.executeUpdate(dropLocationNames);
             dropStatement.executeUpdate(dropNodes);
@@ -330,7 +326,7 @@ public class NodeDAOImpl implements IDAO {
 
         try {
 
-            recreateStatement = DB.c.createStatement();
+            recreateStatement = DBConnection.getDBconnection().getConnection().createStatement();
             recreateStatement.executeUpdate(recreateAll);
             recreateStatement.executeUpdate(recreateNodes);
             recreateStatement.executeUpdate(recreateLocationNames);
@@ -340,39 +336,27 @@ public class NodeDAOImpl implements IDAO {
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'NodeDAOImpl.resetNodesFromBackup': " + e.getMessage());
         }
-
-        nodes = getAllHelper();
-        Repository.getRepository().getAllLongNames();
-        Repository.getRepository().getAllMoves();
     }
 
-//    /**
-//     * Returns a string of all the edges connected to this node
-//     *
-//     * @return String of all the edges connected to this node
-//     */
-//    public String listEdges() {
-//        String str = "";
-//        for (Edge edge : connectedEdges) {
-//            str += edge.getStartNodeID() + " "+edge.getEndNodeID()+" ";
-//        }
-//        return str;
-//    }
-
+    /**
+     * Gets all the neighbors of a given node
+     *
+     * @return an array list of all the neighbors of the given node
+     */
     public ArrayList<Node> getNeighbors(int nodeID) throws SQLException {
         // set up an empty list
         ArrayList<Node> neighbors = new ArrayList<Node>();
 
         for (Edge e : EdgeDAOImpl.getEdges()) {
             if (e.getStartNodeID() == nodeID) {
-                for (Node m : NodeDAOImpl.getNodes()) {
+                for (Node m : getNodes()) {
                     if (m.getNodeID() == e.getEndNodeID()) {
                         neighbors.add(m);
                     }
                 }
             }
             if (e.getEndNodeID() == nodeID) {
-                for (Node m : NodeDAOImpl.getNodes()) {
+                for (Node m : getNodes()) {
                     if (m.getNodeID() == e.getStartNodeID()) {
                         neighbors.add(m);
                     }
@@ -388,14 +372,14 @@ public class NodeDAOImpl implements IDAO {
 
         for (Edge e : EdgeDAOImpl.getEdges()) {
             if (e.getStartNodeID() == nodeID) {
-                for (Node m : NodeDAOImpl.getNodes()) {
+                for (Node m : getNodes()) {
                     if (m.getNodeID() == e.getEndNodeID()) {
                         neighbors.add(m);
                     }
                 }
             }
             if (e.getEndNodeID() == nodeID) {
-                for (Node m : NodeDAOImpl.getNodes()) {
+                for (Node m : getNodes()) {
                     if (m.getNodeID() == e.getStartNodeID()) {
                         neighbors.add(m);
                     }
@@ -405,6 +389,11 @@ public class NodeDAOImpl implements IDAO {
         return nodeToIDs(neighbors);
     }
 
+    /**
+     * Returns a list of nodeIDs given a list of nodes
+     *
+     * @return an integer array list of nodeIDs
+     */
     public ArrayList<Integer> nodeToIDs(ArrayList<Node> nodes) {
         ArrayList<Integer> nodeIDs = new ArrayList<Integer>();
         for (Node n : nodes) {
@@ -413,21 +402,32 @@ public class NodeDAOImpl implements IDAO {
         return nodeIDs;
     }
 
-    public ArrayList<Node> instantiateNodes() throws SQLException {
-        DB.connectToDB();
-        String query = "SELECT * FROM Nodes";
-        Statement stmt = DB.c.createStatement();
-        ResultSet rs = stmt.executeQuery(query);
+    /**
+     * Instantiates all local nodes using the database
+     */
+    public ArrayList<Node> instantiateNodes() {
         ArrayList<Node> nodes = new ArrayList<Node>();
-        while (rs.next()) {
-            Node n = new Node(rs.getInt("nodeID"), rs.getInt("xCoord"), rs.getInt("yCoord"), rs.getString("floor"), rs.getString("building"));
-            nodes.add(n);
+
+        try {
+            String query = "SELECT * FROM Nodes";
+            Statement stmt = DBConnection.getDBconnection().getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                Node n = new Node(rs.getInt("nodeID"), rs.getInt("xCoord"), rs.getInt("yCoord"), rs.getString("floor"), rs.getString("building"));
+                nodes.add(n);
+            }
+            rs.close();
+            stmt.close();
+            return nodes;
+        } catch (SQLException e) {
+            System.out.println("ERROR Query Failed in method 'NodeDAOImpl.instantiateNodes': " + e.getMessage());
         }
-        rs.close();
-        stmt.close();
         return nodes;
     }
 
+    /**
+     * Updates a certain node in the database
+     */
     public void updateEditedNode(Node node, int newNodeID, int newXCoord, int newYCoord, String newFloor, String newBuilding) {
         node.setNodeID(newNodeID);
         node.setxCoord(newXCoord);
@@ -438,22 +438,44 @@ public class NodeDAOImpl implements IDAO {
         String[] col = { "nodeID", "xCoord", "yCoord", "floor", "building" };
         String[] value = { Integer.toString(node.getNodeID()), Integer.toString(node.getxCoord()), Integer.toString(node.getyCoord()),
                 "'" + node.getFloor() + "'", "'" + node.getBuilding() + "'" };
-        DB.updateRow("Nodes", col, value, "nodeID = " + Integer.toString(node.getNodeID()));
+        DButils.updateRow("Nodes", col, value, "nodeID = " + Integer.toString(node.getNodeID()));
     }
 
+    /**
+     * Gets the short name of a node given its nodeID
+     *
+     * @param nodeID the nodeID of the node
+     * @return the short name of the node
+     */
     public String getShortName(int nodeID) {
-        return DB.getShortNameFromNodeID(nodeID);
+        return getShortNameFromNodeID(nodeID);
     }
 
-    public ArrayList<FullNode> getFullNodesHelper() throws SQLException {
-        ResultSet rs = DB.joinFullNodes();
+    /**
+     * A helper function for getting a list of full nodes
+     *
+     * @return the long name of the node
+     */
+    public ArrayList<FullNode> getFullNodesHelper() {
         ArrayList<FullNode> fns = new ArrayList<>();
-        while (rs.next()) {
-            fns.add(new FullNode(rs));
+        try {
+            ResultSet rs = joinFullNodes();
+            while (rs.next()) {
+                fns.add(new FullNode(rs));
+            }
+            return fns;
+        } catch (SQLException e) {
+            System.out.println("ERROR Query Failed in method 'NodeDAOImpl.getFullNodesHelper': " + e.getMessage());
         }
         return fns;
     }
 
+    /**
+     * A helper function for getting a FullNode object given its nodeID
+     *
+     * @param nodeID the nodeID of the node
+     * @return a FullNode object
+     */
     public FullNode getFullNode(int nodeID) {
         for (int i = 0; i < fullNodes.size(); i++) {
             if (fullNodes.get(i).getNodeID() == nodeID) {
@@ -462,6 +484,13 @@ public class NodeDAOImpl implements IDAO {
         }
         return null;
     }
+
+    /**
+     * A helper function for getting a list of node neighbors given a list of nodes
+     *
+     * @param floorNodes the list of nodes on a certain floor
+     * @return the long name of the node
+     */
     public ArrayList<ArrayList<Integer>> nodeNeighborIDs(ArrayList<Node> floorNodes) {
         ArrayList<ArrayList<Integer>> nodesNeighborids = new ArrayList<>();
         for (Node n : floorNodes) {
@@ -471,6 +500,12 @@ public class NodeDAOImpl implements IDAO {
         return nodesNeighborids;
     }
 
+    /**
+     * Gets the node type of a node given its nodeID
+     *
+     * @param n the Node object
+     * @return the node type of the node
+     */
     public String getNodeType (Node n) {
         String nodeType = null;
         String longName = null;
@@ -493,98 +528,104 @@ public class NodeDAOImpl implements IDAO {
      * @return a ResultSet containing the full nodes table joined with the moves table and the locationnames table
      */
     public static ResultSet joinFullNodes() {
-        Repository.getRepository().connectToDB();
         try{
-            Statement stmt = Repository.getRepository().getConnection().createStatement();
+            Statement stmt = DBConnection.getDBconnection().getConnection().createStatement();
             String query = "SELECT * FROM nodes, moves, locationnames WHERE nodes.nodeid = moves.nodeid AND moves.longname = locationnames.longname";
             ResultSet rs = stmt.executeQuery(query);
             return rs;
         } catch (SQLException e) {
-            System.err.println("ERROR Query Failed in method 'DB.joinFullNode's: " + e.getMessage());
+            System.err.println("ERROR Query Failed in method 'NodeDAOImpl.joinFullNode's: " + e.getMessage());
             return null;
         }
     }
 
-//    public void addFullNode (Object n) {
-//        Date current = Date.valueOf(LocalDate.now());
-//        FullNode fullNode = (FullNode) n;
-//        Node node = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding());
-//        LocationNameDAOImpl.add(new LocationName(fullNode.getLongName(), fullNode.getShortName(), fullNode.getNodeType()));
-//        MoveDAOImpl.add(new Move(fullNode.getNodeID(), fullNode.getLongName(), current));
-//    }
+    /**
+     * Gets the value of the column from the table that matches the condition
+     *
+     * @param nodeID the nodeID to get the longName from
+     * @return the longName of the node
+     */
+    public static String getLongNameFromNodeID(int nodeID) {
+        try {
+            Statement stmt = DBConnection.getDBconnection().getConnection().createStatement();
+            String query = "SELECT * from nodes join moves m on nodes.nodeid = m.nodeid where nodes.nodeid = " + nodeID;
+            ResultSet rs = stmt.executeQuery(query);
+            rs.next();
+            String set = rs.getString("longName");
+            rs.close();
+            return set;
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'NodeDAOImpl.getLongNameFromNodeID': " + e.getMessage());
+            return null;
+        }
+    }
 
+    /**
+     * Gets the value of the column from the table that matches the condition
+     *
+     * @param nodeID NodeID to get shortname from
+     * @return a String with the shortname associated with the given NodeID
+     */
+    public static String getShortNameFromNodeID(int nodeID) {
+        try {
+            String longName = getLongNameFromNodeID(nodeID);
+            Statement stmt = DBConnection.getDBconnection().getConnection().createStatement();
+            String query = "SELECT shortname from locationnames join moves m on locationnames.longname = m.longname";
+            ResultSet rs = stmt.executeQuery(query);
+            rs.next();
+            String set = rs.getString("shortname");
+            rs.close();
+            return set;
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'NodeDAOImpl.getShortNameFromNodeID': " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Makes a node from the given nodeID
+     *
+     * @param nodeID the nodeID to make the node from
+     * @return the node with the given nodeID. Returns null if the nodeID is not
+     * found
+     */
+    public static Node getNode(int nodeID) {
+        ResultSet rs = DButils.getRowCond("Nodes", "*", "nodeID = " + nodeID + "");
+        try {
+            if (rs.isBeforeFirst()) {
+                rs.next();
+                Node returnNode = new Node(rs);
+                rs.close();
+                returnNode.setFloorNum();
+                return returnNode;
+            } else
+                rs.close();
+            throw new SQLException("No rows found");
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method : " + e.getMessage());
+            return null;
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                System.err.println("ERROR Query Failed in method : " + e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * 'Fills' a node with its neighbors
+     *
+     * @param nodeID the nodeID to get the neighbors from
+     * @return a 'filled' Node object with the given nodeID
+     */
+    public static Node nodeFill(int nodeID) {
+        Node node = getNode(nodeID);;
+        node.setNeighborIds(node.getNeighborIds());
+        return node;
+    }
 }
-
-// /**
-//  * Gets the row(s) from the database that matches the given node type
-//  *
-//  * @param nodeType the node type to search for
-//  * @return the result set of the row that matches the given node type
-//  */
-// public ResultSet getBDRowNodeType(String nodeType) {
-//     return getDBRowFromCol("nodeType", "'" + nodeType + "'");
-// }
-
-// /**
-//  * Gets the row(s) from the database that matches the given long name
-//  *
-//  * @param longName the long name to search for
-//  * @return the result set of the row that matches the given long name
-//  */
-// public ResultSet getBDRowLongName(String longName) {
-//     return getDBRowFromCol("longName", "'" + longName + "'");
-// }
-
-// /**
-//  * Gets the row(s) from the database that matches the given short name
-//  *
-//  * @param shortName the short name to search for
-//  * @return the result set of the row that matches the given short name
-//  */
-// public ResultSet getBDRowShortName(String shortName) {
-//     return getDBRowFromCol("shortName", "'" + shortName + "'");
-// }
-
-//    /**
-//     * Update the node type in the database
-//     *
-//     * @param nodeType the new node type
-//     *
-//     */
-// public void updateNodeType(String nodeType) {
-//     if (nodeType == null || nodeType.equals(""))
-//         throw new IllegalArgumentException("The node type is null or empty");
-//     String col[] = { "nodeType" };
-//     String value[] = { "'" + nodeType + "'" };
-//     updateRow(col, value);
-// }
-
-// /**
-//  * Update the long name in the database
-//  *
-//  * @param longName the new long name
-//  *
-//  */
-// public void updateLongName(String longName) {
-//     if (longName == null || longName.equals(""))
-//         throw new IllegalArgumentException("The long name is null or empty");
-//     String col[] = { "longName" };
-//     String value[] = { "'" + longName + "'" };
-//     updateRow(col, value);
-// }
-
-// /**
-//  * Update the short name in the database
-//  *
-//  * @param shortName the new short name
-//  *
-//  */
-// public void updateShortName(String shortName) {
-//     if (shortName == null || shortName.equals(""))
-//         throw new IllegalArgumentException("The short name is null or empty");
-//     String col[] = { "shortName" };
-//     String value[] = { "'" + shortName + "'" };
-//     updateRow(col, value);
-// }
 
 

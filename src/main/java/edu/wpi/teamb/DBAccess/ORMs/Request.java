@@ -1,5 +1,5 @@
 package edu.wpi.teamb.DBAccess.ORMs;
-import edu.wpi.teamb.DBAccess.DB;
+import edu.wpi.teamb.DBAccess.DButils;
 
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -107,7 +107,7 @@ public class Request {
   }
 
   public static Request getRequest(int id) {
-    ResultSet rs = DB.getRowCond("requests", "*", "id = " + id);
+    ResultSet rs = DButils.getRowCond("requests", "*", "id = " + id);
     try {
       if (rs.isBeforeFirst()) {
         rs.next();

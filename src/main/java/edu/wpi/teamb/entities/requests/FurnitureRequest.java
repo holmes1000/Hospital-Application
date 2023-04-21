@@ -1,7 +1,7 @@
 package edu.wpi.teamb.entities.requests;
 
 import edu.wpi.teamb.DBAccess.DAO.Repository;
-import edu.wpi.teamb.DBAccess.DB;
+import edu.wpi.teamb.DBAccess.DButils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -174,7 +174,7 @@ public class FurnitureRequest extends RequestImpl {
     }
 
     public ArrayList<String> getUsernames() throws SQLException {
-        ResultSet usernames = DB.getCol("users", "username");
+        ResultSet usernames = DButils.getCol("users", "username");
         ArrayList<String> uesrlist = new ArrayList<>();
         while (usernames.next()) {
             uesrlist.add(usernames.getString("username"));

@@ -1,6 +1,6 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
-import edu.wpi.teamb.DBAccess.DB;
+import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
 import java.sql.ResultSet;
@@ -8,13 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class RequestDAOImpl implements IDAO {
-    // TODO: check if this needs to implement IRequestDAO
-
     private ArrayList<Request> requests;
-
-    public ArrayList<Request> getRequests() {
-        return requests;
-    }
 
     public void setRequests(ArrayList<Request> requests) {
         this.requests = requests;
@@ -35,7 +29,7 @@ public class RequestDAOImpl implements IDAO {
     @Override
     public Object get(Object id) {
         int whichRequest = 0;
-        ResultSet rs = DB.getRowCond("requests", "requesttype", "id = " + id);
+        ResultSet rs = DButils.getRowCond("requests", "requesttype", "id = " + id);
         String requestType = null;
         while (true) {
             try {
@@ -94,10 +88,13 @@ public class RequestDAOImpl implements IDAO {
         return requests;
     }
 
+    @Override
+    public void setAll() { requests = getAllHelper(); }
+
     public ArrayList<Request> getAllHelper() {
         ArrayList<Request> rqs = new ArrayList<Request>();
         try {
-            ResultSet rs = DB.getCol("requests", "*");
+            ResultSet rs = DButils.getCol("requests", "*");
             while (rs.next()) {
                 Request r = new Request(rs);
                 rqs.add(r);
@@ -173,7 +170,7 @@ public class RequestDAOImpl implements IDAO {
 
     public static int insertDBRowNewRequest(String[] values) {
         String[] col = {"employee", "floor", "roomNumber", "dateSubmitted", "requestStatus", "requestType", "location_names"};
-        int id = DB.insertRowRequests("requests", col, values);
+        int id = DButils.insertRowRequests("requests", col, values);
         return id;
     }
 
@@ -190,7 +187,7 @@ public class RequestDAOImpl implements IDAO {
      * @return the result set of the row(s) that matches the given column and value
      */
     private static ResultSet getDBRowFromCol(String col, String value) {
-        return DB.getRowCond("requests", "*", col + " = " + value);
+        return DButils.getRowCond("requests", "*", col + " = " + value);
     }
 
     /**
@@ -233,7 +230,7 @@ public class RequestDAOImpl implements IDAO {
      * @return the result set of all rows
      */
     public ResultSet getDBRowAllRequests() {
-        return DB.getRowCond("Requests", "*", "TRUE");
+        return DButils.getRowCond("Requests", "*", "TRUE");
     }
 
     // Method to Update the Database
@@ -248,7 +245,7 @@ public class RequestDAOImpl implements IDAO {
         if (col.length != value.length) {
             throw new IllegalArgumentException("The column and value arrays must be the same length");
         }
-        DB.updateRow("Requests", col, value, condition);
+        DButils.updateRow("Requests", col, value, condition);
     }
 
     /**
@@ -335,7 +332,7 @@ public class RequestDAOImpl implements IDAO {
      */
     public void deleteDBRequest(int confirm, Request r) {
         if (confirm == 0)
-            DB.deleteRow("Requests", "employee = '" + r.getEmployee() + "'");
+            DButils.deleteRow("Requests", "employee = '" + r.getEmployee() + "'");
         else {
             System.out.println("Delete cancelled");
         }

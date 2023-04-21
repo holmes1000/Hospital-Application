@@ -1,6 +1,6 @@
 package edu.wpi.teamb.DBAccess.ORMs;
 
-import edu.wpi.teamb.DBAccess.DB;
+import edu.wpi.teamb.DBAccess.DButils;
 
 import java.sql.*;
 
@@ -97,7 +97,7 @@ public class Move {
         this.date = date;
     }
     public Move getMove(int id) {
-        ResultSet rs = DB.getRowCond("Moves", "*", "nodeID = " + id + "");
+        ResultSet rs = DButils.getRowCond("Moves", "*", "nodeID = " + id + "");
         try {
             if (rs.isBeforeFirst()) {
                 rs.next();

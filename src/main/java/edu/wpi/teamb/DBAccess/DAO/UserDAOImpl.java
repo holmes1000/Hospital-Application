@@ -1,12 +1,11 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
-import edu.wpi.teamb.DBAccess.DB;
+import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.ORMs.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class UserDAOImpl implements IDAO {
     ArrayList<User> users;
@@ -17,7 +16,7 @@ public class UserDAOImpl implements IDAO {
 
     public User get(Object id) {
         String username = (String) id;
-        ResultSet rs = DB.getRowCond("Users", "*", "username = '" + username + "'");
+        ResultSet rs = DButils.getRowCond("Users", "*", "username = '" + username + "'");
         try {
             if (rs != null) {
                 if (rs.isBeforeFirst()) {
@@ -37,6 +36,9 @@ public class UserDAOImpl implements IDAO {
         return users;
     }
 
+    @Override
+    public void setAll() { users = getAllHelper(); }
+
     /**
      * Gets all users
      *
@@ -45,7 +47,7 @@ public class UserDAOImpl implements IDAO {
     public ArrayList<User> getAllHelper() {
         ArrayList<User> users = new ArrayList<User>();
         try {
-            ResultSet rs = DB.getCol("users", "*");
+            ResultSet rs = DButils.getCol("users", "*");
             while (rs.next()) {
                 users.add(new User(rs));
             }
@@ -62,7 +64,7 @@ public class UserDAOImpl implements IDAO {
         String[] values = {user.getUsername(), user.getPassword(), user.getPosition(), String.valueOf(user.getPermissionLevel())};
         String[] colsUser = {"password", "position", "permissionlevel"};
         String[] valuesUser = {values[1], values[2], values[3]};
-        DB.updateRow("users", colsUser, valuesUser, "username = '" + values[0] +"'");
+        DButils.updateRow("users", colsUser, valuesUser, "username = '" + values[0] +"'");
         for (int i = 0; i < users.size(); i++) {
             if (users.get(i).getUsername() == user.getUsername()) {
                 users.set(i, user);
@@ -80,7 +82,7 @@ public class UserDAOImpl implements IDAO {
     @Override
     public void delete(Object u) {
         User user = (User) u;
-        DB.deleteRow("Users", "username = '" + user.getUsername() + "'");
+        DButils.deleteRow("Users", "username = '" + user.getUsername() + "'");
         users.remove(user);
     }
 
@@ -89,7 +91,7 @@ public class UserDAOImpl implements IDAO {
         User user = (User) u;
         String[] cols = {"username", "password", "permissionLevel", "position"};
         String[] vals = {user.getUsername(), user.getPassword(), Integer.toString(user.getPermissionLevel()), user.getPosition()};
-        DB.insertRow("Users", cols, vals);
+        DButils.insertRow("Users", cols, vals);
         users.add(user);
     }
     /**
@@ -102,7 +104,7 @@ public class UserDAOImpl implements IDAO {
      */
 
     public ResultSet getDBRowFromCol(String col, String value) {
-        return DB.getRowCond("Users", "*", col + " = " + value);
+        return DButils.getRowCond("Users", "*", col + " = " + value);
     }
 
     /**
@@ -151,7 +153,7 @@ public class UserDAOImpl implements IDAO {
     public void updateRow(User user, String[] col, String[] value) {
         if (col == null || value == null)
             throw new IllegalArgumentException("The column and value arrays must be the same length");
-        DB.updateRow("Users", col, value, "username = '" + user.getUsername() + "'");
+        DButils.updateRow("Users", col, value, "username = '" + user.getUsername() + "'");
     }
 
     //TODO: Unsire if we want to beable to change the node ID

@@ -1,6 +1,6 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
-import edu.wpi.teamb.DBAccess.DB;
+import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.ORMs.Edge;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 
@@ -32,7 +32,7 @@ public class EdgeDAOImpl implements IDAO {
     public Edge get(Object id) {
         String endpoints = (String) id;
         String[] endpointsArray = endpoints.split("_");
-        ResultSet rs = DB.getRowCond("edges", "*", "startnode = " + endpointsArray[0] + " AND endnode = " + endpointsArray[1]);
+        ResultSet rs = DButils.getRowCond("edges", "*", "startnode = " + endpointsArray[0] + " AND endnode = " + endpointsArray[1]);
         try {
             if (rs.isBeforeFirst()) { // if there is something it found
                 rs.next();
@@ -56,6 +56,10 @@ public class EdgeDAOImpl implements IDAO {
     public ArrayList<Edge> getAll() {
         return edges;
     }
+
+    @Override
+    public void setAll() { edges = getAllHelper(); }
+
     /**
      * Gets all edges from the database
      *
@@ -64,7 +68,7 @@ public class EdgeDAOImpl implements IDAO {
     public ArrayList<Edge> getAllHelper() {
         ArrayList<Edge> edges = new ArrayList<Edge>();
         try {
-            ResultSet rs = DB.getCol("Edges", "*");
+            ResultSet rs = DButils.getCol("Edges", "*");
             while (rs.next()) {
                 edges.add(new Edge(rs));
             }
@@ -123,7 +127,7 @@ public class EdgeDAOImpl implements IDAO {
             Node node = nodes.get(e.getStartNodeID());
             //node.addEdge(this);
         } else {
-            Node node = Node.getNode(e.getStartNodeID());
+            Node node = NodeDAOImpl.getNode(e.getStartNodeID());
             //node.addEdge(this);
             nodes.put(e.getStartNodeID(), node);
         }
@@ -131,7 +135,7 @@ public class EdgeDAOImpl implements IDAO {
             Node node = nodes.get(e.getEndNodeID());
             //node.addEdge(this);
         } else {
-            Node node = Node.getNode(e.getEndNodeID());
+            Node node = NodeDAOImpl.getNode(e.getEndNodeID());
             //node.addEdge(this);
             nodes.put(e.getEndNodeID(), node);
         }
@@ -170,14 +174,14 @@ public class EdgeDAOImpl implements IDAO {
         if (col == null || value == null || col.equals("") || value.equals("")) {
             throw new IllegalArgumentException("col or value is null");
         }
-        return DB.getRowCond("edges", "*", col + " = " + value + "");
+        return DButils.getRowCond("edges", "*", col + " = " + value + "");
     }
 
     /**
      * gets all the rows from the database
      */
     public ResultSet getDBRowAllEdges() {
-        return DB.getRowCond("edges", "*", "TRUE");
+        return DButils.getRowCond("edges", "*", "TRUE");
     }
 
     /**
@@ -188,7 +192,7 @@ public class EdgeDAOImpl implements IDAO {
     public void insertEdge(int startNode, int endNode) {
         String[] cols = { "startnode", "endnode" };
         String[] values = { "'" + startNode + "'", "'" + endNode + "'" };
-        DB.insertRow("edges", cols, values);
+        DButils.insertRow("edges", cols, values);
     }
 
     /**
@@ -202,7 +206,7 @@ public class EdgeDAOImpl implements IDAO {
         if (cols == null || values == null) {
             throw new IllegalArgumentException("col or value is null");
         }
-        DB.updateRow("edges", cols, values, "startnode = " + endpointsA[0] + "AND endnode = " + endpointsA[1]);
+        DButils.updateRow("edges", cols, values, "startnode = " + endpointsA[0] + "AND endnode = " + endpointsA[1]);
     }
 
     // /**
@@ -232,7 +236,7 @@ public class EdgeDAOImpl implements IDAO {
         String[] values = { "'" + startNode + "'" };
         updateRow(cols, values, e);
         e.endpoints = startNode + "_" + e.getEndNodeID();
-        e.setEndNode(Node.getNode(parseInt(startNode)));
+        e.setEndNode(NodeDAOImpl.getNode(parseInt(startNode)));
     }
 
     /**
@@ -248,7 +252,7 @@ public class EdgeDAOImpl implements IDAO {
         String[] values = { "'" + endNode + "'" };
         updateRow(cols, values, e);
         e.endpoints = e.getStartNodeID() + "_" + endNode;
-        e.setEndNode(Node.getNode(parseInt(endNode)));
+        e.setEndNode(NodeDAOImpl.getNode(parseInt(endNode)));
     }
 
     /**
@@ -268,7 +272,7 @@ public class EdgeDAOImpl implements IDAO {
     public void deleteDBEdge(int confirm, Edge e) {
         String[] endpointsA = e.endpoints.split("_");
         if (confirm == 0) {
-            DB.deleteRow("edges", "startnode = " + endpointsA[0] + "AND endnode = " + endpointsA[1]);
+            DButils.deleteRow("edges", "startnode = " + endpointsA[0] + "AND endnode = " + endpointsA[1]);
         } else {
             System.out.println("Delete not confirmed");
         }

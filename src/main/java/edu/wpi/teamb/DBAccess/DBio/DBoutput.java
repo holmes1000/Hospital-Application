@@ -1,39 +1,33 @@
 package edu.wpi.teamb.DBAccess.DBio;
 
-import edu.wpi.teamb.DBAccess.DB;
+import edu.wpi.teamb.DBAccess.DBConnection;
+import edu.wpi.teamb.DBAccess.DButils;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import static edu.wpi.teamb.DBAccess.DB.connectToDB;
-import static edu.wpi.teamb.DBAccess.DB.forceConnect;
 
 public class DBoutput {
 
     /**
      * This method exports the Nodes table into a CSV file
      *
-     * @param filename The name of the CSV file to be exported
-     * @throws SQLException if the query fails
-     * @throws IOException if the file cannot be written to
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
      */
     public static void exportNodesToCSV(String filename, int location) {
 
-        DB.connectToDB();
-
         try {
             String allQuery = "SELECT * FROM Nodes";
-            DB.forceConnect();
-            Statement allStmt = DB.c.createStatement();
-            DB.forceConnect();
+            Statement allStmt = DBConnection.getDBconnection().getConnection().createStatement();
             ResultSet allRS = allStmt.executeQuery(allQuery);
-            DB.forceConnect();
-
 
             BufferedWriter bw = switch (location) {
                 case 0 -> new BufferedWriter(new FileWriter(filename));
@@ -62,32 +56,29 @@ public class DBoutput {
             allStmt.close();
             bw.close();
         } catch (IOException e) {
-            //return 0;
+            System.err.println("ERROR: Could not write to file " + filename + " in method 'exportNodesToCSV'");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.err.println("ERROR: SQL query failed in method 'exportNodesToCSV'");
         }
-        //return 1;
     }
 
     /**
      * This method exports the Edges table into a CSV file
      *
-     * @param filename The name of the CSV file to be exported
-     * @throws SQLException if the SQL query is invalid
-     * @throws IOException  if the file cannot be found
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
      */
-    public static void exportEdgesToCSV(String filename, int location) throws SQLException {
-
-        connectToDB();
-
-        String allQuery = "SELECT * FROM Edges";
-        DB.forceConnect();
-        Statement allStmt = DB.c.createStatement();
-        DB.forceConnect();
-        ResultSet allRS = allStmt.executeQuery(allQuery);
-        DB.forceConnect();
+    public static void exportEdgesToCSV(String filename, int location) {
 
         try {
+            String allQuery = "SELECT * FROM Edges";
+            Statement allStmt = DBConnection.getDBconnection().getConnection().createStatement();
+            ResultSet allRS = allStmt.executeQuery(allQuery);
+
             BufferedWriter bw = switch (location) {
                 case 0 -> new BufferedWriter(new FileWriter(filename));
                 case 1 -> new BufferedWriter(new FileWriter("./" + filename + ".csv"));
@@ -110,30 +101,29 @@ public class DBoutput {
             allStmt.close();
             bw.close();
         } catch (IOException e) {
-            //return 0;
+            System.err.println("ERROR: Could not write to file " + filename + " in method 'exportEdgesToCSV'");
+        } catch (SQLException e) {
+            System.err.println("ERROR: SQL query failed in method 'exportEdgesToCSV'");
         }
-        //return 1;
     }
 
     /**
-     * This method exports the locationNames table into a CSV file
+     * This method exports the LocationNames table into a CSV file
      *
-     * @param filename The name of the CSV file to be exported
-     * @throws SQLException if the SQL query is invalid
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
      */
-
     public static void exportLocationNamesToCSV(String filename, int location) throws SQLException {
 
-        DB.connectToDB();
-
-        String allQuery = "SELECT * FROM locationNames";
-        DB.forceConnect();
-        Statement allStmt = DB.c.createStatement();
-        DB.forceConnect();
-        ResultSet allRS = allStmt.executeQuery(allQuery);
-        DB.forceConnect();
-
         try {
+            String allQuery = "SELECT * FROM locationNames";
+            Statement allStmt = DBConnection.getDBconnection().getConnection().createStatement();
+            ResultSet allRS = allStmt.executeQuery(allQuery);
+
             BufferedWriter bw = switch (location) {
                 case 0 -> new BufferedWriter(new FileWriter(filename));
                 case 1 -> new BufferedWriter(new FileWriter("./" + filename + ".csv"));
@@ -157,37 +147,30 @@ public class DBoutput {
             allStmt.close();
             bw.close();
         } catch (IOException e) {
-            //return 0;
+            System.err.println("ERROR: Could not write to file " + filename + " in method 'exportLocationNamesToCSV'");
+        } catch (SQLException e) {
+            System.err.println("ERROR: SQL query failed in method 'exportLocationNamesToCSV'");
         }
-        //return 1;
     }
 
     /**
-     * This method exports the moves table into a CSV file
+     * This method exports the Moves table into a CSV file
      *
-     * @param filename The name of the CSV file to be exported
-     * @throws SQLException if the SQL query is invalid
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
      */
 
     public static void exportMovesToCSV(String filename, int location) {
 
-        connectToDB();
-
-        String allQuery = "SELECT * FROM moves";
-        DB.forceConnect();
-        Statement allStmt = null;
-        DB.forceConnect();
-        ResultSet allRS = null;
-        DB.forceConnect();
-
         try {
-            allStmt = DB.c.createStatement();
-            allRS = allStmt.executeQuery(allQuery);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+            String allQuery = "SELECT * FROM moves";
+            Statement allStmt = DBConnection.getDBconnection().getConnection().createStatement();
+            ResultSet allRS = allStmt.executeQuery(allQuery);
 
-        try {
             BufferedWriter bw = switch (location) {
                 case 0 -> new BufferedWriter(new FileWriter(filename));
                 case 1 -> new BufferedWriter(new FileWriter("./" + filename + ".csv"));
@@ -211,11 +194,10 @@ public class DBoutput {
             allStmt.close();
             bw.close();
         } catch (IOException e) {
-            //return 0;
+            System.err.println("ERROR: Could not write to file " + filename + " in method 'exportMovesToCSV'");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.err.println("ERROR: SQL query failed in method 'exportMovesToCSV'");
         }
-        //return 1;
     }
 
 }

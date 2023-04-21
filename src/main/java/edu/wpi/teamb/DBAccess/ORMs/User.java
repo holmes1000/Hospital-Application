@@ -1,6 +1,6 @@
 package edu.wpi.teamb.DBAccess.ORMs;
 
-import edu.wpi.teamb.DBAccess.DB;
+import edu.wpi.teamb.DBAccess.DButils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -105,7 +105,7 @@ public class User {
         return "Username: " + username + "\tPermission Level: " + permissionLevel + "\tPosition: " + position;
     }
     public User getUser(String username) {
-        ResultSet rs = DB.getRowCond("Users", "*", "username like '" + username + "'");
+        ResultSet rs = DButils.getRowCond("Users", "*", "username like '" + username + "'");
         try {
             if (rs != null) {
                 if (rs.isBeforeFirst()) {

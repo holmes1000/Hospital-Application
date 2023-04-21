@@ -1,12 +1,10 @@
 package edu.wpi.teamb.entities.requests;
 
 import edu.wpi.teamb.DBAccess.DAO.Repository;
-import edu.wpi.teamb.DBAccess.DB;
-import edu.wpi.teamb.DBAccess.ORMs.Request;
+import edu.wpi.teamb.DBAccess.DButils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -172,7 +170,7 @@ public class ConferenceRequest extends RequestImpl {
   }
 
   public ArrayList<String> getUsernames() throws SQLException {
-    ResultSet usernames = DB.getCol("users", "username");
+    ResultSet usernames = DButils.getCol("users", "username");
     ArrayList<String> userList = new ArrayList<String>();
     while (usernames.next()) {
       userList.add(usernames.getString("username"));

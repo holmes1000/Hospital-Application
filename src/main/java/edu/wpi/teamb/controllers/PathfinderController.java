@@ -4,24 +4,19 @@ import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 
-import java.awt.image.RenderedImage;
-import java.io.File;
 import java.io.IOException;
-import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
-import edu.wpi.teamb.DBAccess.DB;
+import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.FullNode;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 import edu.wpi.teamb.entities.Pathfinder;
 import edu.wpi.teamb.pathfinding.PathFinding;
 import io.github.palexdev.materialfx.controls.*;
-import io.github.palexdev.materialfx.utils.SwingFXUtils;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -30,7 +25,6 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
@@ -38,10 +32,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -50,9 +41,6 @@ import javafx.scene.shape.Line;
 import javafx.util.Duration;
 import net.kurobako.gesturefx.GesturePane;
 import org.controlsfx.control.PopOver;
-
-import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageOutputStream;
 
 import static javafx.scene.paint.Color.*;
 
@@ -208,7 +196,7 @@ public class PathfinderController {
               if (n == nodes.get(0)) {
                   Circle circle = new Circle(n.getxCoord(), n.getyCoord(), 5, GREEN);
                   pathGroup.getChildren().add(circle);
-                  Tooltip tooltip = new Tooltip(DB.getLongNameFromNodeID(n.getNodeID()));
+                  Tooltip tooltip = new Tooltip(DButils.getLongNameFromNodeID(n.getNodeID()));
                   Tooltip.install(circle,tooltip);
                   tooltip.setShowDelay(Duration.millis(5));
                   tooltip.setStyle("-fx-font-size: 14px;");
@@ -218,7 +206,7 @@ public class PathfinderController {
               } else if (n == nodes.get(nodes.size() - 1)) {
                   Circle circle = new Circle(n.getxCoord(), n.getyCoord(), 5, PURPLE);
                   pathGroup.getChildren().add(circle);
-                  Tooltip tooltip = new Tooltip(DB.getLongNameFromNodeID(n.getNodeID()));
+                  Tooltip tooltip = new Tooltip(DButils.getLongNameFromNodeID(n.getNodeID()));
                   Tooltip.install(circle,tooltip);
                   tooltip.setShowDelay(Duration.millis(5));
                   tooltip.setStyle("-fx-font-size: 14px;");
@@ -226,7 +214,7 @@ public class PathfinderController {
               } else {
                   Circle circle = new Circle(n.getxCoord(), n.getyCoord(), 5, RED);
                   pathGroup.getChildren().add(circle);
-                  Tooltip tooltip = new Tooltip(DB.getLongNameFromNodeID(n.getNodeID()));
+                  Tooltip tooltip = new Tooltip(DButils.getLongNameFromNodeID(n.getNodeID()));
                   Tooltip.install(circle,tooltip);
                   tooltip.setShowDelay(Duration.millis(5));
                   tooltip.setStyle("-fx-font-size: 14px;");

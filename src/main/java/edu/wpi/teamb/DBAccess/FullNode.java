@@ -1,11 +1,14 @@
 package edu.wpi.teamb.DBAccess;
 
+import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 import edu.wpi.teamb.DBAccess.ORMs.Move;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class FullNode {
     int nodeID;
@@ -114,6 +117,33 @@ public class FullNode {
 
     public void setNodeType(String nodeType) {
         this.nodeType = nodeType;
+    }
+
+    public static void addFullNode (Object n) {
+        Date current = Date.valueOf(LocalDate.now());
+        FullNode fullNode = (FullNode) n;
+        Node node = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding());
+        Repository.getRepository().addNode(node);
+        Repository.getRepository().addLocationName(new LocationName(fullNode.getLongName(), fullNode.getShortName(), fullNode.getNodeType()));
+        Repository.getRepository().addMove(new Move(fullNode.getNodeID(), fullNode.getLongName(), current));
+    }
+    public static void deleteFullNode(Object n) {
+        Date current = Date.valueOf(LocalDate.now());
+        FullNode fullNode = (FullNode) n;
+        Node node = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding());
+        Repository.getRepository().deleteNode(node);
+        Repository.getRepository().deleteLocationName(new LocationName(fullNode.getLongName(), fullNode.getShortName(), fullNode.getNodeType()));
+        Repository.getRepository().deleteMove(new Move(fullNode.getNodeID(), fullNode.getLongName(), current));
+    }
+
+    public static void updateFullNode(Object n) {
+        FullNode fn = (FullNode) n;
+        Node node = new Node(fn.getNodeID(), fn.getxCoord(), fn.getyCoord(), fn.getFloor(), fn.getBuilding());
+        Repository.getRepository().updateNode(node);
+        LocationName ln = new LocationName(fn.getLongName(), fn.getShortName(), fn.getNodeType());
+        Repository.getRepository().updateLocationName(ln);
+        Move m = new Move(fn.getNodeID(), fn.getLongName(), Date.valueOf("2023-04-18"));
+        Repository.getRepository().updateMove(m);
     }
 }
 

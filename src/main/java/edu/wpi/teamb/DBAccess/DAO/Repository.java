@@ -22,13 +22,14 @@ public class Repository {
             moveDAO = new MoveDAOImpl();
             locationNameDAO = new LocationNameDAOImpl();
             userDAO = new UserDAOImpl();
-            nodeDAOImpl = new NodeDAOImpl();
-            locationNameDaoImpl = new LocationNameDAOImpl();
             furniturerequestDAO = new FurnitureRequestDAOImpl();
             officerequestDAO = new OfficeRequestDAOImpl();
+            nodeDAOImpl = new NodeDAOImpl();
+            locationNameDaoImpl = new LocationNameDAOImpl();
             moveDAOImpl = new MoveDAOImpl();
-            db = DB.getDB();
+            dbConnection = DBConnection.getDBconnection();
         } catch (SQLException e) {
+            System.out.println("ERROR: Repository failed to initialize");
             throw new RuntimeException(e);
         }
     }
@@ -51,11 +52,11 @@ public class Repository {
     private final IDAO locationNameDAO;
     private final IDAO userDAO;
     private final IDAO furniturerequestDAO;
+    private final IDAO officerequestDAO;
     private final NodeDAOImpl nodeDAOImpl;
     private final LocationNameDAOImpl locationNameDaoImpl;
-    private final IDAO officerequestDAO;
     private final MoveDAOImpl moveDAOImpl;
-    private final DB db;
+    private final DBConnection dbConnection;
 
     public void addEdge(Edge e) {
         edgeDAO.add(e);
@@ -72,6 +73,7 @@ public class Repository {
     public ArrayList<Edge> getAllEdges() {
         return edgeDAO.getAll();
     }
+
     public void updateEdge(Edge e) {
         edgeDAO.update(e);
     }
@@ -79,13 +81,12 @@ public class Repository {
     public void addConferenceRequest(String[] cr) {
         conferencerequestDAO.add(cr);
     }
+
     public void deleteConferenceRequest(ConferenceRequest cr) {
         conferencerequestDAO.delete(cr);
     }
 
-    public FullConferenceRequest getConferenceRequest(int id) {
-        return (FullConferenceRequest) conferencerequestDAO.get(id);
-    }
+    public FullConferenceRequest getConferenceRequest(int id) { return (FullConferenceRequest) conferencerequestDAO.get(id); }
 
     public ArrayList<FullConferenceRequest> getAllConferenceRequests() {
         return conferencerequestDAO.getAll();
@@ -231,7 +232,10 @@ public class Repository {
         return locationNameDaoImpl.getLongNamesAlphebeticalOrder();
     }
 
-    public void resetNodesFromBackup() { nodeDAOImpl.resetNodesFromBackup(); }
+    public void resetNodesFromBackup() {
+        nodeDAOImpl.resetNodesFromBackup();
+        locationNameDaoImpl.getAll();
+    }
 
     public ArrayList<String> getAllShortNames() {
         return locationNameDaoImpl.getShortNamesAlphebeticalOrder();
@@ -289,42 +293,21 @@ public class Repository {
     }
 
     public Connection getConnection() {
-        return db.getConnection();
-    }
-
-    public void connectToDB() {
-        db.connectToDB();
-    }
-
-    public void addFullNode (Object n) {
-        Date current = Date.valueOf(LocalDate.now());
-        FullNode fullNode = (FullNode) n;
-        Node node = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding());
-        nodeDAOImpl.add(node);
-        locationNameDaoImpl.add(new LocationName(fullNode.getLongName(), fullNode.getShortName(), fullNode.getNodeType()));
-        moveDAOImpl.add(new Move(fullNode.getNodeID(), fullNode.getLongName(), current));
+        return dbConnection.getConnection();
     }
 
     public ArrayList<String> getNodeTypesUniqueAlphabetical () {
         return locationNameDaoImpl.getNodeTypesUniqueAlphabetical();
     }
+
+    public void addFullNode (Object n) {
+        FullNode.addFullNode(n);
+    }
     public void deleteFullNode(Object n) {
-        Date current = Date.valueOf(LocalDate.now());
-        FullNode fullNode = (FullNode) n;
-        Node node = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding());
-        nodeDAOImpl.delete(node);
-        locationNameDaoImpl.delete(new LocationName(fullNode.getLongName(), fullNode.getShortName(), fullNode.getNodeType()));
-        moveDAOImpl.delete(new Move(fullNode.getNodeID(), fullNode.getLongName(), current));
+        FullNode.deleteFullNode(n);
     }
 
     public void updateFullNode(Object n) {
-        FullNode fn = (FullNode) n;
-        Node node = new Node(fn.getNodeID(), fn.getxCoord(), fn.getyCoord(), fn.getFloor(), fn.getBuilding());
-        nodeDAO.update(node);
-        LocationName ln = new LocationName(fn.getLongName(), fn.getShortName(), fn.getNodeType());
-        locationNameDAO.update(ln);
-        Move m = new Move(fn.getNodeID(), fn.getLongName(), Date.valueOf("2023-04-18"));
-        moveDAO.update(m);
+        FullNode.updateFullNode(n);
     }
-
 }

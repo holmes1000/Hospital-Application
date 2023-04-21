@@ -1,6 +1,6 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
-import edu.wpi.teamb.DBAccess.DB;
+import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.FullMealRequest;
 import edu.wpi.teamb.DBAccess.FullOfficeRequest;
 import edu.wpi.teamb.DBAccess.ORMs.MealRequest;
@@ -26,7 +26,7 @@ public class MealRequestDAOImpl implements IDAO {
         MealRequest mr = null;
         Request r = null;
         try {
-            ResultSet rs = DB.getRowCond("mealrequests", "*", "id = " + idInt);
+            ResultSet rs = DButils.getRowCond("mealrequests", "*", "id = " + idInt);
             rs.next();
             mr = new MealRequest(rs);
             ResultSet rs1 = RequestDAOImpl.getDBRowID(idInt);
@@ -42,6 +42,9 @@ public class MealRequestDAOImpl implements IDAO {
     public ArrayList<FullMealRequest> getAll() {
         return mealRequests;
     }
+
+    @Override
+    public void setAll() { mealRequests = getAllHelper(); }
 
     /**
      * gets all Meal requests
@@ -74,7 +77,7 @@ public class MealRequestDAOImpl implements IDAO {
         //Date dateSubmitted;
         String[] values = {mealReq[0], mealReq[1], mealReq[2], mealReq[3], mealReq[4], mealReq[5], mealReq[6], mealReq[7], mealReq[8], mealReq[9], mealReq[10]};
         int id = insertDBRowNewMealRequest(values);
-        ResultSet rs = DB.getRowCond("requests", "dateSubmitted", "id = " + id);
+        ResultSet rs = DButils.getRowCond("requests", "dateSubmitted", "id = " + id);
         Date dateSubmitted = null;
         try {
             rs.next();
@@ -83,7 +86,7 @@ public class MealRequestDAOImpl implements IDAO {
             e.printStackTrace();
         }
         mealRequests.add(new FullMealRequest(id, mealReq[0], mealReq[1], mealReq[2], dateSubmitted, mealReq[4], mealReq[5], mealReq[6], mealReq[7], mealReq[8], mealReq[9], mealReq[10]));
-        RequestDAOImpl.getRequestDaoImpl().getRequests().add(new Request(id, mealReq[0], mealReq[1], mealReq[2], dateSubmitted, mealReq[4], (mealReq[5]), mealReq[10]));
+        RequestDAOImpl.getRequestDaoImpl().getAll().add(new Request(id, mealReq[0], mealReq[1], mealReq[2], dateSubmitted, mealReq[4], (mealReq[5]), mealReq[10]));
     }
 
     /**
@@ -94,11 +97,11 @@ public class MealRequestDAOImpl implements IDAO {
     @Override
     public void delete(Object request) {
         FullOfficeRequest fmr = (FullOfficeRequest) request;
-        DB.deleteRow("mealrequests", "id" + fmr.getId() + "");
-        DB.deleteRow("requests", "id =" + fmr.getId() + "");
+        DButils.deleteRow("mealrequests", "id" + fmr.getId() + "");
+        DButils.deleteRow("requests", "id =" + fmr.getId() + "");
         mealRequests.remove(fmr);
         Request r = new Request(fmr.getId(), fmr.getEmployee(), fmr.getFloor(), fmr.getRoomNumber(), fmr.getDateSubmitted(), fmr.getRequestStatus(), fmr.getRequestType(), fmr.getLocationName());
-        RequestDAOImpl.getRequestDaoImpl().getRequests().remove(r);
+        RequestDAOImpl.getRequestDaoImpl().getAll().remove(r);
     }
 
     /**
@@ -116,8 +119,8 @@ public class MealRequestDAOImpl implements IDAO {
         String[] valuesMeal = {values[7], values[8], values[9], values[10], values[11]};
         String[] colsReq = {"employee", "floor", "roomnumber", "datesubmitted", "requeststatus", "requesttype"};
         String[] valuesReq = {values[1], values[2], values[3], values[4], values[5], values[6]};
-        DB.updateRow("mealrequests", colsMeal, valuesMeal, "id = " + values[0]);
-        DB.updateRow("requests", colsReq, valuesReq, "id = " + values[0]);
+        DButils.updateRow("mealrequests", colsMeal, valuesMeal, "id = " + values[0]);
+        DButils.updateRow("requests", colsReq, valuesReq, "id = " + values[0]);
         for (int i = 0; i < mealRequests.size(); i++) {
             if (mealRequests.get(i).getId() == fmr.getId()) {
                 mealRequests.set(i, fmr);
@@ -137,9 +140,9 @@ public class MealRequestDAOImpl implements IDAO {
         String[] colMeal = {"id","orderfrom", "food", "drink", "snack", "mealmodification"};
         String[] colRequest = {"employee", "floor", "roomnumber", "requeststatus", "requesttype", "location_name"};
         String[] valuesReq = {value[0], value[1], value[2], value[3], value[4], value[10]};
-        int id = DB.insertRowRequests("requests", colRequest, valuesReq);
+        int id = DButils.insertRowRequests("requests", colRequest, valuesReq);
         String[] valuesMeal = {Integer.toString(id), value [5], value[6], value[7], value[8], value[9]};
-        DB.insertRow("mealrequests", colMeal, valuesMeal);
+        DButils.insertRow("mealrequests", colMeal, valuesMeal);
         return id;
     }
 
@@ -157,7 +160,7 @@ public class MealRequestDAOImpl implements IDAO {
      * @return the result set of the row(s) that matches the given column and value
      */
     private ResultSet getDBRowFromCol(String col, String value) {
-        return DB.getRowCond("MealRequests", "*", col + " = " + value);
+        return DButils.getRowCond("MealRequests", "*", col + " = " + value);
     }
 
     /**
@@ -168,7 +171,7 @@ public class MealRequestDAOImpl implements IDAO {
      * @return the result set of the row(s) that matches the given column and value
      */
     private ResultSet getDBRowAllRequests(String col, String value) {
-        return DB.getRowCond("MealRequests", "*", col + " = " + value);
+        return DButils.getRowCond("MealRequests", "*", col + " = " + value);
     }
 
     /**
@@ -243,7 +246,7 @@ public class MealRequestDAOImpl implements IDAO {
         if (col.length == value.length) {
             throw new IllegalArgumentException("The column and value arrays must be the same length");
         }
-        DB.updateRow("MealRequests", col, value, condition);
+        DButils.updateRow("MealRequests", col, value, condition);
     }
 
     /**
@@ -275,6 +278,6 @@ public class MealRequestDAOImpl implements IDAO {
      * @return the result set of the row(s) that matches the given column and value
      */
     private ResultSet getDBRowAllRequests() throws SQLException {
-        return DB.getCol("mealrequests", "*");
+        return DButils.getCol("mealrequests", "*");
     }
 }

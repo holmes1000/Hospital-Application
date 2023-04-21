@@ -1,6 +1,6 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
-import edu.wpi.teamb.DBAccess.DB;
+import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.FullFurnitureRequest;
 import edu.wpi.teamb.DBAccess.ORMs.FurnitureRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
@@ -23,13 +23,17 @@ public class FurnitureRequestDAOImpl implements IDAO {
         public ArrayList<FullFurnitureRequest> getAll() {
             return furnitureRequests;
         }
+
+        @Override
+        public void setAll() { furnitureRequests = getAllHelper(); }
+
         @Override
         public FullFurnitureRequest get(Object id) {
             Integer idInt = (Integer) id;
             FurnitureRequest fr = null;
             Request r = null;
             try {
-                ResultSet rs = DB.getRowCond("furniturerequests", "*", "id = " + idInt);
+                ResultSet rs = DButils.getRowCond("furniturerequests", "*", "id = " + idInt);
                 rs.next();
                 fr = new FurnitureRequest(rs);
                 ResultSet rs1 = RequestDAOImpl.getDBRowID(idInt);
@@ -60,7 +64,7 @@ public class FurnitureRequestDAOImpl implements IDAO {
             String[] furnitureReq = (String[]) request;
             String[] values = {furnitureReq[0], furnitureReq[1], furnitureReq[2], furnitureReq[3], furnitureReq[4], furnitureReq[5], furnitureReq[6], furnitureReq[7], furnitureReq[8], furnitureReq[9], furnitureReq[10], furnitureReq[11]};
             int id = insertDBRowNewFurnitureRequest(values);
-            ResultSet rs = DB.getRowCond("requests", "dateSubmitted", "id = " + id);
+            ResultSet rs = DButils.getRowCond("requests", "dateSubmitted", "id = " + id);
             Date dateSubmitted = null;
             try {
                 rs.next();
@@ -75,8 +79,8 @@ public class FurnitureRequestDAOImpl implements IDAO {
         @Override
         public void delete(Object request) {
             FullFurnitureRequest ffr = (FullFurnitureRequest) request;
-            DB.deleteRow("furniturerequests", "id" + ffr.getId() + "");
-            DB.deleteRow("requests", "id =" + ffr.getId() + "");
+            DButils.deleteRow("furniturerequests", "id" + ffr.getId() + "");
+            DButils.deleteRow("requests", "id =" + ffr.getId() + "");
             furnitureRequests.remove(ffr);
             Request req = new Request(ffr.getId(), ffr.getEmployee(), ffr.getFloor(), ffr.getRoomNumber(), ffr.getDateSubmitted(), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getLocationName());
             RequestDAOImpl.getRequestDaoImpl().getRequests().remove(req);
@@ -91,8 +95,8 @@ public class FurnitureRequestDAOImpl implements IDAO {
             String[] valuesFurniture = { values[6], values[7], values[8], values[9], values[10]};
             String[] colsReq = {"employee", "floor", "roomnumber", "datesubmitted", "requeststatus", "requesttype"};
             String[] valuesReq = {values[1], values[2], values[3], values[4], values[5], values[6]};
-            DB.updateRow("furniturerequests", colsFurniture, valuesFurniture, "id = " + values[0]);
-            DB.updateRow("requests", colsReq, valuesReq, "id = " + values[0]);
+            DButils.updateRow("furniturerequests", colsFurniture, valuesFurniture, "id = " + values[0]);
+            DButils.updateRow("requests", colsReq, valuesReq, "id = " + values[0]);
             for (int i = 0; i < furnitureRequests.size(); i++) {
                 if (furnitureRequests.get(i).getId() == ffr.getId()) {
                     furnitureRequests.set(i, ffr);
@@ -108,7 +112,7 @@ public class FurnitureRequestDAOImpl implements IDAO {
          * @return the result set of the row(s) that matches the given column and value
          */
         private ResultSet getDBRowAllRequests() throws SQLException {
-            return DB.getCol("furniturerequests", "*");
+            return DButils.getCol("furniturerequests", "*");
         }
 
         public void updateRowSpecialInstructions(String specialInstructions, String[] col, String[] val) {
@@ -123,14 +127,14 @@ public class FurnitureRequestDAOImpl implements IDAO {
             String[] colsFurniture = {"id", "type", "model", "assembly",};
             String[] colsReq = {"employee", "floor", "roomnumber", "requeststatus","requesttype", "location_name"};
             String[] valuesReq = {values[0], values[1], values[2], values[3], values[4], values[10]};
-            int id = DB.insertRowRequests("requests", colsReq, valuesReq);
+            int id = DButils.insertRowRequests("requests", colsReq, valuesReq);
             String[] valuesFurniture = {Integer.toString(id), values[6], values[7], values[8]};
-            DB.insertRow("furniturerequests", colsFurniture, valuesFurniture);
+            DButils.insertRow("furniturerequests", colsFurniture, valuesFurniture);
             return id;
         }
 
         private ResultSet getDBRowFromCol(String col, String value) {
-            return DB.getRowCond("furniturerequests", "*", col + " = " + value);
+            return DButils.getRowCond("furniturerequests", "*", col + " = " + value);
         }
 
         public ResultSet getDBRowID(int id) {
@@ -151,7 +155,7 @@ public class FurnitureRequestDAOImpl implements IDAO {
         private void updateRows(String[] col, String[] val, String cond) {
             if (col.length != val.length)
                 throw new IllegalArgumentException("Column and value arrays must be the same length");
-            DB.updateRow("furniturerequests", col, val, cond);
+            DButils.updateRow("furniturerequests", col, val, cond);
         }
 
         public void updateRowID(int id, String[] col, String[] val) {

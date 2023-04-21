@@ -1,6 +1,6 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
-import edu.wpi.teamb.DBAccess.DB;
+import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 
 import java.sql.ResultSet;
@@ -17,7 +17,7 @@ public class LocationNameDAOImpl implements IDAO {
 
     public LocationName get(Object id) {
         String name = (String) id;
-        ResultSet rs = DB.getRowCond("LocationNames", "*", "longname = " + name);
+        ResultSet rs = DButils.getRowCond("LocationNames", "*", "longname = " + name);
         try {
         if (rs.isBeforeFirst()) { // if there is something it found
             rs.next();
@@ -42,6 +42,9 @@ public class LocationNameDAOImpl implements IDAO {
         return locationNames;
     }
 
+    @Override
+    public void setAll() { locationNames = getAllHelper(); }
+
     /**
      * Gets all locations
      *
@@ -50,7 +53,7 @@ public class LocationNameDAOImpl implements IDAO {
     public ArrayList<LocationName> getAllHelper() {
         ArrayList<LocationName> lns = new ArrayList<LocationName>();
         try {
-            ResultSet rs = DB.getCol("locationnames", "*");
+            ResultSet rs = DButils.getCol("locationnames", "*");
             while (rs.next()) {
                 lns.add(new LocationName(rs));
             }
@@ -71,7 +74,7 @@ public class LocationNameDAOImpl implements IDAO {
         LocationName location = (LocationName) l;
         String[] cols = {"longName", "shortName", "nodeType"};
         String[] vals = {location.getLongName(), location.getShortName(), location.getNodeType()};
-        DB.insertRow("locationnames", cols, vals);
+        DButils.insertRow("locationnames", cols, vals);
         locationNames.add(location);
     }
 
@@ -83,7 +86,7 @@ public class LocationNameDAOImpl implements IDAO {
     @Override
     public void delete(Object l) {
         LocationName location = (LocationName) l;
-        DB.deleteRow("LocationNames", "longName = " + location.getLongName());
+        DButils.deleteRow("LocationNames", "longName = " + location.getLongName());
         locationNames.remove(location);
     }
 
@@ -97,7 +100,7 @@ public class LocationNameDAOImpl implements IDAO {
         LocationName location = (LocationName) l;
         String[] cols = {"longName", "shortName", "nodeType"};
         String[] vals = {location.getLongName(), location.getShortName(), location.getNodeType()};
-        DB.updateRow("LocationNames", cols, vals, "longName = " + location.getLongName());
+        DButils.updateRow("LocationNames", cols, vals, "longName = " + location.getLongName());
         for (int i = 0; i < locationNames.size(); i++) {
             if (locationNames.get(i).getLongName().equals(location.getLongName())) {
                 locationNames.set(i, location);
@@ -106,11 +109,11 @@ public class LocationNameDAOImpl implements IDAO {
     }
 
     private ResultSet getDBRowFromCol(String col, String value) {
-        return DB.getRowCond("LocationNames", "*", col + " = " + value);
+        return DButils.getRowCond("LocationNames", "*", col + " = " + value);
     }
 
     public ResultSet getDBRowAllLocationNames() {
-        return DB.getRowCond("LocationNames", "*", "TRUE");
+        return DButils.getRowCond("LocationNames", "*", "TRUE");
     }
 
     /**

@@ -7,8 +7,7 @@ import java.util.Date;
 import java.util.Objects;
 
 import edu.wpi.teamb.DBAccess.DAO.Repository;
-import edu.wpi.teamb.DBAccess.DB;
-import edu.wpi.teamb.DBAccess.ORMs.Request;
+import edu.wpi.teamb.DBAccess.DButils;
 
 public class OfficeRequest extends RequestImpl {
     private String employee;
@@ -83,7 +82,7 @@ public class OfficeRequest extends RequestImpl {
     }
 
     public ArrayList<String> getUsernames() throws SQLException {
-        ResultSet usernames = DB.getCol("users", "username");
+        ResultSet usernames = DButils.getCol("users", "username");
         ArrayList<String> uesrlist = new ArrayList<>();
         while (usernames.next()) {
             uesrlist.add(usernames.getString("username"));

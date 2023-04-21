@@ -1,6 +1,6 @@
 package edu.wpi.teamb.pathfinding;
 
-import edu.wpi.teamb.DBAccess.DB;
+import edu.wpi.teamb.DBAccess.DButils;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public class ValidatePathfinding {
     public static void main(String[] args) throws SQLException {
-        DB.connectToDB();
+        DButils.connectToDB();
         ArrayList<Integer> path = new ArrayList<Integer>();
         Pathfinder pathfinder = new Pathfinder();
         path = pathfinder.Astar(1135,1145);
