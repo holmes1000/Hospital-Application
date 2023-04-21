@@ -1,5 +1,6 @@
 package edu.wpi.teamb.pathfinding;
 
+import edu.wpi.teamb.DBAccess.Full.FullNode;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 
 import java.sql.SQLException;
@@ -11,7 +12,8 @@ public enum PathFinding {
     DEPTH_FIRST(new DepthFirstSearchAlgorithmI()),
     BREADTH_FIRST(new BreadthFirstSearchAlgorithmI()),
     ELEVATOR_BIAS(new AStarAlgorithmElevatorBiasI()),
-    STAIR_BIAS(new AStarAlgorithmStairsBiasI());
+    STAIR_BIAS(new AStarAlgorithmStairsBiasI()),
+    DIJKSTRA(new DijkstraAlgorithmI());
 
 
     private IPathFindingAlgorithm algorithm;
@@ -36,6 +38,8 @@ public enum PathFinding {
     public HashMap<Integer, Node> get_node_map() {return this.algorithm.get_node_map();}
 
     public String[] getPathAsStrings(ArrayList<Integer> shortestPath) {return this.algorithm.getPathAsStrings(shortestPath);};
+
+    public ArrayList<FullNode> getFullNodes() {return this.algorithm.getFullNodes();}
 
 //    private static class SingletonHolder {
 //        private static final PathFinding INSTANCE = new PathFinding();
