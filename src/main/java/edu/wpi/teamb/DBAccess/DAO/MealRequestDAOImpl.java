@@ -92,8 +92,6 @@ public class MealRequestDAOImpl implements IDAO {
     @Override
     public void add(Object request) {
         String[] mealReq = (String[]) request;
-       // DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        //Date dateSubmitted;
         String[] values = {mealReq[0], mealReq[1], "Meal", mealReq[2], mealReq[3], mealReq[4], mealReq[5], mealReq[6], mealReq[7]};
         int id = insertDBRowNewMealRequest(values);
         ResultSet rs = DButils.getRowCond("requests", "dateSubmitted", "id = " + id);
@@ -157,11 +155,11 @@ public class MealRequestDAOImpl implements IDAO {
      * @return an int representing the id of the new row
      */
     public static int insertDBRowNewMealRequest(String[] values) {
-        String[] colMeal = {"id","orderfrom", "food", "drink", "snack", "mealmodification"};
-        String[] colRequest = {"employee", "floor", "roomnumber", "requeststatus", "requesttype", "location_name"};
-        String[] valuesReq = {values[0], values[1], values[2], values[3], values[4], values[10]};
+        String[] colMeal = {"id","orderfrom", "food", "drink", "snack"};
+        String[] colRequest = {"employee", "requeststatus", "requesttype", "location_name", "notes"};
+        String[] valuesReq = {values[0], values[1], values[2], values[3], values[4]};
         int id = DButils.insertRowRequests("requests", colRequest, valuesReq);
-        String[] valuesMeal = {Integer.toString(id), values[5], values[6], values[7], values[8], values[9]};
+        String[] valuesMeal = {Integer.toString(id), values[5], values[6], values[7], values[8]};
         DButils.insertRow("mealrequests", colMeal, valuesMeal);
         return id;
     }
@@ -239,16 +237,6 @@ public class MealRequestDAOImpl implements IDAO {
      */
     public ResultSet getDBRowSnack(String snack) {
         return getDBRowFromCol("snack",  "'" + snack  + "'");
-    }
-
-    /**
-     * Gets the row(s) from the database that matches the given meal modification
-     *
-     * @param mealmodiification the meal modification with the order
-     * @return the result set of the row that matches the meal modification
-     */
-    public ResultSet getDBRowMealModification(String mealmodiification) {
-        return getDBRowFromCol("mealmodification",  "'" + mealmodiification  + "'");
     }
 
     // Method to Update the Database
