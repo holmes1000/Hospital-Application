@@ -1,7 +1,6 @@
 package edu.wpi.teamb.pathfinding;
 
 import edu.wpi.teamb.DBAccess.DAO.Repository;
-import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 
 import java.util.ArrayList;
@@ -90,7 +89,7 @@ public class Pathfinder {
         startNode.setCost(0.0);
         Node goalNode = node_map.get(goal);
 
-        PriorityQueue<Node> frontier = new PriorityQueue<Node>(new PriorityComparator());
+        PriorityQueue<Node> frontier = new PriorityQueue<Node>(new PriorityComparatorAstar());
         frontier.add(startNode);
         Node current;
         double newCost;

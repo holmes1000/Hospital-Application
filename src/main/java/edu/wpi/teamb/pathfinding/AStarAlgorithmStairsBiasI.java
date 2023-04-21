@@ -1,7 +1,7 @@
 package edu.wpi.teamb.pathfinding;
 
 import edu.wpi.teamb.DBAccess.DAO.Repository;
-import edu.wpi.teamb.DBAccess.DButils;
+import edu.wpi.teamb.DBAccess.Full.FullNode;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 
 import java.sql.SQLException;
@@ -14,6 +14,7 @@ public class AStarAlgorithmStairsBiasI implements IPathFindingAlgorithm {
 
 
     HashMap<Integer,Node> node_map = new HashMap<Integer,Node>();
+    public ArrayList<FullNode> getFullNodes() {return PathFinding.ASTAR.getFullNodes();}
 
     public void init_pathfinder() throws SQLException {
         if (node_map.isEmpty()){create_all_nodes();}
@@ -51,7 +52,7 @@ public class AStarAlgorithmStairsBiasI implements IPathFindingAlgorithm {
         startNode.setCost(0.0);
         Node goalNode = node_map.get(goal);
 
-        PriorityQueue<Node> frontier = new PriorityQueue<Node>(new PriorityComparator());
+        PriorityQueue<Node> frontier = new PriorityQueue<Node>(new PriorityComparatorAstar());
         frontier.add(startNode);
         Node current;
         double newCost;
