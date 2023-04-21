@@ -11,7 +11,6 @@ public class MealRequest {
   private String food;
   private String drink;
   private String snack;
-  private String mealModification;
 
   public MealRequest() {
     this.id = 0;
@@ -19,16 +18,14 @@ public class MealRequest {
     this.food = "";
     this.drink = "";
     this.snack = "";
-    this.mealModification = "";
   }
 
-  public MealRequest(int id, String orderFrom, String food, String drink, String snack, String mealModification) {
+  public MealRequest(int id, String orderFrom, String food, String drink, String snack) {
     this.id = id;
     this.orderFrom = orderFrom;
     this.food = food;
     this.drink = drink;
     this.snack = snack;
-    this.mealModification = mealModification;
   }
 
   public MealRequest(ResultSet rs) throws java.sql.SQLException {
@@ -37,8 +34,7 @@ public class MealRequest {
       rs.getString("orderFrom"),
       rs.getString("food"),
       rs.getString("drink"),
-      rs.getString("snack"),
-      rs.getString("mealModification")
+      rs.getString("snack")
     );
   }
 
@@ -81,13 +77,4 @@ public class MealRequest {
   public void setSnack(String snack) {
     this.snack = snack;
   }
-
-  public String getMealModification() {
-    return mealModification;
-  }
-
-  public void setMealModification(String mealModification) {
-    this.mealModification = mealModification;
-  }
-
 }

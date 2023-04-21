@@ -7,17 +7,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public enum PathFinding {
-    ASTAR(new AStarAlgorithm()),
-    DEPTH_FIRST(new DepthFirstSearchAlgorithm()),
-    BREADTH_FIRST(new BreadthFirstSearchAlgorithm()),
-    ELEVATOR_BIAS(new AStarAlgorithmElevatorBias()),
-    STAIR_BIAS(new AStarAlgorithmStairsBias());
+    ASTAR(new AStarAlgorithmI()),
+    DEPTH_FIRST(new DepthFirstSearchAlgorithmI()),
+    BREADTH_FIRST(new BreadthFirstSearchAlgorithmI()),
+    ELEVATOR_BIAS(new AStarAlgorithmElevatorBiasI()),
+    STAIR_BIAS(new AStarAlgorithmStairsBiasI());
 
 
-    private PathFindingAlgorithm algorithm;
+    private IPathFindingAlgorithm algorithm;
     //private static PathFinding algoType = ASTAR;
 
-    PathFinding(PathFindingAlgorithm algorithm){
+    PathFinding(IPathFindingAlgorithm algorithm){
         this.algorithm = algorithm;
     }
 
@@ -29,7 +29,7 @@ public enum PathFinding {
 
     public void force_init() throws SQLException {this.algorithm.force_init();}
 
-    public void setAlgorithm(PathFindingAlgorithm algorithm) {
+    public void setAlgorithm(IPathFindingAlgorithm algorithm) {
         this.algorithm = algorithm;
     }
 

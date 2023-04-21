@@ -47,6 +47,7 @@ public class CustomPreloader extends Preloader {
             root.setAlignment(Pos.CENTER);
             root.getChildren().add(imageView);
             root.getChildren().add(ringProgressIndicator);
+            progress.toFront();
             scene = new Scene(root, WIDTH, HEIGHT);
         });
     }

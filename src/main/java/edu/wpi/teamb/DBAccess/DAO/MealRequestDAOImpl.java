@@ -1,14 +1,16 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
 import edu.wpi.teamb.DBAccess.DButils;
-import edu.wpi.teamb.DBAccess.FullMealRequest;
-import edu.wpi.teamb.DBAccess.FullOfficeRequest;
+import edu.wpi.teamb.DBAccess.Full.FullFactory;
+import edu.wpi.teamb.DBAccess.Full.FullMealRequest;
+import edu.wpi.teamb.DBAccess.Full.FullOfficeRequest;
+import edu.wpi.teamb.DBAccess.Full.IFull;
 import edu.wpi.teamb.DBAccess.ORMs.MealRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -67,17 +69,19 @@ public class MealRequestDAOImpl implements IDAO {
      * @return an ArrayList of all MealRequest objects
      */
     public ArrayList<FullMealRequest> getAllHelper() {
+        FullFactory ff = new FullFactory();
+        IFull mealRequest = ff.getFullRequest("Meal");
         ArrayList<MealRequest> mrs = new ArrayList<MealRequest>();
         try {
             ResultSet rs = getDBRowAllRequests();
             while (rs.next()) {
                 mrs.add(new MealRequest(rs));
             }
-            return FullMealRequest.listFullMealRequests(mrs);
+            return (ArrayList<FullMealRequest>) mealRequest.listFullRequests(mrs);
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'MealRequestDAOImpl.getAllHelper': " + e.getMessage());
         }
-        return FullMealRequest.listFullMealRequests(mrs);
+        return (ArrayList<FullMealRequest>) mealRequest.listFullRequests(mrs);
     }
 
     /**
@@ -90,18 +94,18 @@ public class MealRequestDAOImpl implements IDAO {
         String[] mealReq = (String[]) request;
        // DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         //Date dateSubmitted;
-        String[] values = {mealReq[0], mealReq[1], mealReq[2], mealReq[3], mealReq[4], mealReq[5], mealReq[6], mealReq[7], mealReq[8], mealReq[9], mealReq[10]};
+        String[] values = {mealReq[0], mealReq[1], "Meal", mealReq[2], mealReq[3], mealReq[4], mealReq[5], mealReq[6], mealReq[7]};
         int id = insertDBRowNewMealRequest(values);
         ResultSet rs = DButils.getRowCond("requests", "dateSubmitted", "id = " + id);
-        Date dateSubmitted = null;
+        Timestamp dateSubmitted = null;
         try {
             rs.next();
-            dateSubmitted = rs.getDate("dateSubmitted");
+            dateSubmitted = rs.getTimestamp("dateSubmitted");
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        mealRequests.add(new FullMealRequest(id, mealReq[0], mealReq[1], mealReq[2], dateSubmitted, mealReq[4], mealReq[5], mealReq[6], mealReq[7], mealReq[8], mealReq[9], mealReq[10]));
-        RequestDAOImpl.getRequestDaoImpl().getAll().add(new Request(id, mealReq[0], mealReq[1], mealReq[2], dateSubmitted, mealReq[4], (mealReq[5]), mealReq[10]));
+        mealRequests.add(new FullMealRequest(id, mealReq[0], dateSubmitted, mealReq[1], mealReq[2], mealReq[3], mealReq[4], mealReq[5], mealReq[6], mealReq[7]));
+        RequestDAOImpl.getRequestDaoImpl().getAll().add(new Request(id, mealReq[0], dateSubmitted, mealReq[1], "Meal", mealReq[2], mealReq[3]));
     }
 
     /**
@@ -115,7 +119,7 @@ public class MealRequestDAOImpl implements IDAO {
         DButils.deleteRow("mealrequests", "id" + fmr.getId() + "");
         DButils.deleteRow("requests", "id =" + fmr.getId() + "");
         mealRequests.remove(fmr);
-        Request r = new Request(fmr.getId(), fmr.getEmployee(), fmr.getFloor(), fmr.getRoomNumber(), fmr.getDateSubmitted(), fmr.getRequestStatus(), fmr.getRequestType(), fmr.getLocationName());
+        Request r = new Request(fmr.getId(), fmr.getEmployee(), fmr.getDateSubmitted(), fmr.getRequestStatus(), fmr.getRequestType(), fmr.getLocationName(), fmr.getNotes());
         RequestDAOImpl.getRequestDaoImpl().getAll().remove(r);
     }
 
@@ -128,20 +132,20 @@ public class MealRequestDAOImpl implements IDAO {
     public void update(Object request) {
         FullMealRequest fmr = (FullMealRequest) request;
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String[] values = {
-                Integer.toString(fmr.getId()), fmr.getEmployee(), fmr.getFloor(), fmr.getRoomNumber(), dateFormat.format(fmr.getDateSubmitted()), fmr.getRequestStatus(), "Meal", fmr.getOrderFrom(), fmr.getFood(), fmr.getDrink(), fmr.getSnack(), fmr.getMealModification()};
-        String[] colsMeal = {"orderfrom", "food", "drink", "snack", "mealmodification"};
-        String[] valuesMeal = {values[7], values[8], values[9], values[10], values[11]};
-        String[] colsReq = {"employee", "floor", "roomnumber", "datesubmitted", "requeststatus", "requesttype"};
-        String[] valuesReq = {values[1], values[2], values[3], values[4], values[5], values[6]};
-        DButils.updateRow("mealrequests", colsMeal, valuesMeal, "id = " + values[0]);
-        DButils.updateRow("requests", colsReq, valuesReq, "id = " + values[0]);
+//        String[] values = {
+//                Integer.toString(fmr.getId()), fmr.getEmployee(), fmr.getDateSubmitted(), fmr.getRequestStatus(), "Meal", fmr.getOrderFrom(), fmr.getFood(), fmr.getDrink(), fmr.getSnack(), fmr.getMealModification()};
+        String[] colsMeal = {"orderfrom", "food", "drink", "snack"};
+        String[] valuesMeal = {fmr.getOrderFrom(), fmr.getFood(), fmr.getDrink(), fmr.getSnack()};
+        String[] colsReq = {"employee", "datesubmitted", "requeststatus", "requesttype", "locationname", "notes"};
+        String[] valuesReq = {fmr.getEmployee(), dateFormat.format(fmr.getDateSubmitted()), fmr.getRequestStatus(), fmr.getRequestType(), fmr.getLocationName(), fmr.getNotes()};
+        DButils.updateRow("mealrequests", colsMeal, valuesMeal, "id = " + fmr.getId());
+        DButils.updateRow("requests", colsReq, valuesReq, "id = " + fmr.getId());
         for (int i = 0; i < mealRequests.size(); i++) {
             if (mealRequests.get(i).getId() == fmr.getId()) {
                 mealRequests.set(i, fmr);
             }
         }
-        Request r = new Request(fmr.getId(), fmr.getEmployee(), fmr.getFloor(), fmr.getRoomNumber(), fmr.getDateSubmitted(), fmr.getRequestStatus(), fmr.getRequestType(), fmr.getLocationName());
+        Request r = new Request(fmr.getId(), fmr.getEmployee(), fmr.getDateSubmitted(), fmr.getRequestStatus(), fmr.getRequestType(), fmr.getLocationName(), fmr.getNotes());
         RequestDAOImpl.getRequestDaoImpl().update(r);
     }
     //Insert into Database Methods
@@ -282,7 +286,7 @@ public class MealRequestDAOImpl implements IDAO {
      * @return String of all the information about the MealRequest
      */
     public String toString(MealRequest mr) {
-        return "ID: " + mr.getId() + "\tOrder From: " + mr.getOrderFrom() + "\tFood: " + mr.getFood() + "\tDrink: " + mr.getDrink() + "\tSnack: " + mr.getSnack() + "\tMeal Modification: " + mr.getMealModification();
+        return "ID: " + mr.getId() + "\tOrder From: " + mr.getOrderFrom() + "\tFood: " + mr.getFood() + "\tDrink: " + mr.getDrink() + "\tSnack: " + mr.getSnack();
     }
 
     /**

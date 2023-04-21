@@ -1,6 +1,7 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
 import edu.wpi.teamb.DBAccess.*;
+import edu.wpi.teamb.DBAccess.Full.*;
 import edu.wpi.teamb.DBAccess.ORMs.*;
 
 import java.sql.*;
@@ -763,4 +764,9 @@ public class Repository {
     public void updateFullNode(Object n) {
         FullNode.updateFullNode(n);
     }
+
+    public ArrayList<IFull> getAllFullRequests() {
+        return requestDAO.getAllHelper1();
+    }
+
 }

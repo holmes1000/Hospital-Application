@@ -157,23 +157,22 @@ public class DButils {
         Statement currvalStatement = null;
         ResultSet currvalResultSet = null;
         try {
-            Repository.getRepository().getConnection().setAutoCommit(false);
-            String insert = "INSERT INTO requests(employee, floor, roomnumber, requeststatus, requesttype, location_name) VALUES ( ?, ?, ?, ?, ?, ?)";
+            DBConnection.getDBconnection().getConnection().setAutoCommit(false);
+            String insert = "INSERT INTO requests(employee, requeststatus, requesttype, locationname, notes) VALUES ( ?, ?, ?, ?, ?)";
             String query = "SELECT currval(pg_get_serial_sequence('requests','id'))";
-            stmt = Repository.getRepository().getConnection().prepareStatement(insert);
+            stmt = DBConnection.getDBconnection().getConnection().prepareStatement(insert);
             stmt.setString(1, value[0]);
             stmt.setString(2, value[1]);
             stmt.setString(3, value[2]);
             stmt.setString(4, value[3]);
             stmt.setString(5, value[4]);
-            stmt.setString(6, value[5]);
             stmt.executeUpdate();
-            currvalStatement = Repository.getRepository().getConnection().createStatement();
+            currvalStatement = DBConnection.getDBconnection().getConnection().createStatement();
             currvalResultSet = currvalStatement.executeQuery(query);
             if (currvalResultSet.next()) {
                 id = currvalResultSet.getInt(1);
             }
-            Repository.getRepository().getConnection().commit();
+            DBConnection.getDBconnection().getConnection().commit();
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'DB.insertRowRequests': " + e.getMessage());
         }
@@ -226,7 +225,7 @@ public class DButils {
      */
     public static void deleteRow(String table, String cond) {
         try {
-            Statement stmt = Repository.getRepository().getConnection().createStatement();
+            Statement stmt = DBConnection.getDBconnection().getConnection().createStatement();
             String query = "DELETE FROM " + table + " WHERE " + cond;
             stmt.executeUpdate(query);
         } catch (SQLException e) {
@@ -245,7 +244,7 @@ public class DButils {
         String countQuery = "SELECT COUNT(*) FROM " + table;
         int listSize = 0;
         try {
-            Statement countStmt = Repository.getRepository().getConnection().createStatement();
+            Statement countStmt = DBConnection.getDBconnection().getConnection().createStatement();
             ResultSet countRs = countStmt.executeQuery(countQuery);
             countRs.next();
 
@@ -261,7 +260,7 @@ public class DButils {
         int[] IDs = new int[listSize];
 
         try {
-            Statement idStmt = Repository.getRepository().getConnection().createStatement();
+            Statement idStmt = DBConnection.getDBconnection().getConnection().createStatement();
             idRs = idStmt.executeQuery(idQuery);
             for (int i = 0; i < listSize; i++) {
                 idRs.next();

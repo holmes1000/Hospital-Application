@@ -10,37 +10,32 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.Objects;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class HomeController {
-    @FXML
-    private JFXHamburger menuBurger;
-
-    @FXML
-    private JFXDrawer menuDrawer;
-
-    @FXML
-    private Pane navPane;
-    @FXML
-    private Pane homePane;
-
-    @FXML private Text welcomeBackText;
-
-    @FXML
-    MenuItem menuExit;
+    @FXML private JFXHamburger menuBurger;
+    @FXML private JFXDrawer menuDrawer;
+    @FXML private Pane navPane;
+    @FXML private Pane homePane;
+    @FXML private MFXButton btnAbout;
+    @FXML private MFXButton btnCredits;
     private MFXButton pathfinderImgBtn = new MFXButton();
-
     @FXML
     public void initialize() throws IOException {
         initNavBar();
         initPathfinderBtn();
+        initializeBtns();
     }
 
     private void initPathfinderBtn() {
@@ -55,6 +50,41 @@ public class HomeController {
         pathfinderImgBtn.setGraphic(imageView);
         homePane.getChildren().add(pathfinderImgBtn);
     }
+
+    private void initializeBtns() {
+        btnCredits.setOnMouseClicked(e -> handleCredits());
+        btnAbout.setOnMouseClicked(e -> handleAbout());
+    }
+
+    private void handleAbout() {
+        Parent root;
+        try {
+            root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("edu/wpi/teamb/views/AboutPage.fxml")));
+            Stage stage = new Stage();
+            stage.setTitle("About");
+            stage.setScene(new Scene(root, 1280, 720));
+            stage.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleCredits() {
+        Parent root;
+        try {
+            root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("edu/wpi/teamb/views/CreditsPage.fxml")));
+            Stage stage = new Stage();
+            stage.setTitle("Credits");
+            stage.setScene(new Scene(root, 1280, 720));
+            stage.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     @FXML
     void onPathfinderImgClick() {

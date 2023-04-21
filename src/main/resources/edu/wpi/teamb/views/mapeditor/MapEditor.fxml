@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXDrawer?>
+<?import com.jfoenix.controls.JFXHamburger?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXListView?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import io.github.palexdev.materialfx.controls.MFXToggleButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import net.kurobako.gesturefx.GesturePane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #272523;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.mapeditor.MapEditorController">
+    <center>
+        <AnchorPane prefHeight="720.0" prefWidth="1159.0" BorderPane.alignment="CENTER">
+            <children>
+                <ImageView fitHeight="733.0" fitWidth="1316.0" layoutX="-172.0" layoutY="-12.0" opacity="0.5" pickOnBounds="true" preserveRatio="false">
+                    <image>
+                        <Image url="@../../img/bwh-background.jpg" />
+                    </image>
+                </ImageView>
+                      <GesturePane fx:id="pane" prefHeight="720.0" prefWidth="1280.0">
+                      </GesturePane>
+            <VBox fx:id="VboxNodes" layoutX="477.0" layoutY="25.0" prefHeight="71.0" prefWidth="394.0">
+               <children>
+      
+                        <MFXListView fx:id="NodeInfo" prefHeight="70.0" prefWidth="394.0" style="-fx-border-color: black;" />
+               </children></VBox>
+                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#465777" height="50.0" layoutX="14.0" layoutY="35.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
+                <Text fill="#f1f1f1" layoutX="23.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Map Editor" textAlignment="CENTER">
+                    <font>
+                        <Font name="System Bold" size="36.0" />
+                    </font>
+                </Text>
+                <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="1079.0" layoutY="25.0" onMouseEntered="#hoverHelp" onMouseExited="#hoverHelp" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../../img/helpicon.png" />
+                    </image>
+                    <effect>
+                        <ColorAdjust brightness="1.0" />
+                    </effect>
+                </ImageView>
+            <MFXComboBox fx:id="NodeSelector" alignment="TOP_CENTER" floatMode="DISABLED" layoutX="297.0" layoutY="43.0" onAction="#clickNodeSelector" prefHeight="24.0" prefWidth="138.0" style="-fx-border-color: #1C4EFE;" text="CSV Type">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </MFXComboBox>
+            <MFXButton fx:id="uploadBtn" layoutX="889.0" layoutY="31.0" onAction="#clickUploadBtn" style="-fx-background-color: #1C4EFE;" text="Upload" textFill="#f1f1f1" />
+            <MFXButton fx:id="exportBtn" layoutX="891.0" layoutY="66.0" onAction="#clickExportBtn" style="-fx-background-color: #1C4EFE;" text="Export" textFill="#f1f1f1" />
+
+            <MFXButton fx:id="resetFromBackupBtn" layoutX="61.0" layoutY="682.0" onAction="#clickResetFromBackupBtn" style="-fx-background-color: #1C4EFE;" text="Reset From Backup" textFill="#f1f1f1" />
+                  <VBox layoutX="940.0" layoutY="128.0" prefHeight="203.0" prefWidth="204.0" style="-fx-background-color: #f1f1f1;">
+                      <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Add Node Details">
+                            <font>
+                                <Font name="System Bold" size="18.0" />
+                            </font>
+                        </Text>
+                  <MFXTextField fx:id="tfNodeId" floatingText="Node ID" prefHeight="48.0" prefWidth="257.0">
+                     <VBox.margin>
+                        <Insets bottom="20.0" />
+                     </VBox.margin>
+                  </MFXTextField>
+                          <MFXComboBox fx:id="cbNodeType" floatingText="Node Type" prefHeight="39.0" prefWidth="257.0">
+                              <VBox.margin>
+                                  <Insets bottom="20.0" />
+                              </VBox.margin>
+                          </MFXComboBox>
+                          <MFXTextField fx:id="tfLongName" floatingText="Long Name" prefHeight="48.0" prefWidth="257.0">
+                              <VBox.margin>
+                                  <Insets bottom="20.0" />
+                              </VBox.margin>
+                          </MFXTextField>
+                          <MFXTextField fx:id="tfShortName" floatingText="Short Name" prefHeight="48.0" prefWidth="257.0">
+                     <VBox.margin>
+                        <Insets bottom="20.0" />
+                     </VBox.margin>
+                  </MFXTextField>
+                        <MFXButton fx:id="btnSubmitNodeDetails" text="Submit Node Details" />
+                      </children>
+                  </VBox>
+            <VBox fx:id="vboxAddNode" layoutX="944.0" layoutY="458.0" prefHeight="119.0" prefWidth="131.0" style="-fx-background-color: #f1f1f1; -fx-border-color: #1C4EFE;">
+
+               <children>
+                  <VBox fx:id="vboxBtns" alignment="CENTER" spacing="10.0">
+                     <children>
+                        <MFXButton fx:id="btn3" defaultButton="true" prefHeight="46.0" prefWidth="42.0" style="-fx-background-color: #1C4EFE;" text="3" textFill="#f1f1f1">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </MFXButton>
+                        <MFXButton fx:id="btn2" defaultButton="true" prefHeight="46.0" prefWidth="42.0" style="-fx-background-color: #1C4EFE;" text="2" textFill="#f1f1f1">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </MFXButton>
+                        <MFXButton fx:id="btn1" defaultButton="true" prefHeight="46.0" prefWidth="42.0" style="-fx-background-color: #1C4EFE;" text="1" textFill="#f1f1f1">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </MFXButton>
+                        <MFXButton fx:id="btnL1" defaultButton="true" prefHeight="46.0" prefWidth="42.0" style="-fx-background-color: #1C4EFE;" text="LL1" textFill="#f1f1f1">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </MFXButton>
+                        <MFXButton fx:id="btnL2" defaultButton="true" prefHeight="46.0" prefWidth="42.0" style="-fx-background-color: #1C4EFE;" text="LL2" textFill="#f1f1f1">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </MFXButton>
+                     </children>
+                  </VBox>
+                  <MFXToggleButton fx:id="toggleNodes" text="Show Nodes" />
+                  <MFXToggleButton fx:id="toggleLocationNames" onMouseClicked="#toggleLocationNames" text="Show Location Names" />
+               </children>
+            </VBox>
+            </children>
+        </AnchorPane>
+    </center>
+    <left>
+        <Pane fx:id="navPane" prefHeight="720.0" prefWidth="200.0">
+            <children>
+                <JFXDrawer fx:id="menuDrawer" prefHeight="720.0" prefWidth="97.0" />
+                <JFXHamburger fx:id="menuBurger" layoutX="14.0" layoutY="14.0">
+                    <effect>
+                        <ColorAdjust brightness="1.0" />
+                    </effect>
+            </JFXHamburger>
+            </children>
+        </Pane>
+    </left>
+</BorderPane>

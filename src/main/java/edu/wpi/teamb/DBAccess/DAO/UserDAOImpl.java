@@ -81,10 +81,10 @@ public class UserDAOImpl implements IDAO {
     @Override
     public void update(Object u) {
         User user = (User) u;
-        String[] values = {user.getUsername(), user.getPassword(), user.getPosition(), String.valueOf(user.getPermissionLevel())};
-        String[] colsUser = {"password", "position", "permissionlevel"};
-        String[] valuesUser = {values[1], values[2], values[3]};
-        DButils.updateRow("users", colsUser, valuesUser, "username = '" + values[0] +"'");
+        String[] values = {user.getName(), user.getUsername(), user.getPassword(), user.getEmail(), String.valueOf(user.getPermissionLevel())};
+        String[] colsUser = {"name", "password", "email", "permissionlevel"};
+        String[] valuesUser = {values[0], values[2], values[3], values[4]};
+        DButils.updateRow("users", colsUser, valuesUser, "username = '" + values[1] +"'");
         for (int i = 0; i < users.size(); i++) {
             if (users.get(i).getUsername() == user.getUsername()) {
                 users.set(i, user);
@@ -114,8 +114,8 @@ public class UserDAOImpl implements IDAO {
     @Override
     public void add(Object u) {
         User user = (User) u;
-        String[] cols = {"username", "password", "permissionLevel", "position"};
-        String[] vals = {user.getUsername(), user.getPassword(), Integer.toString(user.getPermissionLevel()), user.getPosition()};
+        String[] cols = {"name", "username", "password", "email", "permissionLevel"};
+        String[] vals = {user.getName(), user.getUsername(), user.getPassword(), user.getEmail(), Integer.toString(user.getPermissionLevel())};
         DButils.insertRow("Users", cols, vals);
         users.add(user);
     }
@@ -159,6 +159,26 @@ public class UserDAOImpl implements IDAO {
      */
     public ResultSet getDBRowPosition(String position) {
         return getDBRowFromCol("position", position);
+    }
+
+    /**
+     * Gets the row(s) from the database that matches the given email
+     *
+     * @param email the name to search for
+     * @return the result set of the row that matches the given email
+     */
+    public ResultSet getDBRowEmail(String email) {
+        return getDBRowFromCol("email", email);
+    }
+
+    /**
+     * Gets the row(s) from the database that matches the given name
+     *
+     * @param name the name to search for
+     * @return the result set of the row that matches the given name
+     */
+    public ResultSet getDBRowName(String name) {
+        return getDBRowFromCol("name", name);
     }
 
 
@@ -222,19 +242,35 @@ public class UserDAOImpl implements IDAO {
     }
 
     /**
-     * Update a specific user's position in the database
+     * Update a specific user's email in the database
      *
      * @param user the user to update
-     * @param position the new position
+     * @param email the new floor
      *
      */
-    public void updatePosition(User user, String position) {
-        if (position == null || position.equals(""))
-            throw new IllegalArgumentException("The floor is null or empty");
-        String[] col = { "position" };
-        String[] value = { position };
+    public void updateEmail(User user, String email) {
+        if (email == null || email.equals(""))
+            throw new IllegalArgumentException("The email is null or empty");
+        String[] col = { "email" };
+        String[] value = { email };
         updateRow(user, col, value);
-        user.setPosition(position);
+        user.setEmail(email);
+    }
+
+    /**
+     * Update a specific user's name in the database
+     *
+     * @param user the user to update
+     * @param name the new floor
+     *
+     */
+    public void updateName(User user, String name) {
+        if (name == null || name.equals(""))
+            throw new IllegalArgumentException("The name is null or empty");
+        String[] col = { "name" };
+        String[] value = { name };
+        updateRow(user, col, value);
+        user.setEmail(name);
     }
 
     /**

@@ -1,6 +1,7 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
 import edu.wpi.teamb.DBAccess.DButils;
+import edu.wpi.teamb.DBAccess.Full.IFull;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
 import java.sql.ResultSet;
@@ -33,7 +34,7 @@ public class RequestDAOImpl implements IDAO {
      * @return a Request object with information from request table
      */
     @Override
-    public Object get(Object id) {
+    public IFull get(Object id) {
         int whichRequest = 0;
         ResultSet rs = DButils.getRowCond("requests", "requesttype", "id = " + id);
         String requestType = null;
@@ -49,17 +50,8 @@ public class RequestDAOImpl implements IDAO {
                 throw new RuntimeException(e);
             }
         }
-        if (requestType.equals("Meal")) {
-            whichRequest = 1;
-        } else if (requestType.equals("Conference")) {
-            whichRequest = 2;
-        } else if (requestType.equals("Flower")) {
-            whichRequest = 3;
-        } else {
-            whichRequest = 0;
-        }
-        switch (whichRequest) {
-            case 1:
+        switch (requestType) {
+            case "Meal":
                 MealRequestDAOImpl mr = null;
                 try {
                     mr = new MealRequestDAOImpl();
@@ -67,16 +59,25 @@ public class RequestDAOImpl implements IDAO {
                     throw new RuntimeException(e);
                 }
                 return mr.get(id);
-            case 2:
+            case "Conference":
                 ConferenceRequestDAOImpl cr = null;
                 cr = new ConferenceRequestDAOImpl();
                 return cr.get(id);
-            case 3:
+            case "Flower":
                 FlowerRequestDAOImpl fr = null;
                 fr = new FlowerRequestDAOImpl();
                 return fr.get(id);
-            default:
-                break;
+            case "Furniture":
+                FurnitureRequestDAOImpl ffr = null;
+                ffr = new FurnitureRequestDAOImpl();
+                return ffr.get(id);
+            case "Office":
+                OfficeRequestDAOImpl or = null;
+                try {
+                    or = new OfficeRequestDAOImpl();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
         }
         return null;
     }
@@ -117,6 +118,21 @@ public class RequestDAOImpl implements IDAO {
         return rqs;
     }
 
+    public ArrayList<IFull> getAllHelper1() {
+        ResultSet rs = null;
+        ArrayList<IFull> rqs = new ArrayList<IFull>();
+        try {
+            rs = DButils.getCol("requests", "*");
+            while (rs.next()) {
+                Request r = new Request(rs);
+                rqs.add((IFull) get(r.getId()));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return rqs;
+    }
+
     /**
      * Adds a Request object to the both the database and local list
      *
@@ -125,8 +141,14 @@ public class RequestDAOImpl implements IDAO {
     @Override
     public void add(Object request) {
         Request r = (Request) request;
-        requests.add(new Request(r.getId(), r.getEmployee(), r.getFloor(), r.getRoomNumber(), r.getDateSubmitted(), r.getRequestStatus(), r.getRequestType(), r.getLocationName()));
-        insertDBRowNewRequest(new String[]{r.getEmployee(), r.getFloor(), r.getRoomNumber(), r.getDateSubmitted().toString(), r.getRequestStatus(), r.getRequestType(), r.getLocationName()});
+        Request req = new Request(r.getId(), r.getEmployee(), r.getDateSubmitted(), r.getRequestStatus(), r.getRequestType(), r.getLocationName(), r.getNotes());
+        addHelper(req);
+    }
+
+    public void addHelper(Object request) {
+        Request r = (Request) request;
+        Request req = new Request(r.getId(), r.getEmployee(), r.getDateSubmitted(), r.getRequestStatus(), r.getRequestType(), r.getLocationName(), r.getNotes());
+        requests.add(req);
     }
 
     /**
@@ -147,7 +169,7 @@ public class RequestDAOImpl implements IDAO {
     @Override
     public void update(Object request) {
         Request r = (Request) request;
-        Request req = new Request(r.getId(), r.getEmployee(), r.getFloor(), r.getRoomNumber(), r.getDateSubmitted(), r.getRequestStatus(), r.getRequestType(), r.getLocationName());
+        Request req = new Request(r.getId(), r.getEmployee(), r.getDateSubmitted(), r.getRequestStatus(), r.getRequestType(), r.getLocationName(), r.getNotes());
         getRequestIndex(req.getId());
         requests.set(getRequestIndex(req.getId()), req);
     }
@@ -177,7 +199,7 @@ public class RequestDAOImpl implements IDAO {
      * @return the id of the new row
      */
     public static int insertDBRowNewRequest(String[] values) {
-        String[] col = {"employee", "floor", "roomNumber", "dateSubmitted", "requestStatus", "requestType", "location_names"};
+        String[] col = {"employee", "floor", "roomNumber", "dateSubmitted", "requestStatus", "requestType", "locationname"};
         int id = DButils.insertRowRequests("requests", col, values);
         return id;
     }
@@ -275,34 +297,6 @@ public class RequestDAOImpl implements IDAO {
         r.setEmployee(newEmployee);
     }
 
-    /**
-     * Update the floor in the database
-     *
-     * @param oldFloor the old floor
-     * @param newFloor the new employee
-     * @param r the Request to update
-     */
-    public void updateFloor(String oldFloor, String newFloor, Request r) {
-        String[] col = {"floor"};
-        String[] value = {"'" + newFloor + "'"};
-        updateRows(col, value, "floor = '" + oldFloor + "'");
-        r.setFloor(newFloor);
-    }
-
-    /**
-     * Update the room number in the database
-     *
-     * @param oldRoomNumber the old room number
-     * @param newRoomNumber the new room number
-     * @param r the Request to update
-     */
-    public void updateRoomNumber(String oldRoomNumber, String newRoomNumber, Request r) {
-        String[] col = {"roomnumber"};
-        String[] value = {"'" + newRoomNumber + "'"};
-        updateRows(col, value, "roomnumber = '" + oldRoomNumber + "'");
-        r.setRoomNumber(newRoomNumber);
-    }
-
     //Get rid of oldrequeststatus param and just use the requeststatus field?
 
     /**
@@ -350,14 +344,6 @@ public class RequestDAOImpl implements IDAO {
 
     // list information about this Request object
 
-    /**
-     * Returns a string of all the information about the Request
-     *
-     * @return String of all the information about the Request
-     */
-    public String toString(Request r) {
-        return r.getId() + ", " + r.getEmployee() + ", " + r.getFloor() + ", " + r.getRoomNumber() + ", " + r.getRequestStatus() + ", " + r.getRequestType();
-    }
 
     /**
      * Returns a Request object given an ID

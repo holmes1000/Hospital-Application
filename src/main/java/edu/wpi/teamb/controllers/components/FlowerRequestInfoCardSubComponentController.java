@@ -1,7 +1,7 @@
 package edu.wpi.teamb.controllers.components;
 
-import edu.wpi.teamb.DBAccess.FullFlowerRequest;
-import edu.wpi.teamb.entities.components.FlowerRequestInfoCardSubComponent;
+import edu.wpi.teamb.DBAccess.Full.FullFlowerRequest;
+import edu.wpi.teamb.entities.components.EFlowerRequestInfoCardSubComponent;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.fxml.FXML;
@@ -20,7 +20,7 @@ public class FlowerRequestInfoCardSubComponentController implements IInfoCardSub
     @FXML public Label specialInstructionsLabel;
     //edit field
     private boolean editable;
-    private FlowerRequestInfoCardSubComponent flowerRequestInfoCardSubComponent;
+    private EFlowerRequestInfoCardSubComponent EFlowerRequestInfoCardSubComponent;
     //edit components
     private MFXComboBox<String> flowerTypeComboBox;
     private MFXComboBox<String> colorComboBox;
@@ -31,7 +31,7 @@ public class FlowerRequestInfoCardSubComponentController implements IInfoCardSub
 
 
     @FXML public void initialize() throws IOException {
-        flowerRequestInfoCardSubComponent = new FlowerRequestInfoCardSubComponent();
+        EFlowerRequestInfoCardSubComponent = new EFlowerRequestInfoCardSubComponent();
         editable = false;
     }
 
@@ -50,9 +50,9 @@ public class FlowerRequestInfoCardSubComponentController implements IInfoCardSub
         if (request instanceof FullFlowerRequest fullFlowerRequest) {
             setFlowerTypeLabel(fullFlowerRequest.getFlowerType());
             setColorLabel(fullFlowerRequest.getColor());
-            setFlowerBuschellTypeLabel(fullFlowerRequest.getType());
+            setFlowerBuschellTypeLabel(fullFlowerRequest.getSize());
             setMessageTypeLabel(fullFlowerRequest.getMessage());
-            setSpecialInstructionsLabel(fullFlowerRequest.getSpecialInstructions());
+            setSpecialInstructionsLabel(fullFlowerRequest.getNotes());
         }
     }
 
@@ -84,7 +84,7 @@ public class FlowerRequestInfoCardSubComponentController implements IInfoCardSub
             flowerRequestInfoSubComponentAnchorPane.getChildren().add(index, flowerTypeComboBox);
 
             //get the flower types
-            ArrayList<String> flowerTypes = flowerRequestInfoCardSubComponent.getFlowerTypes();
+            ArrayList<String> flowerTypes = EFlowerRequestInfoCardSubComponent.getFlowerTypes();
             flowerTypeComboBox.getItems().addAll(flowerTypes);
 
             //set the value of the combo box to the current value of the label
@@ -126,7 +126,7 @@ public class FlowerRequestInfoCardSubComponentController implements IInfoCardSub
             flowerRequestInfoSubComponentAnchorPane.getChildren().add(index, colorComboBox);
 
             //get the colors to populate the combobox
-            ArrayList<String> colors = flowerRequestInfoCardSubComponent.getColors();
+            ArrayList<String> colors = EFlowerRequestInfoCardSubComponent.getColors();
             colorComboBox.getItems().addAll(colors);
 
             //set the combo box text to the current order from text
@@ -168,7 +168,7 @@ public class FlowerRequestInfoCardSubComponentController implements IInfoCardSub
             flowerRequestInfoSubComponentAnchorPane.getChildren().add(index, flowerBuschellTypeComboBox);
 
             //get the flower buschell types
-            ArrayList<String> flowerBuschellTypes = flowerRequestInfoCardSubComponent.getBuschellTypes();
+            ArrayList<String> flowerBuschellTypes = EFlowerRequestInfoCardSubComponent.getBuschellTypes();
             flowerBuschellTypeComboBox.getItems().addAll(flowerBuschellTypes);
 
             //set the combo box text to the current order from text

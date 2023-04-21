@@ -1,25 +1,13 @@
 package edu.wpi.teamb.controllers;
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXDrawer;
-import com.jfoenix.controls.JFXHamburger;
-import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import edu.wpi.teamb.Bapp;
-import edu.wpi.teamb.entities.Pathfinder;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.layout.VBox;
-import javafx.util.Duration;
 import org.controlsfx.control.PopOver;
 
-import javax.swing.event.HyperlinkEvent;
-import java.awt.*;
-import java.awt.event.WindowEvent;
-import java.beans.EventHandler;
 import java.io.IOException;
 
 public class NavDrawerController {
@@ -76,7 +64,7 @@ public class NavDrawerController {
 
   @FXML
   void clickExit() { btnExit.setOnMouseClicked(event -> {
-    final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/ExitPopOver.fxml"));
+    final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/ExitPopOver.fxml"));
     PopOver popOver = new PopOver();
     try {
       popOver.setContentNode(popupLoader.load());

@@ -1,16 +1,21 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
 import edu.wpi.teamb.DBAccess.DButils;
-import edu.wpi.teamb.DBAccess.FullConferenceRequest;
+import edu.wpi.teamb.DBAccess.Full.FullConferenceRequest;
+import edu.wpi.teamb.DBAccess.Full.FullFactory;
+import edu.wpi.teamb.DBAccess.Full.FullFurnitureRequest;
+import edu.wpi.teamb.DBAccess.Full.IFull;
+import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.ORMs.ConferenceRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+;
 
 public class ConferenceRequestDAOImpl implements IDAO {
     ArrayList<FullConferenceRequest> conferenceRequests;
@@ -67,17 +72,20 @@ public class ConferenceRequestDAOImpl implements IDAO {
      * @return an ArrayList of conference requests
      */
     public ArrayList<FullConferenceRequest> getAllHelper() {
+        FullFactory ff = new FullFactory();
+        IFull conf = ff.getFullRequest("Conference");
         ArrayList<ConferenceRequest> crs = new ArrayList<ConferenceRequest>();
+
         try {
             ResultSet rs = getDBRowAllRequests();
             while (rs.next()) {
                 crs.add(new ConferenceRequest(rs));
             }
-            return FullConferenceRequest.listFullConferenceRequests(crs);
+            return (ArrayList<FullConferenceRequest>) conf.listFullRequests(crs);
         } catch (SQLException e) {
-            System.err.println("ERROR Query Failed in method 'ConferenceRequestDAOImpl.getAllHelper': " + e.getMessage());
+        System.err.println("ERROR Query Failed in method 'ConferenceRequestDAOImpl.getAllHelper': " + e.getMessage());
         }
-        return FullConferenceRequest.listFullConferenceRequests(crs);
+        return (ArrayList<FullConferenceRequest>) conf.listFullRequests(crs);
     }
 
     /**
@@ -88,18 +96,22 @@ public class ConferenceRequestDAOImpl implements IDAO {
     @Override
     public void add(Object request) {
         String[] confReq = (String[]) request;
-        String[] values = {confReq[0], confReq[1], confReq[2], confReq[3], confReq[4], confReq[5], confReq[6], confReq[7], confReq[8]};
+        String[] values = {confReq[0], confReq[1], "Conference", confReq[2], confReq[3], confReq[4], confReq[5], confReq[6], confReq[7]};
         int id = insertDBRowNewConferenceRequest(values);
         ResultSet rs = DButils.getRowCond("requests", "dateSubmitted", "id = " + id);
-        Date dateSubmitted = null;
+        Timestamp dateSubmitted = null;
+        ResultSet rs1 = DButils.getRowCond("conferencerequests", "dateRequested", "id = " + id);
+        Timestamp dateRequested = null;
         try {
             rs.next();
-            dateSubmitted = rs.getDate("dateSubmitted");
+            dateSubmitted = rs.getTimestamp("dateSubmitted");
+            rs1.next();
+            dateRequested = rs1.getTimestamp("dateRequested");
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        conferenceRequests.add(new FullConferenceRequest(id, confReq[0], confReq[1], confReq[2], dateSubmitted, confReq[3], confReq[8], java.sql.Timestamp.valueOf(confReq[5]), confReq[6], confReq[7]));
-        RequestDAOImpl.getRequestDaoImpl().getAll().add(new Request(id, confReq[0], confReq[1], confReq[2], dateSubmitted, confReq[3], confReq[4], confReq[8]));
+        conferenceRequests.add(new FullConferenceRequest(id, confReq[0], dateSubmitted, confReq[1], confReq[2], confReq[3], dateRequested, confReq[5], confReq[6], Integer.parseInt(confReq[7])));
+        RequestDAOImpl.getRequestDaoImpl().getAll().add(new Request(id, confReq[0], dateSubmitted, confReq[2], "Conference", confReq[3], confReq[4]));
     }
 
     /**
@@ -113,7 +125,7 @@ public class ConferenceRequestDAOImpl implements IDAO {
         DButils.deleteRow("conferencerequests", "id" + fcr.getId() + "");
         DButils.deleteRow("requests", "id =" + fcr.getId() + "");
         conferenceRequests.remove(fcr);
-        Request req = new Request(fcr.getId(), fcr.getEmployee(), fcr.getFloor(), fcr.getRoomNumber(), fcr.getDateSubmitted(), fcr.getRequestStatus(), fcr.getRequestType(), fcr.getLocation_name());
+        Request req = new Request(fcr.getId(), fcr.getEmployee(), fcr.getDateSubmitted(), fcr.getRequestStatus(), fcr.getRequestType(), fcr.getLocationName(), fcr.getNotes());
         RequestDAOImpl.getRequestDaoImpl().getAll().remove(req);
     }
 
@@ -126,20 +138,18 @@ public class ConferenceRequestDAOImpl implements IDAO {
     public void update(Object request) {
         FullConferenceRequest fcr = (FullConferenceRequest) request;
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String[] values = {
-            Integer.toString(fcr.getId()), fcr.getEmployee(), fcr.getFloor(), fcr.getRoomNumber(), dateFormat.format(fcr.getDateSubmitted()), fcr.getRequestStatus(), "Conference", dateFormat.format(fcr.getDateRequested()), fcr.getEventName(), fcr.getBookingReason()};
         String[] colsConf = {"daterequested", "eventname", "bookingreason"};
-        String[] valuesConf = { values[7], values[8], values[9]};
-        String[] colsReq = {"employee", "floor", "roomnumber", "datesubmitted", "requeststatus", "requesttype"};
-        String[] valuesReq = {values[1], values[2], values[3], values[4], values[5], values[6]};
-        DButils.updateRow("conferencerequests", colsConf, valuesConf, "id = " + values[0]);
-        DButils.updateRow("requests", colsReq, valuesReq, "id = " + values[0]);
+        String[] valuesConf = {String.valueOf(fcr.getDateRequested()), fcr.getEventName(), fcr.getBookingReason(), String.valueOf(fcr.getDuration())};
+        String[] colsReq = {"employee", "datesubmitted", "requeststatus", "requesttype", "locationname", "notes"};
+        String[] valuesReq = {fcr.getEmployee(), String.valueOf(fcr.getDateSubmitted()), fcr.getRequestStatus(), fcr.getRequestType(), fcr.getLocationName(), fcr.getNotes()};
+        DButils.updateRow("conferencerequests", colsConf, valuesConf, "id = " + fcr.getId());
+        DButils.updateRow("requests", colsReq, valuesReq, "id = " + fcr.getId());
         for (int i = 0; i < conferenceRequests.size(); i++) {
             if (conferenceRequests.get(i).getId() == fcr.getId()) {
                 conferenceRequests.set(i, fcr);
             }
         }
-        Request req = new Request(fcr.getId(), fcr.getEmployee(), fcr.getFloor(), fcr.getRoomNumber(), fcr.getDateSubmitted(), fcr.getRequestStatus(), fcr.getRequestType(), fcr.getLocation_name());
+        Request req = new Request(fcr.getId(), fcr.getEmployee(), fcr.getDateSubmitted(), fcr.getRequestStatus(), fcr.getRequestType(), fcr.getLocationName(), fcr.getNotes());
         RequestDAOImpl.getRequestDaoImpl().update(req);
     }
 
@@ -149,12 +159,12 @@ public class ConferenceRequestDAOImpl implements IDAO {
      * @param values to insert
      * @return the id of the new conference request
      */
-    public int insertDBRowNewConferenceRequest(String[] values) {
-        String[] colsConf = {"id", "daterequested", "eventname", "bookingreason"};
-        String[] colsReq = {"employee", "floor", "roomnumber", "requeststatus", "requesttype", "location_name"};
-        String[] valuesReq = {values[0], values[1], values[2], values[3], values[4], values[8]};
+    public static int insertDBRowNewConferenceRequest(String[] values) {
+        String[] colsConf = {"id", "daterequested", "eventname", "bookingreason", "duration"};
+        String[] colsReq = {"employee", "requeststatus", "requesttype", "locationname", "notes"};
+        String[] valuesReq = {values[0], values[1], values[2], values[3], values[4]};
         int id = DButils.insertRowRequests("requests", colsReq, valuesReq);
-        String[] valuesConf = {Integer.toString(id),values[5], values[6], values[7]};
+        String[] valuesConf = {Integer.toString(id),values[5], values[6], values[7], values[8]};
         DButils.insertRow("conferencerequests", colsConf, valuesConf);
         return id;
     }
