@@ -13,7 +13,8 @@ public enum PathFinding {
     BREADTH_FIRST(new BreadthFirstSearchAlgorithmI()),
     ELEVATOR_BIAS(new AStarAlgorithmElevatorBiasI()),
     STAIR_BIAS(new AStarAlgorithmStairsBiasI()),
-    DIJKSTRA(new DijkstraAlgorithmI());
+    DIJKSTRA(new DijkstraAlgorithmI()),
+    BSTAR(new BStarAlgorithmI());
 
 
     private IPathFindingAlgorithm algorithm;

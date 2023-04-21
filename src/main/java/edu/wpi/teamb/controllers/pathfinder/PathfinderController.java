@@ -115,6 +115,7 @@ public class PathfinderController {
       algorithms.add("Breadth First Search");
       algorithms.add("Depth First Search");
       algorithms.add("Dijkstra Search");
+      algorithms.add("BStar");
 
 
       nodes.addAll(getFilteredLongnames());
@@ -371,43 +372,48 @@ public class PathfinderController {
   public void clickFindPath() throws SQLException {
       btnFindPath.setOnMouseClicked(event-> {
           VboxPathfinder.getChildren().clear();
-          int start = filteredFullNodes.get(fullNodesByLongname.get(startNode.getSelectedItem()).getNodeID()).getNodeID();
-          int end = filteredFullNodes.get(fullNodesByLongname.get(endNode.getSelectedItem()).getNodeID()).getNodeID();
+          if (!(startNode.getSelectedItem() == null)  && !(endNode.getSelectedItem() == null)) {
+              int start = filteredFullNodes.get(fullNodesByLongname.get(startNode.getSelectedItem()).getNodeID()).getNodeID();
+              int end = filteredFullNodes.get(fullNodesByLongname.get(endNode.getSelectedItem()).getNodeID()).getNodeID();
 
-          String[] path = new String[0];
-          try {
+              String[] path = new String[0];
+              try {
 
-              if (algorithmDropdown.getSelectedItem() != null) {
-                  if (toggleAvoidStairs.isSelected()) {path = EPathfinder.getShortestPath("AStar","Elevators",start, end);}
+                  if (algorithmDropdown.getSelectedItem() != null) {
+                      if (toggleAvoidStairs.isSelected()) {
+                          path = EPathfinder.getShortestPath("AStar", "Elevators", start, end);
+                      }
 //                  else if (toggleAvoidElevators.isSelected()) {path = pathfinder.getShortestPath("AStar","Stairs",start, end);}
-                  else if (algorithmDropdown.getSelectedItem().equals("Breadth First Search")) {
-                      path = EPathfinder.getShortestPath("Breadth First Search", "None",start, end);
+                      else if (algorithmDropdown.getSelectedItem().equals("Breadth First Search")) {
+                          path = EPathfinder.getShortestPath("Breadth First Search", "None", start, end);
+                      } else if (algorithmDropdown.getSelectedItem().equals("Depth First Search")) {
+                          path = EPathfinder.getShortestPath("Depth First Search", "None", start, end);
+                      } else if (algorithmDropdown.getSelectedItem().equals("Dijkstra Search")) {
+                          path = EPathfinder.getShortestPath("Dijkstra Search", "None", start, end);
+                      } else {
+                          path = EPathfinder.getShortestPath("AStar", "None", start, end);
+                      }
+                  } else {
+                      path = EPathfinder.getShortestPath("AStar", "None", start, end);
                   }
-                  else if (algorithmDropdown.getSelectedItem().equals("Depth First Search")) {
-                      path = EPathfinder.getShortestPath("Depth First Search", "None", start, end);
-                  }
-                  else if (algorithmDropdown.getSelectedItem().equals("Dijkstra Search")) {
-                      path = EPathfinder.getShortestPath("Dijkstra Search", "None", start, end);
-                  }
-                  else {path = EPathfinder.getShortestPath("AStar","None",start, end);}
-              }
-              else {path = EPathfinder.getShortestPath("AStar", "None",start, end);}
 
 
-              ArrayList<Integer> int_path = EPathfinder.getPath();
-              ArrayList<Node> nodePath;
-              nodes_by_floor = new HashMap<>();
-              for (Integer id : int_path){
-                  Node node = PathFinding.ASTAR.get_node_map().get(id);
-                  nodePath = nodes_by_floor.get(node.getFloor());
+                  ArrayList<Integer> int_path = EPathfinder.getPath();
+                  ArrayList<Node> nodePath;
+                  nodes_by_floor = new HashMap<>();
+                  for (Integer id : int_path) {
+                      Node node = PathFinding.ASTAR.get_node_map().get(id);
+                      nodePath = nodes_by_floor.get(node.getFloor());
 //                  System.out.println(nodePath);
-                  if (nodePath == null) {nodePath = new ArrayList<>();}
-                  nodePath.add(PathFinding.ASTAR.get_node_map().get(id));
-                  nodes_by_floor.put(node.getFloor(),nodePath);
-              }
+                      if (nodePath == null) {
+                          nodePath = new ArrayList<>();
+                      }
+                      nodePath.add(PathFinding.ASTAR.get_node_map().get(id));
+                      nodes_by_floor.put(node.getFloor(), nodePath);
+                  }
 
-              String floor = PathFinding.ASTAR.get_node_map().get(start).getFloor();
-              switchFloor(floor);
+                  String floor = PathFinding.ASTAR.get_node_map().get(start).getFloor();
+                  switchFloor(floor);
 
               } catch (SQLException e) {
                   throw new RuntimeException(e);
@@ -421,7 +427,7 @@ public class PathfinderController {
               listView.setItems(items);
               VboxPathfinder.getChildren().addAll(listView);
               listView.getSelectionModel().clearSelection();
-
+          }
 
       });
   }
