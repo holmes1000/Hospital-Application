@@ -322,4 +322,84 @@ class DBinput {
         }
     }
 
+    public static void importRequestsFromCSV(String filename, int location) {
+
+            String line = "";
+            String splitBy = ",";
+
+            BufferedReader br = null;
+
+            try {
+                try {
+                    br = switch (location) {
+                        case 0 -> new BufferedReader(new FileReader(filename));
+                        case 1 -> new BufferedReader(new FileReader("./" + filename + ".csv"));
+                        case 2 -> new BufferedReader(new FileReader(filename + ".csv"));
+                        case 3 -> new BufferedReader(new FileReader("./src/main/resources/CSV Files/" + filename + ".csv"));
+                        default -> new BufferedReader(new FileReader("./" + filename + ".csv"));
+                    };
+                } catch (FileNotFoundException e) {
+                    System.out.println("Error reading the file in the method 'DBinput.importRequestsFromCSV'");
+                    e.printStackTrace();
+                }
+
+                Statement tableStmt = DBConnection.getDBconnection().getConnection().createStatement();
+                String dropConferenceRequestsTable = "DROP TABLE IF EXISTS conferenceRequests";
+                int dropUpdateConferenceRequests = tableStmt.executeUpdate(dropConferenceRequestsTable);
+                String dropFlowerRequestsTable = "DROP TABLE IF EXISTS flowerRequests";
+                int dropUpdateFlowerRequests = tableStmt.executeUpdate(dropFlowerRequestsTable);
+                String dropFurnitureRequests = "DROP TABLE IF EXISTS furnitureRequests";
+                int dropUpdateFurnitureRequests = tableStmt.executeUpdate(dropFurnitureRequests);
+                String dropMealRequestsTable = "DROP TABLE IF EXISTS mealRequests";
+                int dropUpdateMealRequests = tableStmt.executeUpdate(dropMealRequestsTable);
+                String dropOfficeRequests = "DROP TABLE IF EXISTS officeRequests";
+                int dropUpdateOfficeRequests = tableStmt.executeUpdate(dropOfficeRequests);
+                String dropRequestsTable = "DROP TABLE IF EXISTS requests";
+                int dropUpdateRequests = tableStmt.executeUpdate(dropRequestsTable);
+
+                String createTableRequests = "CREATE TABLE requests " +
+                        "(id INT, employee VARCHAR(255), dateSubmitted timestamp, requestStatus VARCHAR(255), requestType VARCHAR(255)," +
+                        "locationName VARCHAR(255), primary key (id))";
+                int tableUpdateRequests = tableStmt.executeUpdate(createTableRequests);
+
+                String createTableOfficeRequests = "CREATE TABLE officeRequests " +
+                        "(id INT, employee VARCHAR(255), dateSubmitted timestamp, requestStatus VARCHAR(255), requestType VARCHAR(255)," +
+                        "locationName VARCHAR(255), primary key (id))";
+                int tableUpdateOfficeRequests = tableStmt.executeUpdate(createTableOfficeRequests);
+
+                try {
+                    while (((line = br.readLine()) != null)) {
+                        String[] requestValues = line.split(splitBy);
+                        if (!(requestValues[0].equals("requestID"))) {
+                            // System.out.println(edgeValues[0]);
+                            String rowQuery = "INSERT INTO Requests (id, employee, datesubmitted, requeststatus, requesttype, locationname) VALUES ("
+                                    + requestValues[0]
+                                    + ","
+                                    + requestValues[1]
+                                    + ","
+                                    + "'"
+                                    + requestValues[2]
+                                    + "'"
+                                    + ","
+                                    + "'"
+                                    + requestValues[3]
+                                    + "'"
+                                    + ");";
+                            // System.out.println(rowQuery);
+                            Statement rowStmt = DBConnection.getDBconnection().getConnection().createStatement();
+                            int rowUpdate = rowStmt.executeUpdate(rowQuery);
+                            rowStmt.close();
+                        }
+                    }
+                    br.close();
+                } catch (IOException e) {
+                    System.out.println("Error reading the file in the method 'DBinput.importRequestsFromCSV'");
+                    e.printStackTrace();
+                }
+                tableStmt.close();
+            } catch (SQLException e) {
+                System.out.println("ERROR: Query could not be executed in the method 'DBinput.importRequestsFromCSV'");
+            }
+    }
+
 }

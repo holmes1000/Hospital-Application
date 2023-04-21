@@ -11,12 +11,12 @@ public class DButils {
     /**
      * Allows the user to enter an SQL query to be executed (last resort only!)
      *
-     * @param query is the query to be executed
+     * @param update is the query to be executed
      */
-    void freeQuery(String query) {
+    void freeUpdate(String update) {
         try {
             Statement stmt = DBConnection.getDBconnection().getConnection().createStatement();
-            stmt.executeQuery(query);
+            stmt.executeQuery(update);
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'DB.freeQuery': " + e.getMessage());
         }
@@ -66,6 +66,12 @@ public class DButils {
         }
     }
 
+    /**
+     * Turns a column of a ResultSet into an ArrayList of Strings
+     *
+     * @param rs the ResultSet to convert
+     * @return an ArrayList of Strings
+     */
     public static ArrayList<String> colRStoStringArray(ResultSet rs) {
         int listSize = 0;
         ArrayList<String> stringArray = new ArrayList<>();
