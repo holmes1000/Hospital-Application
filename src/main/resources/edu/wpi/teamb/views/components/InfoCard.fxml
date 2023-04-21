@@ -9,9 +9,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="requestInfoAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="320.0" prefWidth="970.0" style="-fx-background-color: #465777;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.components.InfoCardController">
+<AnchorPane fx:id="requestInfoAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="201.0" prefWidth="970.0" style="-fx-background-color: #465777;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.components.InfoCardController">
    <children>
-      <ImageView fx:id="requestTypeIconImageView" fitHeight="121.0" fitWidth="101.0" layoutX="22.0" layoutY="93.0" pickOnBounds="true" preserveRatio="true" style="-fx-border-style: solid; -fx-background-color: #f1f1f1;">
+      <ImageView fx:id="requestTypeIconImageView" fitHeight="121.0" fitWidth="101.0" layoutX="14.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true" style="-fx-border-style: solid; -fx-background-color: #f1f1f1;">
          <image>
             <Image url="@../../img/breakfast.png" />
          </image>
@@ -58,7 +58,7 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <VBox fx:id="subComponentContainer" layoutX="132.0" layoutY="94.0" prefHeight="140.0" prefWidth="700.0" />
+      <VBox fx:id="subComponentContainer" layoutX="132.0" layoutY="94.0" prefHeight="101.0" prefWidth="700.0" />
       <Label fx:id="employeeAssignedLabel" layoutX="532.0" layoutY="19.0" text="Placeholder" textFill="WHITE">
          <font>
             <Font size="14.0" />
