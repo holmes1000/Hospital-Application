@@ -73,7 +73,7 @@ public class InfoCardController {
     requestType = fullRequest.getRequestType();
     getSpecialFields(requestType);
     //setting common components with common request info
-    setDateSubmittedLabel(fullRequest.getDateSubmitted().toString());
+    if (fullRequest.getDateSubmitted() != null) { setDateSubmittedLabel(fullRequest.getDateSubmitted().toString()); }
     setLocationNameLabel(fullRequest.getLocationName());
     setEmployeeAssignedLabel(fullRequest.getEmployee());
     setStatusLabel(fullRequest.getRequestStatus());

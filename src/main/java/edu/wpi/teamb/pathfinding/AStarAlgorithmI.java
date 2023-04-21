@@ -25,8 +25,9 @@ public class AStarAlgorithmI implements IPathFindingAlgorithm {
     }
 
 
-    public void create_all_nodes() throws SQLException {
+    public void create_all_nodes() {
         HashMap<Integer,Node> node_map = new HashMap<Integer,Node>();
+        Repository.getRepository().setAllNodes();
         ArrayList<Node> node_list = Repository.getRepository().getAllNodes();
         for (int i = 0; i < node_list.size(); i++) {
 //            System.out.println(node_list.get(i).getNodeID());

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class UserDAOImpl implements IDAO {
     ArrayList<User> users;
 
-    public UserDAOImpl() throws SQLException {
+    public UserDAOImpl() {
         users = getAllHelper();
     }
 

@@ -3,7 +3,7 @@ package edu.wpi.teamb.DBAccess;
 import java.sql.*;
 import java.util.ArrayList;
 import edu.wpi.teamb.DBAccess.*;
-import edu.wpi.teamb.DBAccess.DAO.Repository;
+import edu.wpi.teamb.DBAccess.DAO.*;
 import oracle.jdbc.replay.ReplayStatistics;
 
 public class DButils {
@@ -15,7 +15,7 @@ public class DButils {
      */
     void freeQuery(String query) {
         try {
-            Statement stmt = Repository.getRepository().getConnection().createStatement();
+            Statement stmt = DBConnection.getDBconnection().getConnection().createStatement();
             stmt.executeQuery(query);
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'DB.freeQuery': " + e.getMessage());
@@ -34,7 +34,7 @@ public class DButils {
     public static ResultSet getRowCond(String table, String columns, String cond) {
         ResultSet rs = null;
         try {
-            Statement stmt = Repository.getRepository().getConnection().createStatement();
+            Statement stmt = DBConnection.getDBconnection().getConnection().createStatement();
             String query = "SELECT " + columns + " FROM " + table + " WHERE " + cond;
             rs = stmt.executeQuery(query);
             if (rs != null) {
@@ -56,7 +56,7 @@ public class DButils {
      */
     public static ResultSet getCol(String table, String column) {
         try {
-            Statement stmt = Repository.getRepository().getConnection().createStatement();
+            Statement stmt = DBConnection.getDBconnection().getConnection().createStatement();
             String query = "SELECT " + column + " FROM " + table;
             ResultSet rs = stmt.executeQuery(query);
             return rs;
@@ -92,7 +92,7 @@ public class DButils {
      */
     public static void updateRow(String table, String[] columns, String[] value, String cond) {
         try {
-            Statement stmt = Repository.getRepository().getConnection().createStatement();
+            Statement stmt = DBConnection.getDBconnection().getConnection().createStatement();
             String query = "UPDATE " + table + " SET " + strArray2UpdateFormat(columns, value) + " WHERE " + cond;
             stmt.executeUpdate(query);
         } catch (SQLException e) {
@@ -133,7 +133,7 @@ public class DButils {
      */
     public static void insertRow(String table, String[] columns, String[] value) {
         try {
-            Statement stmt = Repository.getRepository().getConnection().createStatement();
+            Statement stmt = DBConnection.getDBconnection().getConnection().createStatement();
             String update = "INSERT INTO "  + table + " (" + strArray2InsertFormatCol(columns) + ") VALUES ("
                     + strArray2InsertFormat(value) + ")";
             stmt.executeUpdate(update);

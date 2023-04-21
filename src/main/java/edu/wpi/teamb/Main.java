@@ -18,7 +18,7 @@ import java.io.IOException;
 public class Main {
 
   public static void main(String[] args) {
-    //Repository.getRepository();
+    Repository.getRepository();
     LauncherImpl.launchApplication(Bapp.class, CustomPreloader.class, args);
   }
 

@@ -14,13 +14,15 @@ public class OfficeRequest {
         this.item = item;
         this.quantity = quantity;
     }
-    public OfficeRequest(ResultSet rs) throws SQLException {
-        this (
-            rs.getInt("id"),
-                rs.getString("type"),
-            rs.getString("item"),
-            rs.getInt("quantity")
-        );
+    public OfficeRequest(ResultSet rs) {
+        try {
+            this.id = rs.getInt("id");
+            this.type = rs.getString("type");
+            this.item = rs.getString("item");
+            this.quantity = rs.getInt("quantity");
+        } catch (SQLException e) {
+            System.err.println("ERROR Query failed while initializing OfficeRequest from ResultSet: " + e.getMessage());
+        }
     }
 
     public int getId() {

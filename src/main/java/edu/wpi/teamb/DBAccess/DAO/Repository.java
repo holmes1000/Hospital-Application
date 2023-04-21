@@ -53,7 +53,6 @@ public class Repository {
     private final MealRequestDAOImpl mealRequestDAO;
     private final FurnitureRequestDAOImpl furnitureRequestDAO;
     private final OfficeRequestDAOImpl officeRequestDAO;
-
     private final DBConnection dbConnection;
 
     //TODO Node methods
