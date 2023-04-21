@@ -3,6 +3,7 @@ package edu.wpi.teamb.controllers.requests;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.entities.requests.EMealRequest;
+import edu.wpi.teamb.entities.requests.IRequest;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -18,13 +19,13 @@ import org.controlsfx.control.PopOver;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 public class MealRequestControllerI implements IRequestController{
 
     @FXML private MFXButton btnSubmit;
     @FXML private MFXButton btnCancel;
     @FXML private MFXButton btnReset;
-    @FXML private MFXTextField roomTextBox;
     @FXML private ImageView helpIcon;
     @FXML private MFXComboBox<String> cbAvailableMeals;
     @FXML private MFXComboBox<String> cbAvailableDrinks;
@@ -32,9 +33,7 @@ public class MealRequestControllerI implements IRequestController{
     @FXML private MFXTextField txtFldNotes;
     @FXML private MFXComboBox<String> cbOrderLocation;
     @FXML private MFXComboBox<String> cbEmployeesToAssign;
-    @FXML private MFXComboBox<String> cbFloorSelect; // Floor
     @FXML private MFXFilterComboBox<String> cbLongName;
-
     private EMealRequest EMealRequest;
 
     public MealRequestControllerI(){
@@ -72,10 +71,6 @@ public class MealRequestControllerI implements IRequestController{
         employees.addAll(EMealRequest.getUsernames());
         cbEmployeesToAssign.setItems(employees);
 
-        // DROPDOWN INITIALIZATION
-        ObservableList<String> floors =
-                FXCollections.observableArrayList("Lower Floor 1", "Lower Floor 2", "Floor 1", "Floor 2", "Floor 3");
-        cbFloorSelect.setItems(floors);
 
         // DROPDOWN INITIALIZATION
         ObservableList<String> meals = FXCollections.observableArrayList("Pizza", "Pasta", "Soup");
@@ -93,24 +88,31 @@ public class MealRequestControllerI implements IRequestController{
 
     @Override
     public void handleSubmit() {
-        //Get all fields from request
-        String orderfrom = cbOrderLocation.getSelectedItem();
-        String food = cbAvailableMeals.getSelectedItem();
-        String drink = cbAvailableDrinks.getSelectedItem();
-        String snack = cbAvailableSnacks.getSelectedItem();
-        String mealmodification = txtFldNotes.getText();
-        String employee = cbEmployeesToAssign.getSelectedItem();
-        String floor = cbFloorSelect.getSelectedItem();
-        String longName = cbLongName.getSelectedItem();
-        String roomnumber = roomTextBox.getText();
-        String requeststatus =("Pending");
-        String mealtype = ("Meal");
+        // Get the standard request fields
+        EMealRequest.setEmployee(cbEmployeesToAssign.getValue());
+        EMealRequest.setLocationName(cbLongName.getValue());
+        EMealRequest.setRequestStatus(IRequest.RequestStatus.Pending);
+        EMealRequest.setNotes(txtFldNotes.getText());
+
+        // Get the meal specific fields
+        EMealRequest.setOrderFrom(cbOrderLocation.getValue());
+        EMealRequest.setFood(cbAvailableMeals.getValue());
+        EMealRequest.setDrink(cbAvailableDrinks.getValue());
+        EMealRequest.setSnack(cbAvailableSnacks.getValue());
 
         //Check for required fields before allowing submittion
-        if(((food != null) || (drink != null) || (snack != null)) && (employee!= null) && (longName != null)){
-
+        if(EMealRequest.checkRequestFields() && EMealRequest.checkSpecialRequestFields()) {
             //Set the gathered fields into a string array
-            String[] output = {employee, floor, roomnumber, requeststatus, mealtype, orderfrom, food, drink, snack, mealmodification, longName};
+            String[] output = {
+                    EMealRequest.getEmployee(),
+                    String.valueOf(EMealRequest.getRequestStatus()),
+                    EMealRequest.getLocationName(),
+                    EMealRequest.getNotes(),
+                    EMealRequest.getOrderFrom(),
+                    EMealRequest.getFood(),
+                    EMealRequest.getDrink(),
+                    EMealRequest.getSnack()
+            };
             EMealRequest.submitRequest(output);
             handleReset();
             Navigation.navigate(Screen.CREATE_NEW_REQUEST);
@@ -137,8 +139,6 @@ public class MealRequestControllerI implements IRequestController{
         //Reset the combo-boxes
         cbOrderLocation.clear();
         cbOrderLocation.replaceSelection("Order Location");
-        cbFloorSelect.clear();
-        cbFloorSelect.replaceSelection("Floor");
         cbEmployeesToAssign.clear();
         cbEmployeesToAssign.replaceSelection("Employees Available");
         cbAvailableMeals.clear();
@@ -149,10 +149,7 @@ public class MealRequestControllerI implements IRequestController{
         cbAvailableSnacks.replaceSelection("Available Snacks:");
         cbLongName.clear();
         cbLongName.replaceSelection("All Room Names: ");
-
         //Reset text fields
-        roomTextBox.clear();
-        roomTextBox.replaceSelection("Room:");
         txtFldNotes.clear();
     }
 

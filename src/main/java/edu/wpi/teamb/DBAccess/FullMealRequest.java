@@ -4,52 +4,48 @@ import edu.wpi.teamb.DBAccess.ORMs.MealRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
 import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FullMealRequest {
     int id;
     String employee;
-    String floor;
-    String roomNumber;
-    Date dateSubmitted;
+    Timestamp dateSubmitted;
     String requestStatus;
     String locationName;
+    String notes;
     String orderFrom;
     String food;
     String drink;
     String snack;
-    String mealModification;
     String requestType = "Meal";
 
-    public FullMealRequest(int id, String employee, String floor, String roomNumber, Date dateSubmitted, String requestStatus, String location_name, String orderFrom, String food, String drink, String snack, String mealModification) {
+    public FullMealRequest(int id, String employee, Timestamp dateSubmitted, String requestStatus, String locationName, String notes, String orderFrom, String food, String drink, String snack) {
         this.id = id;
         this.employee = employee;
-        this.floor = floor;
-        this.roomNumber = roomNumber;
         this.dateSubmitted = dateSubmitted;
         this.requestStatus = requestStatus;
-        this.locationName = location_name;
+        this.locationName = locationName;
+        this.notes = notes;
         this.orderFrom = orderFrom;
         this.food = food;
         this.drink = drink;
         this.snack = snack;
-        this.mealModification = mealModification;
     }
 
     public FullMealRequest(Request request, MealRequest mealRequest) {
         this.id = request.getId();
         this.employee = request.getEmployee();
-        this.floor = request.getFloor();
-        this.roomNumber = request.getRoomNumber();
         this.dateSubmitted = request.getDateSubmitted();
         this.requestStatus = request.getRequestStatus();
         this.locationName = request.getLocationName();
+        this.notes = request.getNotes();
         this.orderFrom = mealRequest.getOrderFrom();
         this.food = mealRequest.getFood();
         this.drink = mealRequest.getDrink();
         this.snack = mealRequest.getSnack();
-        this.mealModification = mealRequest.getMealModification();
     }
 
     public int getId() {
@@ -68,27 +64,11 @@ public class FullMealRequest {
         this.employee = employee;
     }
 
-    public String getFloor() {
-        return floor;
-    }
-
-    public void setFloor(String floor) {
-        this.floor = floor;
-    }
-
-    public String getRoomNumber() {
-        return roomNumber;
-    }
-
-    public void setRoomNumber(String roomNumber) {
-        this.roomNumber = roomNumber;
-    }
-
-    public Date getDateSubmitted() {
+    public Timestamp getDateSubmitted() {
         return dateSubmitted;
     }
 
-    public void setDateSubmitted(Date dateSubmitted) {
+    public void setDateSubmitted(Timestamp dateSubmitted) {
         this.dateSubmitted = dateSubmitted;
     }
 
@@ -132,13 +112,14 @@ public class FullMealRequest {
         this.snack = snack;
     }
 
-    public String getMealModification() {
-        return mealModification;
+    public String getNotes() {
+        return notes;
     }
 
-    public void setMealModification(String mealModification) {
-        this.mealModification = mealModification;
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
+
     public static ArrayList<FullMealRequest> listFullMealRequests(List<MealRequest> mrs) {
         ArrayList<FullMealRequest> fmrs = new ArrayList<FullMealRequest>();
         for (int i = 0; i < mrs.size(); i++) {
@@ -166,24 +147,6 @@ public class FullMealRequest {
 
     public void setLocationName(String locationName) {
         this.locationName = locationName;
-    }
-
-    @Override
-    public String toString() {
-        return "FullMealRequest{" +
-                "id=" + id +
-                ", employee='" + employee + '\'' +
-                ", floor='" + floor + '\'' +
-                ", roomNumber='" + roomNumber + '\'' +
-                ", dateSubmitted=" + dateSubmitted +
-                ", requestStatus='" + requestStatus + '\'' +
-                ", location_name='" + locationName + '\'' +
-                ", orderFrom='" + orderFrom + '\'' +
-                ", food='" + food + '\'' +
-                ", drink='" + drink + '\'' +
-                ", snack='" + snack + '\'' +
-                ", mealModification='" + mealModification + '\'' +
-                '}';
     }
 
     public String getRequestType() {

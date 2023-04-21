@@ -12,110 +12,41 @@ import java.util.List;
 import java.util.Objects;
 
 public class EConferenceRequest extends RequestImpl {
-  private String employee;
-  private String floor;
-  private String roomNumber;
-  private Date dateSubmitted;
-  private Timestamp dateRequested; // includes time
+  private Timestamp dateRequested;
   private String eventName;
   private String bookingReason;
-  private RequestStatus requestStatus;
-  private List<String> availableRooms;
+  private int duration;
 
-  public EConferenceRequest(
-      String employee,
-      String floor,
-      String roomNumber,
-      Date dateSubmitted,
-      Timestamp dateRequested,
-      String eventName,
-      String bookingReason,
-      List<String> availableRooms,
-      RequestStatus requestStatus) {
-    this.employee = employee;
-    this.floor = floor;
-    this.roomNumber = roomNumber;
-    this.dateSubmitted = dateSubmitted;
-    this.dateRequested = dateRequested;
-    this.eventName = eventName;
-    this.bookingReason = bookingReason;
-    this.availableRooms = availableRooms;
-    this.requestStatus = requestStatus;
-  }
+    public EConferenceRequest(String dateRequested, String eventName, String bookingReason, int duration) {
+        this.dateRequested = Timestamp.valueOf(dateRequested);
+        this.eventName = eventName;
+        this.bookingReason = bookingReason;
+        this.duration = duration;
+    }
 
   public EConferenceRequest() {}
-
-  @Override
-  public int getRequestID() {
-    return 0;
-  }
-
-  @Override
-  public String getFloor() {
-    return floor;
-  }
-
-  @Override
-  public String getRoomNumber() {
-    return roomNumber;
-  }
-
-  @Override
-  public Date getDateSubmitted() {
-    return dateSubmitted;
-  }
 
   @Override
   public RequestType getRequestType() {
     return RequestType.ConferenceRoom;
   }
 
-  public String getEmployee() {
-    return employee;
-  }
-
-  public void setEmployee(String employee) {
-    this.employee = employee;
-  }
-
   @Override
   public void submitRequest(String[] inputs) {
-    //String[] requestAttributesValues = {inputs[0],inputs[1],inputs[2], "'" + "2023-04-05" + "'",inputs[3],inputs[4]};
-    String[] attributes = {inputs[0],inputs[1],inputs[2],inputs[3],inputs[4],inputs[5],inputs[6], inputs[7], inputs[8]};
-    //int id = Request.insertDBRowNewRequest(requestAttributesValues);
-    //int finalID = Request.getFinalID( "id");
-    //String[] conferenceRequestAttributeValues = {String.valueOf(id), inputs[5],inputs[6],inputs[7]};
     Repository.getRepository().addConferenceRequest(inputs);
   }
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null || getClass() != obj.getClass()) return false;
-    EConferenceRequest EConferenceRequest = (EConferenceRequest) obj;
-    return Objects.equals(employee, EConferenceRequest.employee)
-        && Objects.equals(floor, EConferenceRequest.floor)
-        && Objects.equals(roomNumber, EConferenceRequest.roomNumber)
-        && Objects.equals(dateSubmitted, EConferenceRequest.dateSubmitted)
-        && Objects.equals(dateRequested, EConferenceRequest.dateRequested)
-        && Objects.equals(eventName, EConferenceRequest.eventName)
-        && Objects.equals(bookingReason, EConferenceRequest.bookingReason)
-        && Objects.equals(requestStatus, EConferenceRequest.requestStatus);
+    return false;
   }
 
-  public void setFloor(String floor) {
-    this.floor = floor;
+  @Override
+  public int hashCode() {
+    return 0;
   }
 
-  public void setRoomNumber(String roomNumber) {
-    this.roomNumber = roomNumber;
-  }
-
-  public void setDateSubmitted(Date dateSubmitted) {
-    this.dateSubmitted = dateSubmitted;
-  }
-
-  public Date getDateRequested() {
+  public Timestamp getDateRequested() {
     return dateRequested;
   }
 
@@ -139,43 +70,19 @@ public class EConferenceRequest extends RequestImpl {
     this.bookingReason = bookingReason;
   }
 
-  public RequestStatus getRequestStatus() {
-    return requestStatus;
+  public int getDuration() {
+    return duration;
   }
 
-  public void setRequestStatus(RequestStatus requestStatus) {
-    this.requestStatus = requestStatus;
+  public void setDuration(int duration) {
+    this.duration = duration;
   }
 
-  public void setAvailableRooms(List<String> availableRooms) {
-    this.availableRooms = availableRooms;
+  public boolean checkSpecialRequestFields() {
+      if (this.dateRequested == null || this.eventName == null || this.bookingReason == null || this.duration == 0) {
+          return false;
+      }
+      return true;
   }
 
-  public List<String> getAvailableRooms() {
-    return availableRooms;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(
-        employee,
-        floor,
-        roomNumber,
-        dateSubmitted,
-        dateRequested,
-        eventName,
-        bookingReason,
-        requestStatus,
-        availableRooms);
-  }
-
-  public ArrayList<String> getUsernames() throws SQLException {
-    ResultSet usernames = DB.getCol("users", "username");
-    ArrayList<String> userList = new ArrayList<String>();
-    while (usernames.next()) {
-      userList.add(usernames.getString("username"));
-    }
-    usernames.close();
-    return userList;
-  }
 }

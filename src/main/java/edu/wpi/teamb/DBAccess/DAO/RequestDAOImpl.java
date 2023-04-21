@@ -117,13 +117,13 @@ public class RequestDAOImpl implements IDAO {
     @Override
     public void add(Object request) {
         Request r = (Request) request;
-        Request req = new Request(r.getId(), r.getEmployee(), r.getFloor(), r.getRoomNumber(), r.getDateSubmitted(), r.getRequestStatus(), r.getRequestType(), r.getLocationName());
+        Request req = new Request(r.getId(), r.getEmployee(), r.getDateSubmitted(), r.getRequestStatus(), r.getRequestType(), r.getLocationName(), r.getNotes());
         addHelper(req);
     }
 
     public void addHelper(Object request) {
         Request r = (Request) request;
-        Request req = new Request(r.getId(), r.getEmployee(), r.getFloor(), r.getRoomNumber(), r.getDateSubmitted(), r.getRequestStatus(), r.getRequestType(), r.getLocationName());
+        Request req = new Request(r.getId(), r.getEmployee(), r.getDateSubmitted(), r.getRequestStatus(), r.getRequestType(), r.getLocationName(), r.getNotes());
         requests.add(req);
     }
 
@@ -147,7 +147,7 @@ public class RequestDAOImpl implements IDAO {
     @Override
     public void update(Object request) {
         Request r = (Request) request;
-        Request req = new Request(r.getId(), r.getEmployee(), r.getFloor(), r.getRoomNumber(), r.getDateSubmitted(), r.getRequestStatus(), r.getRequestType(), r.getLocationName());
+        Request req = new Request(r.getId(), r.getEmployee(), r.getDateSubmitted(), r.getRequestStatus(), r.getRequestType(), r.getLocationName(), r.getNotes());
         getRequestIndex(req.getId());
         requests.set(getRequestIndex(req.getId()), req);
     }
@@ -171,7 +171,7 @@ public class RequestDAOImpl implements IDAO {
     //TODO: figure out a way to NEVER DO THIS (pls dont make me do this) (again) (again) (again)
 
     public static int insertDBRowNewRequest(String[] values) {
-        String[] col = {"employee", "floor", "roomNumber", "dateSubmitted", "requestStatus", "requestType", "location_names"};
+        String[] col = {"employee", "floor", "roomNumber", "dateSubmitted", "requestStatus", "requestType", "locationname"};
         int id = DB.insertRowRequests("requests", col, values);
         return id;
     }
@@ -263,31 +263,6 @@ public class RequestDAOImpl implements IDAO {
         r.setEmployee(newEmployee);
     }
 
-    /**
-     * Update the floor  in the database
-     *
-     * @param oldFloor the old floor
-     * @param newFloor the new employee
-     */
-    public void updateFloor(String oldFloor, String newFloor, Request r) {
-        String[] col = {"floor"};
-        String[] value = {"'" + newFloor + "'"};
-        updateRows(col, value, "floor = '" + oldFloor + "'");
-        r.setFloor(newFloor);
-    }
-
-    /**
-     * Update the room number  in the database
-     *
-     * @param oldRoomNumber the old room number
-     * @param newRoomNumber the new room number
-     */
-    public void updateRoomNumber(String oldRoomNumber, String newRoomNumber, Request r) {
-        String[] col = {"roomnumber"};
-        String[] value = {"'" + newRoomNumber + "'"};
-        updateRows(col, value, "roomnumber = '" + oldRoomNumber + "'");
-        r.setRoomNumber(newRoomNumber);
-    }
 
     //Get rid of oldrequeststatus param and just use the requeststatus field?
 
@@ -342,13 +317,5 @@ public class RequestDAOImpl implements IDAO {
 
     // list information about this Request object
 
-    /**
-     * Returns a string of all the information about the Request
-     *
-     * @return String of all the information about the Request
-     */
-    public String toString(Request r) {
-        return r.getId() + ", " + r.getEmployee() + ", " + r.getFloor() + ", " + r.getRoomNumber() + ", " + r.getRequestStatus() + ", " + r.getRequestType();
-    }
 
 }

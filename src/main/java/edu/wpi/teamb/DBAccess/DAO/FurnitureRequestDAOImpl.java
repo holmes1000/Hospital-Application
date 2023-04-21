@@ -8,6 +8,7 @@ import edu.wpi.teamb.DBAccess.ORMs.Request;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,18 +54,18 @@ public class FurnitureRequestDAOImpl implements IDAO {
         @Override
         public void add(Object request) {
             String[] furnitureReq = (String[]) request;
-            String[] values = {furnitureReq[0], furnitureReq[1], furnitureReq[2], furnitureReq[3], furnitureReq[4], furnitureReq[5], furnitureReq[6], furnitureReq[7], furnitureReq[8], furnitureReq[9], furnitureReq[10], furnitureReq[11]};
+            String[] values = {furnitureReq[0], furnitureReq[1], "Furniture", furnitureReq[2], furnitureReq[3], furnitureReq[4], furnitureReq[5], furnitureReq[6]};
             int id = insertDBRowNewFurnitureRequest(values);
             ResultSet rs = DB.getRowCond("requests", "dateSubmitted", "id = " + id);
-            Date dateSubmitted = null;
+            Timestamp dateSubmitted = null;
             try {
                 rs.next();
-                dateSubmitted = rs.getDate("dateSubmitted");
+                dateSubmitted = rs.getTimestamp("dateSubmitted");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            furnitureRequests.add(new FullFurnitureRequest(id, furnitureReq[0], furnitureReq[1], furnitureReq[2], dateSubmitted, furnitureReq[4], furnitureReq[5], furnitureReq[6], furnitureReq[7], Boolean.getBoolean(furnitureReq[8])));
-            RequestDAOImpl.getRequestDaoImpl().getRequests().add(new Request(id, furnitureReq[0], furnitureReq[1], furnitureReq[2], dateSubmitted, furnitureReq[4], furnitureReq[5], furnitureReq[9]));
+            furnitureRequests.add(new FullFurnitureRequest(id, furnitureReq[0], dateSubmitted, furnitureReq[1], furnitureReq[2], furnitureReq[3], furnitureReq[4], furnitureReq[5], Boolean.getBoolean(furnitureReq[6])));
+            RequestDAOImpl.getRequestDaoImpl().getRequests().add(new Request(id, furnitureReq[0], dateSubmitted, furnitureReq[1], "Furniture", furnitureReq[2], furnitureReq[3]));
         }
 
         @Override
@@ -73,7 +74,7 @@ public class FurnitureRequestDAOImpl implements IDAO {
             DB.deleteRow("furniturerequests", "id" + ffr.getId() + "");
             DB.deleteRow("requests", "id =" + ffr.getId() + "");
             furnitureRequests.remove(ffr);
-            Request req = new Request(ffr.getId(), ffr.getEmployee(), ffr.getFloor(), ffr.getRoomNumber(), ffr.getDateSubmitted(), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getLocationName());
+            Request req = new Request(ffr.getId(), ffr.getEmployee(), ffr.getDateSubmitted(), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getLocationName(), ffr.getNotes());
             RequestDAOImpl.getRequestDaoImpl().getRequests().remove(req);
         }
 
@@ -81,19 +82,19 @@ public class FurnitureRequestDAOImpl implements IDAO {
         public void update(Object request) {
             FullFurnitureRequest ffr = (FullFurnitureRequest) request;
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String[] values = {Integer.toString(ffr.getId()), ffr.getEmployee(), ffr.getFloor(), ffr.getRoomNumber(), ffr.getDateSubmitted().toString(), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getType(), ffr.getModel(), String.valueOf(ffr.isAssembly())};
-            String[] colsFurniture = {"furnituretype", "model", "assembly", "message", "specialinstructions"};
-            String[] valuesFurniture = { values[6], values[7], values[8], values[9], values[10]};
-            String[] colsReq = {"employee", "floor", "roomnumber", "datesubmitted", "requeststatus", "requesttype"};
-            String[] valuesReq = {values[1], values[2], values[3], values[4], values[5], values[6]};
-            DB.updateRow("furniturerequests", colsFurniture, valuesFurniture, "id = " + values[0]);
-            DB.updateRow("requests", colsReq, valuesReq, "id = " + values[0]);
+            //String[] values = {Integer.toString(ffr.getId()), ffr.getEmployee(), ffr.getFloor(), ffr.getRoomNumber(), ffr.getDateSubmitted().toString(), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getType(), ffr.getModel(), String.valueOf(ffr.isAssembly())};
+            String[] colsFurniture = {"type", "model", "assembly"};
+            String[] valuesFurniture = {ffr.getType(), ffr.getModel(), String.valueOf(ffr.isAssembly())};
+            String[] colsReq = {"employee", "requeststatus", "requesttype", "locationname", "notes"};
+            String[] valuesReq = {ffr.getEmployee(), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getLocationName(), ffr.getNotes()};;
+            DB.updateRow("furniturerequests", colsFurniture, valuesFurniture, "id = " + ffr.getId());
+            DB.updateRow("requests", colsReq, valuesReq, "id = " + ffr.getId());
             for (int i = 0; i < furnitureRequests.size(); i++) {
                 if (furnitureRequests.get(i).getId() == ffr.getId()) {
                     furnitureRequests.set(i, ffr);
                 }
             }
-            Request req = new Request(ffr.getId(), ffr.getEmployee(), ffr.getFloor(), ffr.getRoomNumber(), ffr.getDateSubmitted(), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getLocationName());
+            Request req = new Request(ffr.getId(), ffr.getEmployee(), ffr.getDateSubmitted(), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getLocationName(), ffr.getNotes());
             RequestDAOImpl.getRequestDaoImpl().update(req);
         }
 
@@ -116,10 +117,10 @@ public class FurnitureRequestDAOImpl implements IDAO {
 
         public static int insertDBRowNewFurnitureRequest(String[] values) {
             String[] colsFurniture = {"id", "type", "model", "assembly",};
-            String[] colsReq = {"employee", "floor", "roomnumber", "requeststatus","requesttype", "location_name"};
-            String[] valuesReq = {values[0], values[1], values[2], values[3], values[4], values[10]};
+            String[] colsReq = {"employee", "requeststatus","requesttype", "locationname", "notes"};
+            String[] valuesReq = {values[0], values[1], values[2], values[3], values[4]};
             int id = DB.insertRowRequests("requests", colsReq, valuesReq);
-            String[] valuesFurniture = {Integer.toString(id), values[6], values[7], values[8]};
+            String[] valuesFurniture = {Integer.toString(id), values[5], values[6], values[7]};
             DB.insertRow("furniturerequests", colsFurniture, valuesFurniture);
             return id;
         }

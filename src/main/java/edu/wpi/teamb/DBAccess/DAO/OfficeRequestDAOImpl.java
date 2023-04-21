@@ -8,6 +8,7 @@ import edu.wpi.teamb.DBAccess.ORMs.Request;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,18 +54,18 @@ public class OfficeRequestDAOImpl implements IDAO {
     @Override
     public void add(Object request) {
         String[] officeReq = (String[]) request;
-        String[] values = {officeReq[0], officeReq[1], officeReq[2], officeReq[3], officeReq[4], officeReq[5], officeReq[6], officeReq[7], officeReq[8], officeReq[9]};
+        String[] values = {officeReq[0], officeReq[1], "Office", officeReq[2], officeReq[3], officeReq[4], officeReq[5], officeReq[6]};
         int id = insertDBRowNewOfficeRequest(values);
         ResultSet rs = DB.getRowCond("requests", "dateSubmitted", "id = " + id);
-        Date dateSubmitted = null;
+        Timestamp dateSubmitted = null;
         try {
             rs.next();
-            dateSubmitted = rs.getDate("dateSubmitted");
+            dateSubmitted = rs.getTimestamp("dateSubmitted");
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        officeRequests.add(new FullOfficeRequest(id, officeReq[0], officeReq[1], officeReq[2], dateSubmitted, officeReq[3], officeReq[9], officeReq[5], Integer.parseInt(officeReq[7]), officeReq[8], officeReq[4]));
-        RequestDAOImpl.getRequestDaoImpl().getRequests().add(new Request(id, officeReq[0], officeReq[1], officeReq[2], dateSubmitted, officeReq[3], officeReq[4], officeReq[9]));
+        officeRequests.add(new FullOfficeRequest(id, officeReq[0], dateSubmitted, officeReq[1], officeReq[2], officeReq[3], officeReq[4], officeReq[5], Integer.valueOf(officeReq[6])));
+        RequestDAOImpl.getRequestDaoImpl().getRequests().add(new Request(id, officeReq[0], dateSubmitted, officeReq[1], officeReq[2], officeReq[3], officeReq[4]));
     }
 
     @Override
@@ -73,7 +74,7 @@ public class OfficeRequestDAOImpl implements IDAO {
         DB.deleteRow("officerequests", "id" + ffr.getId() + "");
         DB.deleteRow("requests", "id =" + ffr.getId() + "");
         officeRequests.remove(ffr);
-        Request req = new Request(ffr.getId(), ffr.getEmployee(), ffr.getFloor(), ffr.getRoomNumber(), ffr.getDateSubmitted(), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getLocationName());
+        Request req = new Request(ffr.getId(), ffr.getEmployee(), ffr.getDateSubmitted(), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getLocationName(), ffr.getNotes());
         RequestDAOImpl.getRequestDaoImpl().getRequests().remove(req);
     }
 
@@ -81,19 +82,19 @@ public class OfficeRequestDAOImpl implements IDAO {
     public void update(Object request) {
         FullOfficeRequest ofr = (FullOfficeRequest) request;
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String[] values = {Integer.toString(ofr.getId()), ofr.getEmployee(), ofr.getFloor(), ofr.getRoomNumber(), ofr.getDateSubmitted().toString(), ofr.getRequestStatus(), ofr.getRequestType(), ofr.getItem(), Integer.toString(ofr.getQuantity()), ofr.getSpecialInstructions(), ofr.getType()};
-        String[] colsOffice = {"item", "quantity", "specialinstructions", "type"};
-        String[] valuesOffice = { values[6], values[7], values[8], values[9], values[10]};
-        String[] colsReq = {"employee", "floor", "roomnumber", "datesubmitted", "requeststatus", "requesttype"};
-        String[] valuesReq = {values[1], values[2], values[3], values[4], values[5], values[6]};
-        DB.updateRow("furniturerequests", colsOffice, valuesOffice, "id = " + values[0]);
-        DB.updateRow("requests", colsReq, valuesReq, "id = " + values[0]);
+        //String[] values = {Integer.toString(ofr.getId()), ofr.getEmployee(), ofr.getDateSubmitted().toString(), ofr.getRequestStatus(), ofr.getRequestType(), ofr.getItem(), Integer.toString(ofr.getQuantity()), ofr.getSpecialInstructions(), ofr.getType()};
+        String[] colsOffice = {"type", "item", "quantity"};
+        String[] valuesOffice = {ofr.getType(), ofr.getItem(), String.valueOf(ofr.getQuantity())};
+        String[] colsReq = {"employee", "datesubmitted", "requeststatus", "requesttype"};
+        String[] valuesReq = {ofr.getEmployee(), String.valueOf(ofr.getDateSubmitted()), ofr.getRequestStatus(), ofr.getRequestType()};
+        DB.updateRow("furniturerequests", colsOffice, valuesOffice, "id = " + ofr.getId());
+        DB.updateRow("requests", colsReq, valuesReq, "id = " + ofr.getId());
         for (int i = 0; i < officeRequests.size(); i++) {
             if (officeRequests.get(i).getId() == ofr.getId()) {
                 officeRequests.set(i, ofr);
             }
         }
-        Request req = new Request(ofr.getId(), ofr.getEmployee(), ofr.getFloor(), ofr.getRoomNumber(), ofr.getDateSubmitted(), ofr.getRequestStatus(), ofr.getRequestType(), ofr.getLocationName());
+        Request req = new Request(ofr.getId(), ofr.getEmployee(), ofr.getDateSubmitted(), ofr.getRequestStatus(), ofr.getRequestType(), ofr.getLocationName(), ofr.getNotes());
         RequestDAOImpl.getRequestDaoImpl().update(req);
     }
 
@@ -111,11 +112,11 @@ public class OfficeRequestDAOImpl implements IDAO {
     }
 
     public static int insertDBRowNewOfficeRequest(String[] values) {
-        String[] colsOffice = {"id", "item", "quantity", "specialInstructions", "type"};
-        String[] colsReq = {"employee", "floor", "roomnumber", "requeststatus","requesttype", "location_name"};
-        String[] valuesReq = {values[0], values[1], values[2], values[3], values[4], values[9]};
+        String[] colsOffice = {"id", "type", "item", "quantity"};
+        String[] colsReq = {"employee", "requeststatus","requesttype", "locationname", "notes"};
+        String[] valuesReq = {values[0], values[1], values[2], values[3], values[4]};
         int id = DB.insertRowRequests("requests", colsReq, valuesReq);
-        String[] valuesOffice = {Integer.toString(id), values[5], values[7], values[8], values[6]};
+        String[] valuesOffice = {Integer.toString(id), values[5], values[6], values[7]};
         DB.insertRow("officerequests", colsOffice, valuesOffice);
         return id;
     }

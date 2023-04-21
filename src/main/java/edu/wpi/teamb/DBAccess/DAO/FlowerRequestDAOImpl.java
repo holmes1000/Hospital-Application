@@ -8,6 +8,7 @@ import edu.wpi.teamb.DBAccess.ORMs.Request;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class FlowerRequestDAOImpl implements IDAO {
@@ -60,18 +61,18 @@ public class FlowerRequestDAOImpl implements IDAO {
 //        } catch (ParseException e) {
 //            throw new RuntimeException(e);
 //        }
-        String[] values = {flowerReq[0], flowerReq[1], flowerReq[2], flowerReq[3], flowerReq[4], flowerReq[5], flowerReq[6], flowerReq[7], flowerReq[8], flowerReq[9], flowerReq[10], flowerReq[11]};
+        String[] values = {flowerReq[0], flowerReq[1], "Flower", flowerReq[2], flowerReq[3], flowerReq[4], flowerReq[5], flowerReq[6], flowerReq[7]};
         int id = insertDBRowNewFlowerRequest(values);
         ResultSet rs = DB.getRowCond("requests", "dateSubmitted", "id = " + id);
-        Date dateSubmitted = null;
+        Timestamp dateSubmitted = null;
         try {
             rs.next();
-            dateSubmitted = rs.getDate("dateSubmitted");
+            dateSubmitted = rs.getTimestamp("dateSubmitted");
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        flowerRequests.add(new FullFlowerRequest(id, flowerReq[0], flowerReq[1], flowerReq[2], dateSubmitted, flowerReq[4], flowerReq[5], flowerReq[6], flowerReq[7], flowerReq[8], flowerReq[9], flowerReq[10]));
-        RequestDAOImpl.getRequestDaoImpl().getRequests().add(new Request(id, flowerReq[0], flowerReq[1], flowerReq[2], dateSubmitted, flowerReq[4], flowerReq[5], flowerReq[10]));
+        flowerRequests.add(new FullFlowerRequest(id, flowerReq[0], dateSubmitted, flowerReq[1], flowerReq[2], flowerReq[3], flowerReq[4], flowerReq[5], flowerReq[6], flowerReq[7]));
+        RequestDAOImpl.getRequestDaoImpl().getRequests().add(new Request(id, flowerReq[0], dateSubmitted, flowerReq[1], "Flower", flowerReq[2], flowerReq[3]));
     }
 
     @Override
@@ -80,26 +81,26 @@ public class FlowerRequestDAOImpl implements IDAO {
         DB.deleteRow("flowerrequests", "id" + ffr.getId() + "");
         DB.deleteRow("requests", "id =" + ffr.getId() + "");
         flowerRequests.remove(ffr);
-        Request req = new Request(ffr.getId(), ffr.getEmployee(), ffr.getFloor(), ffr.getRoomNumber(), ffr.getDateSubmitted(), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getLocation_name());
+        Request req = new Request(ffr.getId(), ffr.getEmployee(), ffr.getDateSubmitted(), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getLocationName(), ffr.getNotes());
         RequestDAOImpl.getRequestDaoImpl().getRequests().remove(req);
     }
 
     @Override
     public void update(Object request) {
         FullFlowerRequest ffr = (FullFlowerRequest) request;
-        String[] values = {Integer.toString(ffr.getId()), ffr.getEmployee(), ffr.getFloor(), ffr.getRoomNumber(), ffr.getDateSubmitted().toString(), ffr.getRequestStatus(), ffr.getFlowerType(), ffr.getFlowerType(), ffr.getColor(), ffr.getType(), ffr.getMessage(), ffr.getSpecialInstructions()};
-        String[] colsFlower = {"flowertype", "color", "type", "message", "specialinstructions"};
-        String[] valuesFlower = { values[6], values[7], values[8], values[9], values[10]};
-        String[] colsReq = {"employee", "floor", "roomnumber", "datesubmitted", "requeststatus", "requesttype"};
-        String[] valuesReq = {values[1], values[2], values[3], values[4], values[5], values[6]};
-        DB.updateRow("conferencerequests", colsFlower, valuesFlower, "id = " + values[0]);
-        DB.updateRow("requests", colsReq, valuesReq, "id = " + values[0]);
+        //String[] values = {Integer.toString(ffr.getId()), ffr.getEmployee(), ffr.getFloor(), ffr.getRoomNumber(), ffr.getDateSubmitted().toString(), ffr.getRequestStatus(), ffr.getFlowerType(), ffr.getFlowerType(), ffr.getColor(), ffr.getType(), ffr.getMessage(), ffr.getSpecialInstructions()};
+        String[] colsFlower = {"flowertype", "color", "size", "message"};
+        String[] valuesFlower = {ffr.getFlowerType(), ffr.getColor(), ffr.getSize(), ffr.getMessage()};
+        String[] colsReq = {"employee", "datesubmitted", "requeststatus", "requesttype", "locationname", "notes"};
+        String[] valuesReq = {ffr.getEmployee(), String.valueOf(ffr.getDateSubmitted()), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getLocationName(), ffr.getNotes()};
+        DB.updateRow("conferencerequests", colsFlower, valuesFlower, "id = " + ffr.getId());
+        DB.updateRow("requests", colsReq, valuesReq, "id = " + ffr.getId());
         for (int i = 0; i < flowerRequests.size(); i++) {
             if (flowerRequests.get(i).getId() == ffr.getId()) {
                 flowerRequests.set(i, ffr);
             }
         }
-        Request req = new Request(ffr.getId(), ffr.getEmployee(), ffr.getFloor(), ffr.getRoomNumber(), ffr.getDateSubmitted(), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getLocation_name());
+        Request req = new Request(ffr.getId(), ffr.getEmployee(), ffr.getDateSubmitted(), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getLocationName(), ffr.getNotes());
         RequestDAOImpl.getRequestDaoImpl().update(req);
     }
 
@@ -117,15 +118,15 @@ public class FlowerRequestDAOImpl implements IDAO {
     }
 
     public String toString(FlowerRequest request) {
-        return request.getId() + " " + request.getFlowerType() + " " + request.getColor() + " " + request.getType() + " " + request.getMessage() + " " + request.getSpecialInstructions();
+        return request.getId() + " " + request.getFlowerType() + " " + request.getColor() + " " + request.getSize() + " " + request.getMessage();
     }
 
     public static int insertDBRowNewFlowerRequest(String[] values) {
-        String[] colsFlower = {"id", "flowerType", "color", "Type", "message", "specialInstructions"};
-        String[] colsReq = {"employee", "floor", "roomnumber", "requeststatus","requesttype", "location_name"};
-        String[] valuesReq = {values[0], values[1], values[2], values[3], values[4], values[10]};
+        String[] colsFlower = {"id", "flowerType", "color", "size", "message"};
+        String[] colsReq = {"employee", "requeststatus","requesttype", "locationname", "notes"};
+        String[] valuesReq = {values[0], values[1], values[2], values[3], values[4]};
         int id = DB.insertRowRequests("requests", colsReq, valuesReq);
-        String[] valuesFlower = {Integer.toString(id), values[6], values[7], values[8], values[9], values[11]};
+        String[] valuesFlower = {Integer.toString(id), values[5], values[6], values[7], values[8]};
         DB.insertRow("flowerrequests", colsFlower, valuesFlower);
         return id;
     }

@@ -3,6 +3,7 @@ package edu.wpi.teamb.controllers.requests;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.entities.requests.EFurnitureRequest;
+import edu.wpi.teamb.entities.requests.IRequest;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -18,6 +19,8 @@ import org.controlsfx.control.PopOver;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 
 public class FurnitureRequestControllerI implements IRequestController{
 
@@ -28,8 +31,6 @@ public class FurnitureRequestControllerI implements IRequestController{
     @FXML
     private MFXButton btnReset;
     @FXML
-    private MFXTextField roomTextBox;
-    @FXML
     private ImageView helpIcon;
     @FXML
     private MFXComboBox<String> cbAvailableFurniture;
@@ -39,14 +40,9 @@ public class FurnitureRequestControllerI implements IRequestController{
     private MFXComboBox<String> cdAssembly;
     @FXML
     private MFXTextField txtFldNotes;
-    @FXML
-    private MFXTextField txtFldMessage;
-    @FXML
-    private MFXComboBox<String> cbOrderLocation;
+
     @FXML
     private MFXComboBox<String> cbEmployeesToAssign;
-    @FXML
-    private MFXComboBox<String> cbFloorSelect; // Floor
 
     @FXML private MFXFilterComboBox<String> cbLongName;
 
@@ -86,17 +82,6 @@ public class FurnitureRequestControllerI implements IRequestController{
         //Set list of assembly options
         ObservableList<String> assembly = FXCollections.observableArrayList("No", "Yes");
         cdAssembly.setItems(assembly);
-        //todo: fix locations
-
-        //Set list of locations to order to
-        ObservableList<String> orderLocation = FXCollections.observableArrayList("Main Lobby", "ER", "ICU", "Other");
-        cbOrderLocation.setItems(orderLocation);
-
-
-        //Set list of floors
-        ObservableList<String> floors =
-                FXCollections.observableArrayList("Lower Floor 1", "Lower Floor 2", "Floor 1", "Floor 2", "Floor 3");
-        cbFloorSelect.setItems(floors);
 
         //Set list of employees
         ObservableList<String> employees =
@@ -107,20 +92,27 @@ public class FurnitureRequestControllerI implements IRequestController{
 
     @Override
     public void handleSubmit() {
-        String orderfrom = cbOrderLocation.getSelectedItem();
-        String furniture = cbAvailableFurniture.getSelectedItem();
-        String model = cdAvailableModels.getSelectedItem();
-        String assembly = cdAssembly.getSelectedItem();
-        String message = txtFldMessage.getText();
-        String employee = cbEmployeesToAssign.getSelectedItem();
-        String floor = cbFloorSelect.getSelectedItem();
-        String longName = cbLongName.getSelectedItem();
-        String roomnumber = roomTextBox.getText();
-        String notes = txtFldNotes.getText();
-        String requeststatus =("Pending");
-        String furniturerequesttype = ("Furniture");
-        if((orderfrom != null) && (furniture != null) && (model != null) && (assembly != null) && (floor != null) && (roomnumber != null) && (longName != null)){
-            String[] output = {employee, floor, roomnumber, requeststatus, furniturerequesttype, orderfrom, furniture, model, message, longName, notes};
+        // Get the standard request fields
+        EFurnitureRequest.setEmployee(cbEmployeesToAssign.getValue());
+        EFurnitureRequest.setLocationName(cbLongName.getValue());
+        EFurnitureRequest.setRequestStatus(IRequest.RequestStatus.Pending);
+        EFurnitureRequest.setNotes(txtFldNotes.getText());
+
+        // Get the conference specific fields
+        EFurnitureRequest.setFurnitureType(cbAvailableFurniture.getValue());
+        EFurnitureRequest.setModel(cdAvailableModels.getValue());
+        EFurnitureRequest.setAssembly(cdAssembly.getValue());
+
+        if(EFurnitureRequest.checkRequestFields() && EFurnitureRequest.checkSpecialRequestFields()){
+            String[] output = {
+                    EFurnitureRequest.getEmployee(),
+                    String.valueOf(EFurnitureRequest.getRequestStatus()),
+                    EFurnitureRequest.getLocationName(),
+                    EFurnitureRequest.getNotes(),
+                    EFurnitureRequest.getFurnitureType(),
+                    EFurnitureRequest.getModel(),
+                    String.valueOf(stringToBoolean(EFurnitureRequest.getAssembly()))
+            };
             EFurnitureRequest.submitRequest(output);
             handleReset();
             Navigation.navigate(Screen.CREATE_NEW_REQUEST);
@@ -145,14 +137,10 @@ public class FurnitureRequestControllerI implements IRequestController{
         cbAvailableFurniture.getSelectionModel().clearSelection();
         cdAvailableModels.getSelectionModel().clearSelection();
         cdAssembly.getSelectionModel().clearSelection();
-        txtFldMessage.clear();
         txtFldNotes.clear();
         cbEmployeesToAssign.getSelectionModel().clearSelection();
-        cbFloorSelect.getSelectionModel().clearSelection();
-        roomTextBox.clear();
         cbLongName.clear();
         cbLongName.replaceSelection("All Room Names: ");
-        cbOrderLocation.getSelectionModel().clearSelection();
     }
 
     @Override
@@ -167,5 +155,13 @@ public class FurnitureRequestControllerI implements IRequestController{
             throw new RuntimeException(e);
         }
         popOver.show(helpIcon);
+    }
+
+    public boolean stringToBoolean(String assembly) {
+        if (assembly.equals("Yes")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

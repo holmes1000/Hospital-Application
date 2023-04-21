@@ -1,6 +1,7 @@
 package edu.wpi.teamb.entities.requests;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 import edu.wpi.teamb.DBAccess.ORMs.Move;
@@ -25,35 +26,9 @@ public class EMoveRequest extends RequestImpl {
         
     }
 
-
-    @Override
-    public int getRequestID() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getRequestID'");
-    }
-
-    @Override
-    public String getFloor() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getFloor'");
-    }
-
-    @Override
-    public String getRoomNumber() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getRoomNumber'");
-    }
-
-    @Override
-    public Date getDateSubmitted() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getDateSubmitted'");
-    }
-
     @Override
     public RequestType getRequestType() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getRequestType'");
+        return RequestType.Move;
     }
 
     @Override

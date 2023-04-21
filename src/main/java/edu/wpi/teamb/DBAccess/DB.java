@@ -228,7 +228,7 @@ public class DB {
         try {
             connectToDB();
             c.setAutoCommit(false);
-            String insert = "INSERT INTO requests(employee, floor, roomnumber, requeststatus, requesttype, location_name) VALUES ( ?, ?, ?, ?, ?, ?)";
+            String insert = "INSERT INTO requests(employee, requeststatus, requesttype, locationname, notes) VALUES ( ?, ?, ?, ?, ?)";
             String query = "SELECT currval(pg_get_serial_sequence('requests','id'))";
             stmt = c.prepareStatement(insert);
             stmt.setString(1, value[0]);
@@ -236,7 +236,6 @@ public class DB {
             stmt.setString(3, value[2]);
             stmt.setString(4, value[3]);
             stmt.setString(5, value[4]);
-            stmt.setString(6, value[5]);
             stmt.executeUpdate();
             currvalStatement = c.createStatement();
             currvalResultSet = currvalStatement.executeQuery(query);

@@ -5,24 +5,21 @@ import java.sql.SQLException;
 
 public class OfficeRequest {
     int id;
+    String type;
     String item;
     int quantity;
-    String specialInstructions;
-    String type;
-    public OfficeRequest(int id, String item, int quantity, String specialInstructions, String type) {
+    public OfficeRequest(int id, String type, String item, int quantity) {
         this.id = id;
+        this.type = type;
         this.item = item;
         this.quantity = quantity;
-        this.specialInstructions = specialInstructions;
-        this.type = type;
     }
     public OfficeRequest(ResultSet rs) throws SQLException {
         this (
             rs.getInt("id"),
+                rs.getString("type"),
             rs.getString("item"),
-            rs.getInt("quantity"),
-            rs.getString("specialinstructions"),
-            rs.getString("type")
+            rs.getInt("quantity")
         );
     }
 
@@ -48,14 +45,6 @@ public class OfficeRequest {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    public String getSpecialInstructions() {
-        return specialInstructions;
-    }
-
-    public void setSpecialInstructions(String specialInstructions) {
-        this.specialInstructions = specialInstructions;
     }
 
     public String getType() {

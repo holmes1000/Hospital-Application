@@ -2,6 +2,7 @@ package edu.wpi.teamb.entities.requests;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
@@ -10,38 +11,18 @@ import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.DB;
 
 public class EOfficeRequest extends RequestImpl {
-    private String employee;
-    private String floor;
-    private String roomNumber;
-    private Date dateSubmitted;
+    private String type;
     private String item;
     private int quantity;
-    private String specialInstructions;
-    private String type;
-    private RequestStatus requestStatus;
 
-    public EOfficeRequest(String employee,
-                          String floor,
-                          String roomNumber,
-                          Date dateSubmitted, String item, int quantity, String specialInstructions, String type,
-                          RequestStatus requestStatus) {
-        this.employee = employee;
-        this.floor = floor;
-        this.roomNumber = roomNumber;
-        this.dateSubmitted = dateSubmitted;
+    public EOfficeRequest(String type, String item, int quantity) {
+        this.type = type;
         this.item = item;
         this.quantity = quantity;
-        this.specialInstructions = specialInstructions;
-        this.type = type;
-        this.requestStatus = requestStatus;
-
     }
 
     public EOfficeRequest() {
     }
-
-    // getters and setters
-
 
     @Override
     public RequestType getRequestType() {
@@ -50,90 +31,30 @@ public class EOfficeRequest extends RequestImpl {
 
     @Override
     public void submitRequest(String[] inputs) {
-        String[] requestAttributes = {inputs[0], inputs[1], inputs[2], inputs[3], inputs[4], inputs[5], inputs[6], inputs[7], inputs[8], inputs[9]};
-        Repository.getRepository().addOfficeRequest(requestAttributes);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        EOfficeRequest other = (EOfficeRequest) obj;
-        return Objects.equals(item, other.item) && Objects.equals(dateSubmitted, other.dateSubmitted)
-                && Objects.equals(employee, other.employee) && Objects.equals(floor, other.floor)
-                && Objects.equals(quantity, other.quantity)
-                && Objects.equals(roomNumber, other.roomNumber)
-                && Objects.equals(requestStatus, other.requestStatus)
-                && Objects.equals(specialInstructions, other.specialInstructions)
-                && Objects.equals(type, other.type);
+        Repository.getRepository().addOfficeRequest(inputs);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(item, dateSubmitted, employee, floor, quantity, roomNumber, requestStatus,
-                type, specialInstructions);
+        return Objects.hash(type, item, quantity);
     }
 
-    public ArrayList<String> getUsernames() throws SQLException {
-        ResultSet usernames = DB.getCol("users", "username");
-        ArrayList<String> uesrlist = new ArrayList<>();
-        while (usernames.next()) {
-            uesrlist.add(usernames.getString("username"));
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof EOfficeRequest eOfficeRequest)) {
+            return false;
         }
-        usernames.close();
-        return uesrlist;
+        return Objects.equals(type, eOfficeRequest.type) && Objects.equals(item, eOfficeRequest.item) && quantity == eOfficeRequest.quantity;
     }
 
-    public String getEmployee() {
-        return employee;
+    public String getType() {
+        return type;
     }
 
-    public void setEmployee(String employee) {
-        this.employee = employee;
-    }
-
-    /**
-     * Method to get the request ID
-     *
-     * @return requestID
-     */
-    @Override
-    public int getRequestID() {
-        return 0;
-    }
-
-    @Override
-    public String getFloor() {
-        return floor;
-    }
-
-    public void setFloor(String floor) {
-        this.floor = floor;
-    }
-
-    @Override
-    public String getRoomNumber() {
-        return roomNumber;
-    }
-
-    public void setRoomNumber(String roomNumber) {
-        this.roomNumber = roomNumber;
-    }
-
-    @Override
-    public Date getDateSubmitted() {
-        return dateSubmitted;
-    }
-
-    public void setDateSubmitted(Date dateSubmitted) {
-        this.dateSubmitted = dateSubmitted;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getItem() {
@@ -152,27 +73,10 @@ public class EOfficeRequest extends RequestImpl {
         this.quantity = quantity;
     }
 
-    public String getSpecialInstructions() {
-        return specialInstructions;
-    }
-
-    public void setSpecialInstructions(String specialInstructions) {
-        this.specialInstructions = specialInstructions;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public RequestStatus getRequestStatus() {
-        return requestStatus;
-    }
-
-    public void setRequestStatus(RequestStatus requestStatus) {
-        this.requestStatus = requestStatus;
+    public boolean checkSpecialRequestFields() {
+        if (this.type == null || this.item == null || this.quantity == 0) {
+            return false;
+        }
+        return true;
     }
 }

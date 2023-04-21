@@ -4,6 +4,7 @@ import edu.wpi.teamb.DBAccess.ORMs.ConferenceRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,40 +12,40 @@ import java.util.List;
 public class FullConferenceRequest {
     int id;
     String employee;
-    String floor;
-    String roomNumber;
-    Date dateSubmitted;
+    Timestamp dateSubmitted;
     String requestStatus;
-    String location_name;
+    String locationName;
+    String notes;
     Timestamp dateRequested;
     String eventName;
     String bookingReason;
+    int duration;
     String requestType = "Conference";
 
     public FullConferenceRequest(Request request, ConferenceRequest conferenceRequest) {
         this.id = request.getId();
         this.employee = request.getEmployee();
-        this.floor = request.getFloor();
-        this.roomNumber = request.getRoomNumber();
         this.dateSubmitted = request.getDateSubmitted();
         this.requestStatus = request.getRequestStatus();
-        this.location_name = request.getLocationName();
+        this.locationName = request.getLocationName();
+        this.notes = request.getNotes();
         this.dateRequested = conferenceRequest.getDateRequested();
         this.eventName = conferenceRequest.getEventName();
         this.bookingReason = conferenceRequest.getBookingReason();
+        this.duration = conferenceRequest.getDuration();
     }
 
-    public FullConferenceRequest(int id, String employee, String floor, String roomNumber, Date dateSubmitted, String requestStatus, String location_name, Timestamp dateRequested, String eventName, String bookingReason) {
+    public FullConferenceRequest(int id, String employee, Timestamp dateSubmitted, String requestStatus, String locationName, String notes, Timestamp dateRequested, String eventName, String bookingReason, int duration) {
         this.id = id;
         this.employee = employee;
-        this.floor = floor;
-        this.roomNumber = roomNumber;
         this.dateSubmitted = dateSubmitted;
         this.requestStatus = requestStatus;
-        this.location_name = location_name;
+        this.locationName = locationName;
+        this.notes = notes;
         this.dateRequested = dateRequested;
         this.eventName = eventName;
         this.bookingReason = bookingReason;
+        this.duration = duration;
     }
 
     public int getId() {
@@ -63,27 +64,11 @@ public class FullConferenceRequest {
         this.employee = employee;
     }
 
-    public String getFloor() {
-        return floor;
-    }
-
-    public void setFloor(String floor) {
-        this.floor = floor;
-    }
-
-    public String getRoomNumber() {
-        return roomNumber;
-    }
-
-    public void setRoomNumber(String roomNumber) {
-        this.roomNumber = roomNumber;
-    }
-
-    public Date getDateSubmitted() {
+    public Timestamp getDateSubmitted() {
         return dateSubmitted;
     }
 
-    public void setDateSubmitted(Date dateSubmitted) {
+    public void setDateSubmitted(Timestamp dateSubmitted) {
         this.dateSubmitted = dateSubmitted;
     }
 
@@ -119,6 +104,14 @@ public class FullConferenceRequest {
         this.bookingReason = bookingReason;
     }
 
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
     public static ArrayList<FullConferenceRequest> listFullConferenceRequests(ArrayList<ConferenceRequest> crs) {
         ArrayList<FullConferenceRequest> fcrs = new ArrayList<FullConferenceRequest>();
         for (ConferenceRequest cr : crs) {
@@ -139,39 +132,24 @@ public class FullConferenceRequest {
     }
     public void updateAll(List<FullConferenceRequest> reqList) {
         getFullConferenceRequest(getId(), reqList).setEmployee(getEmployee());
-        getFullConferenceRequest(getId(), reqList).setFloor(getFloor());
-        getFullConferenceRequest(getId(), reqList).setRoomNumber(getRoomNumber());
         getFullConferenceRequest(getId(), reqList).setDateSubmitted(getDateSubmitted());
         getFullConferenceRequest(getId(), reqList).setRequestStatus(getRequestStatus());
-        getFullConferenceRequest(getId(), reqList).setLocation_name(getLocation_name());
+        getFullConferenceRequest(getId(), reqList).setLocationName(getLocationName());
+        getFullConferenceRequest(getId(), reqList).setNotes(getNotes());
         getFullConferenceRequest(getId(), reqList).setDateRequested(getDateRequested());
         getFullConferenceRequest(getId(), reqList).setEventName(getEventName());
         getFullConferenceRequest(getId(), reqList).setBookingReason(getBookingReason());
+        getFullConferenceRequest(getId(), reqList).setDuration(getDuration());
     }
 
-    public String getLocation_name() {
-        return location_name;
+    public String getLocationName() {
+        return locationName;
     }
 
-    public void setLocation_name(String location_name) {
-        this.location_name = location_name;
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
     }
 
-    @Override
-    public String toString() {
-        return "FullConferenceRequest{" +
-                "id=" + id +
-                ", employee='" + employee + '\'' +
-                ", floor='" + floor + '\'' +
-                ", roomNumber='" + roomNumber + '\'' +
-                ", dateSubmitted=" + dateSubmitted +
-                ", requestStatus='" + requestStatus + '\'' +
-                ", location_name='" + location_name + '\'' +
-                ", dateRequested=" + dateRequested +
-                ", eventName='" + eventName + '\'' +
-                ", bookingReason='" + bookingReason + '\'' +
-                '}';
-    }
 
     public String getRequestType() {
         return requestType;
@@ -179,5 +157,13 @@ public class FullConferenceRequest {
 
     public void setRequestType(String requestType) {
         this.requestType = requestType;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }

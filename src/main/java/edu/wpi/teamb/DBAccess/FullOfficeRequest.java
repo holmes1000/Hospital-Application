@@ -5,49 +5,44 @@ import edu.wpi.teamb.DBAccess.ORMs.OfficeRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FullOfficeRequest {
     int id;
     String employee;
-    String floor;
-    String roomNumber;
-    Date dateSubmitted;
+    Timestamp dateSubmitted;
     String requestStatus;
     String locationName;
+    String notes;
+    String type;
     String item;
     int quantity;
-    String specialInstructions;
-    String type;
     String requestType = "Office";
 
-    public FullOfficeRequest(int id, String employee, String floor, String roomNumber, Date dateSubmitted, String requestStatus, String locationName, String item, int quantity, String specialInstructions, String type) {
+    public FullOfficeRequest(int id, String employee, Timestamp dateSubmitted, String requestStatus, String locationName, String type, String notes, String item, int quantity) {
         this.id = id;
         this.employee = employee;
-        this.floor = floor;
-        this.roomNumber = roomNumber;
         this.dateSubmitted = dateSubmitted;
         this.requestStatus = requestStatus;
         this.locationName = locationName;
+        this.notes = notes;
         this.item = item;
         this.quantity = quantity;
-        this.specialInstructions = specialInstructions;
         this.type = type;
     }
 
     public FullOfficeRequest(Request request, OfficeRequest officeRequest) {
         this.id = request.getId();
         this.employee = request.getEmployee();
-        this.floor = request.getFloor();
-        this.roomNumber = request.getRoomNumber();
         this.dateSubmitted = request.getDateSubmitted();
         this.requestStatus = request.getRequestStatus();
         this.locationName = request.getLocationName();
+        this.notes = request.getNotes();
         this.type = officeRequest.getType();
         this.item = officeRequest.getItem();
         this.quantity = officeRequest.getQuantity();
-        this.specialInstructions = officeRequest.getSpecialInstructions();
     }
 
     public int getId() {
@@ -66,27 +61,11 @@ public class FullOfficeRequest {
         this.employee = employee;
     }
 
-    public String getFloor() {
-        return floor;
-    }
-
-    public void setFloor(String floor) {
-        this.floor = floor;
-    }
-
-    public String getRoomNumber() {
-        return roomNumber;
-    }
-
-    public void setRoomNumber(String roomNumber) {
-        this.roomNumber = roomNumber;
-    }
-
-    public Date getDateSubmitted() {
+    public Timestamp getDateSubmitted() {
         return dateSubmitted;
     }
 
-    public void setDateSubmitted(Date dateSubmitted) {
+    public void setDateSubmitted(Timestamp dateSubmitted) {
         this.dateSubmitted = dateSubmitted;
     }
 
@@ -96,6 +75,14 @@ public class FullOfficeRequest {
 
     public void setRequestStatus(String requestStatus) {
         this.requestStatus = requestStatus;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
 
@@ -150,14 +137,6 @@ public class FullOfficeRequest {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    public String getSpecialInstructions() {
-        return specialInstructions;
-    }
-
-    public void setSpecialInstructions(String specialInstructions) {
-        this.specialInstructions = specialInstructions;
     }
 
     public String getType() {

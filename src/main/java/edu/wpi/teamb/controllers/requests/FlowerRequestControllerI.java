@@ -3,6 +3,7 @@ package edu.wpi.teamb.controllers.requests;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.entities.requests.EFlowerRequest;
+import edu.wpi.teamb.entities.requests.IRequest;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -18,25 +19,24 @@ import org.controlsfx.control.PopOver;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 
 public class FlowerRequestControllerI implements IRequestController {
 
     @FXML private MFXButton btnSubmit;
     @FXML private MFXButton btnCancel;
     @FXML private MFXButton btnReset;
-    @FXML private MFXTextField roomTextBox;
     @FXML private ImageView helpIcon;
     @FXML private MFXComboBox<String> cbAvailableFlowers;
     @FXML private MFXComboBox<String> cdAvailableColor;
     @FXML private MFXComboBox<String> cdAvailableType;
     @FXML private MFXTextField txtFldNotes;
     @FXML private MFXTextField txtFldMessage;
-    @FXML private MFXComboBox<String> cbOrderLocation;
     @FXML private MFXComboBox<String> cbEmployeesToAssign;
-    @FXML private MFXComboBox<String> cbFloorSelect; // Floor
     @FXML private MFXFilterComboBox<String> cbLongName;
 
-    private EFlowerRequest EFlowerRequest;
+    private final EFlowerRequest EFlowerRequest;
 
     public FlowerRequestControllerI() {
         this.EFlowerRequest = new EFlowerRequest();
@@ -77,15 +77,6 @@ public class FlowerRequestControllerI implements IRequestController {
         cdAvailableType.setItems(deliveryType);
         //todo: fix locations
 
-        //Set list of order locations
-        ObservableList<String> orderLocation = FXCollections.observableArrayList("Main Lobby", "ER", "ICU", "Other");
-        cbOrderLocation.setItems(orderLocation);
-
-        //Set list of floors
-        ObservableList<String> floors =
-                FXCollections.observableArrayList("Lower Floor 1", "Lower Floor 2", "Floor 1", "Floor 2", "Floor 3");
-        cbFloorSelect.setItems(floors);
-
         //Set list of employees
         ObservableList<String> employees =
                 FXCollections.observableArrayList();
@@ -95,25 +86,30 @@ public class FlowerRequestControllerI implements IRequestController {
 
     @Override
     public void handleSubmit() {
-        //Get all fields from request
-        String orderfrom = cbOrderLocation.getSelectedItem();
-        String flower = cbAvailableFlowers.getSelectedItem();
-        String color = cdAvailableColor.getSelectedItem();
-        String deliverytype = cdAvailableType.getSelectedItem();
-        String message = txtFldMessage.getText();
-        String employee = cbEmployeesToAssign.getSelectedItem();
-        String floor = cbFloorSelect.getSelectedItem();
-        String longName = cbLongName.getSelectedItem();
-        String roomnumber = roomTextBox.getText();
-        String notes = txtFldNotes.getText();
-        String requeststatus =("Pending");
-        String flowerrequesttype = ("Flower");
+        // Get the standard request fields
+        EFlowerRequest.setEmployee(cbEmployeesToAssign.getValue());
+        EFlowerRequest.setLocationName(cbLongName.getValue());
+        EFlowerRequest.setRequestStatus(IRequest.RequestStatus.Pending);
+        EFlowerRequest.setNotes(txtFldNotes.getText());
+
+        // Get the conference specific fields
+        EFlowerRequest.setFlowerType(cbAvailableFlowers.getValue());
+        EFlowerRequest.setColor(cdAvailableColor.getValue());
+        EFlowerRequest.setSize(cdAvailableType.getValue());
+        EFlowerRequest.setMessage(txtFldMessage.getText());
 
         //Check for required fields before allowing submittion
-        if((orderfrom != null) && (flower != null) && (color != null) && (deliverytype != null) && (floor != null) && (roomnumber != null) && (longName != null)){
-
-            //Set the gathered fields into a string array
-            String[] output = {employee, floor, roomnumber, requeststatus, flowerrequesttype, orderfrom, flower, color, deliverytype, message, longName, notes};
+        if(EFlowerRequest.checkRequestFields() && EFlowerRequest.checkSpecialRequestFields()){
+            String[] output = {
+                    EFlowerRequest.getEmployee(),
+                    String.valueOf(EFlowerRequest.getRequestStatus()),
+                    EFlowerRequest.getLocationName(),
+                    EFlowerRequest.getNotes(),
+                    EFlowerRequest.getFlowerType(),
+                    EFlowerRequest.getColor(),
+                    EFlowerRequest.getSize(),
+                    EFlowerRequest.getMessage()
+            };
             EFlowerRequest.submitRequest(output);
             handleReset();
             Navigation.navigate(Screen.CREATE_NEW_REQUEST);
@@ -143,11 +139,8 @@ public class FlowerRequestControllerI implements IRequestController {
         txtFldMessage.clear();
         txtFldNotes.clear();
         cbEmployeesToAssign.getSelectionModel().clearSelection();
-        cbFloorSelect.getSelectionModel().clearSelection();
-        roomTextBox.clear();
         cbLongName.clear();
         cbLongName.replaceSelection("All Room Names: ");
-        cbOrderLocation.getSelectionModel().clearSelection();
     }
 
     @Override

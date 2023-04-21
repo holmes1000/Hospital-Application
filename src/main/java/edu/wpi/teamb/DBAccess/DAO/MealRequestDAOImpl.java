@@ -9,6 +9,7 @@ import edu.wpi.teamb.DBAccess.ORMs.Request;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -67,18 +68,18 @@ public class MealRequestDAOImpl implements IDAO {
         String[] mealReq = (String[]) request;
        // DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         //Date dateSubmitted;
-        String[] values = {mealReq[0], mealReq[1], mealReq[2], mealReq[3], mealReq[4], mealReq[5], mealReq[6], mealReq[7], mealReq[8], mealReq[9], mealReq[10]};
+        String[] values = {mealReq[0], mealReq[1], "Meal", mealReq[2], mealReq[3], mealReq[4], mealReq[5], mealReq[6], mealReq[7]};
         int id = insertDBRowNewMealRequest(values);
         ResultSet rs = DB.getRowCond("requests", "dateSubmitted", "id = " + id);
-        Date dateSubmitted = null;
+        Timestamp dateSubmitted = null;
         try {
             rs.next();
-            dateSubmitted = rs.getDate("dateSubmitted");
+            dateSubmitted = rs.getTimestamp("dateSubmitted");
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        mealRequests.add(new FullMealRequest(id, mealReq[0], mealReq[1], mealReq[2], dateSubmitted, mealReq[4], mealReq[5], mealReq[6], mealReq[7], mealReq[8], mealReq[9], mealReq[10]));
-        RequestDAOImpl.getRequestDaoImpl().getRequests().add(new Request(id, mealReq[0], mealReq[1], mealReq[2], dateSubmitted, mealReq[4], (mealReq[5]), mealReq[10]));
+        mealRequests.add(new FullMealRequest(id, mealReq[0], dateSubmitted, mealReq[1], mealReq[2], mealReq[3], mealReq[4], mealReq[5], mealReq[6], mealReq[7]));
+        RequestDAOImpl.getRequestDaoImpl().getRequests().add(new Request(id, mealReq[0], dateSubmitted, mealReq[1], "Meal", mealReq[2], mealReq[3]));
     }
 
     /**
@@ -92,7 +93,7 @@ public class MealRequestDAOImpl implements IDAO {
         DB.deleteRow("mealrequests", "id" + fmr.getId() + "");
         DB.deleteRow("requests", "id =" + fmr.getId() + "");
         mealRequests.remove(fmr);
-        Request r = new Request(fmr.getId(), fmr.getEmployee(), fmr.getFloor(), fmr.getRoomNumber(), fmr.getDateSubmitted(), fmr.getRequestStatus(), fmr.getRequestType(), fmr.getLocationName());
+        Request r = new Request(fmr.getId(), fmr.getEmployee(), fmr.getDateSubmitted(), fmr.getRequestStatus(), fmr.getRequestType(), fmr.getLocationName(), fmr.getNotes());
         RequestDAOImpl.getRequestDaoImpl().getRequests().remove(r);
     }
 
@@ -105,20 +106,20 @@ public class MealRequestDAOImpl implements IDAO {
     public void update(Object request) {
         FullMealRequest fmr = (FullMealRequest) request;
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String[] values = {
-                Integer.toString(fmr.getId()), fmr.getEmployee(), fmr.getFloor(), fmr.getRoomNumber(), dateFormat.format(fmr.getDateSubmitted()), fmr.getRequestStatus(), "Meal", fmr.getOrderFrom(), fmr.getFood(), fmr.getDrink(), fmr.getSnack(), fmr.getMealModification()};
-        String[] colsMeal = {"orderfrom", "food", "drink", "snack", "mealmodification"};
-        String[] valuesMeal = {values[7], values[8], values[9], values[10], values[11]};
-        String[] colsReq = {"employee", "floor", "roomnumber", "datesubmitted", "requeststatus", "requesttype"};
-        String[] valuesReq = {values[1], values[2], values[3], values[4], values[5], values[6]};
-        DB.updateRow("mealrequests", colsMeal, valuesMeal, "id = " + values[0]);
-        DB.updateRow("requests", colsReq, valuesReq, "id = " + values[0]);
+//        String[] values = {
+//                Integer.toString(fmr.getId()), fmr.getEmployee(), fmr.getDateSubmitted(), fmr.getRequestStatus(), "Meal", fmr.getOrderFrom(), fmr.getFood(), fmr.getDrink(), fmr.getSnack(), fmr.getMealModification()};
+        String[] colsMeal = {"orderfrom", "food", "drink", "snack"};
+        String[] valuesMeal = {fmr.getOrderFrom(), fmr.getFood(), fmr.getDrink(), fmr.getSnack()};
+        String[] colsReq = {"employee", "datesubmitted", "requeststatus", "requesttype", "locationname", "notes"};
+        String[] valuesReq = {fmr.getEmployee(), dateFormat.format(fmr.getDateSubmitted()), fmr.getRequestStatus(), fmr.getRequestType(), fmr.getLocationName(), fmr.getNotes()};
+        DB.updateRow("mealrequests", colsMeal, valuesMeal, "id = " + fmr.getId());
+        DB.updateRow("requests", colsReq, valuesReq, "id = " + fmr.getId());
         for (int i = 0; i < mealRequests.size(); i++) {
             if (mealRequests.get(i).getId() == fmr.getId()) {
                 mealRequests.set(i, fmr);
             }
         }
-        Request r = new Request(fmr.getId(), fmr.getEmployee(), fmr.getFloor(), fmr.getRoomNumber(), fmr.getDateSubmitted(), fmr.getRequestStatus(), fmr.getRequestType(), fmr.getLocationName());
+        Request r = new Request(fmr.getId(), fmr.getEmployee(), fmr.getDateSubmitted(), fmr.getRequestStatus(), fmr.getRequestType(), fmr.getLocationName(), fmr.getNotes());
         RequestDAOImpl.getRequestDaoImpl().update(r);
     }
     //Insert into Database Methods
@@ -129,11 +130,11 @@ public class MealRequestDAOImpl implements IDAO {
      * @param value the values to insert into the corresponding columns
      */
     public static int insertDBRowNewMealRequest(String[] value) {
-        String[] colMeal = {"id","orderfrom", "food", "drink", "snack", "mealmodification"};
-        String[] colRequest = {"employee", "floor", "roomnumber", "requeststatus", "requesttype", "location_name"};
-        String[] valuesReq = {value[0], value[1], value[2], value[3], value[4], value[10]};
+        String[] colMeal = {"id","orderfrom", "food", "drink", "snack"};
+        String[] colRequest = {"employee", "requeststatus", "requesttype", "locationname", "notes"};
+        String[] valuesReq = {value[0], value[1], value[2], value[3], value[4]};
         int id = DB.insertRowRequests("requests", colRequest, valuesReq);
-        String[] valuesMeal = {Integer.toString(id), value [5], value[6], value[7], value[8], value[9]};
+        String[] valuesMeal = {Integer.toString(id), value [5], value[6], value[7], value[8]};
         DB.insertRow("mealrequests", colMeal, valuesMeal);
         return id;
     }
@@ -261,7 +262,7 @@ public class MealRequestDAOImpl implements IDAO {
      * @return String of all the information about the MealRequest
      */
     public String toString(MealRequest mr) {
-        return "ID: " + mr.getId() + "\tOrder From: " + mr.getOrderFrom() + "\tFood: " + mr.getFood() + "\tDrink: " + mr.getDrink() + "\tSnack: " + mr.getSnack() + "\tMeal Modification: " + mr.getMealModification();
+        return "ID: " + mr.getId() + "\tOrder From: " + mr.getOrderFrom() + "\tFood: " + mr.getFood() + "\tDrink: " + mr.getDrink() + "\tSnack: " + mr.getSnack();
     }
 
     /**

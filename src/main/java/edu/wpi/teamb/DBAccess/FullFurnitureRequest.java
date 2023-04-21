@@ -4,30 +4,29 @@ import edu.wpi.teamb.DBAccess.ORMs.FurnitureRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FullFurnitureRequest {
     int id;
     String employee;
-    String floor;
-    String roomNumber;
-    Date dateSubmitted;
+    Timestamp dateSubmitted;
     String requestStatus;
     String locationName;
+    String notes;
     String type;
     String model;
     boolean assembly;
     String requestType = "Furniture";
 
-    public FullFurnitureRequest(int id, String employee, String floor, String roomNumber, Date dateSubmitted, String requestStatus, String location_name, String type, String model, boolean assembly) {
+    public FullFurnitureRequest(int id, String employee, Timestamp dateSubmitted, String requestStatus, String locationName, String notes, String type, String model, boolean assembly) {
         this.id = id;
         this.employee = employee;
-        this.floor = floor;
-        this.roomNumber = roomNumber;
         this.dateSubmitted = dateSubmitted;
         this.requestStatus = requestStatus;
-        this.locationName = location_name;
+        this.locationName = locationName;
+        this.notes = notes;
         this.type = type;
         this.model = model;
         this.assembly = assembly;
@@ -36,11 +35,10 @@ public class FullFurnitureRequest {
     public FullFurnitureRequest(Request request, FurnitureRequest furnitureRequest) {
         this.id = request.getId();
         this.employee = request.getEmployee();
-        this.floor = request.getFloor();
-        this.roomNumber = request.getRoomNumber();
         this.dateSubmitted = request.getDateSubmitted();
         this.requestStatus = request.getRequestStatus();
         this.locationName = request.getLocationName();
+        this.notes = request.getNotes();
         this.type = furnitureRequest.getType();
         this.model = furnitureRequest.getModel();
         this.assembly = furnitureRequest.isAssembly();
@@ -62,27 +60,11 @@ public class FullFurnitureRequest {
         this.employee = employee;
     }
 
-    public String getFloor() {
-        return floor;
-    }
-
-    public void setFloor(String floor) {
-        this.floor = floor;
-    }
-
-    public String getRoomNumber() {
-        return roomNumber;
-    }
-
-    public void setRoomNumber(String roomNumber) {
-        this.roomNumber = roomNumber;
-    }
-
-    public Date getDateSubmitted() {
+    public Timestamp getDateSubmitted() {
         return dateSubmitted;
     }
 
-    public void setDateSubmitted(Date dateSubmitted) {
+    public void setDateSubmitted(Timestamp dateSubmitted) {
         this.dateSubmitted = dateSubmitted;
     }
 
@@ -132,6 +114,14 @@ public class FullFurnitureRequest {
 
     public void setRequestType(String requestType) {
         this.requestType = requestType;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public static ArrayList<FullFurnitureRequest> listFullFurnitureRequests(List<FurnitureRequest> frs) {

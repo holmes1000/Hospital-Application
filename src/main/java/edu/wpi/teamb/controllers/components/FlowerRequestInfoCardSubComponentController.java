@@ -50,9 +50,9 @@ public class FlowerRequestInfoCardSubComponentController implements IInfoCardSub
         if (request instanceof FullFlowerRequest fullFlowerRequest) {
             setFlowerTypeLabel(fullFlowerRequest.getFlowerType());
             setColorLabel(fullFlowerRequest.getColor());
-            setFlowerBuschellTypeLabel(fullFlowerRequest.getType());
+            setFlowerBuschellTypeLabel(fullFlowerRequest.getSize());
             setMessageTypeLabel(fullFlowerRequest.getMessage());
-            setSpecialInstructionsLabel(fullFlowerRequest.getSpecialInstructions());
+            setSpecialInstructionsLabel(fullFlowerRequest.getNotes());
         }
     }
 

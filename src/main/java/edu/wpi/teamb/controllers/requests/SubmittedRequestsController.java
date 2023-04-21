@@ -162,9 +162,4 @@ public class SubmittedRequestsController {
                     }
                 });
     }
-
-    @FXML
-    public void clickExit() {
-        System.exit(0);
-    }
 }

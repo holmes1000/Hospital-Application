@@ -27,21 +27,11 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </MFXButton>
-            <MFXComboBox fx:id="cbOrderLocation" floatingText="Order From" layoutX="20.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
-               <cursor>
-                  <Cursor fx:constant="DEFAULT" />
-               </cursor></MFXComboBox>
-            <MFXComboBox fx:id="cbFloorSelect" floatingText="Floor" layoutX="20.0" layoutY="174.0" prefHeight="40.0" prefWidth="238.0">
-               <cursor>
-                  <Cursor fx:constant="DEFAULT" />
-               </cursor>
-            </MFXComboBox>
             <MFXButton fx:id="btnCancel" defaultButton="true" layoutX="170.0" layoutY="481.0" prefHeight="45.0" prefWidth="170.0" style="-fx-background-color: #1C4EFE;" text="Cancel" textFill="#f1f1f1">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </MFXButton>
-            <MFXTextField fx:id="roomTextBox" alignment="TOP_LEFT" floatingText="Room" layoutX="288.0" layoutY="174.0" prefHeight="40.0" prefWidth="162.0" textLimit="10" />
             <MFXButton fx:id="btnReset" defaultButton="true" layoutX="20.0" layoutY="481.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #1C4EFE;" text="Reset" textFill="#f1f1f1">
                <font>
                   <Font name="System Bold" size="18.0" />
@@ -55,74 +45,57 @@
                   <ColorAdjust brightness="1.0" />
                </effect>
             </ImageView>
-            <MFXComboBox fx:id="cbAvailableFurniture" floatingText="Furniture Type" layoutX="20.0" layoutY="230.0" prefHeight="40.0" prefWidth="233.0">
+            <MFXComboBox fx:id="cbAvailableFurniture" floatingText="Furniture Type" layoutX="24.0" layoutY="103.0" prefHeight="40.0" prefWidth="233.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXComboBox>
-            <MFXComboBox fx:id="cdAvailableModels" floatingText="Style" layoutX="288.0" layoutY="230.0" prefHeight="40.0" prefWidth="205.0">
+            <MFXComboBox fx:id="cdAvailableModels" floatingText="Style" layoutX="24.0" layoutY="155.0" prefHeight="40.0" prefWidth="231.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXComboBox>
-            <MFXComboBox fx:id="cdAssembly" floatingText="Assembly" layoutX="523.0" layoutY="230.0" prefHeight="40.0" prefWidth="218.0">
+            <MFXComboBox fx:id="cdAssembly" floatingText="Assembly" layoutX="28.0" layoutY="212.0" prefHeight="40.0" prefWidth="218.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXComboBox>
-            <MFXTextField fx:id="txtFldMessage" floatingText="Message Text" layoutX="20.0" layoutY="354.0" prefHeight="40.0" prefWidth="428.0" textLimit="80">
-            </MFXTextField>
-            <MFXComboBox fx:id="cbEmployeesToAssign" floatingText="Employee" layoutX="20.0" layoutY="292.0" prefHeight="40.0" prefWidth="233.0">
+            <MFXComboBox fx:id="cbEmployeesToAssign" floatingText="Employee" layoutX="788.0" layoutY="123.0" prefHeight="40.0" prefWidth="233.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXComboBox>
-            <MFXTextField fx:id="txtFldNotes" floatingText="Special Instruction" layoutX="502.0" layoutY="354.0" prefHeight="40.0" prefWidth="428.0" textLimit="80">
+            <MFXTextField fx:id="txtFldNotes" floatingText="Special Instruction" layoutX="32.0" layoutY="356.0" prefHeight="40.0" prefWidth="428.0" textLimit="80">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
             </MFXTextField>
-            <Text fill="RED" layoutX="253.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+            <Text fill="RED" layoutX="263.0" layoutY="132.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
                <font>
                   <Font size="24.0" />
                </font>
             </Text>
-            <Text fill="RED" layoutX="258.0" layoutY="203.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+            <Text fill="RED" layoutX="1023.0" layoutY="152.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
                <font>
                   <Font size="24.0" />
                </font>
             </Text>
-            <Text fill="RED" layoutX="450.0" layoutY="208.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+            <Text fill="RED" layoutX="443.0" layoutY="320.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
                <font>
                   <Font size="24.0" />
                </font>
             </Text>
-            <Text fill="RED" layoutX="253.0" layoutY="263.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+            <Text fill="RED" layoutX="258.0" layoutY="188.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
                <font>
                   <Font size="24.0" />
                </font>
             </Text>
-            <Text fill="RED" layoutX="258.0" layoutY="334.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+            <Text fill="RED" layoutX="248.0" layoutY="241.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
                <font>
                   <Font size="24.0" />
                </font>
             </Text>
-            <Text fill="RED" layoutX="698.0" layoutY="321.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Text>
-            <Text fill="RED" layoutX="497.0" layoutY="262.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Text>
-            <Text fill="RED" layoutX="747.0" layoutY="262.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Text>
-            <MFXFilterComboBox fx:id="cbLongName" floatingText="Room Name" layoutX="288.0" layoutY="292.0" prefHeight="40.0" prefWidth="410.0" />
+            <MFXFilterComboBox fx:id="cbLongName" floatingText="Room Name" layoutX="29.0" layoutY="291.0" prefHeight="40.0" prefWidth="410.0" />
          </children>
       </AnchorPane>
    </center>

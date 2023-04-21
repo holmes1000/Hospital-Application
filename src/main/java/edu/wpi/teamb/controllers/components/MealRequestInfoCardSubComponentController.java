@@ -55,7 +55,7 @@ public class MealRequestInfoCardSubComponentController implements IInfoCardSubCo
             setFoodLabel(fullMealRequest.getFood());
             setSnackLabel(fullMealRequest.getSnack());
             setDrinkLabel(fullMealRequest.getDrink());
-            setMealModificationLabel(fullMealRequest.getMealModification());
+            setMealModificationLabel(fullMealRequest.getNotes());
         }
     }
 

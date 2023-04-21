@@ -4,51 +4,46 @@ import edu.wpi.teamb.DBAccess.ORMs.FlowerRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FullFlowerRequest {
     int id;
     String employee;
-    String floor;
-    String roomNumber;
-    Date dateSubmitted;
+    Timestamp dateSubmitted;
     String requestStatus;
-    String location_name;
+    String locationName;
+    String notes;
     String flowerType;
     String color;
-    String type;
+    String size;
     String message;
-    String specialInstructions;
     String requestType = "Flower";
 
-    public FullFlowerRequest(int id, String employee, String floor, String roomNumber, Date dateSubmitted, String requestStatus, String location_name, String flowerType, String color, String type, String message, String specialInstructions) {
+    public FullFlowerRequest(int id, String employee, Timestamp dateSubmitted, String requestStatus, String locationName, String notes, String flowerType, String color, String size, String message) {
         this.id = id;
         this.employee = employee;
-        this.floor = floor;
-        this.roomNumber = roomNumber;
         this.dateSubmitted = dateSubmitted;
         this.requestStatus = requestStatus;
-        this.location_name = location_name;
+        this.locationName = locationName;
+        this.notes = notes;
         this.flowerType = flowerType;
         this.color = color;
-        this.type = type;
+        this.size = size;
         this.message = message;
-        this.specialInstructions = specialInstructions;
     }
     public FullFlowerRequest(Request r, FlowerRequest f) {
         this.id = r.getId();
         this.employee = r.getEmployee();
-        this.floor = r.getFloor();
-        this.roomNumber = r.getRoomNumber();
         this.dateSubmitted = r.getDateSubmitted();
         this.requestStatus = r.getRequestStatus();
-        this.location_name = r.getLocationName();
+        this.locationName = r.getLocationName();
+        this.notes = r.getNotes();
         this.flowerType = f.getFlowerType();
         this.color = f.getColor();
-        this.type = f.getType();
+        this.size = f.getSize();
         this.message = f.getMessage();
-        this.specialInstructions = f.getSpecialInstructions();
     }
 
     public int getId() {
@@ -67,27 +62,11 @@ public class FullFlowerRequest {
         this.employee = employee;
     }
 
-    public String getFloor() {
-        return floor;
-    }
-
-    public void setFloor(String floor) {
-        this.floor = floor;
-    }
-
-    public String getRoomNumber() {
-        return roomNumber;
-    }
-
-    public void setRoomNumber(String roomNumber) {
-        this.roomNumber = roomNumber;
-    }
-
-    public Date getDateSubmitted() {
+    public Timestamp getDateSubmitted() {
         return dateSubmitted;
     }
 
-    public void setDateSubmitted(Date dateSubmitted) {
+    public void setDateSubmitted(Timestamp dateSubmitted) {
         this.dateSubmitted = dateSubmitted;
     }
 
@@ -115,12 +94,12 @@ public class FullFlowerRequest {
         this.color = color;
     }
 
-    public String getType() {
-        return type;
+    public String getSize() {
+        return size;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setSize(String size) {
+        this.size = size;
     }
 
     public String getMessage() {
@@ -131,13 +110,14 @@ public class FullFlowerRequest {
         this.message = message;
     }
 
-    public String getSpecialInstructions() {
-        return specialInstructions;
+    public String getNotes() {
+        return notes;
     }
 
-    public void setSpecialInstructions(String specialInstructions) {
-        this.specialInstructions = specialInstructions;
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
+
     public static ArrayList<FullFlowerRequest> listFullFlowerRequests(List<FlowerRequest> frs) {
         ArrayList<FullFlowerRequest> ffrs = new ArrayList<FullFlowerRequest>();
         for (int i = 0; i < frs.size(); i++) {
@@ -159,31 +139,14 @@ public class FullFlowerRequest {
         return null;
     }
 
-    public String getLocation_name() {
-        return location_name;
+    public String getLocationName() {
+        return locationName;
     }
 
-    public void setLocation_name(String location_name) {
-        this.location_name = location_name;
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
     }
 
-    @Override
-    public String toString() {
-        return "FullFlowerRequest{" +
-                "id=" + id +
-                ", employee='" + employee + '\'' +
-                ", floor='" + floor + '\'' +
-                ", roomNumber='" + roomNumber + '\'' +
-                ", dateSubmitted=" + dateSubmitted +
-                ", requestStatus='" + requestStatus + '\'' +
-                ", location_name='" + location_name + '\'' +
-                ", flowerType='" + flowerType + '\'' +
-                ", color='" + color + '\'' +
-                ", type='" + type + '\'' +
-                ", message='" + message + '\'' +
-                ", specialInstructions='" + specialInstructions + '\'' +
-                '}';
-    }
 
     public String getRequestType() {
         return requestType;

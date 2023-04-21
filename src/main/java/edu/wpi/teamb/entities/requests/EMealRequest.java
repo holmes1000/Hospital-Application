@@ -2,74 +2,37 @@ package edu.wpi.teamb.entities.requests;
 
 import edu.wpi.teamb.DBAccess.*;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
+import edu.wpi.teamb.DBAccess.ORMs.MealRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
 
 public class EMealRequest extends RequestImpl {
-  private String employee;
-  private String floor;
-  private String roomNumber;
-  private Date dateSubmitted; // includes time
   private String orderFrom;
   private String food;
   private String drink;
   private String snack;
-  private String mealModification;
-  private RequestStatus requestStatus;
 
   Request request;
   edu.wpi.teamb.DBAccess.ORMs.MealRequest mealRequest;
 
 
-  public EMealRequest(
-      String employee,
-      String floor,
-      String roomNumber,
-      Date dateSubmitted,
-      String orderFrom,
-      String food,
-      String drink,
-      String snack,
-      String mealModification,
-      RequestStatus requestStatus) {
-    this.employee = employee;
-    this.floor = floor;
-    this.roomNumber = roomNumber;
-    this.dateSubmitted = dateSubmitted;
+  public EMealRequest(String orderFrom, String food, String drink, String snack, Request request, MealRequest mealRequest) {
     this.orderFrom = orderFrom;
     this.food = food;
     this.drink = drink;
     this.snack = snack;
-    this.mealModification = mealModification;
-    this.requestStatus = requestStatus;
+    this.request = request;
+    this.mealRequest = mealRequest;
   }
 
-  public EMealRequest() {}
-
-  @Override
-  public int getRequestID() {
-    return 0;
-  }
-
-  @Override
-  public String getFloor() {
-    return floor;
-  }
-
-  @Override
-  public String getRoomNumber() {
-    return roomNumber;
-  }
-
-  @Override
-  public Date getDateSubmitted() {
-    return dateSubmitted;
+  public EMealRequest() {
   }
 
   @Override
@@ -79,49 +42,20 @@ public class EMealRequest extends RequestImpl {
 
   @Override
   public void submitRequest(String[] inputs) {
-    String[] requestAttributesValues = {inputs[0],inputs[1],inputs[2],inputs[3],inputs[4], inputs[5], inputs[6], inputs[7], inputs[8], inputs[9], inputs[10]};
-    //int id = Request.insertDBRowNewRequest(requestAttributesValues);
-    //int finalID = Request.getFinalID("id");
-    //String[] mealAttributesValues = {String.valueOf(id), inputs[5],inputs[6],inputs[7],inputs[8],inputs[9]};
-    //edu.wpi.teamb.DBAccess.ORMs.MealRequest.insertDBRowNewMealRequest(mealAttributesValues);
-    Repository.getRepository().addMealRequest(requestAttributesValues);
+    Repository.getRepository().addMealRequest(inputs);
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null || obj.getClass() != this.getClass()) return false;
-    EMealRequest EMealRequest = (EMealRequest) obj;
-    return Objects.equals(this.employee, EMealRequest.employee)
-        && Objects.equals(this.floor, EMealRequest.floor)
-        && Objects.equals(this.roomNumber, EMealRequest.roomNumber)
-        && Objects.equals(this.dateSubmitted, EMealRequest.dateSubmitted)
-        && Objects.equals(this.orderFrom, EMealRequest.orderFrom)
-        && Objects.equals(this.food, EMealRequest.food)
-        && Objects.equals(this.drink, EMealRequest.drink)
-        && Objects.equals(this.snack, EMealRequest.snack)
-        && Objects.equals(this.mealModification, EMealRequest.mealModification)
-        && Objects.equals(this.requestStatus, EMealRequest.requestStatus);
+  public int hashCode() {
+    return Objects.hash(orderFrom, food, drink, snack);
   }
 
-  public String getEmployee() {
-    return employee;
-  }
-
-  public void setEmployee(String employee) {
-    this.employee = employee;
-  }
-
-  public void setFloor(String floor) {
-    this.floor = floor;
-  }
-
-  public void setRoomNumber(String roomNumber) {
-    this.roomNumber = roomNumber;
-  }
-
-  public void setDateSubmitted(Date dateSubmitted) {
-    this.dateSubmitted = dateSubmitted;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    EMealRequest that = (EMealRequest) o;
+    return Objects.equals(orderFrom, that.orderFrom) && Objects.equals(food, that.food) && Objects.equals(drink, that.drink) && Objects.equals(snack, that.snack) && Objects.equals(request, that.request) && Objects.equals(mealRequest, that.mealRequest);
   }
 
   public String getOrderFrom() {
@@ -156,48 +90,26 @@ public class EMealRequest extends RequestImpl {
     this.snack = snack;
   }
 
-  public String getMealModification() {
-    return mealModification;
+  public Request getRequest() {
+    return request;
   }
 
-  public void setMealModification(String mealModification) {
-    this.mealModification = mealModification;
+  public void setRequest(Request request) {
+    this.request = request;
   }
 
-  public RequestStatus getRequestStatus() {
-    return requestStatus;
+  public MealRequest getMealRequest() {
+    return mealRequest;
   }
 
-  public void setRequestStatus(RequestStatus requestStatus) {
-    this.requestStatus = requestStatus;
+  public void setMealRequest(MealRequest mealRequest) {
+    this.mealRequest = mealRequest;
   }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(
-        employee,
-        floor,
-        roomNumber,
-        dateSubmitted,
-        orderFrom,
-        food,
-        drink,
-        snack,
-        mealModification,
-        requestStatus);
+  public boolean checkSpecialRequestFields() {
+    if (this.orderFrom == null || this.food == null || this.drink == null || this.snack == null) {
+      return false;
+    }
+    return true;
   }
-
-  public ArrayList<String> getUsernames() throws SQLException {
-    ResultSet usernames = DB.getCol("users", "username");
-    ArrayList<String> userList = new ArrayList<String>();
-            while(usernames.next()){
-              userList.add(usernames.getString("username"));
-
-            }
-            usernames.close();
-    return userList;
-  }
-
-
-
 }

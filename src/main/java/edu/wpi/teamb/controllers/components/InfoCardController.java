@@ -259,7 +259,7 @@ public class InfoCardController {
 
     //setting common components with common request info
     setDateSubmittedLabel(fullConferenceRequest.getDateSubmitted().toString());
-    setLocationNameLabel(fullConferenceRequest.getLocation_name());
+    setLocationNameLabel(fullConferenceRequest.getLocationName());
     setEmployeeAssignedLabel(fullConferenceRequest.getEmployee());
     setStatusLabel(fullConferenceRequest.getRequestStatus());
     setRequestType(fullConferenceRequest.getRequestType());
@@ -289,7 +289,7 @@ public class InfoCardController {
 
     //setting common components with common request info
     setDateSubmittedLabel(fullFlowerRequest.getDateSubmitted().toString());
-    setLocationNameLabel(fullFlowerRequest.getLocation_name());
+    setLocationNameLabel(fullFlowerRequest.getLocationName());
     setEmployeeAssignedLabel(fullFlowerRequest.getEmployee());
     setStatusLabel(fullFlowerRequest.getRequestStatus());
     setRequestType(fullFlowerRequest.getRequestType());
@@ -365,14 +365,6 @@ public class InfoCardController {
     statusLabel.setText(status);
   }
 
-    /**
-     * Sets the text of the roomNumber TextField to the roomNumber parameter
-     *
-     * @param roomNumber
-     */
-  public void setRoomNumberLabel(String roomNumber) {
-    roomNumberLabel.setText(roomNumber);
-  }
 
   /**
    * Sets the requestType information of the InfoCard to the requestType parameter
