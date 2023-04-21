@@ -2,10 +2,17 @@ package edu.wpi.teamb.DBAccess.Full;
 
 import edu.wpi.teamb.DBAccess.ORMs.FlowerRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FullFlowerRequest implements IFull {
     int id;
@@ -21,6 +28,12 @@ public class FullFlowerRequest implements IFull {
     String requestType = "Flower";
 
     public FullFlowerRequest(int id, String employee, Timestamp dateSubmitted, String requestStatus, String locationName, String notes, String flowerType, String color, String size, String message) {
+        this.id = id;
+        this.employee = employee;
+        this.dateSubmitted = dateSubmitted;
+        this.requestStatus = requestStatus;
+        this.locationName = locationName;
+        this.notes = notes;
         this.flowerType = flowerType;
         this.color = color;
         this.size = size;
@@ -100,12 +113,18 @@ public class FullFlowerRequest implements IFull {
         this.message = message;
     }
 
+    @Override
     public String getNotes() {
         return notes;
     }
 
+    @Override
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+    @Override
+    public void setRequestType() {
+        this.requestType = "Flower";
     }
 
     public String getLocationName() {
@@ -141,15 +160,25 @@ public class FullFlowerRequest implements IFull {
         System.out.println("Flower Request");
     }
 
-//    public static FullFlowerRequest getFullFlowerRequest(int id, List<FullFlowerRequest> reqList) {
-//        for (int i = 0; i < reqList.size(); i++) {
-//            FullFlowerRequest req = reqList.get(i);
-//            if (req.getId() == id) {
-//                return req;
-//            }
-//        }
-//        return null;
-//    }
+    @Override
+    public void handleEditRequestMenu() {
+        Parent root;
+        try {
+            root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("/edu/wpi/teamb/views/requests/FlowerRequests.fxml")));
+            Stage stage = new Stage();
+            stage.setTitle("Flower Edit Request Menu");
+            stage.setScene(new Scene(root, 1280, 720));
+            stage.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public Image setRequestTypeIconImageView() {
+        return new Image("/edu/wpi/teamb/img/flower.png");
+    }
 
 
 }

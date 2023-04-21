@@ -2,10 +2,17 @@ package edu.wpi.teamb.DBAccess.Full;
 
 import edu.wpi.teamb.DBAccess.ORMs.OfficeRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FullOfficeRequest implements IFull {
     int id;
@@ -63,46 +70,80 @@ public class FullOfficeRequest implements IFull {
         System.out.println("Office Request");
     }
 
+    @Override
+    public void handleEditRequestMenu() {
+        Parent root;
+        try {
+            root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("/edu/wpi/teamb/views/requests/OfficeRequest.fxml")));
+            Stage stage = new Stage();
+            stage.setTitle("Office Supplies Edit Request Menu");
+            stage.setScene(new Scene(root, 1280, 720));
+            stage.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public Image setRequestTypeIconImageView() {
+        return new Image("/edu/wpi/teamb/img/workspace.png");
+    }
+
+    @Override
     public int getId() {
         return id;
     }
 
+    @Override
     public void setId(int id) {
         this.id = id;
     }
 
+    @Override
     public String getEmployee() {
         return employee;
     }
 
+    @Override
     public void setEmployee(String employee) {
         this.employee = employee;
     }
 
+    @Override
     public Timestamp getDateSubmitted() {
         return dateSubmitted;
     }
 
+    @Override
     public void setDateSubmitted(Timestamp dateSubmitted) {
         this.dateSubmitted = dateSubmitted;
     }
 
+    @Override
     public String getRequestStatus() {
         return requestStatus;
     }
 
+    @Override
     public void setRequestStatus(String requestStatus) {
         this.requestStatus = requestStatus;
     }
 
+    @Override
     public String getNotes() {
         return notes;
     }
 
+    @Override
     public void setNotes(String notes) {
         this.notes = notes;
     }
 
+    @Override
+    public void setRequestType() {
+        this.requestType = "Office";
+    }
 
 
 //    public static FullOfficeRequest getFullOfficeRequest(int id, List<FullOfficeRequest> reqList) {

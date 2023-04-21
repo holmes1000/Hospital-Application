@@ -1,6 +1,6 @@
 package edu.wpi.teamb.DBAccess.Full;
 
-import edu.wpi.teamb.DBAccess.ORMs.OfficeRequest;
+import javafx.scene.image.Image;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -11,4 +11,35 @@ public interface IFull {
 
     void printRequestType();
 
+    void handleEditRequestMenu();
+
+    Image setRequestTypeIconImageView();
+
+    int getId();
+
+    void setId(int id);
+
+    String getEmployee();
+
+    void setEmployee(String employee);
+
+    Timestamp getDateSubmitted();
+
+    void setDateSubmitted(Timestamp dateSubmitted);
+
+    String getRequestStatus();
+
+    void setRequestStatus(String requestStatus);
+
+    String getLocationName();
+    void setLocationName(String locationName);
+
+    String getNotes();
+
+    void setNotes(String notes);
+
+
+    void setRequestType();
+
+    String getRequestType();
 }

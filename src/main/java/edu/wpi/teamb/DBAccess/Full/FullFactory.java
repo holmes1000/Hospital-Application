@@ -5,19 +5,13 @@ import javafx.scene.image.Image;
 
 public class FullFactory {
     public IFull getFullRequest(String requestType) {
-        switch (requestType) {
-            case "Meal":
-                return new FullMealRequest();
-            case "Conference":
-                return new FullConferenceRequest();
-            case "Flower":
-                return new FullFlowerRequest();
-            case "Office":
-                return new FullOfficeRequest();
-            case "Furniture":
-                return new FullFurnitureRequest();
-            default:
-                return null;
-        }
+        return switch (requestType) {
+            case "Meal" -> new FullMealRequest();
+            case "Conference" -> new FullConferenceRequest();
+            case "Flower" -> new FullFlowerRequest();
+            case "Office" -> new FullOfficeRequest();
+            case "Furniture" -> new FullFurnitureRequest();
+            default -> null;
+        };
     }
 }

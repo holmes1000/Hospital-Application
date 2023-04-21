@@ -14,6 +14,7 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -70,20 +71,20 @@ public class SubmittedRequestsController {
 
             switch (listOfRequests.get(i).getRequestType()) {
                 case "Meal":
-                    FullMealRequest fullMealRequest = allRequestsE.getMealRequest(listOfRequests.get(i).getId());
-                    requestInfoCardController.sendRequest(fullMealRequest);
+                    IFull fullMealRequest = allRequestsE.getMealRequest(listOfRequests.get(i).getId());
+                    Objects.requireNonNull(requestInfoCardController).sendRequest(fullMealRequest);
                     break;
                 case "Conference":
-                    FullConferenceRequest fullConferenceRequest = allRequestsE.getConferenceRequest(listOfRequests.get(i).getId());
-                    requestInfoCardController.sendRequest(fullConferenceRequest);
+                    IFull fullConferenceRequest = allRequestsE.getConferenceRequest(listOfRequests.get(i).getId());
+                    Objects.requireNonNull(requestInfoCardController).sendRequest(fullConferenceRequest);
                     break;
                 case "Flower":
-                    FullFlowerRequest fullFlowerRequest = allRequestsE.getFlowerRequest(listOfRequests.get(i).getId());
-                    requestInfoCardController.sendRequest(fullFlowerRequest);
+                    IFull fullFlowerRequest = allRequestsE.getFlowerRequest(listOfRequests.get(i).getId());
+                    Objects.requireNonNull(requestInfoCardController).sendRequest(fullFlowerRequest);
                     break;
                 case "Office":
-                    FullOfficeRequest fullOfficeRequest = allRequestsE.getOfficeRequest(listOfRequests.get(i).getId());
-                    requestInfoCardController.sendRequest(fullOfficeRequest);
+                    IFull fullOfficeRequest = allRequestsE.getOfficeRequest(listOfRequests.get(i).getId());
+                    Objects.requireNonNull(requestInfoCardController).sendRequest(fullOfficeRequest);
                     break;
 //                case "Furniture":
 //                    FullFurnitureRequest fullFurnitureRequest = allRequestsE.getFurnitureRequest(listOfRequests.get(i).getId());
@@ -130,9 +131,6 @@ public class SubmittedRequestsController {
                     Tooltip.install(helpIcon, helpTip);
                 });
         helpIcon.setOnMouseExited(event -> {});
-    }
-
-    private void initializeFields() {
     }
 
     public void initNavBar() {
