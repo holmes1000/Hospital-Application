@@ -58,6 +58,11 @@ public class FullOfficeRequest implements IFull {
         return fors;
     }
 
+    @Override
+    public void printRequestType() {
+        System.out.println("Office Request");
+    }
+
     public int getId() {
         return id;
     }

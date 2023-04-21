@@ -136,6 +136,11 @@ public class FullFlowerRequest implements IFull {
         return ffrs;
     }
 
+    @Override
+    public void printRequestType() {
+        System.out.println("Flower Request");
+    }
+
 //    public static FullFlowerRequest getFullFlowerRequest(int id, List<FullFlowerRequest> reqList) {
 //        for (int i = 0; i < reqList.size(); i++) {
 //            FullFlowerRequest req = reqList.get(i);

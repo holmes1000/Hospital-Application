@@ -132,6 +132,11 @@ public class FullMealRequest implements IFull {
         return fmrs;
     }
 
+    @Override
+    public void printRequestType() {
+        System.out.println("Meal Request");
+    }
+
 //    public static FullOfficeRequest getFullMealRequest(int id, List<FullOfficeRequest> reqList) {
 //        for (int i = 0; i < reqList.size(); i++) {
 //            FullOfficeRequest req = reqList.get(i);

@@ -3,6 +3,8 @@ package edu.wpi.teamb;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
+import edu.wpi.teamb.DBAccess.Full.FullFactory;
+import edu.wpi.teamb.DBAccess.Full.IFull;
 import edu.wpi.teamb.ProgressBar.RingProgressIndicator;
 import edu.wpi.teamb.controllers.NavDrawerController;
 import javafx.application.Platform;

@@ -1,9 +1,7 @@
 package edu.wpi.teamb.controllers.components;
 
-import edu.wpi.teamb.DBAccess.Full.FullConferenceRequest;
-import edu.wpi.teamb.DBAccess.Full.FullFlowerRequest;
-import edu.wpi.teamb.DBAccess.Full.FullMealRequest;
-import edu.wpi.teamb.DBAccess.Full.FullOfficeRequest;
+import edu.wpi.teamb.DBAccess.Full.*;
+import edu.wpi.teamb.DBAccess.ORMs.ConferenceRequest;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 import edu.wpi.teamb.DBAccess.ORMs.User;
 import edu.wpi.teamb.entities.components.EInfoCard;

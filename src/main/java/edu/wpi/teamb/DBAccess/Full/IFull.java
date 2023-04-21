@@ -9,4 +9,6 @@ import java.util.List;
 public interface IFull {
     ArrayList<?> listFullRequests(List<?> list);
 
+    void printRequestType();
+
 }

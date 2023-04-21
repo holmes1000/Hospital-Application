@@ -127,4 +127,9 @@ public class FullFurnitureRequest implements IFull {
         return ffrs;
     }
 
+    @Override
+    public void printRequestType() {
+        System.out.println("Furniture Request");
+    }
+
 }

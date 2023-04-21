@@ -142,6 +142,11 @@ public class FullConferenceRequest implements IFull {
         return fcrs;
     }
 
+    @Override
+    public void printRequestType() {
+        System.out.println("Conference Request");
+    }
+
 
 //
 //    @Override
