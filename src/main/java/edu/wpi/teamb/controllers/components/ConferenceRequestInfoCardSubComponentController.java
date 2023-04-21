@@ -1,6 +1,6 @@
 package edu.wpi.teamb.controllers.components;
 
-import edu.wpi.teamb.DBAccess.FullConferenceRequest;
+import edu.wpi.teamb.DBAccess.Full.FullConferenceRequest;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.fxml.FXML;

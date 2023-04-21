@@ -1,11 +1,12 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
 import edu.wpi.teamb.DBAccess.DB;
-import edu.wpi.teamb.DBAccess.FullFlowerRequest;
+import edu.wpi.teamb.DBAccess.Full.FullFactory;
+import edu.wpi.teamb.DBAccess.Full.FullFlowerRequest;
+import edu.wpi.teamb.DBAccess.Full.IFull;
 import edu.wpi.teamb.DBAccess.ORMs.FlowerRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -42,25 +43,19 @@ public class FlowerRequestDAOImpl implements IDAO {
     }
 
     public ArrayList<FullFlowerRequest> getAllHelper() throws SQLException {
+        FullFactory ff = new FullFactory();
+        IFull flower = ff.getFullRequest("Flower");
         ResultSet rs = getDBRowAllRequests();
         ArrayList<FlowerRequest> frs = new ArrayList<FlowerRequest>();
         while (rs.next()) {
             frs.add(new FlowerRequest(rs));
         }
-        return FullFlowerRequest.listFullFlowerRequests(frs);
+        return (ArrayList<FullFlowerRequest>) flower.listFullRequests(frs);
     }
 
     @Override
     public void add(Object request) {
         String[] flowerReq = (String[]) request;
-//        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//        Date dateSubmitted;
-//        Date dateRequested;
-//        try {
-//            dateSubmitted = (Date) dateFormat.parse(flowerReq[3]);
-//        } catch (ParseException e) {
-//            throw new RuntimeException(e);
-//        }
         String[] values = {flowerReq[0], flowerReq[1], "Flower", flowerReq[2], flowerReq[3], flowerReq[4], flowerReq[5], flowerReq[6], flowerReq[7]};
         int id = insertDBRowNewFlowerRequest(values);
         ResultSet rs = DB.getRowCond("requests", "dateSubmitted", "id = " + id);
@@ -88,7 +83,6 @@ public class FlowerRequestDAOImpl implements IDAO {
     @Override
     public void update(Object request) {
         FullFlowerRequest ffr = (FullFlowerRequest) request;
-        //String[] values = {Integer.toString(ffr.getId()), ffr.getEmployee(), ffr.getFloor(), ffr.getRoomNumber(), ffr.getDateSubmitted().toString(), ffr.getRequestStatus(), ffr.getFlowerType(), ffr.getFlowerType(), ffr.getColor(), ffr.getType(), ffr.getMessage(), ffr.getSpecialInstructions()};
         String[] colsFlower = {"flowertype", "color", "size", "message"};
         String[] valuesFlower = {ffr.getFlowerType(), ffr.getColor(), ffr.getSize(), ffr.getMessage()};
         String[] colsReq = {"employee", "datesubmitted", "requeststatus", "requesttype", "locationname", "notes"};
@@ -111,10 +105,6 @@ public class FlowerRequestDAOImpl implements IDAO {
      */
     private ResultSet getDBRowAllRequests() throws SQLException {
         return DB.getCol("flowerrequests", "*");
-    }
-
-    public void updateRowSpecialInstructions(String specialInstructions, String[] col, String[] val) {
-        updateRows(col, val, "specialInstructions = " + specialInstructions);
     }
 
     public String toString(FlowerRequest request) {
@@ -147,25 +137,18 @@ public class FlowerRequestDAOImpl implements IDAO {
         return getDBRowFromCol("color", color);
     }
 
-    public ResultSet getDBRowType(String type) {
-        return getDBRowFromCol("type", type);
+    public ResultSet getDBRowSize(String size) {
+        return getDBRowFromCol("size", size);
     }
 
     public ResultSet getDBRowMessage(String message) {
         return getDBRowFromCol("message", message);
     }
 
-    public ResultSet getDBRowSpecialInstructions(String specialInstructions) {
-        return getDBRowFromCol("specialInstructions", specialInstructions);
-    }
     private void updateRows(String[] col, String[] val, String cond) {
         if (col.length != val.length)
             throw new IllegalArgumentException("Column and value arrays must be the same length");
         DB.updateRow("flowerrequests", col, val, cond);
-    }
-
-    public void updateRowID(int id, String[] col, String[] val) {
-        updateRows(col, val, "id = " + id);
     }
 
     public void updateRowFlowerType(String flowerType, String[] col, String[] val) {
@@ -176,8 +159,8 @@ public class FlowerRequestDAOImpl implements IDAO {
         updateRows(col, val, "color = " + color);
     }
 
-    public void updateRowType(String type, String[] col, String[] val) {
-        updateRows(col, val, "type = " + type);
+    public void updateRowSize(String size, String[] col, String[] val) {
+        updateRows(col, val, "size = " + size);
     }
 
     public void updateRowMessage(String message, String[] col, String[] val) {

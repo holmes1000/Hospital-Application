@@ -1,11 +1,12 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
 import edu.wpi.teamb.DBAccess.DB;
-import edu.wpi.teamb.DBAccess.FullFurnitureRequest;
+import edu.wpi.teamb.DBAccess.Full.FullFactory;
+import edu.wpi.teamb.DBAccess.Full.FullFurnitureRequest;
+import edu.wpi.teamb.DBAccess.Full.IFull;
 import edu.wpi.teamb.DBAccess.ORMs.FurnitureRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -43,12 +44,14 @@ public class FurnitureRequestDAOImpl implements IDAO {
         }
 
         public ArrayList<FullFurnitureRequest> getAllHelper() throws SQLException {
+            FullFactory ff = new FullFactory();
+            IFull furn = ff.getFullRequest("Furniture");
             ResultSet rs = getDBRowAllRequests();
             ArrayList<FurnitureRequest> frs = new ArrayList<FurnitureRequest>();
             while (rs.next()) {
                 frs.add(new FurnitureRequest(rs));
             }
-            return FullFurnitureRequest.listFullFurnitureRequests(frs);
+            return (ArrayList<FullFurnitureRequest>) furn.listFullRequests(frs);
         }
 
         @Override
@@ -154,9 +157,6 @@ public class FurnitureRequestDAOImpl implements IDAO {
             updateRows(col, val, "id = " + id);
         }
 
-        public void updateRowAssembly(String assembly, String[] col, String[] val) {
-            updateRows(col, val, "assembly = " + assembly);
-        }
 
         public void updateRowModel(String model, String[] col, String[] val) {
             updateRows(col, val, "model = " + model);

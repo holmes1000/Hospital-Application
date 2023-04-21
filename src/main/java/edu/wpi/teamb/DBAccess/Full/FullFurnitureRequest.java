@@ -1,14 +1,13 @@
-package edu.wpi.teamb.DBAccess;
+package edu.wpi.teamb.DBAccess.Full;
 
 import edu.wpi.teamb.DBAccess.ORMs.FurnitureRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FullFurnitureRequest {
+public class FullFurnitureRequest implements IFull {
     int id;
     String employee;
     Timestamp dateSubmitted;
@@ -21,27 +20,19 @@ public class FullFurnitureRequest {
     String requestType = "Furniture";
 
     public FullFurnitureRequest(int id, String employee, Timestamp dateSubmitted, String requestStatus, String locationName, String notes, String type, String model, boolean assembly) {
-        this.id = id;
-        this.employee = employee;
-        this.dateSubmitted = dateSubmitted;
-        this.requestStatus = requestStatus;
-        this.locationName = locationName;
-        this.notes = notes;
         this.type = type;
         this.model = model;
         this.assembly = assembly;
     }
 
     public FullFurnitureRequest(Request request, FurnitureRequest furnitureRequest) {
-        this.id = request.getId();
-        this.employee = request.getEmployee();
-        this.dateSubmitted = request.getDateSubmitted();
-        this.requestStatus = request.getRequestStatus();
-        this.locationName = request.getLocationName();
-        this.notes = request.getNotes();
         this.type = furnitureRequest.getType();
         this.model = furnitureRequest.getModel();
         this.assembly = furnitureRequest.isAssembly();
+    }
+
+    public FullFurnitureRequest() {
+
     }
 
     public int getId() {
@@ -124,10 +115,11 @@ public class FullFurnitureRequest {
         this.notes = notes;
     }
 
-    public static ArrayList<FullFurnitureRequest> listFullFurnitureRequests(List<FurnitureRequest> frs) {
+    @Override
+    public ArrayList<?> listFullRequests(List<?> frs) {
         ArrayList<FullFurnitureRequest> ffrs = new ArrayList<FullFurnitureRequest>();
         for (int i = 0; i < frs.size(); i++) {
-            FurnitureRequest fr = frs.get(i);
+            FurnitureRequest fr = (FurnitureRequest) frs.get(i);
             Request r = Request.getRequest(fr.getId());
             FullFurnitureRequest ffr = new FullFurnitureRequest(r, fr);
             ffrs.add(ffr);

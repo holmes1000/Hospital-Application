@@ -1,6 +1,6 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
-import edu.wpi.teamb.DBAccess.*;
+import edu.wpi.teamb.DBAccess.Full.*;
 import edu.wpi.teamb.DBAccess.ORMs.*;
 
 import java.sql.Date;
@@ -26,6 +26,7 @@ public class Repository {
             furniturerequestDAO = new FurnitureRequestDAOImpl();
             officerequestDAO = new OfficeRequestDAOImpl();
             moveDAOImpl = new MoveDAOImpl();
+            requestDAOImpl = RequestDAOImpl.getRequestDaoImpl();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -55,6 +56,7 @@ public class Repository {
     private final LocationNameDAOImpl locationNameDaoImpl;
     private final IDAO officerequestDAO;
     private final MoveDAOImpl moveDAOImpl;
+    private final RequestDAOImpl requestDAOImpl;
 
 
     public void addEdge(Edge e) {
@@ -322,6 +324,10 @@ public class Repository {
         locationNameDAO.update(ln);
         Move m = new Move(fn.getNodeID(), fn.getLongName(), Date.valueOf("2023-04-18"));
         moveDAO.update(m);
+    }
+
+    public ArrayList<IFull> getAllFullRequests() {
+        return requestDAOImpl.getAllHelper1();
     }
 
 }

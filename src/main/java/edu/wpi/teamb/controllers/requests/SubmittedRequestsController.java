@@ -3,7 +3,7 @@ package edu.wpi.teamb.controllers.requests;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
-import edu.wpi.teamb.DBAccess.*;
+import edu.wpi.teamb.DBAccess.Full.*;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 import edu.wpi.teamb.controllers.NavDrawerController;
 import edu.wpi.teamb.controllers.components.InfoCardController;
@@ -68,14 +68,13 @@ public class SubmittedRequestsController {
                 System.out.println("IOException in loadRequestsIntoContainer of AllRequestsController: " + e.getMessage());
             }
 
-
             switch (listOfRequests.get(i).getRequestType()) {
                 case "Meal":
                     FullMealRequest fullMealRequest = allRequestsE.getMealRequest(listOfRequests.get(i).getId());
                     requestInfoCardController.sendRequest(fullMealRequest);
                     break;
                 case "Conference":
-                    FullConferenceRequest fullConferenceRequest = allRequestsE.getConfenferenceRequest(listOfRequests.get(i).getId());
+                    FullConferenceRequest fullConferenceRequest = allRequestsE.getConferenceRequest(listOfRequests.get(i).getId());
                     requestInfoCardController.sendRequest(fullConferenceRequest);
                     break;
                 case "Flower":
@@ -87,7 +86,7 @@ public class SubmittedRequestsController {
                     requestInfoCardController.sendRequest(fullOfficeRequest);
                     break;
 //                case "Furniture":
-//                    FullFurnitureRequest fullFurnitureRequest = allRequests.getFurnitureRequest(listOfRequests.get(i).getId());
+//                    FullFurnitureRequest fullFurnitureRequest = allRequestsE.getFurnitureRequest(listOfRequests.get(i).getId());
 //                    break;
                 default:
                     break;

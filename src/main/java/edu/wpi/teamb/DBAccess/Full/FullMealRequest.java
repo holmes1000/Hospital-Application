@@ -1,15 +1,13 @@
-package edu.wpi.teamb.DBAccess;
+package edu.wpi.teamb.DBAccess.Full;
 
 import edu.wpi.teamb.DBAccess.ORMs.MealRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FullMealRequest {
+public class FullMealRequest implements IFull {
     int id;
     String employee;
     Timestamp dateSubmitted;
@@ -23,12 +21,6 @@ public class FullMealRequest {
     String requestType = "Meal";
 
     public FullMealRequest(int id, String employee, Timestamp dateSubmitted, String requestStatus, String locationName, String notes, String orderFrom, String food, String drink, String snack) {
-        this.id = id;
-        this.employee = employee;
-        this.dateSubmitted = dateSubmitted;
-        this.requestStatus = requestStatus;
-        this.locationName = locationName;
-        this.notes = notes;
         this.orderFrom = orderFrom;
         this.food = food;
         this.drink = drink;
@@ -36,48 +28,17 @@ public class FullMealRequest {
     }
 
     public FullMealRequest(Request request, MealRequest mealRequest) {
-        this.id = request.getId();
-        this.employee = request.getEmployee();
-        this.dateSubmitted = request.getDateSubmitted();
-        this.requestStatus = request.getRequestStatus();
-        this.locationName = request.getLocationName();
-        this.notes = request.getNotes();
         this.orderFrom = mealRequest.getOrderFrom();
         this.food = mealRequest.getFood();
         this.drink = mealRequest.getDrink();
         this.snack = mealRequest.getSnack();
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(String employee) {
-        this.employee = employee;
-    }
-
-    public Timestamp getDateSubmitted() {
-        return dateSubmitted;
-    }
-
-    public void setDateSubmitted(Timestamp dateSubmitted) {
-        this.dateSubmitted = dateSubmitted;
-    }
-
-    public String getRequestStatus() {
-        return requestStatus;
-    }
-
-    public void setRequestStatus(String requestStatus) {
-        this.requestStatus = requestStatus;
+    public FullMealRequest() {
+        this.orderFrom = "";
+        this.food = "";
+        this.drink = "";
+        this.snack = "";
     }
 
     public String getOrderFrom() {
@@ -111,34 +72,36 @@ public class FullMealRequest {
     public void setSnack(String snack) {
         this.snack = snack;
     }
-
-    public String getNotes() {
-        return notes;
+    public int getId() {
+        return id;
     }
 
-    public void setNotes(String notes) {
-        this.notes = notes;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public static ArrayList<FullMealRequest> listFullMealRequests(List<MealRequest> mrs) {
-        ArrayList<FullMealRequest> fmrs = new ArrayList<FullMealRequest>();
-        for (int i = 0; i < mrs.size(); i++) {
-            MealRequest mr = mrs.get(i);
-            Request r = Request.getRequest(mr.getId());
-            FullMealRequest fmr = new FullMealRequest(r, mr);
-            fmrs.add(fmr);
-        }
-        return fmrs;
+    public String getEmployee() {
+        return employee;
     }
 
-    public static FullOfficeRequest getFullMealRequest(int id, List<FullOfficeRequest> reqList) {
-        for (int i = 0; i < reqList.size(); i++) {
-            FullOfficeRequest req = reqList.get(i);
-            if (req.getId() == id) {
-                return req;
-            }
-        }
-        return null;
+    public void setEmployee(String employee) {
+        this.employee = employee;
+    }
+
+    public Timestamp getDateSubmitted() {
+        return dateSubmitted;
+    }
+
+    public void setDateSubmitted(Timestamp dateSubmitted) {
+        this.dateSubmitted = dateSubmitted;
+    }
+
+    public String getRequestStatus() {
+        return requestStatus;
+    }
+
+    public void setRequestStatus(String requestStatus) {
+        this.requestStatus = requestStatus;
     }
 
     public String getLocationName() {
@@ -148,6 +111,36 @@ public class FullMealRequest {
     public void setLocationName(String locationName) {
         this.locationName = locationName;
     }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    @Override
+    public ArrayList<?> listFullRequests(List<?> mrs) {
+        ArrayList<FullMealRequest> fmrs = new ArrayList<FullMealRequest>();
+        for (int i = 0; i < mrs.size(); i++) {
+            MealRequest mr = (MealRequest) mrs.get(i);
+            Request r = Request.getRequest(mr.getId());
+            FullMealRequest fmr = new FullMealRequest(r, mr);
+            fmrs.add(fmr);
+        }
+        return fmrs;
+    }
+
+//    public static FullOfficeRequest getFullMealRequest(int id, List<FullOfficeRequest> reqList) {
+//        for (int i = 0; i < reqList.size(); i++) {
+//            FullOfficeRequest req = reqList.get(i);
+//            if (req.getId() == id) {
+//                return req;
+//            }
+//        }
+//        return null;
+//    }
 
     public String getRequestType() {
         return requestType;

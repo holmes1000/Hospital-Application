@@ -1,24 +1,29 @@
 package edu.wpi.teamb.controllers.components;
 
-import edu.wpi.teamb.DBAccess.FullConferenceRequest;
-import edu.wpi.teamb.DBAccess.FullFlowerRequest;
-import edu.wpi.teamb.DBAccess.FullMealRequest;
-import edu.wpi.teamb.DBAccess.FullOfficeRequest;
+import edu.wpi.teamb.DBAccess.Full.FullConferenceRequest;
+import edu.wpi.teamb.DBAccess.Full.FullFlowerRequest;
+import edu.wpi.teamb.DBAccess.Full.FullMealRequest;
+import edu.wpi.teamb.DBAccess.Full.FullOfficeRequest;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 import edu.wpi.teamb.DBAccess.ORMs.User;
 import edu.wpi.teamb.entities.components.EInfoCard;
+import edu.wpi.teamb.entities.requests.IRequest;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class InfoCardController {
   @FXML private AnchorPane requestInfoAnchorPane;
@@ -380,12 +385,26 @@ public class InfoCardController {
    */
   private void initializeEditButtonOnClickListener() {
     editButton.setOnMouseClicked(event -> {
-      toggleEditable();
-      editEmployeeAssigned();
-      editLocationName();
-      toggleEditableForSubComponent();
-      editStatus();
-      toggleSubmitButtonVisibility();
+      switch(requestType){
+        case "Meal":
+          handleEditRequestMenu(IRequest.RequestType.MealDelivery);
+          break;
+        case "Conference":
+          handleEditRequestMenu(IRequest.RequestType.ConferenceRoom);
+          break;
+        case "Flower":
+          handleEditRequestMenu(IRequest.RequestType.FlowerDelivery);
+          break;
+        case "Office":
+            handleEditRequestMenu(IRequest.RequestType.OfficeSupplies);
+          break;
+        case "Furniture":
+          handleEditRequestMenu(IRequest.RequestType.FurnitureDelivery);
+          break;
+        default:
+          handleEditRequestMenu(IRequest.RequestType.MealDelivery);
+          break;
+      }
     });
   }
 
@@ -425,31 +444,42 @@ public class InfoCardController {
     }
   }
 
-  private void setSubComponentContainer(String requestType){
-    //first load the subcomponent
-    FXMLLoader subComponentLoader = null;
-    try {
-      switch (requestType) {
-        case "Meal":
-          subComponentLoader = new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/components/MealRequestInfoCardSubComponent.fxml"));
-          subComponentRoot = subComponentLoader.load();
-          subComponentController = subComponentLoader.getController();
-          break;
-        default:
-          break;
-      }
-    } catch (IOException e) {
-      System.out.println("IOException in setSpecificRequestTypeInfoSubComponent of InfoCardController: " + e.getMessage());
-    } catch (NullPointerException e) {
-      System.out.println("NullPointerException in setSpecificRequestTypeInfoSubComponent of InfoCardController: " + e.getMessage());
-    }
-    //then add it to the subcomponent container
-    if (subComponentRoot != null){
-      subComponentContainer.getChildren().add(subComponentRoot);
-    }
-  }
-
   private void toggleEditableForSubComponent() {
     subComponentController.toggleEditMode();
   }
+
+
+  private void handleEditRequestMenu(IRequest.RequestType requestType) {
+    Parent root;
+    try {
+      switch(requestType){
+        case MealDelivery:
+          root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("/edu/wpi/teamb/views/requests/MealRequest.fxml")));
+          break;
+        case ConferenceRoom:
+          root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("/edu/wpi/teamb/views/requests/ConferenceRequest.fxml")));
+          break;
+        case FlowerDelivery:
+          root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("/edu/wpi/teamb/views/requests/FlowerRequests.fxml")));
+          break;
+        case OfficeSupplies:
+          root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("/edu/wpi/teamb/views/requests/OfficeRequest.fxml")));
+          break;
+        case FurnitureDelivery:
+          root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("/edu/wpi/teamb/views/requests/FurnitureRequest.fxml")));
+          break;
+        default:
+          root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("/edu/wpi/teamb/views/requests/MealRequest.fxml")));
+          break;
+      }
+      Stage stage = new Stage();
+      stage.setTitle("Edit Request Menu");
+      stage.setScene(new Scene(root, 1280, 720));
+      stage.show();
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
 }

@@ -1,12 +1,13 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
 import edu.wpi.teamb.DBAccess.DB;
-import edu.wpi.teamb.DBAccess.FullMealRequest;
-import edu.wpi.teamb.DBAccess.FullOfficeRequest;
+import edu.wpi.teamb.DBAccess.Full.FullFactory;
+import edu.wpi.teamb.DBAccess.Full.FullMealRequest;
+import edu.wpi.teamb.DBAccess.Full.FullOfficeRequest;
+import edu.wpi.teamb.DBAccess.Full.IFull;
 import edu.wpi.teamb.DBAccess.ORMs.MealRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -50,12 +51,14 @@ public class MealRequestDAOImpl implements IDAO {
      * @return list of Meal requests
      */
     public ArrayList<FullMealRequest> getAllHelper() throws SQLException {
+        FullFactory ff = new FullFactory();
+        IFull mealRequest = ff.getFullRequest("Meal");
         ResultSet rs = getDBRowAllRequests();
         ArrayList<MealRequest> mrs = new ArrayList<MealRequest>();
         while (rs.next()) {
             mrs.add(new MealRequest(rs));
         }
-        return FullMealRequest.listFullMealRequests(mrs);
+        return (ArrayList<FullMealRequest>) mealRequest.listFullRequests(mrs);
     }
 
     /**

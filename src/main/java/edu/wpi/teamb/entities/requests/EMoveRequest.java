@@ -44,7 +44,6 @@ public class EMoveRequest extends RequestImpl {
 
     public void updateRequest(String[] inputs) {
         move = new Move(Integer.parseInt(inputs[0]), inputs[1], java.sql.Date.valueOf(inputs[2]));
-        //request = new Request(Integer.parseInt(inputs[0]), inputs[3], inputs[4], inputs[5], Date.valueOf(inputs[6]), inputs[7], "Move", inputs[1]);
         Repository.getRepository().updateMove(move);
     }
 
@@ -81,13 +80,6 @@ public class EMoveRequest extends RequestImpl {
         } else if (!move.equals(other.move)) {
             return false;
         }
-        // if (request == null) {
-        //     if (other.request != null) {
-        //         return false;
-        //     }
-        // } else if (!request.equals(other.request)) {
-        //     return false;
-        // }
         return true;
     }
 

@@ -1,15 +1,13 @@
-package edu.wpi.teamb.DBAccess;
+package edu.wpi.teamb.DBAccess.Full;
 
 import edu.wpi.teamb.DBAccess.ORMs.ConferenceRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FullConferenceRequest {
+public class FullConferenceRequest implements IFull {
     int id;
     String employee;
     Timestamp dateSubmitted;
@@ -48,6 +46,10 @@ public class FullConferenceRequest {
         this.duration = duration;
     }
 
+    public FullConferenceRequest() {
+
+    }
+
     public int getId() {
         return id;
     }
@@ -78,6 +80,22 @@ public class FullConferenceRequest {
 
     public void setRequestStatus(String requestStatus) {
         this.requestStatus = requestStatus;
+    }
+
+    public String getLocationName() {
+        return locationName;
+    }
+
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public Timestamp getDateRequested() {
@@ -112,43 +130,30 @@ public class FullConferenceRequest {
         this.duration = duration;
     }
 
-    public static ArrayList<FullConferenceRequest> listFullConferenceRequests(ArrayList<ConferenceRequest> crs) {
+    @Override
+    public ArrayList<?> listFullRequests(List<?> crs) {
         ArrayList<FullConferenceRequest> fcrs = new ArrayList<FullConferenceRequest>();
-        for (ConferenceRequest cr : crs) {
-            Request r = Request.getRequest(cr.getId());
-            FullConferenceRequest fcr = new FullConferenceRequest(r, cr);
-            fcrs.add(fcr);
+        for (int i = 0; i < crs.size(); i++) {
+            ConferenceRequest or = (ConferenceRequest) crs.get(i);
+            Request r = Request.getRequest(or.getId());
+            FullConferenceRequest ofr = new FullConferenceRequest(r, or);
+            fcrs.add(ofr);
         }
         return fcrs;
     }
-    public static FullConferenceRequest getFullConferenceRequest(int id, List<FullConferenceRequest> reqList) {
-        for (int i = 0; i < reqList.size(); i++) {
-            FullConferenceRequest req = reqList.get(i);
-            if (req.getId() == id) {
-                return req;
-            }
-        }
-        return null;
-    }
-    public void updateAll(List<FullConferenceRequest> reqList) {
-        getFullConferenceRequest(getId(), reqList).setEmployee(getEmployee());
-        getFullConferenceRequest(getId(), reqList).setDateSubmitted(getDateSubmitted());
-        getFullConferenceRequest(getId(), reqList).setRequestStatus(getRequestStatus());
-        getFullConferenceRequest(getId(), reqList).setLocationName(getLocationName());
-        getFullConferenceRequest(getId(), reqList).setNotes(getNotes());
-        getFullConferenceRequest(getId(), reqList).setDateRequested(getDateRequested());
-        getFullConferenceRequest(getId(), reqList).setEventName(getEventName());
-        getFullConferenceRequest(getId(), reqList).setBookingReason(getBookingReason());
-        getFullConferenceRequest(getId(), reqList).setDuration(getDuration());
-    }
 
-    public String getLocationName() {
-        return locationName;
-    }
 
-    public void setLocationName(String locationName) {
-        this.locationName = locationName;
-    }
+//
+//    @Override
+//    public FullConferenceRequest getFullRequest(int id, List<FullConferenceRequest> reqList) {
+//        for (int i = 0; i < reqList.size(); i++) {
+//            FullConferenceRequest req = reqList.get(i);
+//            if (req.id == id) {
+//                return req;
+//            }
+//        }
+//        return null;
+//    }
 
 
     public String getRequestType() {
@@ -157,13 +162,5 @@ public class FullConferenceRequest {
 
     public void setRequestType(String requestType) {
         this.requestType = requestType;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
     }
 }

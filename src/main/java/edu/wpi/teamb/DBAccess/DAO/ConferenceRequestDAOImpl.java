@@ -1,18 +1,20 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
 import edu.wpi.teamb.DBAccess.DB;
-import edu.wpi.teamb.DBAccess.FullConferenceRequest;
+import edu.wpi.teamb.DBAccess.Full.FullConferenceRequest;
+import edu.wpi.teamb.DBAccess.Full.FullFactory;
+import edu.wpi.teamb.DBAccess.Full.FullFurnitureRequest;
+import edu.wpi.teamb.DBAccess.Full.IFull;
 import edu.wpi.teamb.DBAccess.ORMs.ConferenceRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;;
+;
 
 public class ConferenceRequestDAOImpl implements IDAO {
     ArrayList<FullConferenceRequest> conferenceRequests;
@@ -60,12 +62,14 @@ public class ConferenceRequestDAOImpl implements IDAO {
      * @return list of conference requests
      */
     public ArrayList<FullConferenceRequest> getAllHelper() throws SQLException {
+        FullFactory ff = new FullFactory();
+        IFull conf = ff.getFullRequest("Conference");
         ResultSet rs = getDBRowAllRequests();
         ArrayList<ConferenceRequest> crs = new ArrayList<ConferenceRequest>();
         while (rs.next()) {
             crs.add(new ConferenceRequest(rs));
         }
-        return FullConferenceRequest.listFullConferenceRequests(crs);
+        return (ArrayList<FullConferenceRequest>) conf.listFullRequests(crs);
     }
 
     /**

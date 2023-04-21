@@ -1,4 +1,4 @@
-package edu.wpi.teamb.DBAccess;
+package edu.wpi.teamb.DBAccess.Full;
 
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 import edu.wpi.teamb.DBAccess.ORMs.Move;

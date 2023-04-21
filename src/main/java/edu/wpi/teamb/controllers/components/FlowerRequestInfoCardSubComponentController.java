@@ -1,6 +1,6 @@
 package edu.wpi.teamb.controllers.components;
 
-import edu.wpi.teamb.DBAccess.FullFlowerRequest;
+import edu.wpi.teamb.DBAccess.Full.FullFlowerRequest;
 import edu.wpi.teamb.entities.components.EFlowerRequestInfoCardSubComponent;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;

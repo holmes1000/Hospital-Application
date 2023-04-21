@@ -1,5 +1,5 @@
 package edu.wpi.teamb.controllers.components;
-import edu.wpi.teamb.DBAccess.FullMealRequest;
+import edu.wpi.teamb.DBAccess.Full.FullMealRequest;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 import edu.wpi.teamb.entities.components.EMealRequestInfoCardSubComponent;
 import io.github.palexdev.materialfx.controls.MFXComboBox;

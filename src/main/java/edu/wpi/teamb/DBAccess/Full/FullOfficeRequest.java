@@ -1,15 +1,13 @@
-package edu.wpi.teamb.DBAccess;
+package edu.wpi.teamb.DBAccess.Full;
 
-import edu.wpi.teamb.DBAccess.ORMs.MealRequest;
 import edu.wpi.teamb.DBAccess.ORMs.OfficeRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FullOfficeRequest {
+public class FullOfficeRequest implements IFull {
     int id;
     String employee;
     Timestamp dateSubmitted;
@@ -43,6 +41,21 @@ public class FullOfficeRequest {
         this.type = officeRequest.getType();
         this.item = officeRequest.getItem();
         this.quantity = officeRequest.getQuantity();
+    }
+
+    public FullOfficeRequest() {
+    }
+
+    @Override
+    public ArrayList<?> listFullRequests(List<?> list) {
+        ArrayList<FullOfficeRequest> fors = new ArrayList<FullOfficeRequest>();
+        for (int i = 0; i < list.size(); i++) {
+            OfficeRequest or = (OfficeRequest) list.get(i);
+            Request r = Request.getRequest(or.getId());
+            FullOfficeRequest ofr = new FullOfficeRequest(r, or);
+            fors.add(ofr);
+        }
+        return fors;
     }
 
     public int getId() {
@@ -86,26 +99,16 @@ public class FullOfficeRequest {
     }
 
 
-    public static ArrayList<FullOfficeRequest> listFullOfficeRequests(List<OfficeRequest> ors) {
-        ArrayList<FullOfficeRequest> fors = new ArrayList<FullOfficeRequest>();
-        for (int i = 0; i < ors.size(); i++) {
-            OfficeRequest or = ors.get(i);
-            Request r = Request.getRequest(or.getId());
-            FullOfficeRequest ofr = new FullOfficeRequest(r, or);
-            fors.add(ofr);
-        }
-        return fors;
-    }
 
-    public static FullOfficeRequest getFullOfficeRequest(int id, List<FullOfficeRequest> reqList) {
-        for (int i = 0; i < reqList.size(); i++) {
-            FullOfficeRequest req = reqList.get(i);
-            if (req.getId() == id) {
-                return req;
-            }
-        }
-        return null;
-    }
+//    public static FullOfficeRequest getFullOfficeRequest(int id, List<FullOfficeRequest> reqList) {
+//        for (int i = 0; i < reqList.size(); i++) {
+//            FullOfficeRequest req = reqList.get(i);
+//            if (req.getId() == id) {
+//                return req;
+//            }
+//        }
+//        return null;
+//    }
 
     public String getLocationName() {
         return locationName;

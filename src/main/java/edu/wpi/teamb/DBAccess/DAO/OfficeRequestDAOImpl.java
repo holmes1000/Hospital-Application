@@ -1,16 +1,15 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
 import edu.wpi.teamb.DBAccess.DB;
-import edu.wpi.teamb.DBAccess.FullOfficeRequest;
+import edu.wpi.teamb.DBAccess.Full.FullFactory;
+import edu.wpi.teamb.DBAccess.Full.FullOfficeRequest;
+import edu.wpi.teamb.DBAccess.Full.IFull;
 import edu.wpi.teamb.DBAccess.ORMs.OfficeRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class OfficeRequestDAOImpl implements IDAO {
@@ -43,12 +42,14 @@ public class OfficeRequestDAOImpl implements IDAO {
     }
 
     public ArrayList<FullOfficeRequest> getAllHelper() throws SQLException {
+        FullFactory ff = new FullFactory();
+        IFull or = ff.getFullRequest("Office");
         ResultSet rs = getDBRowAllRequests();
         ArrayList<OfficeRequest> ors = new ArrayList<OfficeRequest>();
         while (rs.next()) {
             ors.add(new OfficeRequest(rs));
         }
-        return FullOfficeRequest.listFullOfficeRequests(ors);
+        return (ArrayList<FullOfficeRequest>) or.listFullRequests(ors);
     }
 
     @Override
@@ -81,12 +82,12 @@ public class OfficeRequestDAOImpl implements IDAO {
     @Override
     public void update(Object request) {
         FullOfficeRequest ofr = (FullOfficeRequest) request;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        //DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         //String[] values = {Integer.toString(ofr.getId()), ofr.getEmployee(), ofr.getDateSubmitted().toString(), ofr.getRequestStatus(), ofr.getRequestType(), ofr.getItem(), Integer.toString(ofr.getQuantity()), ofr.getSpecialInstructions(), ofr.getType()};
         String[] colsOffice = {"type", "item", "quantity"};
         String[] valuesOffice = {ofr.getType(), ofr.getItem(), String.valueOf(ofr.getQuantity())};
-        String[] colsReq = {"employee", "datesubmitted", "requeststatus", "requesttype"};
-        String[] valuesReq = {ofr.getEmployee(), String.valueOf(ofr.getDateSubmitted()), ofr.getRequestStatus(), ofr.getRequestType()};
+        String[] colsReq = {"employee", "datesubmitted", "requeststatus", "requesttype", "locationname", "notes"};
+        String[] valuesReq = {ofr.getEmployee(), String.valueOf(ofr.getDateSubmitted()), ofr.getRequestStatus(), ofr.getRequestType(), ofr.getLocationName(), ofr.getNotes()};
         DB.updateRow("furniturerequests", colsOffice, valuesOffice, "id = " + ofr.getId());
         DB.updateRow("requests", colsReq, valuesReq, "id = " + ofr.getId());
         for (int i = 0; i < officeRequests.size(); i++) {

@@ -1,6 +1,7 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
 import edu.wpi.teamb.DBAccess.DB;
+import edu.wpi.teamb.DBAccess.Full.IFull;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
 import java.sql.ResultSet;
@@ -37,7 +38,7 @@ public class RequestDAOImpl implements IDAO {
     }
 
     @Override
-    public Object get(Object id) {
+    public IFull get(Object id) {
         int whichRequest = 0;
         ResultSet rs = DB.getRowCond("requests", "requesttype", "id = " + id);
         String requestType = null;
@@ -53,17 +54,8 @@ public class RequestDAOImpl implements IDAO {
                 throw new RuntimeException(e);
             }
         }
-        if (requestType.equals("Meal")) {
-            whichRequest = 1;
-        } else if (requestType.equals("Conference")) {
-            whichRequest = 2;
-        } else if (requestType.equals("Flower")) {
-            whichRequest = 3;
-        } else {
-            whichRequest = 0;
-        }
-        switch (whichRequest) {
-            case 1:
+        switch (requestType) {
+            case "Meal":
                 MealRequestDAOImpl mr = null;
                 try {
                     mr = new MealRequestDAOImpl();
@@ -71,7 +63,7 @@ public class RequestDAOImpl implements IDAO {
                     throw new RuntimeException(e);
                 }
                 return mr.get(id);
-            case 2:
+            case "Conference":
                 ConferenceRequestDAOImpl cr = null;
                 try {
                     cr = new ConferenceRequestDAOImpl();
@@ -79,7 +71,7 @@ public class RequestDAOImpl implements IDAO {
                     throw new RuntimeException(e);
                 }
                 return cr.get(id);
-            case 3:
+            case "Flower":
                 FlowerRequestDAOImpl fr = null;
                 try {
                     fr = new FlowerRequestDAOImpl();
@@ -87,8 +79,21 @@ public class RequestDAOImpl implements IDAO {
                     throw new RuntimeException(e);
                 }
                 return fr.get(id);
-            default:
-                break;
+            case "Furniture":
+                FurnitureRequestDAOImpl ffr = null;
+                try {
+                    ffr = new FurnitureRequestDAOImpl();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+                return ffr.get(id);
+            case "Office":
+                OfficeRequestDAOImpl or = null;
+                try {
+                    or = new OfficeRequestDAOImpl();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
         }
         return null;
     }
@@ -104,6 +109,21 @@ public class RequestDAOImpl implements IDAO {
         while (rs.next()) {
             Request r = new Request(rs);
             rqs.add(r);
+        }
+        return rqs;
+    }
+
+    public ArrayList<IFull> getAllHelper1() {
+        ResultSet rs = null;
+        ArrayList<IFull> rqs = new ArrayList<IFull>();
+        try {
+            rs = DB.getCol("requests", "*");
+            while (rs.next()) {
+                Request r = new Request(rs);
+                rqs.add(get(r.getId()));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         return rqs;
     }
