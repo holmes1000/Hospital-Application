@@ -42,6 +42,12 @@ public class FullMealRequest implements IFull {
     }
 
     public FullMealRequest(Request request, MealRequest mealRequest) {
+        this.id = request.getId();
+        this.employee = request.getEmployee();
+        this.dateSubmitted = request.getDateSubmitted();
+        this.requestStatus = request.getRequestStatus();
+        this.locationName = request.getLocationName();
+        this.notes = request.getNotes();
         this.orderFrom = mealRequest.getOrderFrom();
         this.food = mealRequest.getFood();
         this.drink = mealRequest.getDrink();

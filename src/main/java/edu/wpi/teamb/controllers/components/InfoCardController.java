@@ -77,6 +77,7 @@ public class InfoCardController {
     setLocationNameLabel(fullRequest.getLocationName());
     setEmployeeAssignedLabel(fullRequest.getEmployee());
     setStatusLabel(fullRequest.getRequestStatus());
+    requestTypeIconImageView.setImage(fullRequest.setRequestTypeIconImageView());
     fullRequest.setRequestType();
   }
 
