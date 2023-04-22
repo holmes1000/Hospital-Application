@@ -5,24 +5,44 @@ import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
+import edu.wpi.teamb.DBAccess.Full.FullNode;
 import edu.wpi.teamb.DBAccess.ORMs.Move;
 import edu.wpi.teamb.controllers.NavDrawerController;
+import edu.wpi.teamb.navigation.Navigation;
+import edu.wpi.teamb.navigation.Screen;
+import edu.wpi.teamb.pathfinding.PathFinding;
 import io.github.palexdev.materialfx.controls.*;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
+import javafx.scene.control.Alert;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
 import net.kurobako.gesturefx.GesturePane;
 import org.controlsfx.control.PopOver;
+
+import static javafx.scene.paint.Color.*;
 
 public class MoveMapController {
     @FXML private JFXHamburger menuBurger;
@@ -40,16 +60,25 @@ public class MoveMapController {
 
     public GesturePane pane = new GesturePane();
     private ArrayList<Move> allMoves;
+
+    private HashMap<Integer,ArrayList<Move>> move_map = new HashMap<>();
+    private ArrayList<Move> upcoming_moves = new ArrayList<>();
+    private ArrayList<Move> moved_today = new ArrayList<>();
+    private HashMap<Integer, FullNode> fullNodesByID = new HashMap<>();
+    HashMap<String,FullNode> fullNodesByLongname = new HashMap<>();
+    private ArrayList<FullNode> fullNodes = new ArrayList();
     Group pathGroup;
+    Group moveInfo;
     Pane locationCanvas;
     @FXML
-    public void initialize() throws IOException {
+    public void initialize() throws IOException, SQLException {
         initNavBar();
         hoverHelp();
         initButtons();
-
+        PathFinding.ASTAR.force_init();
         this.stackPaneMapView = new StackPane(); // no longer @FXML
         this.pathGroup = new Group();
+        this.moveInfo = new Group();
         this.locationCanvas = new Pane();
         this.allMoves = Repository.getRepository().getAllMoves();
 
@@ -59,10 +88,17 @@ public class MoveMapController {
         this.stackPaneMapView.getChildren().add(this.locationCanvas);
 
         this.locationCanvas.getChildren().add(pathGroup);
+        this.locationCanvas.getChildren().add(moveInfo);
 
         pane.setScrollMode(GesturePane.ScrollMode.ZOOM);
         pane.setScrollBarPolicy(GesturePane.ScrollBarPolicy.NEVER);
         Platform.runLater(() -> this.pane.centreOn(new Point2D(2190, 910)));
+        getMoveMap();
+        handle_move();
+        this.fullNodesByID = PathFinding.ASTAR.getFullNodesByID();
+        this.fullNodes = PathFinding.ASTAR.getFullNodes();
+        getFilteredLongnames();
+        displayMoves(currentFloor);
         System.out.println("Move Map initialized");
     }
 
@@ -123,6 +159,7 @@ public class MoveMapController {
             pathGroup.getChildren().clear();
             imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(0));
             changeButtonColor(currentFloor);
+            displayMoves(currentFloor);
             locationCanvas.getChildren().add(pathGroup);
         });
         btnL2.setOnMouseClicked(event->{
@@ -132,6 +169,7 @@ public class MoveMapController {
             pathGroup.getChildren().clear();
             imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(1));
             changeButtonColor(currentFloor);
+            displayMoves(currentFloor);
             locationCanvas.getChildren().add(pathGroup);
         });
         btn1.setOnMouseClicked(event->{
@@ -140,6 +178,7 @@ public class MoveMapController {
             locationCanvas.getChildren().remove(pathGroup);
             pathGroup.getChildren().clear();
             imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(3));
+            displayMoves(currentFloor);
             locationCanvas.getChildren().add(pathGroup);
         });
         btn2.setOnMouseClicked(event->{
@@ -148,6 +187,7 @@ public class MoveMapController {
             locationCanvas.getChildren().remove(pathGroup);
             pathGroup.getChildren().clear();
             imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(4));
+            displayMoves(currentFloor);
             locationCanvas.getChildren().add(pathGroup);
         });
         btn3.setOnMouseClicked(event->{
@@ -156,6 +196,7 @@ public class MoveMapController {
             locationCanvas.getChildren().remove(pathGroup);
             pathGroup.getChildren().clear();
             imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(5));
+            displayMoves(currentFloor);
             locationCanvas.getChildren().add(pathGroup);
         });
     }
@@ -204,4 +245,170 @@ public class MoveMapController {
                     }
                 });
     }
+
+    public void getMoveMap(){
+        HashMap<Integer,ArrayList<Move>> move_map = new HashMap<>();
+        ArrayList<Move> moves = Repository.getRepository().getAllMoves();
+        ArrayList<Move> currentMove = new ArrayList<>();
+        for (Move move : moves) {
+            if (move_map.containsKey(move.getNodeID())) {currentMove = move_map.get(move.getNodeID());}
+            else {currentMove = new ArrayList<>();}
+            currentMove.add(move);
+            move_map.put(move.getNodeID(),currentMove);
+        }
+        this.move_map = move_map;
+
+    }
+
+    public void handle_move() {
+        HashMap<Integer, Move> nodes_to_update = new HashMap<>();
+        ArrayList<Move> upcoming_moves = new ArrayList<>();
+        ArrayList<Move> moved_today = new ArrayList<>();
+//        HashMap<Integer, ArrayList<Move>> upcoming_moves_map = new HashMap<>();
+        LocalDate current_date = new Date(System.currentTimeMillis()-1000*60*60*24).toLocalDate();
+        LocalDate tempDate;
+        for (Integer id : move_map.keySet()) {
+            if (move_map.get(id).size() >= 1) {
+                tempDate = move_map.get(id).get(0).getDate().toLocalDate().minusYears(1);
+                for (Move move : move_map.get(id)) {
+                    LocalDate move_date = move.getDate().toLocalDate();
+
+                    if ((move_date.isAfter(tempDate)) && move_date.isBefore(current_date)) {
+                        tempDate = move_date;
+                        nodes_to_update.put(move.getNodeID(), move);
+                    } else if (move_date.equals(current_date)) {
+                        tempDate = move_date;
+                        nodes_to_update.put(move.getNodeID(), move);
+                    }
+                    if (move_date.isAfter(current_date)) {
+                        upcoming_moves.add(move);
+                    }
+                    else if (move_date.isEqual(current_date)) {moved_today.add(move);}
+                }
+            }
+        }
+        update_nodes_from_moves(nodes_to_update);
+        this.upcoming_moves = upcoming_moves;
+        this.moved_today = moved_today;
+    }
+
+    public void update_nodes_from_moves(HashMap<Integer,Move> nodes_to_update){
+        fullNodes = new ArrayList<>();
+        for (Integer id : fullNodesByID.keySet()){
+            if (nodes_to_update.containsKey(id)){
+                FullNode newNode = fullNodesByID.get(id);
+                newNode.setLongName(nodes_to_update.get(id).getLongName());
+//                newNode.setShortName(PathFinding.ASTAR.getFullNodes().get(id).getShortName());
+                fullNodes.add(newNode);
+            }
+            else {
+                fullNodes.add(fullNodesByID.get(id));
+            }
+        }
+        getFilteredLongnames();
+    }
+
+    public ArrayList<String> getFilteredLongnames(){
+        ArrayList<String> filtered_names = new ArrayList<>();
+        for (FullNode node : fullNodes){
+            this.fullNodesByID.put(node.getNodeID(),node);
+            this.fullNodesByLongname.put(node.getLongName(),node);
+
+            if (!node.getNodeType().equals("HALL")) {filtered_names.add(node.getLongName());}
+        }
+        Collections.sort(filtered_names);
+//        this.filtered_names = filtered_names;
+        return filtered_names;
+    }
+
+    public void displayMoves(String currentFloor){
+        moveInfo.getChildren().clear();
+        for (Move move : upcoming_moves) {
+            if (fullNodesByID.get(move.getNodeID()).getNodeID() != fullNodesByLongname.get(move.getLongName()).getNodeID()) {
+                int originalX = fullNodesByLongname.get(move.getLongName()).getxCoord();
+                int originalY = fullNodesByLongname.get(move.getLongName()).getyCoord();
+                System.out.println("old "+ fullNodesByLongname.get(move.getLongName()).getNodeID());
+                int newX = fullNodesByID.get(move.getNodeID()).getxCoord();
+                int newY = fullNodesByID.get(move.getNodeID()).getyCoord();
+                System.out.println("new "+ fullNodesByID.get(move.getNodeID()).getNodeID());
+                Line line = new Line(originalX, originalY, newX, newY);
+                line.setStrokeWidth(4);
+                animateLine(line);
+                Circle circle = new Circle(originalX, originalY, 5, RED);
+                pathGroup.getChildren().add(circle);
+                circle = new Circle(newX, newY, 5, PURPLE);
+                pathGroup.getChildren().add(circle);
+                pathGroup.getChildren().add(line);
+                if (moveInfo.contains(new Point2D(originalX,originalY))) {originalY -= 15;}
+                display_move_info(move,originalX,originalY);
+            }
+//            else if (!fullNodesByID.get(move.getNodeID()).getFloor().equals(fullNodesByLongname.get(move.getLongName()).getFloor())){
+//                System.out.println("Floor changed from " + fullNodesByID.get(move.getNodeID()).getFloor() + " to " + fullNodesByLongname.get(move.getLongName()).getFloor());
+//            }
+
+        }
+        pathGroup.toFront();
+        moveInfo.toFront();
+    }
+
+    private void animateLine(Line line)
+    {
+        // https://stackoverflow.com/questions/36727777/how-to-animate-dashed-line-javafx
+        line.getStrokeDashArray().setAll(25d, 15d, 10d, 20d);
+        final double maxOffset =
+                line.getStrokeDashArray().stream()
+                        .reduce(
+                                0d,
+                                (a, b) -> a - b
+                        );
+
+        Timeline timeline = new Timeline(
+                new KeyFrame(
+                        Duration.ZERO,
+                        new KeyValue(
+                                line.strokeDashOffsetProperty(),
+                                0,
+                                Interpolator.LINEAR
+                        )
+                ),
+                new KeyFrame(
+                        Duration.seconds(2),
+                        new KeyValue(
+                                line.strokeDashOffsetProperty(),
+                                maxOffset,
+                                Interpolator.LINEAR
+                        )
+                )
+        );
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+    }
+
+    public void display_move_info(Move move, Integer x, Integer y){
+        Text text = new Text();
+        text.setText(move.getLongName() + " will be moving to node " + move.getNodeID() + " on " + move.getDate());
+        text.setX(x - 200);
+        text.setY(y);
+        moveInfo.getChildren().add(text);
+    }
+
+    public void moveAlert(ArrayList<String> input) {
+        // Create an alert
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Upcoming Moves");
+        alert.setHeaderText(null);
+        String alert_message = "";
+        for (String string : input) {
+            alert_message += string + "\n";
+        }
+        alert.setContentText(alert_message);
+        alert.showAndWait();
+        Navigation.navigate(Screen.CREATE_NEW_REQUEST);
+    }
+
+
+    public void display_all_moves() {
+
+    }
+
 }
