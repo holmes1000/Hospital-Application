@@ -90,7 +90,8 @@ public class SubmittedRequestsController {
 //                    FullFurnitureRequest fullFurnitureRequest = allRequestsE.getFurnitureRequest(listOfRequests.get(i).getId());
 //                    break;
                 default:
-                    break;
+                    //continue statement to skip any unrecognized types of request to avoid occurrence of empty cards
+                    continue;
             }
 
 
