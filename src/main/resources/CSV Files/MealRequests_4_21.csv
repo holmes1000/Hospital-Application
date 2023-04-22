@@ -1,0 +1,11 @@
+id,orderFrom,food,drink,snack
+176,Shapiro Center,null,Coca-Cola,null
+178,Connors Center,Pasta,Ginger-Ale,Chips
+186,Shapiro Center,null,null,Apple
+222,Shapiro Center,Pasta,Coca-Cola,Apple
+224,Connors Center,Pasta,Coca-Cola,Apple
+231,Connors Center,Pizza,Coca-Cola,Apple
+237,Connors Center,Pasta,Ginger-Ale,Chips
+239,Connors Center,Soup,Water,Apple
+240,Shapiro Center,Pizza,Coca-Cola,Apple
+241,Connors Center,Soup,Ginger-Ale,Apple

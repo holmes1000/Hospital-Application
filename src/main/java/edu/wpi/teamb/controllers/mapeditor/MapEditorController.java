@@ -5,7 +5,7 @@ import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
-import edu.wpi.teamb.DBAccess.DBio.DBoutput;
+import edu.wpi.teamb.DBAccess.DBoutput;
 import edu.wpi.teamb.DBAccess.Full.FullNode;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
@@ -893,11 +893,7 @@ public class MapEditorController {
             DBoutput.exportEdgesToCSV(absolutePath, 2);
         }
         case "Location Names" -> {
-          try {
             DBoutput.exportLocationNamesToCSV(absolutePath, 2);
-          } catch (SQLException e) {
-            throw new RuntimeException(e);
-          }
         }
         default -> new ArrayList<>();
       };
