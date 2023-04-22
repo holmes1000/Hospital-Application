@@ -97,7 +97,7 @@ public class SubmittedRequestsController {
 //           add the request info card to the request container VBox
             allRequestsContainerVBox.getChildren().add(requestInfoCardRoot);
 //            add a margin to the children of allRequestsContainerVBox
-            VBox.setMargin(requestInfoCardRoot, new Insets(10, 0, 10, 0));
+            VBox.setMargin(requestInfoCardRoot, new Insets( 0, 0, 10, 0));
         }
     }
 

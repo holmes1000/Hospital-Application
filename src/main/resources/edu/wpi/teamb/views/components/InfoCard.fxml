@@ -2,16 +2,18 @@
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="requestInfoAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="201.0" prefWidth="970.0" style="-fx-background-color: #465777;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.components.InfoCardController">
    <children>
-      <ImageView fx:id="requestTypeIconImageView" fitHeight="121.0" fitWidth="101.0" layoutX="14.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true" style="-fx-border-style: solid; -fx-background-color: #f1f1f1;">
+      <ImageView fx:id="requestTypeIconImageView" fitHeight="121.0" fitWidth="101.0" layoutX="14.0" layoutY="64.0" pickOnBounds="true" preserveRatio="true" style="-fx-border-style: solid; -fx-background-color: #f1f1f1;">
          <image>
             <Image url="@../../img/breakfast.png" />
          </image>
@@ -19,22 +21,7 @@
             <ColorAdjust brightness="1.0" />
          </effect>
       </ImageView>
-      <Label layoutX="132.0" layoutY="16.0" text="Date Submitted: " textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Label>
-      <Label layoutX="132.0" layoutY="62.0" text="Location Name: " textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Label>
-      <Label layoutX="655.0" layoutY="16.0" text="Status:" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Label>
-      <VBox fx:id="buttonContainerVBox" layoutX="836.0" layoutY="39.0">
+      <VBox fx:id="buttonContainerVBox" layoutX="879.0" layoutY="39.0" prefHeight="151.0" prefWidth="77.0">
          <children>
             <MFXButton fx:id="editButton" prefHeight="50.0" prefWidth="118.0" style="-fx-background-color: #1C4EFE; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Edit" textFill="WHITE">
                <font>
@@ -46,38 +33,52 @@
                   <Font name="System Bold" size="12.0" />
                </font>
             </MFXButton>
-            <MFXButton fx:id="submitButton" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #42f55a; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Submit" textFill="WHITE" visible="false">
+            <MFXButton fx:id="submitButton" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #42f55a; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Submit" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
             </MFXButton>
          </children>
       </VBox>
-      <Label fx:id="dateSubmittedLabel" layoutX="263.0" layoutY="19.0" text="MM/DD/YYYY" textFill="WHITE">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
       <VBox fx:id="subComponentContainer" layoutX="132.0" layoutY="94.0" prefHeight="101.0" prefWidth="700.0" />
-      <Label fx:id="employeeAssignedLabel" layoutX="532.0" layoutY="19.0" text="Placeholder" textFill="WHITE">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <Label fx:id="statusLabel" layoutX="709.0" layoutY="19.0" text="Placeholder" textFill="WHITE">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <Label fx:id="locationNameLabel" layoutX="255.0" layoutY="66.0" text="Placeholder" textFill="WHITE">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="377.0" layoutY="16.0" text="Employee Assigned:" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Label>
+      <HBox layoutY="19.0" prefHeight="20.0" prefWidth="970.0">
+         <children>
+            <Label fx:id="requestIdLabel" alignment="CENTER" prefWidth="85.0" text="Request ID" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
+            <Label fx:id="dateSubmittedLabel" alignment="CENTER" prefWidth="142.0" text="MM/DD/YYYY" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
+            <Label fx:id="timeSubmittedLabel" alignment="CENTER" prefWidth="138.0" text="Time Submitted" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
+            <Label fx:id="employeeAssignedLabel" alignment="CENTER" prefWidth="166.0" text="Employee" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
+            <Label fx:id="statusLabel" alignment="CENTER" prefWidth="113.0" text="Status" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Separator orientation="VERTICAL" prefHeight="200.0" visible="false" />
+            <Label fx:id="locationNameLabel" alignment="CENTER" prefWidth="197.0" text="Location Name" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
    </children>
 </AnchorPane>
