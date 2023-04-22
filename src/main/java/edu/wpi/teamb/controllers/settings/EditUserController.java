@@ -37,6 +37,7 @@ public class EditUserController {
         tfUsername.setEditable(false); // cannot change username
         tfPassword.setText(currentUser.getPassword());
         tfEmail.setText(currentUser.getEmail());
+        cbPermissionLevel.setValue(permissionLevelToString(currentUser.getPermissionLevel()));
 
         // Init combo box
         ObservableList<String> permissionLevels = FXCollections.observableArrayList();

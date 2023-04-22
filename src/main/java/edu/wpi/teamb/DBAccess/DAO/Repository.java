@@ -7,7 +7,6 @@ import edu.wpi.teamb.DBAccess.ORMs.*;
 import java.sql.*;
 import java.util.ArrayList;
 
-import java.time.LocalDate;
 import java.util.Map;
 
 import static java.lang.Integer.parseInt;
@@ -626,7 +625,7 @@ public class Repository {
 
     public void deleteUser(User u) {
         userDAO.delete(u);
-        requestDAO.updateRequestUser(u.getUsername());
+        requestDAO.updateRequestDeleteUser(u.getUsername());
     }
 
     public User getUser(String id) {
@@ -769,5 +768,11 @@ public class Repository {
         return requestDAO.getAllHelper1();
     }
 
+    public ArrayList<IFull> getAllFullRequestsByUser(String username) {
+        return requestDAO.getFullRequestsbyEmployee(username);
+    }
 
+    public ArrayList<IFull> getAllFullRequestsByStatus(String status) {
+        return requestDAO.getFullRequestsbyStatus(status);
+    }
 }

@@ -118,9 +118,9 @@ public class EditUsersController {
     private void handleAddUser() {
         User newUser = new User();
         newUser.setName(textName.getText());
-        newUser.setUsername(textUsername.getText());
+        newUser.setUsername(textUsername.getText().toLowerCase());
         newUser.setPassword(textPassword.getText());
-        newUser.setEmail(textEmail.getText());
+        newUser.setEmail(textEmail.getText().toLowerCase());
         newUser.setPermissionLevel(permissionLevelToInt(cbPermissionLevel.getValue()));
         if (usernameDoesNotExist(newUser)) {
             Repository.getRepository().addUser(newUser);
