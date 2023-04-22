@@ -9,8 +9,8 @@ import edu.wpi.teamb.DBAccess.DBoutput;
 import edu.wpi.teamb.DBAccess.Full.FullNode;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
-import edu.wpi.teamb.entities.ELogin;
 import edu.wpi.teamb.entities.EMapEditor;
+import edu.wpi.teamb.pathfinding.PathFinding;
 import io.github.palexdev.materialfx.controls.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -33,7 +33,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import javafx.util.Duration;
 import net.kurobako.gesturefx.GesturePane;
 import org.controlsfx.control.PopOver;
 
@@ -65,6 +64,7 @@ public class MapEditorController {
   @FXML private MFXButton exportBtn;
   @FXML private MFXToggleButton toggleNodes;
   @FXML private MFXToggleButton toggleLocationNames;
+  @FXML private MFXToggleButton toggleEdges;
   @FXML private FileChooser fileChooser;
   @FXML private MFXButton resetFromBackupBtn;
 
@@ -72,7 +72,7 @@ public class MapEditorController {
 
   public GesturePane pane = new GesturePane();
   Group nodeGroup;
-  Group lineGroup;
+  Group edgeGroup;
   Group nameGroup;
   Pane locationCanvas;
   Pane fullNodeCanvas;
@@ -144,6 +144,7 @@ public class MapEditorController {
     initializeFields();
     initButtons();
     initStateBtn();
+    PathFinding.ASTAR.init_pathfinder();
     // Initialize the edges, nodes, and names on the map
     nodeList = Repository.getRepository().getAllNodes();
     nameToolTip = new Tooltip();
@@ -155,7 +156,7 @@ public class MapEditorController {
 
     this.nodeGroup = new Group();
     this.nameGroup = new Group();
-    this.lineGroup = new Group();
+    this.edgeGroup = new Group();
 
     // Used for location names
     this.fullNodeCanvas = new Pane();
@@ -168,7 +169,8 @@ public class MapEditorController {
     this.stackPaneMapView.getChildren().add(this.locationCanvas);
 
     this.locationCanvas.getChildren().add(nodeGroup);
-    this.locationCanvas.getChildren().add(lineGroup);
+    this.locationCanvas.getChildren().add(edgeGroup);
+    this.locationCanvas.getChildren().add(nameGroup);
 
     //Fitting the scrollpane
     pane.setScrollMode(GesturePane.ScrollMode.ZOOM);
@@ -191,7 +193,7 @@ public class MapEditorController {
 
 
     btnSubmitNodeDetails.setOnMouseClicked(event -> handleSubmitNodeDetails());
-    drawNodes( currentFloor);
+    draw( currentFloor);
 
     changeButtonColor(currentFloor);
     Platform.runLater(() -> this.pane.centreOn(new Point2D(2190, 910)));
@@ -241,7 +243,7 @@ public class MapEditorController {
    * @param floor
    * @throws SQLException
    */
-  public void drawNodes(String floor) throws SQLException {
+  public void draw(String floor) throws SQLException {
     // For each node, create a circle
     for (Node n : nodeList) {
       if (n.getFloor().equals(floor)) {
@@ -254,39 +256,15 @@ public class MapEditorController {
   //Draws edges for a single node, taking in a node
   //From node it grabs the neighbors from the repository and then creates the 1-3 lines required
   public void drawEdge(Node n){
-      lineGroup.getChildren().clear();
+//      edgeGroup.getChildren().clear();
 
       //Gets the full node of the current node, as well as the neighbors of this node
-      ArrayList<Integer> neighbors = Repository.getRepository().getNeighbors(n.getNodeID());
-      FullNode nNode = Repository.getRepository().getFullNode(n.getNodeID());
+      ArrayList<Integer> neighbors = PathFinding.ASTAR.get_node_map().get(n.getNodeID()).getNeighborIds();
 
       for (int i = 0; i < neighbors.size(); i++) {
 
         //Get the full node of the neighbor, check to see if they're both elevators or stairs
-        Node neighborNode = Repository.getRepository().getNode(neighbors.get(i));
-        FullNode neighborFullNode = Repository.getRepository().getFullNode(neighborNode.getNodeID());
-        String floor = neighborFullNode.getFloor();
-        //If not stair or elevator reset this to null
-        if(!nNode.getNodeType().equals("ELEV") && !nNode.getNodeType().equals("STAI")){
-          nodeL1 = null;
-          nodeL2 = null;
-          node1 = null;
-          node2 = null;
-          node3 = null;
-        } else if((neighborFullNode.getNodeType().equals("ELEV") && nNode.getNodeType().equals("ELEV")) || (neighborFullNode.getNodeType().equals("STAI") && nNode.getNodeType().equals("STAI"))){
-          //If the neighborNode is of the same type as the current node
-           if(floor.equals("L1")){
-             nodeL1 = neighborNode;
-           } else if (floor.equals("L2")) {
-             nodeL2 = neighborNode;
-           } else if (floor.equals("1")) {
-             node1 = neighborNode;
-           } else if (floor.equals("2")){
-             node2 = neighborNode;
-           } else {
-             node3 = neighborNode;
-           }
-        }
+        Node neighborNode = PathFinding.ASTAR.get_node_map().get(neighbors.get(i));
 
         //Draws the lines of the neighbors on the current floor
         //This gets redone every floor which is slightly unoptimized but this should never span enough
@@ -294,29 +272,49 @@ public class MapEditorController {
         if (neighborNode.getFloor().equals(n.getFloor())) {
           Line line = new Line(n.getxCoord(), n.getyCoord(), neighborNode.getxCoord(), neighborNode.getyCoord());
           line.setStrokeWidth(4);
-          lineGroup.getChildren().add(line);
-          lineGroup.toFront();
-          nodeGroup.toFront();
+          edgeGroup.getChildren().add(line);
+
       }
     }
+    edgeGroup.toFront();
+    nodeGroup.toFront();
   }
-
 
   //Toggles the ability to see location names
   //Takes in current ability to see them in relation to the bar
   //When on it adds the ability to generate them in the node drawing method
   //When off it replaces text with "bruh" and removed ability to see them by adding delay.
-  public void toggleLocationNames(){
-    toggleLocationNames.setOnMouseClicked(event -> {
+  public void handleToggleLocationNames(){
       if(toggleLocationNames.isSelected()){
+        nameGroup.setVisible(true);
         System.out.println("Location names on");
       } else {
+        nameGroup.setVisible(false);
         System.out.println("Location names off");
         toggleLocationNames.setSelected(false);
-        nameToolTip.setText("bruh");
-        nameToolTip.setShowDelay(Duration.minutes(1));
       }
-    });
+  }
+
+  public void handleToggleNodes(){
+    if(toggleNodes.isSelected()){
+      nodeGroup.setVisible(true);
+      System.out.println("Nodes on");
+    } else {
+      nodeGroup.setVisible(false);
+      System.out.println("Nodes off");
+      toggleNodes.setSelected(false);
+    }
+  }
+
+  public void handleToggleEdges(){
+    if(toggleEdges.isSelected()){
+      edgeGroup.setVisible(true);
+      System.out.println("Edges on");
+    } else {
+      edgeGroup.setVisible(false);
+      System.out.println("Edges off");
+      toggleEdges.setSelected(false);
+    }
   }
 
   /**
@@ -331,75 +329,22 @@ public class MapEditorController {
     c.setOnMouseClicked(event -> {
       this.handleNodeClick(event, n);
     });
+    drawEdge(n);
     // Set the circle's click handler
     //Sets up each individual hover for node name
     //Only toggles whn listNames is active
-    c.setOnMouseEntered(event -> {
-      if(abilityToSeeNames) {
-        nameToolTip.setText(Repository.getRepository().getFullNode(n.getNodeID()).getShortName());
-        System.out.println(Repository.getRepository().getFullNode(n.getNodeID()).getShortName());
-        System.out.println(n.getNodeID());
-        nameToolTip.setShowDelay(Duration.millis(1));
-        nameToolTip.hideDelayProperty().set(Duration.seconds(.5));
-        Tooltip.install(c, nameToolTip);
-      }
-    });
+
+//    nameToolTip.setText(Repository.getRepository().getFullNode(n.getNodeID()).getShortName());
+//    System.out.println(Repository.getRepository().getFullNode(n.getNodeID()).getShortName());
+//    System.out.println(n.getNodeID());
+//    nameToolTip.setShowDelay(Duration.millis(1));
+//    nameToolTip.hideDelayProperty().set(Duration.seconds(.5));
+//    Tooltip.install(c, nameToolTip);
 
     // Add the circle to the nodeGroup
     floorList.add(n);
     nodeGroup.getChildren().add(c);
     nodeGroup.toFront();
-  }
-
-
-
-  /**
-   * Draws a label with the respective nodes short name above the node
-   * @param n
-   */
-
-  /**
-   * Changes the color of the buttons to indicate which floor is currently being viewed
-   * @param currentFloor
-   */
-  private void changeButtonColor(String currentFloor) {
-    switch (currentFloor) {
-      case "L1" -> {
-        btnL1.setStyle("-fx-background-color: #f6bd38");
-        btnL2.setStyle("-fx-background-color: #1C4EFE");
-        btn1.setStyle("-fx-background-color: #1C4EFE");
-        btn2.setStyle("-fx-background-color: #1C4EFE");
-        btn3.setStyle("-fx-background-color: #1C4EFE");
-      }
-      case "L2" -> {
-        btnL1.setStyle("-fx-background-color: #1C4EFE");
-        btnL2.setStyle("-fx-background-color: #f6bd38");
-        btn1.setStyle("-fx-background-color: #1C4EFE");
-        btn2.setStyle("-fx-background-color: #1C4EFE");
-        btn3.setStyle("-fx-background-color: #1C4EFE");
-      }
-      case "1" -> {
-        btnL1.setStyle("-fx-background-color: #1C4EFE");
-        btnL2.setStyle("-fx-background-color: #1C4EFE");
-        btn1.setStyle("-fx-background-color: #f6bd38");
-        btn2.setStyle("-fx-background-color: #1C4EFE");
-        btn3.setStyle("-fx-background-color: #1C4EFE");
-      }
-      case "2" -> {
-        btnL1.setStyle("-fx-background-color: #1C4EFE");
-        btnL2.setStyle("-fx-background-color: #1C4EFE");
-        btn1.setStyle("-fx-background-color: #1C4EFE");
-        btn2.setStyle("-fx-background-color: #f6bd38");
-        btn3.setStyle("-fx-background-color: #1C4EFE");
-      }
-      case "3" -> {
-        btnL1.setStyle("-fx-background-color: #1C4EFE");
-        btnL2.setStyle("-fx-background-color: #1C4EFE");
-        btn1.setStyle("-fx-background-color: #1C4EFE");
-        btn2.setStyle("-fx-background-color: #1C4EFE");
-        btn3.setStyle("-fx-background-color: #f6bd38");
-      }
-    }
   }
 
 
@@ -438,9 +383,10 @@ public class MapEditorController {
   private void refreshMap() {
     // Clear the map
     nodeGroup.getChildren().clear();
+    edgeGroup.getChildren().clear();
     // Redraw the map
     try {
-      drawNodes(currentFloor);
+      draw(currentFloor);
       System.out.println("Refreshing map for floor " + currentFloor + "...");
     } catch (SQLException e) {
       e.printStackTrace();
@@ -470,21 +416,15 @@ public class MapEditorController {
     System.out.println("Context menu created for node: " + n.getNodeID());
 
     locationItem = new MenuItem("Location name: " + Repository.getRepository().getFullNode(n.getNodeID()).getShortName());
-    editLocationItem = new MenuItem("Edit Location Name");
-    viewConnectedEdges = new MenuItem("View connected edges");
     deleteItem = new MenuItem("Delete");
     editItem = new MenuItem("Edit Node");
-    contextMenu.getItems().addAll(locationItem, editLocationItem, viewConnectedEdges, deleteItem, editItem);
+    contextMenu.getItems().addAll(locationItem, deleteItem, editItem);
     this.editLocationItem.setOnAction(e-> {
       try {
         handleEditName(e, n);
       } catch (SQLException ex){
         throw new RuntimeException(ex);
       }
-    });
-    //Calls drawEdge for a node when option is selected
-    this.viewConnectedEdges.setOnAction(e -> {
-      drawEdge(n);
     });
     this.deleteItem.setOnAction(e-> {
       try {
@@ -642,6 +582,14 @@ public class MapEditorController {
     exportBtn.setOnMouseClicked(event->{handleExportBtn();});
     resetFromBackupBtn.setOnMouseClicked(event->{handleResetFromBackupBtn();});
 
+    // initialize the toggles
+    toggleEdges.setSelected(true);
+    toggleNodes.setSelected(true);
+    toggleLocationNames.setSelected(true);
+    toggleLocationNames.setOnMouseClicked(event->{handleToggleLocationNames();});
+    toggleEdges.setOnMouseClicked(event->{handleToggleEdges();});
+    toggleNodes.setOnMouseClicked(event->{handleToggleNodes();});
+
   }
 
   public void clickFloorBtn(String floor) {
@@ -651,12 +599,9 @@ public class MapEditorController {
       changeButtonColor(currentFloor);
       floorList = Repository.getRepository().getNodesByFloor("L1");
       try {
-        lineGroup.getChildren().clear();
+        edgeGroup.getChildren().clear();
         nodeGroup.getChildren().clear();
-        drawNodes( "L1");
-        if(!nodeL1.equals(null)){
-          drawEdge(nodeL1);
-        }
+        draw( "L1");
       } catch (SQLException e) {
         throw new RuntimeException(e);
       }
@@ -668,12 +613,9 @@ public class MapEditorController {
       floorList = Repository.getRepository().getNodesByFloor("L2");
 
       try {
-        lineGroup.getChildren().clear();
+        edgeGroup.getChildren().clear();
         nodeGroup.getChildren().clear();
-        drawNodes( "L2");
-        if(!nodeL2.equals(null)){
-          drawEdge(nodeL2);
-        }
+        draw( "L2");
       } catch (SQLException e) {
         throw new RuntimeException(e);
       }
@@ -684,12 +626,9 @@ public class MapEditorController {
       changeButtonColor(currentFloor);
       floorList = Repository.getRepository().getNodesByFloor("1");
       try {
-        lineGroup.getChildren().clear();
+        edgeGroup.getChildren().clear();
         nodeGroup.getChildren().clear();
-        drawNodes( "1");
-        if(!node1.equals(null)){
-          drawEdge(node1);
-        }
+        draw( "1");
       } catch (SQLException e) {
         throw new RuntimeException(e);
       }
@@ -700,12 +639,9 @@ public class MapEditorController {
       changeButtonColor(currentFloor);
       floorList = Repository.getRepository().getNodesByFloor("2");
       try {
-        lineGroup.getChildren().clear();
+        edgeGroup.getChildren().clear();
         nodeGroup.getChildren().clear();
-        drawNodes( "2");
-        if(!node2.equals(null)){
-          drawEdge(node2);
-        }
+        draw( "2");
       } catch (SQLException e) {
         throw new RuntimeException(e);
       }
@@ -716,12 +652,9 @@ public class MapEditorController {
       changeButtonColor(currentFloor);
       floorList = Repository.getRepository().getNodesByFloor("3");
       try {
-        lineGroup.getChildren().clear();
+        edgeGroup.getChildren().clear();
         nodeGroup.getChildren().clear();
-        drawNodes( "3");
-        if(!node3.equals(null)){
-          drawEdge(node3);
-        }
+        draw( "3");
       } catch (SQLException e) {
         throw new RuntimeException(e);
       }
@@ -732,18 +665,22 @@ public class MapEditorController {
     btnView.setOnMouseClicked(event->{
       mapEditorContext.setState(viewState);
       mapEditorContext.getState().printStatus();
+      changeStateButtonColor("View");
     } );
     btnEdit.setOnMouseClicked(event->{
       mapEditorContext.setState(editState);
       mapEditorContext.getState().printStatus();
+      changeStateButtonColor("Edit");
     } );
     btnAdd.setOnMouseClicked(event->{
       mapEditorContext.setState(addState);
       mapEditorContext.getState().printStatus();
+      changeStateButtonColor("Add");
     } );
     btnDelete.setOnMouseClicked(event->{
       mapEditorContext.setState(deleteState);
       mapEditorContext.getState().printStatus();
+      changeStateButtonColor("Delete");
     } );
   }
 
@@ -791,6 +728,79 @@ public class MapEditorController {
     System.out.println("here"); // 1 means success, 0 means failure
   }
 
+  /**
+   * Changes the color of the buttons to indicate which floor is currently being viewed
+   * @param currentFloor
+   */
+  private void changeButtonColor(String currentFloor) {
+    switch (currentFloor) {
+      case "L1" -> {
+        btnL1.setStyle("-fx-background-color: #f6bd38");
+        btnL2.setStyle("-fx-background-color: #1C4EFE");
+        btn1.setStyle("-fx-background-color: #1C4EFE");
+        btn2.setStyle("-fx-background-color: #1C4EFE");
+        btn3.setStyle("-fx-background-color: #1C4EFE");
+      }
+      case "L2" -> {
+        btnL1.setStyle("-fx-background-color: #1C4EFE");
+        btnL2.setStyle("-fx-background-color: #f6bd38");
+        btn1.setStyle("-fx-background-color: #1C4EFE");
+        btn2.setStyle("-fx-background-color: #1C4EFE");
+        btn3.setStyle("-fx-background-color: #1C4EFE");
+      }
+      case "1" -> {
+        btnL1.setStyle("-fx-background-color: #1C4EFE");
+        btnL2.setStyle("-fx-background-color: #1C4EFE");
+        btn1.setStyle("-fx-background-color: #f6bd38");
+        btn2.setStyle("-fx-background-color: #1C4EFE");
+        btn3.setStyle("-fx-background-color: #1C4EFE");
+      }
+      case "2" -> {
+        btnL1.setStyle("-fx-background-color: #1C4EFE");
+        btnL2.setStyle("-fx-background-color: #1C4EFE");
+        btn1.setStyle("-fx-background-color: #1C4EFE");
+        btn2.setStyle("-fx-background-color: #f6bd38");
+        btn3.setStyle("-fx-background-color: #1C4EFE");
+      }
+      case "3" -> {
+        btnL1.setStyle("-fx-background-color: #1C4EFE");
+        btnL2.setStyle("-fx-background-color: #1C4EFE");
+        btn1.setStyle("-fx-background-color: #1C4EFE");
+        btn2.setStyle("-fx-background-color: #1C4EFE");
+        btn3.setStyle("-fx-background-color: #f6bd38");
+      }
+    }
+  }
+
+  private void changeStateButtonColor(String state) {
+    switch (state) {
+      case "View"-> {
+        btnView.setStyle("-fx-background-color: #f6bd38");
+        btnEdit.setStyle("-fx-background-color: #1C4EFE");
+        btnDelete.setStyle("-fx-background-color: #1C4EFE");
+        btnAdd.setStyle("-fx-background-color: #1C4EFE");
+      }
+      case "Add" -> {
+        btnAdd.setStyle("-fx-background-color: #f6bd38");
+        btnEdit.setStyle("-fx-background-color: #1C4EFE");
+        btnDelete.setStyle("-fx-background-color: #1C4EFE");
+        btnView.setStyle("-fx-background-color: #1C4EFE");
+      }
+      case "Edit" -> {
+        btnEdit.setStyle("-fx-background-color: #f6bd38");
+        btnAdd.setStyle("-fx-background-color: #1C4EFE");
+        btnDelete.setStyle("-fx-background-color: #1C4EFE");
+        btnView.setStyle("-fx-background-color: #1C4EFE");
+      }
+      case "Delete" -> {
+        btnDelete.setStyle("-fx-background-color: #f6bd38");
+        btnEdit.setStyle("-fx-background-color: #1C4EFE");
+        btnAdd.setStyle("-fx-background-color: #1C4EFE");
+        btnView.setStyle("-fx-background-color: #1C4EFE");
+      }
+    }
+  }
+
 
   @FXML
   public void hoverHelp() {
@@ -813,8 +823,6 @@ public class MapEditorController {
 
   private void initializeFields() {
     ArrayList<String> tables = new ArrayList<String>();
-    toggleLocationNames();
-    toggleLocationNames();
     tables.add("Nodes");
     tables.add("Edges");
     tables.add("Moves");

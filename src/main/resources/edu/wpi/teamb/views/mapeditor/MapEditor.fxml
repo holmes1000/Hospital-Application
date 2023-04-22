@@ -120,8 +120,8 @@
                      </children>
                   </VBox>
                   <MFXToggleButton fx:id="toggleNodes" text="Show Nodes" />
-                  <MFXToggleButton fx:id="toggleLocationNames" onMouseClicked="#toggleLocationNames" text="Show Location Names" />
-                  <MFXToggleButton fx:id="toggleEdges" onMouseClicked="#toggleLocationNames" text="Show Edges" />
+                  <MFXToggleButton fx:id="toggleLocationNames" text="Show Location Names" />
+                  <MFXToggleButton fx:id="toggleEdges" text="Show Edges" />
                </children>
             </VBox>
             <VBox fx:id="vboxBtns1" alignment="CENTER" layoutX="69.0" layoutY="455.0" prefHeight="214.0" prefWidth="108.0" spacing="10.0">
