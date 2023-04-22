@@ -1,5 +1,6 @@
 package edu.wpi.teamb.pathfinding;
 
+import edu.wpi.teamb.DBAccess.Full.FullNode;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 
 import java.sql.SQLException;
@@ -13,5 +14,8 @@ public interface IPathFindingAlgorithm {
 
     public String[] getPathAsStrings(ArrayList<Integer> shortestPath);
     public void force_init() throws SQLException;
+    public ArrayList<FullNode> getFullNodes();
+
+    public HashMap<Integer, FullNode> getFullNodesByID();
 }
 

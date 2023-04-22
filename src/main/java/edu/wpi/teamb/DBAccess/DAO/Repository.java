@@ -1,9 +1,13 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
 import edu.wpi.teamb.DBAccess.*;
+import edu.wpi.teamb.DBAccess.DBinput;
 import edu.wpi.teamb.DBAccess.Full.*;
 import edu.wpi.teamb.DBAccess.ORMs.*;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -14,7 +18,7 @@ import static java.lang.Integer.parseInt;
 public class Repository {
     private Repository() {
         try {
-            dbConnection = DBConnection.getDBconnection();
+            dbConnection = DBconnection.getDBconnection();
             nodeDAO = new NodeDAOImpl();
             edgeDAO = new EdgeDAOImpl();
             locationNameDAO = new LocationNameDAOImpl();
@@ -52,7 +56,7 @@ public class Repository {
     private final MealRequestDAOImpl mealRequestDAO;
     private final FurnitureRequestDAOImpl furnitureRequestDAO;
     private final OfficeRequestDAOImpl officeRequestDAO;
-    private final DBConnection dbConnection;
+    private final DBconnection dbConnection;
 
     //TODO Node methods
 
@@ -533,11 +537,266 @@ public class Repository {
 
     //TODO DBinput methods
 
+    /**
+     * This method imports the Nodes table from a CSV file
+     *
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
+     */
+    public void importNodesFromCSV(String filename, int location) { DBinput.importNodesFromCSV(filename, location); }
 
+    /**
+     * This method imports the Edges table from a CSV file
+     *
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
+     */
+    public void importEdgesFromCSV(String filename, int location) { DBinput.importEdgesFromCSV(filename, location); }
+
+    /**
+     * This method imports the LocationNames table from a CSV file
+     *
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
+     */
+    public void importLocationNamesFromCSV(String filename, int location) { DBinput.importLocationNamesFromCSV(filename, location); }
+
+    /**
+     * This method imports the Moves table from a CSV file
+     *
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
+     */
+    public void importMovesFromCSV(String filename, int location) { DBinput.importMovesFromCSV(filename, location); }
+
+    /**
+     * This method imports the Users table from a CSV file
+     *
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
+     */
+    public void importUsersFromCSV(String filename, int location) { DBinput.importUsersFromCSV(filename, location); }
+
+    /**
+     * This method imports the Requests table from a CSV file
+     *
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
+     */
+    public void importRequestsFromCSV(String filename, int location) { DBinput.importRequestsFromCSV(filename, location); }
+
+    /**
+     * Imports the conference requests from a CSV file into the database
+     *
+     * @param filename The name of the CSV file to be imported as a String
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
+     */
+    public void importConferenceRequestsFromCSV(String filename, int location) { DBinput.importConferenceRequestsFromCSV(filename, location); }
+
+    /**
+     * Imports the flower requests from a CSV file into the database
+     *
+     * @param filename The name of the CSV file to be imported as a String
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
+     */
+    public void importFlowerRequestsFromCSV(String filename, int location) { DBinput.importFlowerRequestsFromCSV(filename, location); }
+
+    /**
+     * Imports the furniture requests from a CSV file into the database
+     *
+     * @param filename The name of the CSV file to be imported as a String
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
+     */
+    public void importFurnitureRequestsFromCSV(String filename, int location) { DBinput.importFurnitureRequestsFromCSV(filename, location); }
+
+    /**
+     * Imports the meal requests from a CSV file into the database
+     *
+     * @param filename The name of the CSV file to be imported as a String
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
+     */
+    public void importMealRequestsFromCSV(String filename, int location) { DBinput.importMealRequestsFromCSV(filename, location); }
+
+    /**
+     * Imports the office requests from a CSV file into the database
+     *
+     * @param filename The name of the CSV file to be imported as a String
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
+     */
+    public void importOfficeRequestsFromCSV(String filename, int location) { DBinput.importOfficeRequestsFromCSV(filename, location); }
 
     //TODO DBoutput methods
 
+    /**
+     * This method exports the Nodes table into a CSV file
+     *
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
+     */
+    public void exportNodesToCSV(String filename, int location) { DBoutput.exportNodesToCSV(filename, location); }
 
+    /**
+     * This method exports the Edges table into a CSV file
+     *
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
+     */
+    public void exportEdgesToCSV(String filename, int location) { DBoutput.exportEdgesToCSV(filename, location); }
+
+    /**
+     * This method exports the LocationNames table into a CSV file
+     *
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
+     */
+    public void exportLocationNamesToCSV(String filename, int location) { DBoutput.exportLocationNamesToCSV(filename, location); }
+
+    /**
+     * This method exports the Moves table into a CSV file
+     *
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
+     */
+    public void exportMovesToCSV(String filename, int location) { DBoutput.exportMovesToCSV(filename, location); }
+
+    /**
+     * This method exports the Users table into a CSV file
+     *
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
+     */
+    public void exportUsersToCSV(String filename, int location) { DBoutput.exportUsersToCSV(filename, location); }
+
+    /**
+     * This method exports the Requests table into a CSV file
+     *
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
+     */
+    public void exportRequestsToCSV(String filename, int location) { DBoutput.exportRequestsToCSV(filename, location); }
+
+    /**
+     * This method exports the ConferenceRequests table into a CSV file
+     *
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
+     */
+    public void exportConferenceRequestsToCSV(String filename, int location) { DBoutput.exportConferenceRequestsToCSV(filename, location); }
+
+    /**
+     * This method exports the FlowerRequests table into a CSV file
+     *
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
+     */
+    public void exportFlowerRequestsToCSV(String filename, int location) { DBoutput.exportFlowerRequestsToCSV(filename, location); }
+
+    /**
+     * This method exports the FurnitureRequests table into a CSV file
+     *
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
+     */
+    public void exportFurnitureRequestsToCSV(String filename, int location) { DBoutput.exportFurnitureRequestsToCSV(filename, location); }
+
+    /**
+     * This method exports the MealRequests table into a CSV file
+     *
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
+     */
+    public void exportMealRequestsToCSV(String filename, int location) { DBoutput.exportMealRequestsToCSV(filename, location); }
+
+    /**
+     * This method exports the OfficeRequests table into a CSV file
+     *
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
+     */
+    public void exportOfficeRequestsToCSV(String filename, int location) { DBoutput.exportOfficeRequestsToCSV(filename, location); }
 
     //TODO Unorganized stuff below
 

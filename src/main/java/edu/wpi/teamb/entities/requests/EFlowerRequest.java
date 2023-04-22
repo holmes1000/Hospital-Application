@@ -79,10 +79,7 @@ public class EFlowerRequest extends RequestImpl {
     }
 
     public boolean checkSpecialRequestFields() {
-        if (this.color == null || this.flowerType == null || this.size == null || this.message == null) {
-            return false;
-        }
-        return true;
+        return this.color != null && this.flowerType != null && this.size != null && this.message != null;
     }
 
 }

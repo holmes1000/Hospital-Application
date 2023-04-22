@@ -107,9 +107,6 @@ public class EMealRequest extends RequestImpl {
   }
 
   public boolean checkSpecialRequestFields() {
-    if (this.orderFrom == null || this.food == null || this.drink == null || this.snack == null) {
-      return false;
-    }
-    return true;
+    return this.orderFrom != null && this.food != null && this.drink != null && this.snack != null;
   }
 }

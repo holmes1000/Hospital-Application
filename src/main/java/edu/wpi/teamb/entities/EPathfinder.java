@@ -59,6 +59,8 @@ public class EPathfinder {
         else if (algorithm.equals("AStar")) {path = PathFinding.ASTAR.findPath(start,end);}
         else if (algorithm.equals("Depth First Search")) {path = PathFinding.DEPTH_FIRST.findPath(start,end);}
         else if (algorithm.equals("Breadth First Search")) {path = PathFinding.BREADTH_FIRST.findPath(start,end);}
+        else if (algorithm.equals("Dijkstra Search")) {path = PathFinding.DIJKSTRA.findPath(start,end);}
+        else if (algorithm.equals("BStar")) {path = PathFinding.BSTAR.findPath(start,end);}
 
 //        BufferedImage image = null;
 //        try {

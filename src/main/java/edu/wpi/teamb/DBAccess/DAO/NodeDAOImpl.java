@@ -6,7 +6,7 @@ import edu.wpi.teamb.DBAccess.ORMs.Edge;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 import edu.wpi.teamb.DBAccess.ORMs.Move;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
-import edu.wpi.teamb.DBAccess.DBConnection;
+import edu.wpi.teamb.DBAccess.DBconnection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -303,7 +303,7 @@ public class NodeDAOImpl implements IDAO {
 
         try {
 
-            dropStatement = DBConnection.getDBconnection().getConnection().createStatement();
+            dropStatement = DBconnection.getDBconnection().getConnection().createStatement();
             dropStatement.executeUpdate(dropMove);
             dropStatement.executeUpdate(dropLocationNames);
             dropStatement.executeUpdate(dropNodes);
@@ -332,7 +332,7 @@ public class NodeDAOImpl implements IDAO {
 
         try {
 
-            recreateStatement = DBConnection.getDBconnection().getConnection().createStatement();
+            recreateStatement = DBconnection.getDBconnection().getConnection().createStatement();
             recreateStatement.executeUpdate(recreateAll);
             recreateStatement.executeUpdate(recreateNodes);
             recreateStatement.executeUpdate(recreateLocationNames);
@@ -421,7 +421,7 @@ public class NodeDAOImpl implements IDAO {
 
         try {
             String query = "SELECT * FROM Nodes";
-            Statement stmt = DBConnection.getDBconnection().getConnection().createStatement();
+            Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
                 Node n = new Node(rs.getInt("nodeID"), rs.getInt("xCoord"), rs.getInt("yCoord"), rs.getString("floor"), rs.getString("building"));
@@ -547,7 +547,7 @@ public class NodeDAOImpl implements IDAO {
      */
     public ResultSet joinFullNodes() {
         try{
-            Statement stmt = DBConnection.getDBconnection().getConnection().createStatement();
+            Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
             String query = "SELECT * FROM nodes, moves, locationnames WHERE nodes.nodeid = moves.nodeid AND moves.longname = locationnames.longname";
             ResultSet rs = stmt.executeQuery(query);
             return rs;
@@ -565,7 +565,7 @@ public class NodeDAOImpl implements IDAO {
      */
     public String getLongNameFromNodeID(int nodeID) {
         try {
-            Statement stmt = DBConnection.getDBconnection().getConnection().createStatement();
+            Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
             String query = "SELECT * from nodes join moves m on nodes.nodeid = m.nodeid where nodes.nodeid = " + nodeID;
             ResultSet rs = stmt.executeQuery(query);
             rs.next();
@@ -587,7 +587,7 @@ public class NodeDAOImpl implements IDAO {
     public String getShortNameFromNodeID(int nodeID) {
         try {
             String longName = getLongNameFromNodeID(nodeID);
-            Statement stmt = DBConnection.getDBconnection().getConnection().createStatement();
+            Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
             String query = "SELECT shortname from locationnames join moves m on locationnames.longname = m.longname";
             ResultSet rs = stmt.executeQuery(query);
             rs.next();

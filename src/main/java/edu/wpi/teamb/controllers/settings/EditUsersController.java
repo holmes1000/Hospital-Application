@@ -122,8 +122,12 @@ public class EditUsersController {
         newUser.setPassword(textPassword.getText());
         newUser.setEmail(textEmail.getText().toLowerCase());
         newUser.setPermissionLevel(permissionLevelToInt(cbPermissionLevel.getValue()));
-        if (usernameDoesNotExist(newUser)) {
+        if (usernameDoesNotExist(newUser) && emailDoesNotExist(newUser)) {
             Repository.getRepository().addUser(newUser);
+            createAlert("User added", "User added successfully");
+        }
+        else if (!emailDoesNotExist(newUser)) {
+            createAlert("Email already exists", "Please enter a different email");
         }
         else
         {
@@ -142,6 +146,21 @@ public class EditUsersController {
         ArrayList<User> listOfUsers = Repository.getRepository().getAllUsers();
         for (User u : listOfUsers) {
             if (u.getUsername().equals(user.getUsername())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Checks if the email already exists in the database
+     * @param user
+     * @return
+     */
+    boolean emailDoesNotExist(User user) {
+        ArrayList<User> listOfUsers = Repository.getRepository().getAllUsers();
+        for (User u : listOfUsers) {
+            if (u.getEmail().equals(user.getEmail())) {
                 return false;
             }
         }

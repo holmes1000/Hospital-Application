@@ -40,7 +40,13 @@ public class FullFlowerRequest implements IFull {
         this.size = size;
         this.message = message;
     }
-    public FullFlowerRequest(Request r, FlowerRequest f) {
+    public FullFlowerRequest(Request request, FlowerRequest f) {
+        this.id = request.getId();
+        this.employee = request.getEmployee();
+        this.dateSubmitted = request.getDateSubmitted();
+        this.requestStatus = request.getRequestStatus();
+        this.locationName = request.getLocationName();
+        this.notes = request.getNotes();
         this.flowerType = f.getFlowerType();
         this.color = f.getColor();
         this.size = f.getSize();

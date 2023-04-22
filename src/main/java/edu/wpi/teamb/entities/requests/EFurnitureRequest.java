@@ -72,9 +72,6 @@ public EFurnitureRequest(String furnitureType,
     }
 
     public boolean checkSpecialRequestFields() {
-        if (this.furnitureType == null || this.model == null || this.assembly == null) {
-            return false;
-        }
-        return true;
+        return this.furnitureType != null && this.model != null && this.assembly != null;
     }
 }

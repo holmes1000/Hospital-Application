@@ -5,12 +5,12 @@ import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
-import edu.wpi.teamb.DBAccess.DBio.DBoutput;
+import edu.wpi.teamb.DBAccess.DBoutput;
 import edu.wpi.teamb.DBAccess.Full.FullNode;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
-import edu.wpi.teamb.entities.ELogin;
 import edu.wpi.teamb.entities.EMapEditor;
+import edu.wpi.teamb.pathfinding.PathFinding;
 import io.github.palexdev.materialfx.controls.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -31,6 +31,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
@@ -41,6 +42,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static javafx.scene.paint.Color.RED;
 
@@ -65,6 +67,7 @@ public class MapEditorController {
   @FXML private MFXButton exportBtn;
   @FXML private MFXToggleButton toggleNodes;
   @FXML private MFXToggleButton toggleLocationNames;
+  @FXML private MFXToggleButton toggleEdges;
   @FXML private FileChooser fileChooser;
   @FXML private MFXButton resetFromBackupBtn;
 
@@ -72,7 +75,7 @@ public class MapEditorController {
 
   public GesturePane pane = new GesturePane();
   Group nodeGroup;
-  Group lineGroup;
+  Group edgeGroup;
   Group nameGroup;
   Pane locationCanvas;
   Pane fullNodeCanvas;
@@ -85,8 +88,7 @@ public class MapEditorController {
   private MenuItem editItem;
 
   private ArrayList<Node> nodeList = new ArrayList<>();
-//  private ArrayList<FullNode> fullNodes = new ArrayList<>();
-
+  private ArrayList<FullNode> fullNodesList = new ArrayList<>();
     private Node nodeL1;
     private  Node nodeL2;
     private Node node1;
@@ -94,6 +96,7 @@ public class MapEditorController {
     private Node node3;
 
   private ArrayList<Node> floorList = new ArrayList<>();
+
 
   //Context menus
   private ContextMenu contextMenu;
@@ -113,12 +116,23 @@ public class MapEditorController {
   private Pane menuPane;
   private boolean editingNode = false; // Used for the submitting details button
 
+  @FXML private MFXButton btnAdd;
+  @FXML private MFXButton btnEdit;
+  @FXML private MFXButton btnDelete;
+  @FXML private MFXButton btnView;
   @FXML private MFXComboBox<String> cbNodeType;
   @FXML private MFXTextField tfLongName;
   @FXML private MFXTextField tfShortName;
   @FXML private MFXButton btnSubmitNodeDetails;
   @FXML private MFXTextField tfNodeId;
   private boolean boolAddingNode = false;
+
+  // Create the states
+  MapEditorContext mapEditorContext = new MapEditorContext();
+  MapEditorState editState = new EditState();
+  MapEditorState deleteState = new DeleteState();
+  MapEditorState addState = new AddState();
+  MapEditorState viewState = new ViewState();
 
   int fullNodeX;
   int fullNodeY;
@@ -128,32 +142,28 @@ public class MapEditorController {
 
   @FXML
   public void initialize() throws IOException, SQLException {
-
-
-
-
-    //pathfinderController = new PathfinderController();
     initNavBar();
     hoverHelp();
     initializeFields();
     initButtons();
+    initStateBtn();
+    PathFinding.ASTAR.init_pathfinder();
     // Initialize the edges, nodes, and names on the map
     nodeList = Repository.getRepository().getAllNodes();
+    fullNodesList = Repository.getRepository().getAllFullNodes();
     nameToolTip = new Tooltip();
 //    fullNodes = Repository.getRepository().getFullNodes();
-
 
     this.stackPaneMapView = new StackPane(); // no longer @FXML
     // Used for nodes
     this.locationCanvas = new Pane();
+
     this.nodeGroup = new Group();
+    this.nameGroup = new Group();
+    this.edgeGroup = new Group();
 
     // Used for location names
     this.fullNodeCanvas = new Pane();
-    this.nameGroup = new Group();
-
-    this.lineGroup = new Group();
-
 
     this.pane.setContent(stackPaneMapView);
     this.imageViewPathfinder = new ImageView(Bapp.getHospitalListOfFloors().get(3)); // no longer @FXML
@@ -163,16 +173,14 @@ public class MapEditorController {
     this.stackPaneMapView.getChildren().add(this.locationCanvas);
 
     this.locationCanvas.getChildren().add(nodeGroup);
-    this.locationCanvas.getChildren().add(lineGroup);
+    this.locationCanvas.getChildren().add(edgeGroup);
+    this.locationCanvas.getChildren().add(nameGroup);
 
     //Fitting the scrollpane
     pane.setScrollMode(GesturePane.ScrollMode.ZOOM);
     pane.setScrollBarPolicy(GesturePane.ScrollBarPolicy.NEVER);
 
-    //Pane addMenuPane = FXMLLoader.load(getClass().getResource("/edu/wpi/teamb/views/components/AddNodeMenu.fxml"));
-    //vboxAddNode.getChildren().add(addMenuPane);
     // Method to allow for triple click to add a new node
-    if(ELogin.getLogin().getPermissionLevel() == ELogin.PermissionLevel.ADMIN) {
       stackPaneMapView.setOnMouseClicked(e -> {
         if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 3) {
           try {
@@ -186,36 +194,19 @@ public class MapEditorController {
           }
         }
       });
-    }
 
 
     btnSubmitNodeDetails.setOnMouseClicked(event -> handleSubmitNodeDetails());
-    drawNodes( currentFloor);
+    draw( currentFloor);
 
     changeButtonColor(currentFloor);
     Platform.runLater(() -> this.pane.centreOn(new Point2D(2190, 910)));
-
-    if(ELogin.getLogin().getPermissionLevel() != ELogin.PermissionLevel.ADMIN) {
-      NodeSelector.setVisible(false);
-      NodeInfo.setVisible(false);
-      exportBtn.setVisible(false);
-      uploadBtn.setVisible(false);
-      resetFromBackupBtn.setVisible(false);
-
-    }
 
     System.out.println("MapEditorController initialized");
   }
 
   private void handleSubmitNodeDetails() {
-    String shortName = tfShortName.getText();
-    String longName = tfLongName.getText();
-    String nodeType = cbNodeType.getValue();
-    if (nodeType.equals("ELEV")) {
-      createElevatorNode();
-    } else if (nodeType.equals("STAI")) {
-      createStairNode();
-    } else createNode();
+    createNode();
   }
 
   private void createNode() {
@@ -251,124 +242,15 @@ public class MapEditorController {
       tfNodeId.setText("");
   }
 
-  private void createElevatorNode() {
-    String shortName = tfShortName.getText();
-    String longName = tfLongName.getText();
-    String nodeType = cbNodeType.getValue();
-    FullNode fullNode = null;
-
-    // Get the max ID of the list of nodes
-    int maxID = 0;
-    for (Node n : nodeList) {
-      if (n.getNodeID() > maxID) {
-        maxID = n.getNodeID();
-      }
-    }
-
-    fullNode = new FullNode(maxID+5, (int) fullNodeX, (int) fullNodeY, "L1", "Full Node Building", "Elevator" + longName + "L1", tfShortName.getText(), cbNodeType.getSelectedItem());
-    Repository.getRepository().addFullNode(fullNode);
-
-    Node newNode = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
-    nodeList.add(newNode); // Add the node to the nodeList
-
-    fullNode = new FullNode(maxID+10, (int) fullNodeX, (int) fullNodeY, "L2", "Full Node Building", "Elevator" + longName + "L2", tfShortName.getText(), cbNodeType.getSelectedItem());
-    Repository.getRepository().addFullNode(fullNode);
-
-    Node newNode1 = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
-    nodeList.add(newNode1);
-
-    fullNode = new FullNode(maxID+15, (int) fullNodeX, (int) fullNodeY, "1", "Full Node Building", "Elevator" + longName + "1", tfShortName.getText(), cbNodeType.getSelectedItem());
-    Repository.getRepository().addFullNode(fullNode);
-
-    Node newNode2 = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
-    nodeList.add(newNode2); // Add the node to the nodeList
-
-    fullNode = new FullNode(maxID+20, (int) fullNodeX, (int) fullNodeY, "2", "Full Node Building", "Elevator" + longName + "2", tfShortName.getText(), cbNodeType.getSelectedItem());
-    Repository.getRepository().addFullNode(fullNode);
-
-    Node newNode3 = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
-    nodeList.add(newNode3);
-
-    fullNode = new FullNode(maxID+25, (int) fullNodeX, (int) fullNodeY, "3", "Full Node Building", "Elevator" + longName + "3", tfShortName.getText(), cbNodeType.getSelectedItem());
-    Repository.getRepository().addFullNode(fullNode);
-
-    Node newNode4 = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
-    nodeList.add(newNode4);
-    // Add node to the database
-    //Repository.getRepository().addNode(newNode);
-
-    System.out.println("Adding a new node with nodeID: " + newNode.getNodeID());
-    // Refresh the map
-    refreshMap();
-
-    // Reset the fields
-    tfShortName.setText("");
-    tfLongName.setText("");
-    tfNodeId.setText("");
-  }
-
-  private void createStairNode() {
-    String shortName = tfShortName.getText();
-    String longName = tfLongName.getText();
-    String nodeType = cbNodeType.getValue();
-    FullNode fullNode = null;
-
-    // Get the max ID of the list of nodes
-    int maxID = 0;
-    for (Node n : nodeList) {
-      if (n.getNodeID() > maxID) {
-        maxID = n.getNodeID();
-      }
-    }
-
-    fullNode = new FullNode(maxID+5, (int) fullNodeX, (int) fullNodeY, "L1", "Full Node Building", "Stair" + longName + "L1", tfShortName.getText(), cbNodeType.getSelectedItem());
-    Repository.getRepository().addFullNode(fullNode);
-
-    Node newNode = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
-    nodeList.add(newNode); // Add the node to the nodeList
-
-    fullNode = new FullNode(maxID+10, (int) fullNodeX, (int) fullNodeY, "L2", "Full Node Building", "Stair" + longName + "L2", tfShortName.getText(), cbNodeType.getSelectedItem());
-    Repository.getRepository().addFullNode(fullNode);
-
-    Node newNode1 = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
-    nodeList.add(newNode1);
-
-    fullNode = new FullNode(maxID+15, (int) fullNodeX, (int) fullNodeY, "1", "Full Node Building", "Stair" + longName + "1", tfShortName.getText(), cbNodeType.getSelectedItem());
-    Repository.getRepository().addFullNode(fullNode);
-
-    Node newNode2 = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
-    nodeList.add(newNode2); // Add the node to the nodeList
-
-    fullNode = new FullNode(maxID+20, (int) fullNodeX, (int) fullNodeY, "2", "Full Node Building", "Stair" + longName + "2", tfShortName.getText(), cbNodeType.getSelectedItem());
-    Repository.getRepository().addFullNode(fullNode);
-
-    Node newNode3 = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
-    nodeList.add(newNode3);
-
-    fullNode = new FullNode(maxID+25, (int) fullNodeX, (int) fullNodeY, "3", "Full Node Building", "Stair" + longName + "3", tfShortName.getText(), cbNodeType.getSelectedItem());
-    Repository.getRepository().addFullNode(fullNode);
-
-    Node newNode4 = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
-    nodeList.add(newNode4);
-    // Add node to the database
-    //Repository.getRepository().addNode(newNode);
-
-    System.out.println("Adding a new node with nodeID: " + newNode.getNodeID());
-    // Refresh the map
-    refreshMap();
-
-    // Reset the fields
-    tfShortName.setText("");
-    tfLongName.setText("");
-    tfNodeId.setText("");
-  }
-
   /**
    * Draws all the nodes on the map
    * @param floor
    * @throws SQLException
    */
-  public void drawNodes(String floor) throws SQLException {
+  public void draw(String floor) throws SQLException {
+    nodeGroup.getChildren().clear();
+    nameGroup.getChildren().clear();
+    edgeGroup.getChildren().clear();
     // For each node, create a circle
     for (Node n : nodeList) {
       if (n.getFloor().equals(floor)) {
@@ -381,39 +263,15 @@ public class MapEditorController {
   //Draws edges for a single node, taking in a node
   //From node it grabs the neighbors from the repository and then creates the 1-3 lines required
   public void drawEdge(Node n){
-      lineGroup.getChildren().clear();
+//      edgeGroup.getChildren().clear();
 
       //Gets the full node of the current node, as well as the neighbors of this node
-      ArrayList<Integer> neighbors = Repository.getRepository().getNeighbors(n.getNodeID());
-      FullNode nNode = Repository.getRepository().getFullNode(n.getNodeID());
+      ArrayList<Integer> neighbors = PathFinding.ASTAR.get_node_map().get(n.getNodeID()).getNeighborIds();
 
       for (int i = 0; i < neighbors.size(); i++) {
 
         //Get the full node of the neighbor, check to see if they're both elevators or stairs
-        Node neighborNode = Repository.getRepository().getNode(neighbors.get(i));
-        FullNode neighborFullNode = Repository.getRepository().getFullNode(neighborNode.getNodeID());
-        String floor = neighborFullNode.getFloor();
-        //If not stair or elevator reset this to null
-        if(!nNode.getNodeType().equals("ELEV") && !nNode.getNodeType().equals("STAI")){
-          nodeL1 = null;
-          nodeL2 = null;
-          node1 = null;
-          node2 = null;
-          node3 = null;
-        } else if((neighborFullNode.getNodeType().equals("ELEV") && nNode.getNodeType().equals("ELEV")) || (neighborFullNode.getNodeType().equals("STAI") && nNode.getNodeType().equals("STAI"))){
-          //If the neighborNode is of the same type as the current node
-           if(floor.equals("L1")){
-             nodeL1 = neighborNode;
-           } else if (floor.equals("L2")) {
-             nodeL2 = neighborNode;
-           } else if (floor.equals("1")) {
-             node1 = neighborNode;
-           } else if (floor.equals("2")){
-             node2 = neighborNode;
-           } else {
-             node3 = neighborNode;
-           }
-        }
+        Node neighborNode = PathFinding.ASTAR.get_node_map().get(neighbors.get(i));
 
         //Draws the lines of the neighbors on the current floor
         //This gets redone every floor which is slightly unoptimized but this should never span enough
@@ -421,31 +279,49 @@ public class MapEditorController {
         if (neighborNode.getFloor().equals(n.getFloor())) {
           Line line = new Line(n.getxCoord(), n.getyCoord(), neighborNode.getxCoord(), neighborNode.getyCoord());
           line.setStrokeWidth(4);
-          lineGroup.getChildren().add(line);
-          lineGroup.toFront();
-          nodeGroup.toFront();
+          edgeGroup.getChildren().add(line);
+
       }
     }
+    edgeGroup.toFront();
+    nodeGroup.toFront();
   }
-
 
   //Toggles the ability to see location names
   //Takes in current ability to see them in relation to the bar
   //When on it adds the ability to generate them in the node drawing method
   //When off it replaces text with "bruh" and removed ability to see them by adding delay.
-  public void toggleLocationNames(){
-    toggleLocationNames.setOnMouseClicked(event -> {
+  public void handleToggleLocationNames(){
       if(toggleLocationNames.isSelected()){
+        nameGroup.setVisible(true);
         System.out.println("Location names on");
-        abilityToSeeNames = true;
       } else {
+        nameGroup.setVisible(false);
         System.out.println("Location names off");
-        abilityToSeeNames = false;
         toggleLocationNames.setSelected(false);
-        nameToolTip.setText("bruh");
-        nameToolTip.setShowDelay(Duration.minutes(1));
       }
-    });
+  }
+
+  public void handleToggleNodes(){
+    if(toggleNodes.isSelected()){
+      nodeGroup.setVisible(true);
+      System.out.println("Nodes on");
+    } else {
+      nodeGroup.setVisible(false);
+      System.out.println("Nodes off");
+      toggleNodes.setSelected(false);
+    }
+  }
+
+  public void handleToggleEdges(){
+    if(toggleEdges.isSelected()){
+      edgeGroup.setVisible(true);
+      System.out.println("Edges on");
+    } else {
+      edgeGroup.setVisible(false);
+      System.out.println("Edges off");
+      toggleEdges.setSelected(false);
+    }
   }
 
   /**
@@ -458,22 +334,10 @@ public class MapEditorController {
     Circle c = new Circle(n.getxCoord(), n.getyCoord(), 5, RED);
     c.setId(String.valueOf(n.getNodeID())); // Set the circle's ID to the node's ID
     c.setOnMouseClicked(event -> {
-      if (event.getButton() == MouseButton.PRIMARY && ELogin.getLogin().getPermissionLevel() == ELogin.PermissionLevel.ADMIN) {
-        this.handleNodeClick(event, n);
-      }
+      this.handleNodeClick(event, n);
     });
-    //Sets up each individual hover for node name
-    //Only toggles whn listNames is active
-    c.setOnMouseEntered(event -> {
-      if(abilityToSeeNames) {
-        nameToolTip.setText(Repository.getRepository().getFullNode(n.getNodeID()).getShortName());
-        System.out.println(Repository.getRepository().getFullNode(n.getNodeID()).getShortName());
-        System.out.println(n.getNodeID());
-        nameToolTip.setShowDelay(Duration.millis(1));
-        nameToolTip.hideDelayProperty().set(Duration.seconds(.5));
-        Tooltip.install(c, nameToolTip);
-      }
-    });
+    drawEdge(n);
+    drawName(c, n);
 
     // Add the circle to the nodeGroup
     floorList.add(n);
@@ -481,53 +345,15 @@ public class MapEditorController {
     nodeGroup.toFront();
   }
 
-
-
-  /**
-   * Draws a label with the respective nodes short name above the node
-   * @param n
-   */
-
-  /**
-   * Changes the color of the buttons to indicate which floor is currently being viewed
-   * @param currentFloor
-   */
-  private void changeButtonColor(String currentFloor) {
-    switch (currentFloor) {
-      case "L1" -> {
-        btnL1.setStyle("-fx-background-color: #f6bd38");
-        btnL2.setStyle("-fx-background-color: #1C4EFE");
-        btn1.setStyle("-fx-background-color: #1C4EFE");
-        btn2.setStyle("-fx-background-color: #1C4EFE");
-        btn3.setStyle("-fx-background-color: #1C4EFE");
-      }
-      case "L2" -> {
-        btnL1.setStyle("-fx-background-color: #1C4EFE");
-        btnL2.setStyle("-fx-background-color: #f6bd38");
-        btn1.setStyle("-fx-background-color: #1C4EFE");
-        btn2.setStyle("-fx-background-color: #1C4EFE");
-        btn3.setStyle("-fx-background-color: #1C4EFE");
-      }
-      case "1" -> {
-        btnL1.setStyle("-fx-background-color: #1C4EFE");
-        btnL2.setStyle("-fx-background-color: #1C4EFE");
-        btn1.setStyle("-fx-background-color: #f6bd38");
-        btn2.setStyle("-fx-background-color: #1C4EFE");
-        btn3.setStyle("-fx-background-color: #1C4EFE");
-      }
-      case "2" -> {
-        btnL1.setStyle("-fx-background-color: #1C4EFE");
-        btnL2.setStyle("-fx-background-color: #1C4EFE");
-        btn1.setStyle("-fx-background-color: #1C4EFE");
-        btn2.setStyle("-fx-background-color: #f6bd38");
-        btn3.setStyle("-fx-background-color: #1C4EFE");
-      }
-      case "3" -> {
-        btnL1.setStyle("-fx-background-color: #1C4EFE");
-        btnL2.setStyle("-fx-background-color: #1C4EFE");
-        btn1.setStyle("-fx-background-color: #1C4EFE");
-        btn2.setStyle("-fx-background-color: #1C4EFE");
-        btn3.setStyle("-fx-background-color: #f6bd38");
+  void drawName(Circle c, Node n) {
+    for (FullNode fn : fullNodesList) {
+      if (!Objects.equals(fn.getNodeType(), "HALL")) {
+        if (fn.getNodeID() == n.getNodeID()) {
+          Text name = new Text(fn.getShortName());
+          name.setX(c.getCenterX() + 5);
+          name.setY(c.getCenterY() + 5);
+          nameGroup.getChildren().add(name);
+        }
       }
     }
   }
@@ -536,7 +362,7 @@ public class MapEditorController {
   /**
    * Handles the reset from backup button click
    */
-  @FXML void clickResetFromBackupBtn() {
+  void handleResetFromBackupBtn() {
     Repository.getRepository().resetNodesFromBackup();
     nodeList = Repository.getRepository().getAllNodes();
     // Refresh the map
@@ -568,9 +394,10 @@ public class MapEditorController {
   private void refreshMap() {
     // Clear the map
     nodeGroup.getChildren().clear();
+    edgeGroup.getChildren().clear();
     // Redraw the map
     try {
-      drawNodes(currentFloor);
+      draw(currentFloor);
       System.out.println("Refreshing map for floor " + currentFloor + "...");
     } catch (SQLException e) {
       e.printStackTrace();
@@ -587,9 +414,6 @@ public class MapEditorController {
     contextMenu.show(this.pane, e.getScreenX(), e.getScreenY());
   }
 
-
-
-
   /**
    * Method to create context menu and set the actions for the menu items
    * @param n Node
@@ -603,21 +427,15 @@ public class MapEditorController {
     System.out.println("Context menu created for node: " + n.getNodeID());
 
     locationItem = new MenuItem("Location name: " + Repository.getRepository().getFullNode(n.getNodeID()).getShortName());
-    editLocationItem = new MenuItem("Edit Location Name");
-    viewConnectedEdges = new MenuItem("View connected edges");
     deleteItem = new MenuItem("Delete");
     editItem = new MenuItem("Edit Node");
-    contextMenu.getItems().addAll(locationItem, editLocationItem, viewConnectedEdges, deleteItem, editItem);
+    contextMenu.getItems().addAll(locationItem, deleteItem, editItem);
     this.editLocationItem.setOnAction(e-> {
       try {
         handleEditName(e, n);
       } catch (SQLException ex){
         throw new RuntimeException(ex);
       }
-    });
-    //Calls drawEdge for a node when option is selected
-    this.viewConnectedEdges.setOnAction(e -> {
-      drawEdge(n);
     });
     this.deleteItem.setOnAction(e-> {
       try {
@@ -771,6 +589,18 @@ public class MapEditorController {
     clickFloorBtn("1");
     clickFloorBtn("2");
     clickFloorBtn("3");
+    uploadBtn.setOnMouseClicked(event->{handleUploadBtn();});
+    exportBtn.setOnMouseClicked(event->{handleExportBtn();});
+    resetFromBackupBtn.setOnMouseClicked(event->{handleResetFromBackupBtn();});
+
+    // initialize the toggles
+    toggleEdges.setSelected(true);
+    toggleNodes.setSelected(true);
+    toggleLocationNames.setSelected(true);
+    toggleLocationNames.setOnMouseClicked(event->{handleToggleLocationNames();});
+    toggleEdges.setOnMouseClicked(event->{handleToggleEdges();});
+    toggleNodes.setOnMouseClicked(event->{handleToggleNodes();});
+
   }
 
   public void clickFloorBtn(String floor) {
@@ -780,12 +610,9 @@ public class MapEditorController {
       changeButtonColor(currentFloor);
       floorList = Repository.getRepository().getNodesByFloor("L1");
       try {
-        lineGroup.getChildren().clear();
+        edgeGroup.getChildren().clear();
         nodeGroup.getChildren().clear();
-        drawNodes( "L1");
-        if(!nodeL1.equals(null)){
-          drawEdge(nodeL1);
-        }
+        draw( "L1");
       } catch (SQLException e) {
         throw new RuntimeException(e);
       }
@@ -797,12 +624,9 @@ public class MapEditorController {
       floorList = Repository.getRepository().getNodesByFloor("L2");
 
       try {
-        lineGroup.getChildren().clear();
+        edgeGroup.getChildren().clear();
         nodeGroup.getChildren().clear();
-        drawNodes( "L2");
-        if(!nodeL2.equals(null)){
-          drawEdge(nodeL2);
-        }
+        draw( "L2");
       } catch (SQLException e) {
         throw new RuntimeException(e);
       }
@@ -813,12 +637,9 @@ public class MapEditorController {
       changeButtonColor(currentFloor);
       floorList = Repository.getRepository().getNodesByFloor("1");
       try {
-        lineGroup.getChildren().clear();
+        edgeGroup.getChildren().clear();
         nodeGroup.getChildren().clear();
-        drawNodes( "1");
-        if(!node1.equals(null)){
-          drawEdge(node1);
-        }
+        draw( "1");
       } catch (SQLException e) {
         throw new RuntimeException(e);
       }
@@ -829,12 +650,9 @@ public class MapEditorController {
       changeButtonColor(currentFloor);
       floorList = Repository.getRepository().getNodesByFloor("2");
       try {
-        lineGroup.getChildren().clear();
+        edgeGroup.getChildren().clear();
         nodeGroup.getChildren().clear();
-        drawNodes( "2");
-        if(!node2.equals(null)){
-          drawEdge(node2);
-        }
+        draw( "2");
       } catch (SQLException e) {
         throw new RuntimeException(e);
       }
@@ -845,22 +663,42 @@ public class MapEditorController {
       changeButtonColor(currentFloor);
       floorList = Repository.getRepository().getNodesByFloor("3");
       try {
-        lineGroup.getChildren().clear();
+        edgeGroup.getChildren().clear();
         nodeGroup.getChildren().clear();
-        drawNodes( "3");
-        if(!node3.equals(null)){
-          drawEdge(node3);
-        }
+        draw( "3");
       } catch (SQLException e) {
         throw new RuntimeException(e);
       }
     });
   }
 
+  public void initStateBtn() {
+    btnView.setOnMouseClicked(event->{
+      mapEditorContext.setState(viewState);
+      mapEditorContext.getState().printStatus();
+      changeStateButtonColor("View");
+    } );
+    btnEdit.setOnMouseClicked(event->{
+      mapEditorContext.setState(editState);
+      mapEditorContext.getState().printStatus();
+      changeStateButtonColor("Edit");
+    } );
+    btnAdd.setOnMouseClicked(event->{
+      mapEditorContext.setState(addState);
+      mapEditorContext.getState().printStatus();
+      changeStateButtonColor("Add");
+    } );
+    btnDelete.setOnMouseClicked(event->{
+      mapEditorContext.setState(deleteState);
+      mapEditorContext.getState().printStatus();
+      changeStateButtonColor("Delete");
+    } );
+  }
+
   /**
    * Handles the click event for the upload button
    */
-  @FXML public void clickUploadBtn() {
+  public void handleUploadBtn() {
     fileChooser = new FileChooser();
     fileChooser.setTitle("Open Resource File");
     fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("CSV", "*.csv"));
@@ -873,7 +711,7 @@ public class MapEditorController {
   /**
    * Handles the click event for the export button
    */
-  @FXML public void clickExportBtn() {
+  public void handleExportBtn() {
     DirectoryChooser directoryChooser = new DirectoryChooser();
     File selectedDirectory = directoryChooser.showDialog(null);
     String absolutePath = null;
@@ -893,16 +731,85 @@ public class MapEditorController {
             DBoutput.exportEdgesToCSV(absolutePath, 2);
         }
         case "Location Names" -> {
-          try {
             DBoutput.exportLocationNamesToCSV(absolutePath, 2);
-          } catch (SQLException e) {
-            throw new RuntimeException(e);
-          }
         }
         default -> new ArrayList<>();
       };
     }
     System.out.println("here"); // 1 means success, 0 means failure
+  }
+
+  /**
+   * Changes the color of the buttons to indicate which floor is currently being viewed
+   * @param currentFloor
+   */
+  private void changeButtonColor(String currentFloor) {
+    switch (currentFloor) {
+      case "L1" -> {
+        btnL1.setStyle("-fx-background-color: #f6bd38");
+        btnL2.setStyle("-fx-background-color: #1C4EFE");
+        btn1.setStyle("-fx-background-color: #1C4EFE");
+        btn2.setStyle("-fx-background-color: #1C4EFE");
+        btn3.setStyle("-fx-background-color: #1C4EFE");
+      }
+      case "L2" -> {
+        btnL1.setStyle("-fx-background-color: #1C4EFE");
+        btnL2.setStyle("-fx-background-color: #f6bd38");
+        btn1.setStyle("-fx-background-color: #1C4EFE");
+        btn2.setStyle("-fx-background-color: #1C4EFE");
+        btn3.setStyle("-fx-background-color: #1C4EFE");
+      }
+      case "1" -> {
+        btnL1.setStyle("-fx-background-color: #1C4EFE");
+        btnL2.setStyle("-fx-background-color: #1C4EFE");
+        btn1.setStyle("-fx-background-color: #f6bd38");
+        btn2.setStyle("-fx-background-color: #1C4EFE");
+        btn3.setStyle("-fx-background-color: #1C4EFE");
+      }
+      case "2" -> {
+        btnL1.setStyle("-fx-background-color: #1C4EFE");
+        btnL2.setStyle("-fx-background-color: #1C4EFE");
+        btn1.setStyle("-fx-background-color: #1C4EFE");
+        btn2.setStyle("-fx-background-color: #f6bd38");
+        btn3.setStyle("-fx-background-color: #1C4EFE");
+      }
+      case "3" -> {
+        btnL1.setStyle("-fx-background-color: #1C4EFE");
+        btnL2.setStyle("-fx-background-color: #1C4EFE");
+        btn1.setStyle("-fx-background-color: #1C4EFE");
+        btn2.setStyle("-fx-background-color: #1C4EFE");
+        btn3.setStyle("-fx-background-color: #f6bd38");
+      }
+    }
+  }
+
+  private void changeStateButtonColor(String state) {
+    switch (state) {
+      case "View"-> {
+        btnView.setStyle("-fx-background-color: #f6bd38");
+        btnEdit.setStyle("-fx-background-color: #1C4EFE");
+        btnDelete.setStyle("-fx-background-color: #1C4EFE");
+        btnAdd.setStyle("-fx-background-color: #1C4EFE");
+      }
+      case "Add" -> {
+        btnAdd.setStyle("-fx-background-color: #f6bd38");
+        btnEdit.setStyle("-fx-background-color: #1C4EFE");
+        btnDelete.setStyle("-fx-background-color: #1C4EFE");
+        btnView.setStyle("-fx-background-color: #1C4EFE");
+      }
+      case "Edit" -> {
+        btnEdit.setStyle("-fx-background-color: #f6bd38");
+        btnAdd.setStyle("-fx-background-color: #1C4EFE");
+        btnDelete.setStyle("-fx-background-color: #1C4EFE");
+        btnView.setStyle("-fx-background-color: #1C4EFE");
+      }
+      case "Delete" -> {
+        btnDelete.setStyle("-fx-background-color: #f6bd38");
+        btnEdit.setStyle("-fx-background-color: #1C4EFE");
+        btnAdd.setStyle("-fx-background-color: #1C4EFE");
+        btnView.setStyle("-fx-background-color: #1C4EFE");
+      }
+    }
   }
 
 
@@ -927,8 +834,6 @@ public class MapEditorController {
 
   private void initializeFields() {
     ArrayList<String> tables = new ArrayList<String>();
-    toggleLocationNames();
-    toggleLocationNames();
     tables.add("Nodes");
     tables.add("Edges");
     tables.add("Moves");

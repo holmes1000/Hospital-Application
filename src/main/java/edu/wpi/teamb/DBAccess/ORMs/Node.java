@@ -17,6 +17,7 @@ public class Node {
     private String building;
     private Set<Edge> connectedEdges;
     private Double cost; // Alex added a cost value we can mess with to the nodes for A* pathfinding, we may change this implementation later
+    private Double cost_and_heuristic;
     private ArrayList<Integer> neighborIds;
 
     private String nodeType = null; // implemented here for elevator vs. stair weighting
@@ -73,6 +74,15 @@ public class Node {
     }
 
     // Getters and Setters
+
+
+    public Double getCost_and_heuristic() {
+        return cost_and_heuristic;
+    }
+
+    public void setCost_and_heuristic(Double cost_and_heuristic) {
+        this.cost_and_heuristic = cost_and_heuristic;
+    }
 
     public int getNodeID() {
         return nodeID;
