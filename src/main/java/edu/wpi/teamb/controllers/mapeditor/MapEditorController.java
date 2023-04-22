@@ -42,6 +42,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static javafx.scene.paint.Color.RED;
 
@@ -346,11 +347,13 @@ public class MapEditorController {
 
   void drawName(Circle c, Node n) {
     for (FullNode fn : fullNodesList) {
-      if (fn.getNodeID() == n.getNodeID()) {
-        Text name = new Text(fn.getShortName());
-        name.setX(c.getCenterX()+5);
-        name.setY(c.getCenterY()+5);
-        nameGroup.getChildren().add(name);
+      if (!Objects.equals(fn.getNodeType(), "HALL")) {
+        if (fn.getNodeID() == n.getNodeID()) {
+          Text name = new Text(fn.getShortName());
+          name.setX(c.getCenterX() + 5);
+          name.setY(c.getCenterY() + 5);
+          nameGroup.getChildren().add(name);
+        }
       }
     }
   }
