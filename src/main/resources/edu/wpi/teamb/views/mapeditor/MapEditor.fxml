@@ -59,13 +59,8 @@
             <MFXButton fx:id="exportBtn" layoutX="891.0" layoutY="66.0" onAction="#clickExportBtn" style="-fx-background-color: #1C4EFE;" text="Export" textFill="#f1f1f1" />
 
             <MFXButton fx:id="resetFromBackupBtn" layoutX="61.0" layoutY="682.0" onAction="#clickResetFromBackupBtn" style="-fx-background-color: #1C4EFE;" text="Reset From Backup" textFill="#f1f1f1" />
-                  <VBox layoutX="940.0" layoutY="128.0" prefHeight="203.0" prefWidth="204.0" style="-fx-background-color: #f1f1f1;">
+                  <VBox layoutX="934.0" layoutY="102.0" prefHeight="203.0" prefWidth="204.0" style="-fx-background-color: #f1f1f1;">
                       <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Add Node Details">
-                            <font>
-                                <Font name="System Bold" size="18.0" />
-                            </font>
-                        </Text>
                   <MFXTextField fx:id="tfNodeId" floatingText="Node ID" prefHeight="48.0" prefWidth="257.0">
                      <VBox.margin>
                         <Insets bottom="20.0" />
@@ -89,7 +84,7 @@
                         <MFXButton fx:id="btnSubmitNodeDetails" text="Submit Node Details" />
                       </children>
                   </VBox>
-            <VBox fx:id="vboxAddNode" layoutX="944.0" layoutY="458.0" prefHeight="119.0" prefWidth="131.0" style="-fx-background-color: #f1f1f1; -fx-border-color: #1C4EFE;">
+            <VBox fx:id="vboxAddNode" layoutX="944.0" layoutY="417.0" prefHeight="119.0" prefWidth="131.0" style="-fx-background-color: #f1f1f1; -fx-border-color: #1C4EFE;">
 
                <children>
                   <VBox fx:id="vboxBtns" alignment="CENTER" spacing="10.0">
@@ -126,6 +121,34 @@
                   </VBox>
                   <MFXToggleButton fx:id="toggleNodes" text="Show Nodes" />
                   <MFXToggleButton fx:id="toggleLocationNames" onMouseClicked="#toggleLocationNames" text="Show Location Names" />
+                  <MFXToggleButton fx:id="toggleEdges" onMouseClicked="#toggleLocationNames" text="Show Edges" />
+               </children>
+            </VBox>
+            <VBox fx:id="vboxBtns1" alignment="CENTER" layoutX="69.0" layoutY="455.0" prefHeight="214.0" prefWidth="108.0" spacing="10.0">
+               <children>
+                  <MFXButton fx:id="btnView" defaultButton="true" prefHeight="40.0" prefWidth="70.0" style="-fx-background-color: #1C4EFE;" text="View" textFill="#f1f1f1">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </MFXButton>
+                  <MFXButton fx:id="btnEdit" defaultButton="true" prefHeight="40.0" prefWidth="70.0" style="-fx-background-color: #1C4EFE;" text="Edit" textFill="#f1f1f1">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </MFXButton>
+                  <MFXButton fx:id="btnAdd" defaultButton="true" prefHeight="40.0" prefWidth="70.0" style="-fx-background-color: #1C4EFE;" text="Add" textFill="#f1f1f1">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </MFXButton>
+                  <MFXButton fx:id="btnDelete" defaultButton="true" prefHeight="40.0" prefWidth="70.0" style="-fx-background-color: #1C4EFE;" text="Delete" textFill="#f1f1f1">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </MFXButton>
                </children>
             </VBox>
             </children>

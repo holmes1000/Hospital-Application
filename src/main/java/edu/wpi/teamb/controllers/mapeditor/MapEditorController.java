@@ -113,12 +113,23 @@ public class MapEditorController {
   private Pane menuPane;
   private boolean editingNode = false; // Used for the submitting details button
 
+  @FXML private MFXButton btnAdd;
+  @FXML private MFXButton btnEdit;
+  @FXML private MFXButton btnDelete;
+  @FXML private MFXButton btnView;
   @FXML private MFXComboBox<String> cbNodeType;
   @FXML private MFXTextField tfLongName;
   @FXML private MFXTextField tfShortName;
   @FXML private MFXButton btnSubmitNodeDetails;
   @FXML private MFXTextField tfNodeId;
   private boolean boolAddingNode = false;
+
+  // Create the states
+  MapEditorContext mapEditorContext = new MapEditorContext();
+  MapEditorState editState = new EditState();
+  MapEditorState deleteState = new DeleteState();
+  MapEditorState addState = new AddState();
+  MapEditorState viewState = new ViewState();
 
   int fullNodeX;
   int fullNodeY;
@@ -128,20 +139,15 @@ public class MapEditorController {
 
   @FXML
   public void initialize() throws IOException, SQLException {
-
-
-
-
-    //pathfinderController = new PathfinderController();
     initNavBar();
     hoverHelp();
     initializeFields();
     initButtons();
+    initStateBtn();
     // Initialize the edges, nodes, and names on the map
     nodeList = Repository.getRepository().getAllNodes();
     nameToolTip = new Tooltip();
 //    fullNodes = Repository.getRepository().getFullNodes();
-
 
     this.stackPaneMapView = new StackPane(); // no longer @FXML
     // Used for nodes
@@ -169,10 +175,7 @@ public class MapEditorController {
     pane.setScrollMode(GesturePane.ScrollMode.ZOOM);
     pane.setScrollBarPolicy(GesturePane.ScrollBarPolicy.NEVER);
 
-    //Pane addMenuPane = FXMLLoader.load(getClass().getResource("/edu/wpi/teamb/views/components/AddNodeMenu.fxml"));
-    //vboxAddNode.getChildren().add(addMenuPane);
     // Method to allow for triple click to add a new node
-    if(ELogin.getLogin().getPermissionLevel() == ELogin.PermissionLevel.ADMIN) {
       stackPaneMapView.setOnMouseClicked(e -> {
         if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 3) {
           try {
@@ -186,7 +189,6 @@ public class MapEditorController {
           }
         }
       });
-    }
 
 
     btnSubmitNodeDetails.setOnMouseClicked(event -> handleSubmitNodeDetails());
@@ -194,15 +196,6 @@ public class MapEditorController {
 
     changeButtonColor(currentFloor);
     Platform.runLater(() -> this.pane.centreOn(new Point2D(2190, 910)));
-
-    if(ELogin.getLogin().getPermissionLevel() != ELogin.PermissionLevel.ADMIN) {
-      NodeSelector.setVisible(false);
-      NodeInfo.setVisible(false);
-      exportBtn.setVisible(false);
-      uploadBtn.setVisible(false);
-      resetFromBackupBtn.setVisible(false);
-
-    }
 
     System.out.println("MapEditorController initialized");
   }
@@ -855,6 +848,25 @@ public class MapEditorController {
         throw new RuntimeException(e);
       }
     });
+  }
+
+  public void initStateBtn() {
+    btnView.setOnMouseClicked(event->{
+      mapEditorContext.setState(viewState);
+      mapEditorContext.getState().printStatus();
+    } );
+    btnEdit.setOnMouseClicked(event->{
+      mapEditorContext.setState(editState);
+      mapEditorContext.getState().printStatus();
+    } );
+    btnAdd.setOnMouseClicked(event->{
+      mapEditorContext.setState(addState);
+      mapEditorContext.getState().printStatus();
+    } );
+    btnDelete.setOnMouseClicked(event->{
+      mapEditorContext.setState(deleteState);
+      mapEditorContext.getState().printStatus();
+    } );
   }
 
   /**
