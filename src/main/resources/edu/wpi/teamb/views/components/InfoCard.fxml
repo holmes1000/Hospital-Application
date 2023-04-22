@@ -40,7 +40,7 @@
             </MFXButton>
          </children>
       </VBox>
-      <VBox fx:id="subComponentContainer" layoutX="132.0" layoutY="94.0" prefHeight="101.0" prefWidth="700.0" />
+      <VBox fx:id="subComponentContainer" layoutX="132.0" layoutY="54.0" prefHeight="142.0" prefWidth="700.0" />
       <HBox layoutY="19.0" prefHeight="20.0" prefWidth="970.0">
          <children>
             <Label fx:id="requestIdLabel" alignment="CENTER" prefWidth="85.0" text="Request ID" textAlignment="CENTER" textFill="WHITE">

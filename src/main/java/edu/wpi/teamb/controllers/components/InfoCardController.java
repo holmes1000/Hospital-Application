@@ -28,12 +28,15 @@ public class InfoCardController {
   @FXML private ImageView requestTypeIconImageView;
   @FXML private MFXButton editButton;
   @FXML private MFXButton deleteButton;
+  @FXML private MFXButton submitButton;
+
+  @FXML private Label requestIdLabel;
   @FXML private Label dateSubmittedLabel;
+  @FXML private Label timeSubmittedLabel;
   @FXML private Label locationNameLabel;
   @FXML private Label employeeAssignedLabel;
-  @FXML private Label statusLabel; //make a button for this
+  @FXML private Label statusLabel; //deprecated implementation comment: make a button for this *Note: Please Disregard*
   @FXML private VBox buttonContainerVBox;
-  @FXML private MFXButton submitButton;
   @FXML private Label roomNumberLabel;
   @FXML private VBox subComponentContainer;
 
@@ -73,7 +76,16 @@ public class InfoCardController {
     requestType = fullRequest.getRequestType();
     getSpecialFields(requestType);
     //setting common components with common request info
-    if (fullRequest.getDateSubmitted() != null) { setDateSubmittedLabel(fullRequest.getDateSubmitted().toString()); }
+    setRequestIdLabel(Integer.toString(fullRequest.getId()));
+    if (fullRequest.getDateSubmitted() != null) {
+        //break up the date and time into two different variables
+        String[] dateAndTime = fullRequest.getDateSubmitted().toString().split(" ");
+        setDateSubmittedLabel(dateAndTime[0]);
+        setTimeSubmittedLabel(dateAndTime[1]);
+    } else {
+        setDateSubmittedLabel("Unavailable");
+        setTimeSubmittedLabel("Unavailable");
+    }
     setLocationNameLabel(fullRequest.getLocationName());
     setEmployeeAssignedLabel(fullRequest.getEmployee());
     setStatusLabel(fullRequest.getRequestStatus());
@@ -81,83 +93,132 @@ public class InfoCardController {
     fullRequest.setRequestType();
   }
 
-  void getSpecialFields(String requestType) {
-    if (Objects.equals(requestType, "Meal")) {
-        FullMealRequest mealFull = (FullMealRequest) fullRequest;
-        //set the meal specific fields
-        ((FullMealRequest) fullRequest).setDrink(mealFull.getDrink());
-        ((FullMealRequest) fullRequest).setFood(mealFull.getFood());
-        ((FullMealRequest) fullRequest).setOrderFrom(mealFull.getOrderFrom());
-        ((FullMealRequest) fullRequest).setSnack(mealFull.getSnack());
-
+    void getSpecialFields(String requestType) {
+        if (Objects.equals(requestType, "Meal")) {
+            FullMealRequest mealFull = (FullMealRequest) fullRequest;
+            //set the meal specific fields
+            ((FullMealRequest) fullRequest).setDrink(mealFull.getDrink());
+            ((FullMealRequest) fullRequest).setFood(mealFull.getFood());
+            ((FullMealRequest) fullRequest).setOrderFrom(mealFull.getOrderFrom());
+            ((FullMealRequest) fullRequest).setSnack(mealFull.getSnack());
+            ((FullMealRequest) fullRequest).setNotes(mealFull.getNotes());
         } else if (Objects.equals(requestType, "Conference")) {
-        FullConferenceRequest conferenceFull = (FullConferenceRequest) fullRequest;
-        //set the conference specific fields
-        ((FullConferenceRequest) fullRequest).setBookingReason(conferenceFull.getBookingReason());
-        ((FullConferenceRequest) fullRequest).setEventName(conferenceFull.getEventName());
-        ((FullConferenceRequest) fullRequest).setDuration(conferenceFull.getDuration());
-        ((FullConferenceRequest) fullRequest).setDateRequested(conferenceFull.getDateRequested());
-
+            FullConferenceRequest conferenceFull = (FullConferenceRequest) fullRequest;
+            //set the conference specific fields
+            ((FullConferenceRequest) fullRequest).setBookingReason(conferenceFull.getBookingReason());
+            ((FullConferenceRequest) fullRequest).setEventName(conferenceFull.getEventName());
+            ((FullConferenceRequest) fullRequest).setDuration(conferenceFull.getDuration());
+            ((FullConferenceRequest) fullRequest).setDateRequested(conferenceFull.getDateRequested());
+            (fullRequest).setNotes(conferenceFull.getNotes());
         } else if (Objects.equals(requestType, "Flower")) {
-        FullFlowerRequest flowerFull = (FullFlowerRequest) fullRequest;
-        //set the flower specific fields
-        ((FullFlowerRequest) fullRequest).setFlowerType(flowerFull.getFlowerType());
-        ((FullFlowerRequest) fullRequest).setSize(flowerFull.getSize());
-        ((FullFlowerRequest) fullRequest).setColor(flowerFull.getColor());
-        ((FullFlowerRequest) fullRequest).setMessage(flowerFull.getMessage());
+            FullFlowerRequest flowerFull = (FullFlowerRequest) fullRequest;
+            //set the flower specific fields
+            ((FullFlowerRequest) fullRequest).setFlowerType(flowerFull.getFlowerType());
+            ((FullFlowerRequest) fullRequest).setSize(flowerFull.getSize());
+            ((FullFlowerRequest) fullRequest).setColor(flowerFull.getColor());
+            ((FullFlowerRequest) fullRequest).setMessage(flowerFull.getMessage());
 
         } else if (Objects.equals(requestType, "Furniture")) {
-        FullFurnitureRequest furnitureRequest = (FullFurnitureRequest) fullRequest;
-        //set the furniture specific fields
-        ((FullFurnitureRequest) fullRequest).setType(furnitureRequest.getType());
-        ((FullFurnitureRequest) fullRequest).setModel(furnitureRequest.getModel());
-        ((FullFurnitureRequest) fullRequest).setAssembly(furnitureRequest.getAssembly());
+            FullFurnitureRequest furnitureRequest = (FullFurnitureRequest) fullRequest;
+            //set the furniture specific fields
+            ((FullFurnitureRequest) fullRequest).setType(furnitureRequest.getType());
+            ((FullFurnitureRequest) fullRequest).setModel(furnitureRequest.getModel());
+            ((FullFurnitureRequest) fullRequest).setAssembly(furnitureRequest.getAssembly());
 
         } else if (Objects.equals(requestType, "Office")) {
-        FullOfficeRequest officeRequest = (FullOfficeRequest) fullRequest;
-        //set the office specific fields
-        ((FullOfficeRequest) fullRequest).setQuantity(officeRequest.getQuantity());
-        ((FullOfficeRequest) fullRequest).setItem(officeRequest.getItem());
-        ((FullOfficeRequest) fullRequest).setType(officeRequest.getType());
+            FullOfficeRequest officeRequest = (FullOfficeRequest) fullRequest;
+            //set the office specific fields
+            ((FullOfficeRequest) fullRequest).setQuantity(officeRequest.getQuantity());
+            ((FullOfficeRequest) fullRequest).setItem(officeRequest.getItem());
+            ((FullOfficeRequest) fullRequest).setType(officeRequest.getType());
 
+        }
+        setSpecificFieldsOnCard();
     }
-    setSpecificFieldsOnCard();
-  }
 
   public void setSpecificFieldsOnCard() {
+      //set a margin on subComponentContainer
+      subComponentContainer.setSpacing(5);
+      String commonCSStyles = "-fx-font-size: 14px; -fx-text-fill: WHITE;";
       if (Objects.equals(requestType, "Meal")) {
+          //make the labels and set the styling
+          Label orderFromLabel = new Label("Order From: " + ((FullMealRequest) fullRequest).getOrderFrom());
+          orderFromLabel.setStyle(commonCSStyles);
+          Label foodLabel = new Label("Food: " + ((FullMealRequest) fullRequest).getFood());
+          foodLabel.setStyle(commonCSStyles);
+          Label drinkLabel = new Label("Drink: " + ((FullMealRequest) fullRequest).getDrink());
+          drinkLabel.setStyle(commonCSStyles);
+          Label snackLabel = new Label("Snack: " + ((FullMealRequest) fullRequest).getSnack());
+          snackLabel.setStyle(commonCSStyles);
           //set the meal specific fields
-          subComponentContainer.getChildren().add(new Label("Order From: " + ((FullMealRequest) fullRequest).getOrderFrom()));
-          subComponentContainer.getChildren().add(new Label("Food: " + ((FullMealRequest) fullRequest).getFood()));
-          subComponentContainer.getChildren().add(new Label("Drink: " + ((FullMealRequest) fullRequest).getDrink()));
-          subComponentContainer.getChildren().add(new Label("Snack: " + ((FullMealRequest) fullRequest).getSnack()));
-
+          subComponentContainer.getChildren().add(orderFromLabel);
+          subComponentContainer.getChildren().add(foodLabel);
+          subComponentContainer.getChildren().add(drinkLabel);
+          subComponentContainer.getChildren().add(snackLabel);
       } else if (Objects.equals(requestType, "Conference")) {
+          //make the labels and set the styling
+          Label eventNameLabel = new Label("Event Name: " + ((FullConferenceRequest) fullRequest).getEventName());
+          eventNameLabel.setStyle(commonCSStyles);
+          Label bookingReasonLabel = new Label("Booking Reason: " + ((FullConferenceRequest) fullRequest).getBookingReason());
+          bookingReasonLabel.setStyle(commonCSStyles);
+          Label durationLabel = new Label("Duration: " + ((FullConferenceRequest) fullRequest).getDuration());
+          durationLabel.setStyle(commonCSStyles);
+          Label dateRequestedLabel = new Label("Date Requested: " + ((FullConferenceRequest) fullRequest).getDateRequested());
+          dateRequestedLabel.setStyle(commonCSStyles);
           //set the conference specific fields
-          subComponentContainer.getChildren().add(new Label("Event Name: " + ((FullConferenceRequest) fullRequest).getEventName()));
-          subComponentContainer.getChildren().add(new Label("Booking Reason: " + ((FullConferenceRequest) fullRequest).getBookingReason()));
-          subComponentContainer.getChildren().add(new Label("Duration: " + ((FullConferenceRequest) fullRequest).getDuration()));
-          subComponentContainer.getChildren().add(new Label("Date Requested: " + ((FullConferenceRequest) fullRequest).getDateRequested()));
-
+          subComponentContainer.getChildren().add(eventNameLabel);
+          subComponentContainer.getChildren().add(bookingReasonLabel);
+          subComponentContainer.getChildren().add(durationLabel);
+          subComponentContainer.getChildren().add(dateRequestedLabel);
       } else if (Objects.equals(requestType, "Flower")) {
+          //make the labels and set the styling
+          Label flowerTypeLabel = new Label("Flower Type: " + ((FullFlowerRequest) fullRequest).getFlowerType());
+          flowerTypeLabel.setStyle(commonCSStyles);
+          Label sizeLabel = new Label("Size: " + ((FullFlowerRequest) fullRequest).getSize());
+          sizeLabel.setStyle(commonCSStyles);
+          Label colorLabel = new Label("Color: " + ((FullFlowerRequest) fullRequest).getColor());
+          colorLabel.setStyle(commonCSStyles);
+          Label messageLabel = new Label("Message: " + ((FullFlowerRequest) fullRequest).getMessage());
+          messageLabel.setStyle(commonCSStyles);
           //set the flower specific fields
-          subComponentContainer.getChildren().add(new Label("Flower Type: " + ((FullFlowerRequest) fullRequest).getFlowerType()));
-          subComponentContainer.getChildren().add(new Label("Size: " + ((FullFlowerRequest) fullRequest).getSize()));
-          subComponentContainer.getChildren().add(new Label("Color: " + ((FullFlowerRequest) fullRequest).getColor()));
-          subComponentContainer.getChildren().add(new Label("Message: " + ((FullFlowerRequest) fullRequest).getMessage()));
-
+          subComponentContainer.getChildren().add(flowerTypeLabel);
+          subComponentContainer.getChildren().add(sizeLabel);
+          subComponentContainer.getChildren().add(colorLabel);
+          subComponentContainer.getChildren().add(messageLabel);
       } else if (Objects.equals(requestType, "Furniture")) {
+          //make the labels and set the styling
+          Label typeLabel = new Label("Type: " + ((FullFurnitureRequest) fullRequest).getType());
+          typeLabel.setStyle(commonCSStyles);
+          Label modelLabel = new Label("Model: " + ((FullFurnitureRequest) fullRequest).getModel());
+          modelLabel.setStyle(commonCSStyles);
+          Label assemblyLabel = new Label("Assembly: " + ((FullFurnitureRequest) fullRequest).getAssembly());
+          assemblyLabel.setStyle(commonCSStyles);
           //set the furniture specific fields
-          subComponentContainer.getChildren().add(new Label("Type: " + ((FullFurnitureRequest) fullRequest).getType()));
-          subComponentContainer.getChildren().add(new Label("Model: " + ((FullFurnitureRequest) fullRequest).getModel()));
-          subComponentContainer.getChildren().add(new Label("Assembly: " + ((FullFurnitureRequest) fullRequest).getAssembly()));
-
+          subComponentContainer.getChildren().add(typeLabel);
+          subComponentContainer.getChildren().add(modelLabel);
+          subComponentContainer.getChildren().add(assemblyLabel);
       } else if (Objects.equals(requestType, "Office")) {
+          //make the labels and set the styling
+          Label itemLabel = new Label("Item: " + ((FullOfficeRequest) fullRequest).getItem());
+          itemLabel.setStyle(commonCSStyles);
+          Label quantityLabel = new Label("Quantity: " + ((FullOfficeRequest) fullRequest).getQuantity());
+          quantityLabel.setStyle(commonCSStyles);
+          Label typeLabel = new Label("Type: " + ((FullOfficeRequest) fullRequest).getType());
+          typeLabel.setStyle(commonCSStyles);
           //set the office specific fields
-          subComponentContainer.getChildren().add(new Label("Item: " + ((FullOfficeRequest) fullRequest).getItem()));
-          subComponentContainer.getChildren().add(new Label("Quantity: " + ((FullOfficeRequest) fullRequest).getQuantity()));
-          subComponentContainer.getChildren().add(new Label("Type: " + ((FullOfficeRequest) fullRequest).getType()));
+          subComponentContainer.getChildren().add(itemLabel);
+          subComponentContainer.getChildren().add(quantityLabel);
+          subComponentContainer.getChildren().add(typeLabel);
       }
+  }
+
+  /**
+   * Sets the text of the requestId TextField to the requestId parameter
+   *
+   * @param requestId
+   */
+  private void setRequestIdLabel(String requestId) {
+    requestIdLabel.setText(requestId);
   }
 
   /**
@@ -167,6 +228,15 @@ public class InfoCardController {
    */
   public void setDateSubmittedLabel(String dateSubmitted) {
     dateSubmittedLabel.setText(dateSubmitted);
+  }
+
+  /**
+   * Sets the text of the timeSubmitted TextField to the timeSubmitted parameter
+   *
+   * @param timeSubmitted
+   */
+  public void setTimeSubmittedLabel(String timeSubmitted) {
+    timeSubmittedLabel.setText(timeSubmitted);
   }
 
   /**
