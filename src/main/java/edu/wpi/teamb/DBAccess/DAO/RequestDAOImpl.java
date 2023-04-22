@@ -169,9 +169,11 @@ public class RequestDAOImpl implements IDAO {
     @Override
     public void update(Object request) {
         Request r = (Request) request;
-        Request req = new Request(r.getId(), r.getEmployee(), r.getDateSubmitted(), r.getRequestStatus(), r.getRequestType(), r.getLocationName(), r.getNotes());
-        getRequestIndex(req.getId());
-        requests.set(getRequestIndex(req.getId()), req);
+        getRequestIndex(r.getId());
+        requests.set(getRequestIndex(r.getId()), r);
+        String[] cols = {"employee", "datesubmitted", "requeststatus", "requesttype", "locationname", "notes"};
+        String[] vals = {r.getEmployee(), String.valueOf(r.getDateSubmitted()), r.getRequestStatus(), r.getRequestType(), r.getLocationName(), r.getNotes()};
+        DButils.updateRow("requests", cols, vals, "id = " + r.getId());
     }
 
     /**
@@ -360,6 +362,16 @@ public class RequestDAOImpl implements IDAO {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public void updateRequestUser(String username) {
+        for (int i = 0; i < requests.size(); i++) {
+            if (requests.get(i).getEmployee().equals(username)) {
+                Request newRequest = requests.get(i);
+                newRequest.setEmployee("Unassigned");
+                update(newRequest);
+            }
         }
     }
 

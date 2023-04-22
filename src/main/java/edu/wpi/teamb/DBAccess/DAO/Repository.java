@@ -626,6 +626,7 @@ public class Repository {
 
     public void deleteUser(User u) {
         userDAO.delete(u);
+        requestDAO.updateRequestUser(u.getUsername());
     }
 
     public User getUser(String id) {
@@ -767,5 +768,6 @@ public class Repository {
     public ArrayList<IFull> getAllFullRequests() {
         return requestDAO.getAllHelper1();
     }
+
 
 }
