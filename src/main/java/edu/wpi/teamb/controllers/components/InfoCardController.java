@@ -115,10 +115,10 @@ public class InfoCardController {
                 //send the current meal request information to the edit page
                 ((MealRequestControllerI) controller).enterMealRequestEditableMode((FullMealRequest) fullRequest, this);
                 break;
-//            case "Conference":
-//                //send the current conference request information to the edit page
-//                ((ConferenceRequestControllerI) controller).(fullRequest);
-//                break;
+            case "Conference":
+                //send the current conference request information to the edit page
+                ((ConferenceRequestControllerI) controller).enterConferenceRequestEditableMode((FullConferenceRequest) fullRequest, this);
+                break;
 //            case "Flower":
 //                //send the current flower request information to the edit page
 //                ((FlowerRequestControllerI) controller).sendRequest(fullRequest);

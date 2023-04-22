@@ -188,9 +188,7 @@ public class MealRequestControllerI implements IRequestController{
 
     //functions for editable stage in InfoCardController
     public void enterMealRequestEditableMode(FullMealRequest fullMealRequest, InfoCardController currentInfoCardController) {
-        System.out.println(fullMealRequest.getId() + " "  + fullMealRequest.getOrderFrom());
         cbOrderLocation.getSelectionModel().selectItem(fullMealRequest.getOrderFrom());
-        System.out.println(fullMealRequest.getId() + " "  + fullMealRequest.getEmployee());
         cbEmployeesToAssign.getSelectionModel().selectItem(fullMealRequest.getEmployee());
         cbAvailableMeals.getSelectionModel().selectItem(fullMealRequest.getFood());
         cbAvailableDrinks.getSelectionModel().selectItem(fullMealRequest.getDrink());

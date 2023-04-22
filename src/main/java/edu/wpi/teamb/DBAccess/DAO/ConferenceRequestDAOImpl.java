@@ -138,7 +138,7 @@ public class ConferenceRequestDAOImpl implements IDAO {
     public void update(Object request) {
         FullConferenceRequest fcr = (FullConferenceRequest) request;
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String[] colsConf = {"daterequested", "eventname", "bookingreason"};
+        String[] colsConf = {"daterequested", "eventname", "bookingreason", "duration"};
         String[] valuesConf = {String.valueOf(fcr.getDateRequested()), fcr.getEventName(), fcr.getBookingReason(), String.valueOf(fcr.getDuration())};
         String[] colsReq = {"employee", "datesubmitted", "requeststatus", "requesttype", "locationname", "notes"};
         String[] valuesReq = {fcr.getEmployee(), String.valueOf(fcr.getDateSubmitted()), fcr.getRequestStatus(), fcr.getRequestType(), fcr.getLocationName(), fcr.getNotes()};

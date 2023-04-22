@@ -830,6 +830,10 @@ public class Repository {
         conferenceRequestDAO.update(cr);
     }
 
+    public void updateConferenceRequest(FullConferenceRequest cr) {
+        conferenceRequestDAO.update(cr);
+    }
+
     public void addMealRequest(String[] mr) {
         mealRequestDAO.add(mr);
     }
