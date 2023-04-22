@@ -6,13 +6,17 @@ import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 
 import edu.wpi.teamb.Bapp;
+import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.Full.FullNode;
 import edu.wpi.teamb.DBAccess.DButils;
+import edu.wpi.teamb.DBAccess.ORMs.Move;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 import edu.wpi.teamb.pathfinding.PathFinding;
 import edu.wpi.teamb.controllers.NavDrawerController;
@@ -39,6 +43,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Path;
 import javafx.util.Duration;
 import net.kurobako.gesturefx.GesturePane;
 import org.controlsfx.control.PopOver;
@@ -68,6 +73,7 @@ public class PathfinderController {
     @FXML private MFXDatePicker datePicker;
     @FXML private MFXToggleButton toggleAvoidStairs;
     private String currentFloor = "1";
+    private HashMap<Integer,ArrayList<Move>> move_map = new HashMap<>();
 
 
     HashMap<String,ArrayList<Node>> nodes_by_floor = new HashMap<>();
@@ -77,7 +83,7 @@ public class PathfinderController {
     ArrayList<FullNode> fullNodes = new ArrayList<>();
     HashMap<Integer,FullNode> filteredFullNodes = new HashMap<>();
     HashMap<String,FullNode> fullNodesByLongname = new HashMap<>();
-    HashMap<Integer,FullNode> fullNodesByID = new HashMap<>();
+    HashMap<Integer,FullNode> fullNodesByID = PathFinding.ASTAR.getFullNodesByID();
     Group pathGroup;
     Pane locationCanvas;
   @FXML
@@ -86,6 +92,8 @@ public class PathfinderController {
       initNavBar();
       hoverHelp();
       initButtons();
+      getMoveMap();
+      handleDate();
       // Initialize the path
       //nodeList = editor.getNodeList();
 
@@ -155,12 +163,82 @@ public class PathfinderController {
 
   }
 
+  public void getMoveMap(){
+      HashMap<Integer,ArrayList<Move>> move_map = new HashMap<>();
+      ArrayList<Move> moves = Repository.getRepository().getAllMoves();
+      ArrayList<Move> currentMove = new ArrayList<>();
+      for (Move move : moves) {
+          if (move_map.containsKey(move.getNodeID())) {currentMove = move_map.get(move.getNodeID());}
+          else {currentMove = new ArrayList<>();}
+          currentMove.add(move);
+          move_map.put(move.getNodeID(),currentMove);
+      }
+//      System.out.println(move_map.get(105));
+      this.move_map = move_map;
+
+  }
+
+  public void handleDate(){
+      datePicker.setValue(LocalDate.now()); // Init to current date
+      LocalDate date_inputted = datePicker.getCurrentDate();
+      handle_move();
+      datePicker.valueProperty().addListener(new ChangeListener<LocalDate>() {
+          @Override
+          public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) {
+              //Print date change to console
+              System.out.println("New date selected: " + newValue);
+              handle_move();
+
+          }
+      });
+  }
+
+  public void handle_move() {
+      HashMap<Integer,Move> nodes_to_update = new HashMap<>();
+      LocalDate current_date = datePicker.getValue();
+      LocalDate tempDate;
+      for (Integer id : move_map.keySet()){
+          if (move_map.get(id).size() >= 1) {
+              tempDate = move_map.get(id).get(0).getDate().toLocalDate().minusYears(1);
+              for (Move move : move_map.get(id)) {
+                  LocalDate move_date =  move.getDate().toLocalDate();
+
+                  if ((move_date.isAfter(tempDate)) && move_date.isBefore(current_date)) {
+                      tempDate = move_date;
+                      nodes_to_update.put(move.getNodeID(),move);
+                  }
+
+                  else if (move_date.equals(current_date)) {
+                      tempDate = move_date;
+                      nodes_to_update.put(move.getNodeID(),move);
+                  }
+              }
+          }
+      }
+//      System.out.println("nodes to update");
+//      System.out.println(nodes_to_update);
+
+
+  }
+
+    public void update_nodes_from_moves(HashMap<Integer,Move> nodes_to_update){
+        for (Integer id : fullNodesByID.keySet()){
+            if (nodes_to_update.containsKey(id)){
+                FullNode newNode = fullNodesByID.get(id);
+                newNode.setLongName(nodes_to_update.get(id).getLongName());
+                fullNodesByID.put(id,newNode);
+            }
+            else {
+                fullNodesByID.put(id,PathFinding.ASTAR.getFullNodesByID().get(id));
+            }
+        }
+    }
+
   public ArrayList<String> getFilteredLongnames(){
       ArrayList<String> filtered_names = new ArrayList<>();
       for (FullNode node : fullNodes){
           filteredFullNodes.put(node.getNodeID(),node);
           fullNodesByLongname.put(node.getLongName(),node);
-          fullNodesByID.put(node.getNodeID(),node);
 
           filtered_names.add(node.getLongName());
 //          if (node.getNodeType().equals("STAI") || node.getNodeType().equals("ELEV")) {

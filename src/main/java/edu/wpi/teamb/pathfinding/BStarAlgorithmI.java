@@ -21,6 +21,8 @@ public class BStarAlgorithmI implements IPathFindingAlgorithm {
     }
     public void force_init() throws SQLException {create_all_nodes();}
 
+    public HashMap<Integer, FullNode> getFullNodesByID() {return PathFinding.ASTAR.getFullNodesByID();}
+
     public HashMap<Integer, Node> get_node_map() {
         return node_map;
     }

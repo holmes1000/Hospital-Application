@@ -42,6 +42,10 @@ public enum PathFinding {
 
     public ArrayList<FullNode> getFullNodes() {return this.algorithm.getFullNodes();}
 
+    public HashMap<Integer, FullNode> getFullNodesByID() {
+        return this.algorithm.getFullNodesByID();
+    }
+
 //    private static class SingletonHolder {
 //        private static final PathFinding INSTANCE = new PathFinding();
 //    }

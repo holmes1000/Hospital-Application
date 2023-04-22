@@ -24,6 +24,7 @@ public class DijkstraAlgorithmI implements IPathFindingAlgorithm {
         return node_map;
     }
     public ArrayList<FullNode> getFullNodes() {return PathFinding.ASTAR.getFullNodes();}
+    public HashMap<Integer, FullNode> getFullNodesByID() {return PathFinding.ASTAR.getFullNodesByID();}
 
 
     public void create_all_nodes() {

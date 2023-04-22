@@ -15,6 +15,7 @@ public class AStarAlgorithmStairsBiasI implements IPathFindingAlgorithm {
 
     HashMap<Integer,Node> node_map = new HashMap<Integer,Node>();
     public ArrayList<FullNode> getFullNodes() {return PathFinding.ASTAR.getFullNodes();}
+    public HashMap<Integer, FullNode> getFullNodesByID() {return PathFinding.ASTAR.getFullNodesByID();}
 
     public void init_pathfinder() throws SQLException {
         if (node_map.isEmpty()){create_all_nodes();}

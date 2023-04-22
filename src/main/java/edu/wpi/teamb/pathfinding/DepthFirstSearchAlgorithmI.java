@@ -12,6 +12,7 @@ public class DepthFirstSearchAlgorithmI implements IPathFindingAlgorithm {
 
     HashMap<Integer,Node> node_map = PathFinding.ASTAR.get_node_map();
     public ArrayList<FullNode> getFullNodes() {return PathFinding.ASTAR.getFullNodes();}
+    public HashMap<Integer, FullNode> getFullNodesByID() {return PathFinding.ASTAR.getFullNodesByID();}
 
     public LinkedList<Integer> newFrontiers(Integer location, ArrayList<Integer> visited) throws SQLException {
         LinkedList<Integer> newFrontiers = new LinkedList<Integer>();
