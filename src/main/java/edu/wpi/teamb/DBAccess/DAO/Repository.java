@@ -958,6 +958,10 @@ public class Repository {
         flowerRequestDAO.update(fr);
     }
 
+    public void updateFlowerRequest(FullFlowerRequest fr) {
+        flowerRequestDAO.update(fr);
+    }
+
     public ArrayList<Integer> getNeighbors(int nodeID) {
         return nodeDAO.getNeighborsAsNodeIDs(nodeID);
     }

@@ -1,29 +1,22 @@
 package edu.wpi.teamb.controllers.components;
 
 import edu.wpi.teamb.DBAccess.Full.*;
-import edu.wpi.teamb.DBAccess.ORMs.ConferenceRequest;
-import edu.wpi.teamb.DBAccess.ORMs.LocationName;
-import edu.wpi.teamb.DBAccess.ORMs.User;
 import edu.wpi.teamb.controllers.requests.ConferenceRequestControllerI;
+import edu.wpi.teamb.controllers.requests.FlowerRequestControllerI;
 import edu.wpi.teamb.controllers.requests.IRequestController;
 import edu.wpi.teamb.controllers.requests.MealRequestControllerI;
 import edu.wpi.teamb.entities.components.EInfoCard;
-import edu.wpi.teamb.entities.requests.IRequest;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXComboBox;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class InfoCardController {
@@ -119,10 +112,10 @@ public class InfoCardController {
                 //send the current conference request information to the edit page
                 ((ConferenceRequestControllerI) controller).enterConferenceRequestEditableMode((FullConferenceRequest) fullRequest, this);
                 break;
-//            case "Flower":
-//                //send the current flower request information to the edit page
-//                ((FlowerRequestControllerI) controller).sendRequest(fullRequest);
-//                break;
+            case "Flower":
+                //send the current flower request information to the edit page
+                ((FlowerRequestControllerI) controller).enterFlowerRequestEditableMode((FullFlowerRequest) fullRequest, this);
+                break;
 //            case "Office":
 //                //send the current office request information to the edit page
 //                ((OfficeRequestControllerI) controller).sendRequest(fullRequest);
