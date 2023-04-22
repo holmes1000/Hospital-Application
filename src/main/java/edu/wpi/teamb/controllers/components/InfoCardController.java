@@ -68,7 +68,45 @@ public class InfoCardController {
               //set the submit button to hidden
               submitButton.setVisible(false);
             });
-    editButton.setOnMouseClicked(event -> {});
+    editButton.setOnMouseClicked(event -> {
+        FXMLLoader loader = null;
+        Scene editPageScene = null;
+        //create a new window to load the edit page
+        Stage editPageStage = new Stage();
+        //switch statement to load the correct edit page
+        switch (requestType){
+            case "Meal":
+                //load the meal request form
+                loader = new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/requests/MealRequest.fxml"));
+                break;
+            case "Conference":
+                //load the conference request form
+                loader = new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/requests/ConferenceRequest.fxml"));
+                break;
+            case "Flower":
+                //load the flower request form
+                loader = new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/requests/FlowerRequests.fxml"));
+                break;
+            case "Office":
+                //load the office request form
+                loader = new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/requests/OfficeRequest.fxml"));
+                break;
+            case "Furniture":
+                //load the furniture request form
+                loader = new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/requests/FurnitureRequest.fxml"));
+                break;
+            default:
+                break;
+        }
+        //show the edit page window
+        try{
+            editPageScene = new Scene(loader.load());
+        } catch (IOException e) {
+            System.out.println("Error loading edit conference request form" + e.getMessage());
+        }
+        editPageStage.setScene(editPageScene);
+        editPageStage.show();
+    });
   }
 
   public void sendRequest(IFull request) {
