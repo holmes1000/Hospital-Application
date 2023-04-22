@@ -83,9 +83,7 @@ public abstract class RequestImpl implements IRequest {
   }
 
   public boolean checkRequestFields() {
-    if (this.employee == null || this.locationName == null  || this.requestStatus == null) {
-      return false;
-    }
-    return true;
+    return this.employee != null && this.locationName != null && this.requestStatus != null;
   }
+
 }

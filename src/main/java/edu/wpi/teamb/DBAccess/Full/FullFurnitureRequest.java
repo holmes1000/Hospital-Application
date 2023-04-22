@@ -40,6 +40,12 @@ public class FullFurnitureRequest implements IFull {
     }
 
     public FullFurnitureRequest(Request request, FurnitureRequest furnitureRequest) {
+        this.id = request.getId();
+        this.employee = request.getEmployee();
+        this.dateSubmitted = request.getDateSubmitted();
+        this.requestStatus = request.getRequestStatus();
+        this.locationName = request.getLocationName();
+        this.notes = request.getNotes();
         this.type = furnitureRequest.getType();
         this.model = furnitureRequest.getModel();
         this.assembly = furnitureRequest.isAssembly();

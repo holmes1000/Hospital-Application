@@ -86,50 +86,43 @@ public class FurnitureRequestControllerI implements IRequestController{
         //Set list of employees
         ObservableList<String> employees =
                 FXCollections.observableArrayList();
+        employees.add("Unassigned");
         employees.addAll(EFurnitureRequest.getUsernames());
         cbEmployeesToAssign.setItems(employees);
     }
 
     @Override
     public void handleSubmit() {
-        // Get the standard request fields
-        EFurnitureRequest.setEmployee(cbEmployeesToAssign.getValue());
-        EFurnitureRequest.setLocationName(cbLongName.getValue());
-        EFurnitureRequest.setRequestStatus(IRequest.RequestStatus.Pending);
-        EFurnitureRequest.setNotes(txtFldNotes.getText());
+        if (nullInputs())
+            showPopOver();
+        else {
+            // Get the standard request fields
+            EFurnitureRequest.setEmployee(cbEmployeesToAssign.getValue());
+            EFurnitureRequest.setLocationName(cbLongName.getValue());
+            EFurnitureRequest.setRequestStatus(IRequest.RequestStatus.Pending);
+            EFurnitureRequest.setNotes(txtFldNotes.getText());
 
-        // Get the conference specific fields
-        EFurnitureRequest.setFurnitureType(cbAvailableFurniture.getValue());
-        EFurnitureRequest.setModel(cdAvailableModels.getValue());
-        EFurnitureRequest.setAssembly(cdAssembly.getValue());
+            // Get the conference specific fields
+            EFurnitureRequest.setFurnitureType(cbAvailableFurniture.getValue());
+            EFurnitureRequest.setModel(cdAvailableModels.getValue());
+            EFurnitureRequest.setAssembly(cdAssembly.getValue());
 
-        if(EFurnitureRequest.checkRequestFields() && EFurnitureRequest.checkSpecialRequestFields()){
-            String[] output = {
-                    EFurnitureRequest.getEmployee(),
-                    String.valueOf(EFurnitureRequest.getRequestStatus()),
-                    EFurnitureRequest.getLocationName(),
-                    EFurnitureRequest.getNotes(),
-                    EFurnitureRequest.getFurnitureType(),
-                    EFurnitureRequest.getModel(),
-                    String.valueOf(stringToBoolean(EFurnitureRequest.getAssembly()))
-            };
-            EFurnitureRequest.submitRequest(output);
-            handleReset();
-            Navigation.navigate(Screen.CREATE_NEW_REQUEST);
-        }else{
-            final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/NotAllFieldsCompleteError.fxml"));
-            PopOver popOver = new PopOver();
-            popOver.setDetachable(true);
-            popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
-            popOver.setArrowSize(0.0);
-            try {
-                popOver.setContentNode(popupLoader.load());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            if (EFurnitureRequest.checkRequestFields() && EFurnitureRequest.checkSpecialRequestFields()) {
+                String[] output = {
+                        EFurnitureRequest.getEmployee(),
+                        String.valueOf(EFurnitureRequest.getRequestStatus()),
+                        EFurnitureRequest.getLocationName(),
+                        EFurnitureRequest.getNotes(),
+                        EFurnitureRequest.getFurnitureType(),
+                        EFurnitureRequest.getModel(),
+                        String.valueOf(stringToBoolean(EFurnitureRequest.getAssembly()))
+                };
+                EFurnitureRequest.submitRequest(output);
+                handleReset();
+                Navigation.navigate(Screen.CREATE_NEW_REQUEST);
             }
-            popOver.show(btnSubmit);
+            submissionAlert();
         }
-        submissionAlert();
     }
 
     @Override
@@ -163,5 +156,30 @@ public class FurnitureRequestControllerI implements IRequestController{
         } else {
             return false;
         }
+    }
+
+    @Override
+    public boolean nullInputs() {
+        return cbAvailableFurniture.getValue() == null
+                || cdAvailableModels.getValue() == null
+                || cdAssembly.getValue() == null
+                || txtFldNotes.getText().isEmpty()
+                || cbEmployeesToAssign.getValue() == null
+                || cbLongName.getValue() == null;
+    }
+
+    @Override
+    public void showPopOver() {
+        final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/NotAllFieldsCompleteError.fxml"));
+        PopOver popOver = new PopOver();
+        popOver.setDetachable(true);
+        popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
+        popOver.setArrowSize(0.0);
+        try {
+            popOver.setContentNode(popupLoader.load());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        popOver.show(btnSubmit);
     }
 }

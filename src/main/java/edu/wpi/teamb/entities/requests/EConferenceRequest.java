@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.Objects;
 
 public class EConferenceRequest extends RequestImpl {
-  private Timestamp dateRequested;
-  private String eventName;
-  private String bookingReason;
-  private int duration;
+  private Timestamp dateRequested = null;
+  private String eventName = null;
+  private String bookingReason = null;
+  private int duration = 0;
 
     public EConferenceRequest(String dateRequested, String eventName, String bookingReason, int duration) {
         this.dateRequested = Timestamp.valueOf(dateRequested);
@@ -79,10 +79,7 @@ public class EConferenceRequest extends RequestImpl {
   }
 
   public boolean checkSpecialRequestFields() {
-      if (this.dateRequested == null || this.eventName == null || this.bookingReason == null || this.duration == 0) {
-          return false;
-      }
-      return true;
+    return this.dateRequested != null && this.eventName != null && this.bookingReason != null && this.duration != 0;
   }
 
 }

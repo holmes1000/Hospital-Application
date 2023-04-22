@@ -68,6 +68,7 @@ public class MealRequestControllerI implements IRequestController{
         // DROPDOWN INITIALIZATION
         ObservableList<String> employees =
                 FXCollections.observableArrayList();
+        employees.add("Unassigned");
         employees.addAll(EMealRequest.getUsernames());
         cbEmployeesToAssign.setItems(employees);
 
@@ -88,50 +89,40 @@ public class MealRequestControllerI implements IRequestController{
 
     @Override
     public void handleSubmit() {
-        // Get the standard request fields
-        EMealRequest.setEmployee(cbEmployeesToAssign.getValue());
-        EMealRequest.setLocationName(cbLongName.getValue());
-        EMealRequest.setRequestStatus(IRequest.RequestStatus.Pending);
-        EMealRequest.setNotes(txtFldNotes.getText());
+        if (nullInputs())
+            showPopOver();
+        else {
+            // Get the standard request fields
+            EMealRequest.setEmployee(cbEmployeesToAssign.getValue());
+            EMealRequest.setLocationName(cbLongName.getValue());
+            EMealRequest.setRequestStatus(IRequest.RequestStatus.Pending);
+            EMealRequest.setNotes(txtFldNotes.getText());
 
-        // Get the meal specific fields
-        EMealRequest.setOrderFrom(cbOrderLocation.getValue());
-        EMealRequest.setFood(cbAvailableMeals.getValue());
-        EMealRequest.setDrink(cbAvailableDrinks.getValue());
-        EMealRequest.setSnack(cbAvailableSnacks.getValue());
+            // Get the meal specific fields
+            EMealRequest.setOrderFrom(cbOrderLocation.getValue());
+            EMealRequest.setFood(cbAvailableMeals.getValue());
+            EMealRequest.setDrink(cbAvailableDrinks.getValue());
+            EMealRequest.setSnack(cbAvailableSnacks.getValue());
 
-        //Check for required fields before allowing submittion
-        if(EMealRequest.checkRequestFields() && EMealRequest.checkSpecialRequestFields()) {
-            //Set the gathered fields into a string array
-            String[] output = {
-                    EMealRequest.getEmployee(),
-                    String.valueOf(EMealRequest.getRequestStatus()),
-                    EMealRequest.getLocationName(),
-                    EMealRequest.getNotes(),
-                    EMealRequest.getOrderFrom(),
-                    EMealRequest.getFood(),
-                    EMealRequest.getDrink(),
-                    EMealRequest.getSnack()
-            };
-            EMealRequest.submitRequest(output);
-            handleReset();
-            Navigation.navigate(Screen.CREATE_NEW_REQUEST);
-        } else {
-
-            //If the required fields are not filled, bring up pop-over indicating such
-            final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/NotAllFieldsCompleteError.fxml"));
-            PopOver popOver = new PopOver();
-            popOver.setDetachable(true);
-            popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
-            popOver.setArrowSize(0.0);
-            try {
-                popOver.setContentNode(popupLoader.load());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            //Check for required fields before allowing submittion
+            if (EMealRequest.checkRequestFields() && EMealRequest.checkSpecialRequestFields()) {
+                //Set the gathered fields into a string array
+                String[] output = {
+                        EMealRequest.getEmployee(),
+                        String.valueOf(EMealRequest.getRequestStatus()),
+                        EMealRequest.getLocationName(),
+                        EMealRequest.getNotes(),
+                        EMealRequest.getOrderFrom(),
+                        EMealRequest.getFood(),
+                        EMealRequest.getDrink(),
+                        EMealRequest.getSnack()
+                };
+                EMealRequest.submitRequest(output);
+                handleReset();
+                Navigation.navigate(Screen.CREATE_NEW_REQUEST);
             }
-            popOver.show(btnSubmit);
+            submissionAlert();
         }
-        submissionAlert();
     }
 
     @Override
@@ -170,5 +161,25 @@ public class MealRequestControllerI implements IRequestController{
             throw new RuntimeException(e);
         }
         popOver.show(helpIcon);
+    }
+
+    @Override
+    public boolean nullInputs() {
+        return cbOrderLocation.getValue() == null || cbEmployeesToAssign.getValue() == null || cbAvailableMeals.getValue() == null || cbAvailableDrinks.getValue() == null || cbAvailableSnacks.getValue() == null || cbLongName.getValue() == null;
+    }
+
+    @Override
+    public void showPopOver() {
+        final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/NotAllFieldsCompleteError.fxml"));
+        PopOver popOver = new PopOver();
+        popOver.setDetachable(true);
+        popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
+        popOver.setArrowSize(0.0);
+        try {
+            popOver.setContentNode(popupLoader.load());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        popOver.show(btnSubmit);
     }
 }

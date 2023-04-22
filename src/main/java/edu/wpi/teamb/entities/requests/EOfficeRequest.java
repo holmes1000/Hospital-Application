@@ -74,9 +74,6 @@ public class EOfficeRequest extends RequestImpl {
     }
 
     public boolean checkSpecialRequestFields() {
-        if (this.type == null || this.item == null || this.quantity == 0) {
-            return false;
-        }
-        return true;
+        return this.type != null && this.item != null && this.quantity != 0;
     }
 }

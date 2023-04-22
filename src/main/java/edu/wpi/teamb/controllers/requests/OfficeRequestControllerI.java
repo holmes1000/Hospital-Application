@@ -63,6 +63,7 @@ public class OfficeRequestControllerI implements IRequestController{
 
         //DROPDOWN INITIALIZATION
         ObservableList<String> employees = FXCollections.observableArrayList(EOfficeRequest.getUsernames());
+        employees.add("Unassigned");
         cbEmployeesToAssign.setItems(employees);
 
         //DROPDOWN INITIALIZATION
@@ -76,44 +77,36 @@ public class OfficeRequestControllerI implements IRequestController{
 
     @Override
     public void handleSubmit() {
-        // Get the standard request fields
-        EOfficeRequest.setEmployee(cbEmployeesToAssign.getValue());
-        EOfficeRequest.setLocationName(cbLongName.getValue());
-        EOfficeRequest.setRequestStatus(IRequest.RequestStatus.Pending);
-        EOfficeRequest.setNotes(txtFldNotes.getText());
+        if (nullInputs())
+            showPopOver();
+        else {
+            // Get the standard request fields
+            EOfficeRequest.setEmployee(cbEmployeesToAssign.getValue());
+            EOfficeRequest.setLocationName(cbLongName.getValue());
+            EOfficeRequest.setRequestStatus(IRequest.RequestStatus.Pending);
+            EOfficeRequest.setNotes(txtFldNotes.getText());
 
-        // Get the office specific fields
-        EOfficeRequest.setType(cbSupplyType.getValue());
-        EOfficeRequest.setItem(cbSupplyItems.getValue());
-        EOfficeRequest.setQuantity(Integer.parseInt(tbSupplyQuantities.getText()));
+            // Get the office specific fields
+            EOfficeRequest.setType(cbSupplyType.getValue());
+            EOfficeRequest.setItem(cbSupplyItems.getValue());
+            EOfficeRequest.setQuantity(Integer.parseInt(tbSupplyQuantities.getText()));
 
-        if(EOfficeRequest.checkRequestFields() && EOfficeRequest.checkSpecialRequestFields()){
-            String[] output = {
-                    EOfficeRequest.getEmployee(),
-                    String.valueOf(EOfficeRequest.getRequestStatus()),
-                    EOfficeRequest.getLocationName(),
-                    EOfficeRequest.getNotes(),
-                    EOfficeRequest.getType(),
-                    EOfficeRequest.getItem(),
-                    Integer.toString(EOfficeRequest.getQuantity())
-            };
-            EOfficeRequest.submitRequest(output);
-            handleReset();
-            Navigation.navigate(Screen.CREATE_NEW_REQUEST);
-        } else {
-            final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/NotAllFieldsCompleteError.fxml"));
-            PopOver popOver = new PopOver();
-            popOver.setDetachable(true);
-            popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
-            popOver.setArrowSize(0.0);
-            try {
-                popOver.setContentNode(popupLoader.load());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            if (EOfficeRequest.checkRequestFields() && EOfficeRequest.checkSpecialRequestFields()) {
+                String[] output = {
+                        EOfficeRequest.getEmployee(),
+                        String.valueOf(EOfficeRequest.getRequestStatus()),
+                        EOfficeRequest.getLocationName(),
+                        EOfficeRequest.getNotes(),
+                        EOfficeRequest.getType(),
+                        EOfficeRequest.getItem(),
+                        Integer.toString(EOfficeRequest.getQuantity())
+                };
+                EOfficeRequest.submitRequest(output);
+                handleReset();
+                Navigation.navigate(Screen.CREATE_NEW_REQUEST);
             }
-            popOver.show(btnSubmit);
+            submissionAlert();
         }
-        submissionAlert();
     }
 
     @Override
@@ -144,5 +137,25 @@ public class OfficeRequestControllerI implements IRequestController{
             throw new RuntimeException(e);
         }
         popOver.show(helpIcon);
+    }
+
+    @Override
+    public boolean nullInputs(){
+        return cbEmployeesToAssign.getValue() == null || cbSupplyItems.getValue() == null || cbSupplyType.getValue() == null || tbSupplyQuantities.getText().isEmpty() || cbLongName.getValue() == null;
+    }
+
+    @Override
+    public void showPopOver() {
+        final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/NotAllFieldsCompleteError.fxml"));
+        PopOver popOver = new PopOver();
+        popOver.setDetachable(true);
+        popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
+        popOver.setArrowSize(0.0);
+        try {
+            popOver.setContentNode(popupLoader.load());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        popOver.show(btnSubmit);
     }
 }

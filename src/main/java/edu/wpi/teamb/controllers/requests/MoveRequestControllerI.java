@@ -97,45 +97,34 @@ public class MoveRequestControllerI implements IRequestController{
 
     @Override
     public void handleSubmit() {
-        String what = cdRoomToMove.getSelectedItem();
-        Integer where = cdWheretoMove.getSelectedItem();
-        Date when = Date.valueOf(dateOfMove.getValue());
+        if (nullInputs())
+            showPopOver();
+        else {
+            String what = cdRoomToMove.getSelectedItem();
+            Integer where = cdWheretoMove.getSelectedItem();
+            Date when = Date.valueOf(dateOfMove.getValue());
 
-        // popup error when not all fields are filled or when date is before current
-        // date or when the move is already in the table
-        if (what != null && where != null && when != null) {
-            if (!tbFutureMoves.getItems().contains(new Move(where, what, when))) {
-                if (when.after(new Date(System.currentTimeMillis()-1000*60*60*24))) {
-                    String[] output = { where.toString(), what, when.toString() };
-                    EMoveRequest.submitRequest(output);
-                    handleReset();
+            // popup error when not all fields are filled or when date is before current
+            // date or when the move is already in the table
+            if (what != null && where != null && when != null) {
+                if (!tbFutureMoves.getItems().contains(new Move(where, what, when))) {
+                    if (when.after(new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24))) {
+                        String[] output = {where.toString(), what, when.toString()};
+                        EMoveRequest.submitRequest(output);
+                        handleReset();
 
-                    updateTable();
+                        updateTable();
 
+                    } else {
+                        // TODO popup error when entered date is before current date
+                    }
                 } else {
-                    // TODO popup error when entered date is before current date
+                    // TODO popup error when entered value is already in table
                 }
-            } else {
-                // TODO popup error when entered value is already in table
+                handleReset();
+                submissionAlert();
             }
-
-            handleReset();
-
-        } else {
-            final FXMLLoader popupLoader = new FXMLLoader(
-                    Bapp.class.getResource("views/components/popovers/NotAllFieldsCompleteError.fxml"));
-            PopOver popOver = new PopOver();
-            popOver.setDetachable(true);
-            popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
-            popOver.setArrowSize(0.0);
-            try {
-                popOver.setContentNode(popupLoader.load());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            popOver.show(btnSubmit);
         }
-        submissionAlert();
     }
 
     @Override
@@ -165,6 +154,27 @@ public class MoveRequestControllerI implements IRequestController{
             throw new RuntimeException(e);
         }
         popOver.show(helpIcon);
+    }
+
+    @Override
+    public void showPopOver() {
+        final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/NotAllFieldsCompleteError.fxml"));
+        PopOver popOver = new PopOver();
+        popOver.setDetachable(true);
+        popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
+        popOver.setArrowSize(0.0);
+        try {
+            popOver.setContentNode(popupLoader.load());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        popOver.show(btnSubmit);
+    }
+
+    @Override
+    public boolean nullInputs() {
+        return cdRoomToMove.getSelectedItem() == null || cdWheretoMove.getSelectedItem() == null
+                || dateOfMove.getValue() == null;
     }
 
     private void moveTable() {

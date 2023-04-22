@@ -1,12 +1,16 @@
 package edu.wpi.teamb.controllers.requests;
 
+import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import org.controlsfx.control.PopOver;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 public interface IRequestController {
@@ -50,7 +54,12 @@ public interface IRequestController {
         alert.setHeaderText(null);
         alert.setContentText("Successfully Submitted Request");
         alert.showAndWait();
-        Navigation.navigate(Screen.HOME);
+        Navigation.navigate(Screen.CREATE_NEW_REQUEST);
     }
+
+    void showPopOver();
+
+    boolean nullInputs();
+
 }
 

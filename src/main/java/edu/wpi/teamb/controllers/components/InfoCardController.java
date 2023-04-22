@@ -77,6 +77,7 @@ public class InfoCardController {
     setLocationNameLabel(fullRequest.getLocationName());
     setEmployeeAssignedLabel(fullRequest.getEmployee());
     setStatusLabel(fullRequest.getRequestStatus());
+    requestTypeIconImageView.setImage(fullRequest.setRequestTypeIconImageView());
     fullRequest.setRequestType();
   }
 
@@ -120,6 +121,43 @@ public class InfoCardController {
         ((FullOfficeRequest) fullRequest).setType(officeRequest.getType());
 
     }
+    setSpecificFieldsOnCard();
+  }
+
+  public void setSpecificFieldsOnCard() {
+      if (Objects.equals(requestType, "Meal")) {
+          //set the meal specific fields
+          subComponentContainer.getChildren().add(new Label("Order From: " + ((FullMealRequest) fullRequest).getOrderFrom()));
+          subComponentContainer.getChildren().add(new Label("Food: " + ((FullMealRequest) fullRequest).getFood()));
+          subComponentContainer.getChildren().add(new Label("Drink: " + ((FullMealRequest) fullRequest).getDrink()));
+          subComponentContainer.getChildren().add(new Label("Snack: " + ((FullMealRequest) fullRequest).getSnack()));
+
+      } else if (Objects.equals(requestType, "Conference")) {
+          //set the conference specific fields
+          subComponentContainer.getChildren().add(new Label("Event Name: " + ((FullConferenceRequest) fullRequest).getEventName()));
+          subComponentContainer.getChildren().add(new Label("Booking Reason: " + ((FullConferenceRequest) fullRequest).getBookingReason()));
+          subComponentContainer.getChildren().add(new Label("Duration: " + ((FullConferenceRequest) fullRequest).getDuration()));
+          subComponentContainer.getChildren().add(new Label("Date Requested: " + ((FullConferenceRequest) fullRequest).getDateRequested()));
+
+      } else if (Objects.equals(requestType, "Flower")) {
+          //set the flower specific fields
+          subComponentContainer.getChildren().add(new Label("Flower Type: " + ((FullFlowerRequest) fullRequest).getFlowerType()));
+          subComponentContainer.getChildren().add(new Label("Size: " + ((FullFlowerRequest) fullRequest).getSize()));
+          subComponentContainer.getChildren().add(new Label("Color: " + ((FullFlowerRequest) fullRequest).getColor()));
+          subComponentContainer.getChildren().add(new Label("Message: " + ((FullFlowerRequest) fullRequest).getMessage()));
+
+      } else if (Objects.equals(requestType, "Furniture")) {
+          //set the furniture specific fields
+          subComponentContainer.getChildren().add(new Label("Type: " + ((FullFurnitureRequest) fullRequest).getType()));
+          subComponentContainer.getChildren().add(new Label("Model: " + ((FullFurnitureRequest) fullRequest).getModel()));
+          subComponentContainer.getChildren().add(new Label("Assembly: " + ((FullFurnitureRequest) fullRequest).getAssembly()));
+
+      } else if (Objects.equals(requestType, "Office")) {
+          //set the office specific fields
+          subComponentContainer.getChildren().add(new Label("Item: " + ((FullOfficeRequest) fullRequest).getItem()));
+          subComponentContainer.getChildren().add(new Label("Quantity: " + ((FullOfficeRequest) fullRequest).getQuantity()));
+          subComponentContainer.getChildren().add(new Label("Type: " + ((FullOfficeRequest) fullRequest).getType()));
+      }
   }
 
   /**

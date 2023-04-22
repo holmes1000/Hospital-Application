@@ -66,6 +66,7 @@ public class ConferenceRequestControllerI implements IRequestController{
         //Dropdown for employee selection
         ObservableList<String> employees =
                 FXCollections.observableArrayList();
+        employees.add("Unassigned");
         employees.addAll(EConferenceRequest.getUsernames());
         cbEmployeesToAssign.setItems(employees);
 
@@ -99,6 +100,11 @@ public class ConferenceRequestControllerI implements IRequestController{
 
     @Override
     public void handleSubmit() {
+        // Check if the input fields are null
+        if (nullInputs()) {
+            showPopOver();
+        }
+        else {
         String timerequested = "";
         if (reservationAmPm.getText().equals("AM") && reservationHour.getText().equals("12")) {
             timerequested = "00:" + reservationMinute.getText() + ":00";
@@ -113,48 +119,37 @@ public class ConferenceRequestControllerI implements IRequestController{
         String daterequested = datePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));;
         String timeStamp = daterequested + " " + timerequested;
 
-        // Get the standard request fields
-        EConferenceRequest.setEmployee(cbEmployeesToAssign.getValue());
-        EConferenceRequest.setLocationName(cbLongName.getValue());
-        EConferenceRequest.setRequestStatus(IRequest.RequestStatus.Pending);
-        EConferenceRequest.setNotes(tfNotes.getText());
+            // Get the standard request fields
+            EConferenceRequest.setEmployee(cbEmployeesToAssign.getValue());
+            EConferenceRequest.setLocationName(cbLongName.getValue());
+            EConferenceRequest.setRequestStatus(IRequest.RequestStatus.Pending);
+            EConferenceRequest.setNotes(tfNotes.getText());
 
-        // Get the conference specific fields
-        EConferenceRequest.setDateRequested(Timestamp.valueOf(timeStamp));
-        EConferenceRequest.setEventName(eventNameTextField.getText());
-        EConferenceRequest.setBookingReason(bookingReasonTextField.getText());
-        EConferenceRequest.setDuration(cbDuration.getValue());
+            // Get the conference specific fields
+            EConferenceRequest.setDateRequested(Timestamp.valueOf(timeStamp));
+            EConferenceRequest.setEventName(eventNameTextField.getText());
+            EConferenceRequest.setBookingReason(bookingReasonTextField.getText());
+            EConferenceRequest.setDuration(cbDuration.getValue());
 
-        //Check for required fields before allowing submittion
-        if(EConferenceRequest.checkRequestFields() && EConferenceRequest.checkSpecialRequestFields()){
-            //Set the gathered fields into a string array
-            String[] output = {EConferenceRequest.getEmployee(),
-                    String.valueOf(EConferenceRequest.getRequestStatus()),
-                    EConferenceRequest.getLocationName(),
-                    EConferenceRequest.getNotes(),
-                    String.valueOf(EConferenceRequest.getDateRequested()),
-                    EConferenceRequest.getEventName(),
-                    EConferenceRequest.getBookingReason(),
-                    String.valueOf(EConferenceRequest.getDuration())
-            };
+            //Check for required fields before allowing submittion
+            if (EConferenceRequest.checkRequestFields() && EConferenceRequest.checkSpecialRequestFields()) {
+                //Set the gathered fields into a string array
+                String[] output = {EConferenceRequest.getEmployee(),
+                        String.valueOf(EConferenceRequest.getRequestStatus()),
+                        EConferenceRequest.getLocationName(),
+                        EConferenceRequest.getNotes(),
+                        String.valueOf(EConferenceRequest.getDateRequested()),
+                        EConferenceRequest.getEventName(),
+                        EConferenceRequest.getBookingReason(),
+                        String.valueOf(EConferenceRequest.getDuration())
+                };
 
-            EConferenceRequest.submitRequest(output);
-            handleReset();
-            Navigation.navigate(Screen.CREATE_NEW_REQUEST);
-        } else {
-            //If the required fields are not filled, bring up pop-over indicating such
-            final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/NotAllFieldsCompleteError.fxml"));
-            PopOver popOver = new PopOver();
-            popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
-            popOver.setArrowSize(0.0);
-            try {
-                popOver.setContentNode(popupLoader.load());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                EConferenceRequest.submitRequest(output);
+                handleReset();
+                Navigation.navigate(Screen.CREATE_NEW_REQUEST);
             }
-            popOver.show(btnSubmit);
+            submissionAlert();
         }
-        submissionAlert();
     }
 
     @Override
@@ -186,5 +181,33 @@ public class ConferenceRequestControllerI implements IRequestController{
             throw new RuntimeException(e);
         }
         popOver.show(helpIcon);
+    }
+
+    @Override
+    public boolean nullInputs() {
+        return cbEmployeesToAssign.getValue() == null
+                || cbLongName.getValue() == null
+                || eventNameTextField.getText().isEmpty()
+                || bookingReasonTextField.getText().isEmpty()
+                || cbDuration.getValue() == null
+                || reservationHour.getValue() == null
+                || reservationMinute.getValue() == null
+                || reservationAmPm.getValue() == null
+                || datePicker.getValue() == null;
+    }
+
+    @Override
+    public void showPopOver() {
+        final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/NotAllFieldsCompleteError.fxml"));
+        PopOver popOver = new PopOver();
+        popOver.setDetachable(true);
+        popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
+        popOver.setArrowSize(0.0);
+        try {
+            popOver.setContentNode(popupLoader.load());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        popOver.show(btnSubmit);
     }
 }
