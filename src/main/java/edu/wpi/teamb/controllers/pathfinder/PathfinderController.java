@@ -81,7 +81,6 @@ public class PathfinderController {
 
     public GesturePane pane = new GesturePane();
     ArrayList<FullNode> fullNodes = new ArrayList<>();
-    HashMap<Integer,FullNode> filteredFullNodes = new HashMap<>();
     HashMap<String,FullNode> fullNodesByLongname = new HashMap<>();
     HashMap<Integer,FullNode> fullNodesByID = PathFinding.ASTAR.getFullNodesByID();
     Group pathGroup;
@@ -100,7 +99,7 @@ public class PathfinderController {
       this.stackPaneMapView = new StackPane(); // no longer @FXML
       this.pathGroup = new Group();
       this.locationCanvas = new Pane();
-      this.filteredFullNodes = new HashMap<>();
+//      this.filteredFullNodes = new HashMap<>();
       getFilteredLongnames();
       this.pane.setContent(stackPaneMapView);
       this.imageViewPathfinder = new ImageView(Bapp.getHospitalListOfFloors().get(3)); // no longer @FXML
@@ -144,7 +143,7 @@ public class PathfinderController {
                   Integer index = listView.getItems().indexOf(selectedLongName);
 //                  System.out.println(index);
                   Node node = PathFinding.ASTAR.get_node_map().get(EPathfinder.getPath().get(index));
-                  FullNode n = filteredFullNodes.get(node.getNodeID());
+                  FullNode n = fullNodesByID.get(node.getNodeID());
                   String floor = n.getFloor();
                   if (!currentFloor.equals(floor)) {
                       switchFloor(floor);
@@ -215,6 +214,11 @@ public class PathfinderController {
               }
           }
       }
+      update_nodes_from_moves(nodes_to_update);
+      ObservableList<String> nodes = FXCollections.observableArrayList();
+      nodes.addAll(getFilteredLongnames());
+      startNode.setItems(nodes);
+      endNode.setItems(nodes);
 //      System.out.println("nodes to update");
 //      System.out.println(nodes_to_update);
 
@@ -222,22 +226,24 @@ public class PathfinderController {
   }
 
     public void update_nodes_from_moves(HashMap<Integer,Move> nodes_to_update){
+            fullNodes = new ArrayList<>();
         for (Integer id : fullNodesByID.keySet()){
             if (nodes_to_update.containsKey(id)){
                 FullNode newNode = fullNodesByID.get(id);
                 newNode.setLongName(nodes_to_update.get(id).getLongName());
-                fullNodesByID.put(id,newNode);
+                fullNodes.add(newNode);
             }
             else {
-                fullNodesByID.put(id,PathFinding.ASTAR.getFullNodesByID().get(id));
+                fullNodes.add(fullNodesByID.get(id));
             }
         }
+        getFilteredLongnames();
     }
 
   public ArrayList<String> getFilteredLongnames(){
       ArrayList<String> filtered_names = new ArrayList<>();
       for (FullNode node : fullNodes){
-          filteredFullNodes.put(node.getNodeID(),node);
+          fullNodesByID.put(node.getNodeID(),node);
           fullNodesByLongname.put(node.getLongName(),node);
 
           filtered_names.add(node.getLongName());
@@ -449,10 +455,11 @@ public class PathfinderController {
 
   public void clickFindPath() throws SQLException {
       btnFindPath.setOnMouseClicked(event-> {
+          ArrayList<String> string_path = new ArrayList<>();
           VboxPathfinder.getChildren().clear();
           if (!(startNode.getSelectedItem() == null)  && !(endNode.getSelectedItem() == null)) {
-              int start = filteredFullNodes.get(fullNodesByLongname.get(startNode.getSelectedItem()).getNodeID()).getNodeID();
-              int end = filteredFullNodes.get(fullNodesByLongname.get(endNode.getSelectedItem()).getNodeID()).getNodeID();
+              int start = fullNodesByID.get(fullNodesByLongname.get(startNode.getSelectedItem()).getNodeID()).getNodeID();
+              int end = fullNodesByID.get(fullNodesByLongname.get(endNode.getSelectedItem()).getNodeID()).getNodeID();
 
               String[] path = new String[0];
               try {
@@ -480,7 +487,7 @@ public class PathfinderController {
                   ArrayList<Node> nodePath;
                   nodes_by_floor = new HashMap<>();
                   for (Integer id : int_path) {
-                      Node node = PathFinding.ASTAR.get_node_map().get(id);
+                      FullNode node = fullNodesByID.get(id);
                       nodePath = nodes_by_floor.get(node.getFloor());
 //                  System.out.println(nodePath);
                       if (nodePath == null) {
@@ -488,6 +495,7 @@ public class PathfinderController {
                       }
                       nodePath.add(PathFinding.ASTAR.get_node_map().get(id));
                       nodes_by_floor.put(node.getFloor(), nodePath);
+                      string_path.add(node.getLongName());
                   }
 
                   String floor = PathFinding.ASTAR.get_node_map().get(start).getFloor();
@@ -501,7 +509,7 @@ public class PathfinderController {
               //Assume all images were already added to the stackPane
 
               //Add the image to the Front
-              ObservableList<String> items = FXCollections.observableArrayList(path);
+              ObservableList<String> items = FXCollections.observableArrayList(string_path);
               listView.setItems(items);
               VboxPathfinder.getChildren().addAll(listView);
               listView.getSelectionModel().clearSelection();
