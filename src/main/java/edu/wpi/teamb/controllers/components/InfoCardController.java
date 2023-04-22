@@ -113,7 +113,7 @@ public class InfoCardController {
         switch(requestType){
             case "Meal":
                 //send the current meal request information to the edit page
-                ((MealRequestControllerI) controller).enterMealRequestEditableMode((FullMealRequest) fullRequest);
+                ((MealRequestControllerI) controller).enterMealRequestEditableMode((FullMealRequest) fullRequest, this);
                 break;
 //            case "Conference":
 //                //send the current conference request information to the edit page
@@ -205,6 +205,8 @@ public class InfoCardController {
     }
 
   public void setSpecificFieldsOnCard() {
+      //empty subComponentContainer *necessary for update*
+      subComponentContainer.getChildren().clear();
       //set a margin on subComponentContainer
       subComponentContainer.setSpacing(5);
       String commonCSStyles = "-fx-font-size: 14px; -fx-text-fill: WHITE;";

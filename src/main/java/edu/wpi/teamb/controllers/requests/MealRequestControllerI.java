@@ -3,6 +3,7 @@ package edu.wpi.teamb.controllers.requests;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.Full.FullMealRequest;
+import edu.wpi.teamb.controllers.components.InfoCardController;
 import edu.wpi.teamb.entities.requests.EMealRequest;
 import edu.wpi.teamb.entities.requests.IRequest;
 import edu.wpi.teamb.navigation.Navigation;
@@ -16,6 +17,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
 
 import java.io.IOException;
@@ -185,7 +187,7 @@ public class MealRequestControllerI implements IRequestController{
     }
 
     //functions for editable stage in InfoCardController
-    public void enterMealRequestEditableMode(FullMealRequest fullMealRequest) {
+    public void enterMealRequestEditableMode(FullMealRequest fullMealRequest, InfoCardController currentInfoCardController) {
         System.out.println(fullMealRequest.getId() + " "  + fullMealRequest.getOrderFrom());
         cbOrderLocation.getSelectionModel().selectItem(fullMealRequest.getOrderFrom());
         System.out.println(fullMealRequest.getId() + " "  + fullMealRequest.getEmployee());
@@ -210,6 +212,11 @@ public class MealRequestControllerI implements IRequestController{
             fullMealRequest.setNotes(txtFldNotes.getText());
             //update the database
             EMealRequest.updateMealRequests(fullMealRequest);
+            //close the window
+            Stage stage = (Stage) btnSubmit.getScene().getWindow();
+            stage.close();
+            //send the fullmealrequest to the info card controller
+            currentInfoCardController.sendRequest(fullMealRequest);
         });
     }
 }
