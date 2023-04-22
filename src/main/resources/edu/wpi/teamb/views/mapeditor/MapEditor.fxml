@@ -55,10 +55,10 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </MFXComboBox>
-            <MFXButton fx:id="uploadBtn" layoutX="889.0" layoutY="31.0" onAction="#clickUploadBtn" style="-fx-background-color: #1C4EFE;" text="Upload" textFill="#f1f1f1" />
-            <MFXButton fx:id="exportBtn" layoutX="891.0" layoutY="66.0" onAction="#clickExportBtn" style="-fx-background-color: #1C4EFE;" text="Export" textFill="#f1f1f1" />
+            <MFXButton fx:id="uploadBtn" layoutX="889.0" layoutY="31.0" style="-fx-background-color: #1C4EFE;" text="Upload" textFill="#f1f1f1" />
+            <MFXButton fx:id="exportBtn" layoutX="891.0" layoutY="66.0" style="-fx-background-color: #1C4EFE;" text="Export" textFill="#f1f1f1" />
 
-            <MFXButton fx:id="resetFromBackupBtn" layoutX="61.0" layoutY="682.0" onAction="#clickResetFromBackupBtn" style="-fx-background-color: #1C4EFE;" text="Reset From Backup" textFill="#f1f1f1" />
+            <MFXButton fx:id="resetFromBackupBtn" layoutX="61.0" layoutY="682.0" style="-fx-background-color: #1C4EFE;" text="Reset From Backup" textFill="#f1f1f1" />
                   <VBox layoutX="934.0" layoutY="102.0" prefHeight="203.0" prefWidth="204.0" style="-fx-background-color: #f1f1f1;">
                       <children>
                   <MFXTextField fx:id="tfNodeId" floatingText="Node ID" prefHeight="48.0" prefWidth="257.0">

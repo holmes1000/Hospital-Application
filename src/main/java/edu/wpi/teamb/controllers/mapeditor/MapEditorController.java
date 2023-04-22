@@ -152,14 +152,13 @@ public class MapEditorController {
     this.stackPaneMapView = new StackPane(); // no longer @FXML
     // Used for nodes
     this.locationCanvas = new Pane();
+
     this.nodeGroup = new Group();
+    this.nameGroup = new Group();
+    this.lineGroup = new Group();
 
     // Used for location names
     this.fullNodeCanvas = new Pane();
-    this.nameGroup = new Group();
-
-    this.lineGroup = new Group();
-
 
     this.pane.setContent(stackPaneMapView);
     this.imageViewPathfinder = new ImageView(Bapp.getHospitalListOfFloors().get(3)); // no longer @FXML
@@ -201,14 +200,7 @@ public class MapEditorController {
   }
 
   private void handleSubmitNodeDetails() {
-    String shortName = tfShortName.getText();
-    String longName = tfLongName.getText();
-    String nodeType = cbNodeType.getValue();
-    if (nodeType.equals("ELEV")) {
-      createElevatorNode();
-    } else if (nodeType.equals("STAI")) {
-      createStairNode();
-    } else createNode();
+    createNode();
   }
 
   private void createNode() {
@@ -242,118 +234,6 @@ public class MapEditorController {
       tfShortName.setText("");
       tfLongName.setText("");
       tfNodeId.setText("");
-  }
-
-  private void createElevatorNode() {
-    String shortName = tfShortName.getText();
-    String longName = tfLongName.getText();
-    String nodeType = cbNodeType.getValue();
-    FullNode fullNode = null;
-
-    // Get the max ID of the list of nodes
-    int maxID = 0;
-    for (Node n : nodeList) {
-      if (n.getNodeID() > maxID) {
-        maxID = n.getNodeID();
-      }
-    }
-
-    fullNode = new FullNode(maxID+5, (int) fullNodeX, (int) fullNodeY, "L1", "Full Node Building", "Elevator" + longName + "L1", tfShortName.getText(), cbNodeType.getSelectedItem());
-    Repository.getRepository().addFullNode(fullNode);
-
-    Node newNode = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
-    nodeList.add(newNode); // Add the node to the nodeList
-
-    fullNode = new FullNode(maxID+10, (int) fullNodeX, (int) fullNodeY, "L2", "Full Node Building", "Elevator" + longName + "L2", tfShortName.getText(), cbNodeType.getSelectedItem());
-    Repository.getRepository().addFullNode(fullNode);
-
-    Node newNode1 = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
-    nodeList.add(newNode1);
-
-    fullNode = new FullNode(maxID+15, (int) fullNodeX, (int) fullNodeY, "1", "Full Node Building", "Elevator" + longName + "1", tfShortName.getText(), cbNodeType.getSelectedItem());
-    Repository.getRepository().addFullNode(fullNode);
-
-    Node newNode2 = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
-    nodeList.add(newNode2); // Add the node to the nodeList
-
-    fullNode = new FullNode(maxID+20, (int) fullNodeX, (int) fullNodeY, "2", "Full Node Building", "Elevator" + longName + "2", tfShortName.getText(), cbNodeType.getSelectedItem());
-    Repository.getRepository().addFullNode(fullNode);
-
-    Node newNode3 = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
-    nodeList.add(newNode3);
-
-    fullNode = new FullNode(maxID+25, (int) fullNodeX, (int) fullNodeY, "3", "Full Node Building", "Elevator" + longName + "3", tfShortName.getText(), cbNodeType.getSelectedItem());
-    Repository.getRepository().addFullNode(fullNode);
-
-    Node newNode4 = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
-    nodeList.add(newNode4);
-    // Add node to the database
-    //Repository.getRepository().addNode(newNode);
-
-    System.out.println("Adding a new node with nodeID: " + newNode.getNodeID());
-    // Refresh the map
-    refreshMap();
-
-    // Reset the fields
-    tfShortName.setText("");
-    tfLongName.setText("");
-    tfNodeId.setText("");
-  }
-
-  private void createStairNode() {
-    String shortName = tfShortName.getText();
-    String longName = tfLongName.getText();
-    String nodeType = cbNodeType.getValue();
-    FullNode fullNode = null;
-
-    // Get the max ID of the list of nodes
-    int maxID = 0;
-    for (Node n : nodeList) {
-      if (n.getNodeID() > maxID) {
-        maxID = n.getNodeID();
-      }
-    }
-
-    fullNode = new FullNode(maxID+5, (int) fullNodeX, (int) fullNodeY, "L1", "Full Node Building", "Stair" + longName + "L1", tfShortName.getText(), cbNodeType.getSelectedItem());
-    Repository.getRepository().addFullNode(fullNode);
-
-    Node newNode = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
-    nodeList.add(newNode); // Add the node to the nodeList
-
-    fullNode = new FullNode(maxID+10, (int) fullNodeX, (int) fullNodeY, "L2", "Full Node Building", "Stair" + longName + "L2", tfShortName.getText(), cbNodeType.getSelectedItem());
-    Repository.getRepository().addFullNode(fullNode);
-
-    Node newNode1 = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
-    nodeList.add(newNode1);
-
-    fullNode = new FullNode(maxID+15, (int) fullNodeX, (int) fullNodeY, "1", "Full Node Building", "Stair" + longName + "1", tfShortName.getText(), cbNodeType.getSelectedItem());
-    Repository.getRepository().addFullNode(fullNode);
-
-    Node newNode2 = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
-    nodeList.add(newNode2); // Add the node to the nodeList
-
-    fullNode = new FullNode(maxID+20, (int) fullNodeX, (int) fullNodeY, "2", "Full Node Building", "Stair" + longName + "2", tfShortName.getText(), cbNodeType.getSelectedItem());
-    Repository.getRepository().addFullNode(fullNode);
-
-    Node newNode3 = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
-    nodeList.add(newNode3);
-
-    fullNode = new FullNode(maxID+25, (int) fullNodeX, (int) fullNodeY, "3", "Full Node Building", "Stair" + longName + "3", tfShortName.getText(), cbNodeType.getSelectedItem());
-    Repository.getRepository().addFullNode(fullNode);
-
-    Node newNode4 = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
-    nodeList.add(newNode4);
-    // Add node to the database
-    //Repository.getRepository().addNode(newNode);
-
-    System.out.println("Adding a new node with nodeID: " + newNode.getNodeID());
-    // Refresh the map
-    refreshMap();
-
-    // Reset the fields
-    tfShortName.setText("");
-    tfLongName.setText("");
-    tfNodeId.setText("");
   }
 
   /**
@@ -430,10 +310,8 @@ public class MapEditorController {
     toggleLocationNames.setOnMouseClicked(event -> {
       if(toggleLocationNames.isSelected()){
         System.out.println("Location names on");
-        abilityToSeeNames = true;
       } else {
         System.out.println("Location names off");
-        abilityToSeeNames = false;
         toggleLocationNames.setSelected(false);
         nameToolTip.setText("bruh");
         nameToolTip.setShowDelay(Duration.minutes(1));
@@ -451,10 +329,9 @@ public class MapEditorController {
     Circle c = new Circle(n.getxCoord(), n.getyCoord(), 5, RED);
     c.setId(String.valueOf(n.getNodeID())); // Set the circle's ID to the node's ID
     c.setOnMouseClicked(event -> {
-      if (event.getButton() == MouseButton.PRIMARY && ELogin.getLogin().getPermissionLevel() == ELogin.PermissionLevel.ADMIN) {
-        this.handleNodeClick(event, n);
-      }
+      this.handleNodeClick(event, n);
     });
+    // Set the circle's click handler
     //Sets up each individual hover for node name
     //Only toggles whn listNames is active
     c.setOnMouseEntered(event -> {
@@ -529,7 +406,7 @@ public class MapEditorController {
   /**
    * Handles the reset from backup button click
    */
-  @FXML void clickResetFromBackupBtn() {
+  void handleResetFromBackupBtn() {
     Repository.getRepository().resetNodesFromBackup();
     nodeList = Repository.getRepository().getAllNodes();
     // Refresh the map
@@ -579,9 +456,6 @@ public class MapEditorController {
     createNodeContextMenu(n);
     contextMenu.show(this.pane, e.getScreenX(), e.getScreenY());
   }
-
-
-
 
   /**
    * Method to create context menu and set the actions for the menu items
@@ -764,6 +638,10 @@ public class MapEditorController {
     clickFloorBtn("1");
     clickFloorBtn("2");
     clickFloorBtn("3");
+    uploadBtn.setOnMouseClicked(event->{handleUploadBtn();});
+    exportBtn.setOnMouseClicked(event->{handleExportBtn();});
+    resetFromBackupBtn.setOnMouseClicked(event->{handleResetFromBackupBtn();});
+
   }
 
   public void clickFloorBtn(String floor) {
@@ -872,7 +750,7 @@ public class MapEditorController {
   /**
    * Handles the click event for the upload button
    */
-  @FXML public void clickUploadBtn() {
+  public void handleUploadBtn() {
     fileChooser = new FileChooser();
     fileChooser.setTitle("Open Resource File");
     fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("CSV", "*.csv"));
@@ -885,7 +763,7 @@ public class MapEditorController {
   /**
    * Handles the click event for the export button
    */
-  @FXML public void clickExportBtn() {
+  public void handleExportBtn() {
     DirectoryChooser directoryChooser = new DirectoryChooser();
     File selectedDirectory = directoryChooser.showDialog(null);
     String absolutePath = null;
