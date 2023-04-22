@@ -31,8 +31,10 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.util.Duration;
 import net.kurobako.gesturefx.GesturePane;
 import org.controlsfx.control.PopOver;
 
@@ -85,8 +87,7 @@ public class MapEditorController {
   private MenuItem editItem;
 
   private ArrayList<Node> nodeList = new ArrayList<>();
-//  private ArrayList<FullNode> fullNodes = new ArrayList<>();
-
+  private ArrayList<FullNode> fullNodesList = new ArrayList<>();
     private Node nodeL1;
     private  Node nodeL2;
     private Node node1;
@@ -94,6 +95,7 @@ public class MapEditorController {
     private Node node3;
 
   private ArrayList<Node> floorList = new ArrayList<>();
+
 
   //Context menus
   private ContextMenu contextMenu;
@@ -147,6 +149,7 @@ public class MapEditorController {
     PathFinding.ASTAR.init_pathfinder();
     // Initialize the edges, nodes, and names on the map
     nodeList = Repository.getRepository().getAllNodes();
+    fullNodesList = Repository.getRepository().getAllFullNodes();
     nameToolTip = new Tooltip();
 //    fullNodes = Repository.getRepository().getFullNodes();
 
@@ -244,6 +247,9 @@ public class MapEditorController {
    * @throws SQLException
    */
   public void draw(String floor) throws SQLException {
+    nodeGroup.getChildren().clear();
+    nameGroup.getChildren().clear();
+    edgeGroup.getChildren().clear();
     // For each node, create a circle
     for (Node n : nodeList) {
       if (n.getFloor().equals(floor)) {
@@ -330,21 +336,23 @@ public class MapEditorController {
       this.handleNodeClick(event, n);
     });
     drawEdge(n);
-    // Set the circle's click handler
-    //Sets up each individual hover for node name
-    //Only toggles whn listNames is active
-
-//    nameToolTip.setText(Repository.getRepository().getFullNode(n.getNodeID()).getShortName());
-//    System.out.println(Repository.getRepository().getFullNode(n.getNodeID()).getShortName());
-//    System.out.println(n.getNodeID());
-//    nameToolTip.setShowDelay(Duration.millis(1));
-//    nameToolTip.hideDelayProperty().set(Duration.seconds(.5));
-//    Tooltip.install(c, nameToolTip);
+    drawName(c, n);
 
     // Add the circle to the nodeGroup
     floorList.add(n);
     nodeGroup.getChildren().add(c);
     nodeGroup.toFront();
+  }
+
+  void drawName(Circle c, Node n) {
+    for (FullNode fn : fullNodesList) {
+      if (fn.getNodeID() == n.getNodeID()) {
+        Text name = new Text(fn.getShortName());
+        name.setX(c.getCenterX()+5);
+        name.setY(c.getCenterY()+5);
+        nameGroup.getChildren().add(name);
+      }
+    }
   }
 
 
