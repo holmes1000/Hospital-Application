@@ -83,6 +83,7 @@ public class PathfinderController {
     ArrayList<FullNode> fullNodes = new ArrayList<>();
     HashMap<String,FullNode> fullNodesByLongname = new HashMap<>();
     HashMap<Integer,FullNode> fullNodesByID = PathFinding.ASTAR.getFullNodesByID();
+    ArrayList<String> filtered_names = new ArrayList<>();
     Group pathGroup;
     Pane locationCanvas;
   @FXML
@@ -92,7 +93,6 @@ public class PathfinderController {
       hoverHelp();
       initButtons();
       getMoveMap();
-      handleDate();
       // Initialize the path
       //nodeList = editor.getNodeList();
 
@@ -131,6 +131,7 @@ public class PathfinderController {
       endNode.setItems(nodes);
       startNode.getSearchText();
       endNode.getSearchText();
+      handleDate();
       changeButtonColor(currentFloor);
       algorithmDropdown.selectFirst();
 
@@ -231,6 +232,7 @@ public class PathfinderController {
             if (nodes_to_update.containsKey(id)){
                 FullNode newNode = fullNodesByID.get(id);
                 newNode.setLongName(nodes_to_update.get(id).getLongName());
+//                newNode.setShortName(PathFinding.ASTAR.getFullNodes().get(id).getShortName());
                 fullNodes.add(newNode);
             }
             else {
@@ -246,7 +248,7 @@ public class PathfinderController {
           fullNodesByID.put(node.getNodeID(),node);
           fullNodesByLongname.put(node.getLongName(),node);
 
-          filtered_names.add(node.getLongName());
+          if (!node.getNodeType().equals("HALL")) {filtered_names.add(node.getLongName());}
 //          if (node.getNodeType().equals("STAI") || node.getNodeType().equals("ELEV")) {
 //              filtered_names.remove(node.getLongName());
 //
@@ -256,7 +258,12 @@ public class PathfinderController {
 //          }
       }
       Collections.sort(filtered_names);
+      this.filtered_names = filtered_names;
       return filtered_names;
+  }
+
+  public void label_nodes(){
+      
   }
 
   public ArrayList<Integer> ListOfNodeIDs () throws SQLException {
