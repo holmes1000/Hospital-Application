@@ -15,6 +15,7 @@ public class AStarAlgorithmI implements IPathFindingAlgorithm {
 
     HashMap<Integer,Node> node_map = new HashMap<Integer,Node>();
     ArrayList<FullNode> fullNodes = new ArrayList<FullNode>();
+    HashMap<Integer,FullNode> fullNodesByID = new HashMap<>();
 
     public void init_pathfinder() throws SQLException {
         if (node_map.isEmpty()){create_all_nodes();}
@@ -29,6 +30,16 @@ public class AStarAlgorithmI implements IPathFindingAlgorithm {
         return fullNodes;
     }
 
+    private void generateFullNodeMap(){
+        for (FullNode node : fullNodes) {
+            fullNodesByID.put(node.getNodeID(), node);
+        }
+    }
+
+    public HashMap<Integer, FullNode> getFullNodesByID() {
+        return fullNodesByID;
+    }
+
     public void create_all_nodes() {
         HashMap<Integer,Node> node_map = new HashMap<Integer,Node>();
         Repository.getRepository().setAllNodes();
@@ -41,6 +52,7 @@ public class AStarAlgorithmI implements IPathFindingAlgorithm {
         }
         this.node_map = node_map;
         this.fullNodes = Repository.getRepository().getAllFullNodes();
+        generateFullNodeMap();
         System.out.println("Initialized all nodes. Ready for pathfinding");
     }
 

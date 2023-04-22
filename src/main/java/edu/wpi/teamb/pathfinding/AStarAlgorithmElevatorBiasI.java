@@ -27,7 +27,7 @@ public class AStarAlgorithmElevatorBiasI implements IPathFindingAlgorithm {
         return node_map;
     }
     public ArrayList<FullNode> getFullNodes() {return PathFinding.ASTAR.getFullNodes();}
-
+    public HashMap<Integer, FullNode> getFullNodesByID() {return PathFinding.ASTAR.getFullNodesByID();}
 
     public void create_all_nodes() throws SQLException {
         HashMap<Integer,Node> node_map = new HashMap<Integer,Node>();

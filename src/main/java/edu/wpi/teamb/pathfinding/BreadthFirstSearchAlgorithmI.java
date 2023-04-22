@@ -16,6 +16,7 @@ public class BreadthFirstSearchAlgorithmI implements IPathFindingAlgorithm {
 
     HashMap<Integer,Node> node_map = PathFinding.ASTAR.get_node_map();
     public ArrayList<FullNode> getFullNodes() {return PathFinding.ASTAR.getFullNodes();}
+    public HashMap<Integer, FullNode> getFullNodesByID() {return PathFinding.ASTAR.getFullNodesByID();}
 
     @Override
     public ArrayList<Integer> findPath(int start, int goal) throws SQLException {
