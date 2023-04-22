@@ -850,6 +850,10 @@ public class Repository {
         mealRequestDAO.update(mr);
     }
 
+    public void updateMealRequest(FullMealRequest mr) {
+        mealRequestDAO.update(mr);
+    }
+
     public Object getRequest(int id) {
         return requestDAO.get(id);
     }

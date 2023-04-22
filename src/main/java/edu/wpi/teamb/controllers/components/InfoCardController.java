@@ -4,6 +4,9 @@ import edu.wpi.teamb.DBAccess.Full.*;
 import edu.wpi.teamb.DBAccess.ORMs.ConferenceRequest;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 import edu.wpi.teamb.DBAccess.ORMs.User;
+import edu.wpi.teamb.controllers.requests.ConferenceRequestControllerI;
+import edu.wpi.teamb.controllers.requests.IRequestController;
+import edu.wpi.teamb.controllers.requests.MealRequestControllerI;
 import edu.wpi.teamb.entities.components.EInfoCard;
 import edu.wpi.teamb.entities.requests.IRequest;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -71,6 +74,7 @@ public class InfoCardController {
     editButton.setOnMouseClicked(event -> {
         FXMLLoader loader = null;
         Scene editPageScene = null;
+        IRequestController controller = null;
         //create a new window to load the edit page
         Stage editPageStage = new Stage();
         //switch statement to load the correct edit page
@@ -101,8 +105,34 @@ public class InfoCardController {
         //show the edit page window
         try{
             editPageScene = new Scene(loader.load());
+            controller = loader.getController();
         } catch (IOException e) {
             System.out.println("Error loading edit conference request form" + e.getMessage());
+        }
+        //determine and send current information to the edit page
+        switch(requestType){
+            case "Meal":
+                //send the current meal request information to the edit page
+                ((MealRequestControllerI) controller).enterMealRequestEditableMode((FullMealRequest) fullRequest);
+                break;
+//            case "Conference":
+//                //send the current conference request information to the edit page
+//                ((ConferenceRequestControllerI) controller).(fullRequest);
+//                break;
+//            case "Flower":
+//                //send the current flower request information to the edit page
+//                ((FlowerRequestControllerI) controller).sendRequest(fullRequest);
+//                break;
+//            case "Office":
+//                //send the current office request information to the edit page
+//                ((OfficeRequestControllerI) controller).sendRequest(fullRequest);
+//                break;
+//            case "Furniture":
+//                //send the current furniture request information to the edit page
+//                ((FurnitureRequestControllerI) controller).sendRequest(fullRequest);
+//                break;
+            default:
+                break;
         }
         editPageStage.setScene(editPageScene);
         editPageStage.show();
