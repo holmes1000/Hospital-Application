@@ -2,9 +2,6 @@ package edu.wpi.teamb.DBAccess;
 
 import java.sql.*;
 import java.util.ArrayList;
-import edu.wpi.teamb.DBAccess.*;
-import edu.wpi.teamb.DBAccess.DAO.*;
-import oracle.jdbc.replay.ReplayStatistics;
 
 public class DButils {
 
@@ -15,7 +12,7 @@ public class DButils {
      */
     void freeUpdate(String update) {
         try {
-            Statement stmt = DBConnection.getDBconnection().getConnection().createStatement();
+            Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
             stmt.executeQuery(update);
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'DB.freeQuery': " + e.getMessage());
@@ -34,7 +31,7 @@ public class DButils {
     public static ResultSet getRowCond(String table, String columns, String cond) {
         ResultSet rs = null;
         try {
-            Statement stmt = DBConnection.getDBconnection().getConnection().createStatement();
+            Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
             String query = "SELECT " + columns + " FROM " + table + " WHERE " + cond;
             rs = stmt.executeQuery(query);
             if (rs != null) {
@@ -56,7 +53,7 @@ public class DButils {
      */
     public static ResultSet getCol(String table, String column) {
         try {
-            Statement stmt = DBConnection.getDBconnection().getConnection().createStatement();
+            Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
             String query = "SELECT " + column + " FROM " + table;
             ResultSet rs = stmt.executeQuery(query);
             return rs;
@@ -98,7 +95,7 @@ public class DButils {
      */
     public static void updateRow(String table, String[] columns, String[] value, String cond) {
         try {
-            Statement stmt = DBConnection.getDBconnection().getConnection().createStatement();
+            Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
             String query = "UPDATE " + table + " SET " + strArray2UpdateFormat(columns, value) + " WHERE " + cond;
             stmt.executeUpdate(query);
         } catch (SQLException e) {
@@ -139,7 +136,7 @@ public class DButils {
      */
     public static void insertRow(String table, String[] columns, String[] value) {
         try {
-            Statement stmt = DBConnection.getDBconnection().getConnection().createStatement();
+            Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
             String update = "INSERT INTO "  + table + " (" + strArray2InsertFormatCol(columns) + ") VALUES ("
                     + strArray2InsertFormat(value) + ")";
             stmt.executeUpdate(update);
@@ -163,22 +160,22 @@ public class DButils {
         Statement currvalStatement = null;
         ResultSet currvalResultSet = null;
         try {
-            DBConnection.getDBconnection().getConnection().setAutoCommit(false);
+            DBconnection.getDBconnection().getConnection().setAutoCommit(false);
             String insert = "INSERT INTO requests(employee, requeststatus, requesttype, locationname, notes) VALUES ( ?, ?, ?, ?, ?)";
             String query = "SELECT currval(pg_get_serial_sequence('requests','id'))";
-            stmt = DBConnection.getDBconnection().getConnection().prepareStatement(insert);
+            stmt = DBconnection.getDBconnection().getConnection().prepareStatement(insert);
             stmt.setString(1, value[0]);
             stmt.setString(2, value[1]);
             stmt.setString(3, value[2]);
             stmt.setString(4, value[3]);
             stmt.setString(5, value[4]);
             stmt.executeUpdate();
-            currvalStatement = DBConnection.getDBconnection().getConnection().createStatement();
+            currvalStatement = DBconnection.getDBconnection().getConnection().createStatement();
             currvalResultSet = currvalStatement.executeQuery(query);
             if (currvalResultSet.next()) {
                 id = currvalResultSet.getInt(1);
             }
-            DBConnection.getDBconnection().getConnection().commit();
+            DBconnection.getDBconnection().getConnection().commit();
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'DB.insertRowRequests': " + e.getMessage());
         }
@@ -231,7 +228,7 @@ public class DButils {
      */
     public static void deleteRow(String table, String cond) {
         try {
-            Statement stmt = DBConnection.getDBconnection().getConnection().createStatement();
+            Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
             String query = "DELETE FROM " + table + " WHERE " + cond;
             stmt.executeUpdate(query);
         } catch (SQLException e) {
@@ -250,7 +247,7 @@ public class DButils {
         String countQuery = "SELECT COUNT(*) FROM " + table;
         int listSize = 0;
         try {
-            Statement countStmt = DBConnection.getDBconnection().getConnection().createStatement();
+            Statement countStmt = DBconnection.getDBconnection().getConnection().createStatement();
             ResultSet countRs = countStmt.executeQuery(countQuery);
             countRs.next();
 
@@ -266,7 +263,7 @@ public class DButils {
         int[] IDs = new int[listSize];
 
         try {
-            Statement idStmt = DBConnection.getDBconnection().getConnection().createStatement();
+            Statement idStmt = DBconnection.getDBconnection().getConnection().createStatement();
             idRs = idStmt.executeQuery(idQuery);
             for (int i = 0; i < listSize; i++) {
                 idRs.next();

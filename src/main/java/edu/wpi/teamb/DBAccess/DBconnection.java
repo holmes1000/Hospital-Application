@@ -3,7 +3,7 @@ package edu.wpi.teamb.DBAccess;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-public class DBConnection {
+public class DBconnection {
 
     private Connection c = null;
     private final String url = "jdbc:postgresql://database.cs.wpi.edu/teambdb";
@@ -12,14 +12,14 @@ public class DBConnection {
 
     private static class SingletonHelper {
         //Nested class is referenced after getRepository() is called
-        private static final DBConnection dbConnection = new DBConnection();
+        private static final DBconnection dbConnection = new DBconnection();
     }
 
-    public static DBConnection getDBconnection() {
+    public static DBconnection getDBconnection() {
         return SingletonHelper.dbConnection;
     }
 
-    private DBConnection() { connectToDB(); }
+    private DBconnection() { connectToDB(); }
 
     public Connection getConnection() {
         connectToDB();
