@@ -15,6 +15,8 @@ import edu.wpi.teamb.DBAccess.Full.FullNode;
 import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.ORMs.Move;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
+import edu.wpi.teamb.navigation.Navigation;
+import edu.wpi.teamb.navigation.Screen;
 import edu.wpi.teamb.pathfinding.PathFinding;
 import edu.wpi.teamb.controllers.NavDrawerController;
 import edu.wpi.teamb.entities.EPathfinder;
@@ -33,6 +35,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -73,6 +76,7 @@ public class PathfinderController {
     @FXML private MFXToggleButton toggleShowNames;
     private String currentFloor = "1";
     private HashMap<Integer,ArrayList<Move>> move_map = new HashMap<>();
+    private ArrayList<Move> upcoming_moves = new ArrayList<>();
 
 
     HashMap<String,ArrayList<Node>> nodes_by_floor = new HashMap<>();
@@ -219,6 +223,7 @@ public class PathfinderController {
 
   public void handle_move() {
 //      System.out.println("handling moves");
+      upcoming_moves.clear();
       HashMap<Integer,Move> nodes_to_update = new HashMap<>();
       LocalDate current_date = datePicker.getValue();
       LocalDate tempDate;
@@ -237,7 +242,9 @@ public class PathfinderController {
                       tempDate = move_date;
                       nodes_to_update.put(move.getNodeID(),move);
                   }
+                  if (move_date.isAfter(current_date) || move_date.equals(current_date)) {upcoming_moves.add(move);}
               }
+
           }
       }
       ArrayList<String> longname_list = new ArrayList<>();
@@ -306,6 +313,27 @@ public class PathfinderController {
       return filtered_names;
   }
 
+
+    public void moveAlert(String input) {
+      ArrayList<String> message = new ArrayList<>();
+      for (Move move : upcoming_moves) {
+          if (input.contains(move.getLongName())) {
+              message.add(move.getLongName() + " will be moving to node " + move.getNodeID() + " on " + move.getDate());
+          }
+      }
+
+        // Create an alert
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Upcoming Moves");
+        alert.setHeaderText(null);
+        String alert_message = "";
+        for (String string : message) {
+            alert_message += string + "\n";
+        }
+        alert.setContentText(alert_message);
+        alert.showAndWait();
+    }
+
   public void label_nodes(){
       
   }
@@ -367,6 +395,16 @@ public class PathfinderController {
           }
 
           pathGroup.toFront();
+          for (Move move : upcoming_moves){
+              if (startNode.getSelectedItem().equals(move.getLongName())) {
+                  moveAlert(startNode.getSelectedItem());
+              }
+              if (endNode.getSelectedItem().equals(move.getLongName())) {
+                  moveAlert(endNode.getSelectedItem());
+              }
+
+
+          }
       }
   }
 
