@@ -48,9 +48,9 @@
                   <MFXListView fx:id="listView" prefHeight="238.0" prefWidth="254.0" style="-fx-border-color: #1C4EFE;" />
                </children>
             </VBox>
-                <VBox layoutX="989.0" layoutY="499.0" prefHeight="119.0" prefWidth="131.0" style="-fx-background-color: #f1f1f1; -fx-border-color: #1C4EFE;">
+                <VBox layoutX="997.0" layoutY="469.0" prefHeight="119.0" prefWidth="131.0" style="-fx-background-color: #f1f1f1; -fx-border-color: #1C4EFE;">
                     <children>
-                        <VBox fx:id="vboxBtns" alignment="CENTER" spacing="10.0">
+                        <VBox fx:id="vboxBtns" alignment="CENTER" prefHeight="192.0" prefWidth="134.0" spacing="10.0">
                             <children>
                                 <MFXButton fx:id="btn3" defaultButton="true" prefHeight="46.0" prefWidth="42.0" style="-fx-background-color: #1C4EFE;" text="3" textFill="#f1f1f1">
                                     <font>
@@ -83,6 +83,7 @@
                             </children>
                         </VBox>
                         <MFXToggleButton fx:id="toggleAvoidStairs" prefWidth="150.0" text="Avoid Stairs" />
+                  <MFXToggleButton fx:id="toggleShowNames" layoutX="11.0" layoutY="178.0" prefWidth="150.0" text="Show Names" />
                     </children>
                 </VBox>
             <MFXFilterComboBox fx:id="startNode" layoutX="917.0" layoutY="85.0" prefHeight="50.0" prefWidth="200.0" promptText="Start Location" style="-fx-border-color: #1C4EFE;" />
