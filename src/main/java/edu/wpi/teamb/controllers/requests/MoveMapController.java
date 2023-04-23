@@ -33,6 +33,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
@@ -352,7 +353,7 @@ public class MoveMapController {
                 animateLine(line);
                 Circle c = new Circle(originalX, originalY, 5, RED);
                 Circle finalC = c;
-                if (moveInfo.contains(new Point2D(originalX,originalY))) {originalY -= 15;}
+//                if (moveInfo.contains(new Point2D(originalX,originalY))) {originalY -= 15;}
                 c.setOnMouseEntered(event -> {
                                 if (nameToolTip.getText().isBlank() || nameToolTip.getText().contains(nameToolTip.getText())) {nameToolTip.setText(display_move_info(move));}
                                 else {nameToolTip.setText(display_move_info(move) + "\n" + nameToolTip.getText());}
@@ -361,8 +362,16 @@ public class MoveMapController {
                                 Tooltip.install(finalC, nameToolTip);
                         });
                 pathGroup.getChildren().add(c);
-                c = new Circle(newX, newY, 5, PURPLE);
-                pathGroup.getChildren().add(c);
+                Boolean exists = false;
+                for (Node child : pathGroup.getChildren()) {
+                    if (child.contains(newX,newY)) {
+                        exists = true;
+                    }
+                }
+                if (!exists) {
+                    c = new Circle(newX, newY, 5, PURPLE);
+                    pathGroup.getChildren().add(c);
+                }
                 pathGroup.getChildren().add(line);
             }
 //            else if (!fullNodesByID.get(move.getNodeID()).getFloor().equals(fullNodesByLongname.get(move.getLongName()).getFloor())){
