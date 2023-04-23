@@ -1,10 +1,7 @@
 package edu.wpi.teamb.controllers.components;
 
 import edu.wpi.teamb.DBAccess.Full.*;
-import edu.wpi.teamb.controllers.requests.ConferenceRequestControllerI;
-import edu.wpi.teamb.controllers.requests.FlowerRequestControllerI;
-import edu.wpi.teamb.controllers.requests.IRequestController;
-import edu.wpi.teamb.controllers.requests.MealRequestControllerI;
+import edu.wpi.teamb.controllers.requests.*;
 import edu.wpi.teamb.entities.components.EInfoCard;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
@@ -116,10 +113,10 @@ public class InfoCardController {
                 //send the current flower request information to the edit page
                 ((FlowerRequestControllerI) controller).enterFlowerRequestEditableMode((FullFlowerRequest) fullRequest, this);
                 break;
-//            case "Office":
-//                //send the current office request information to the edit page
-//                ((OfficeRequestControllerI) controller).sendRequest(fullRequest);
-//                break;
+            case "Office":
+                //send the current office request information to the edit page
+                ((OfficeRequestControllerI) controller).enterOfficeRequestsEditableMode((FullOfficeRequest) fullRequest, this);
+                break;
 //            case "Furniture":
 //                //send the current furniture request information to the edit page
 //                ((FurnitureRequestControllerI) controller).sendRequest(fullRequest);

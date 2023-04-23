@@ -533,6 +533,12 @@ public class Repository {
 
     //TODO OfficeRequest methods
 
+    /**
+     * Updates an OfficeRequest in the database
+     * @param fullOfficeRequest
+     */
+    public void updateOfficeRequest(FullOfficeRequest fullOfficeRequest) { officeRequestDAO.update(fullOfficeRequest); }
+
 
 
     //TODO DBinput methods
