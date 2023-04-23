@@ -1004,6 +1004,10 @@ public class Repository {
         furnitureRequestDAO.update(fr);
     }
 
+    public void updateFurnitureRequest(FullFurnitureRequest fr) {
+        furnitureRequestDAO.update(fr);
+    }
+
     public void addOfficeRequest(String[] or) {
         officeRequestDAO.add(or);
     }

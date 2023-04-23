@@ -117,10 +117,10 @@ public class InfoCardController {
                 //send the current office request information to the edit page
                 ((OfficeRequestControllerI) controller).enterOfficeRequestsEditableMode((FullOfficeRequest) fullRequest, this);
                 break;
-//            case "Furniture":
-//                //send the current furniture request information to the edit page
-//                ((FurnitureRequestControllerI) controller).sendRequest(fullRequest);
-//                break;
+            case "Furniture":
+                //send the current furniture request information to the edit page
+                ((FurnitureRequestControllerI) controller).enterFurnitureRequestEditableMode((FullFurnitureRequest) fullRequest, this);
+                break;
             default:
                 break;
         }

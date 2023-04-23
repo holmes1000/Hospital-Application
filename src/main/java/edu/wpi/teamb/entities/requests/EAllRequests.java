@@ -40,4 +40,8 @@ public class EAllRequests {
     public FullOfficeRequest getOfficeRequest(int id) {
         return Repository.getRepository().getOfficeRequest(id);
     }
+
+    public FullFurnitureRequest getFurnitureRequest(int id) {
+        return Repository.getRepository().getFurnitureRequest(id);
+    }
 }

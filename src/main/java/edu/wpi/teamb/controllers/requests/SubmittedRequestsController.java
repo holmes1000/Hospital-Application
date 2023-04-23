@@ -86,9 +86,9 @@ public class SubmittedRequestsController {
                     IFull fullOfficeRequest = allRequestsE.getOfficeRequest(listOfRequests.get(i).getId());
                     Objects.requireNonNull(requestInfoCardController).sendRequest(fullOfficeRequest);
                     break;
-//                case "Furniture":
-//                    FullFurnitureRequest fullFurnitureRequest = allRequestsE.getFurnitureRequest(listOfRequests.get(i).getId());
-//                    break;
+                case "Furniture":
+                    FullFurnitureRequest fullFurnitureRequest = allRequestsE.getFurnitureRequest(listOfRequests.get(i).getId());
+                    break;
                 default:
                     //continue statement to skip any unrecognized types of request to avoid occurrence of empty cards
                     continue;
