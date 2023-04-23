@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+
+
+<!--<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="edu.wpi.teamb.controllers.CreditsController" prefHeight="400.0" prefWidth="600.0">-->
+<!--    -->
+<!--</AnchorPane>-->
+
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.CreditsController">
+    <children>
+        <VBox layoutX="6.0" layoutY="7.0" prefHeight="138.0" prefWidth="125.0">
+            <children>
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Floors" textAlignment="CENTER" wrappingWidth="119.0">
+                    <font>
+                        <Font size="20.0" />
+                    </font>
+                </Text>
+                <Separator prefWidth="200.0" />
+                <VBox prefHeight="39.0" prefWidth="119.0">
+                    <children>
+                        <Label prefHeight="39.0" prefWidth="122.0" text="       Ground Floor" textAlignment="CENTER" />
+                        <Label text="Lower Level 1" textAlignment="CENTER" />
+                        <Label text="Lower Level 2" />
+                        <Label text="First Floor" />
+                        <Label text="Second Floor" />
+                        <Label text="Third Floor" />
+                        <Label text="Breakfast" />
+                        <Label text="BWH Background" />
+                        <Label text="BWH Logo" />
+                        <Label text="BWH Logo 2" />
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+        <VBox layoutX="139.0" layoutY="7.0" prefHeight="126.0" prefWidth="100.0">
+            <children>
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Icons" />
+                <Separator prefWidth="200.0" />
+                <VBox prefHeight="200.0" prefWidth="100.0">
+                    <children>
+                        <Label text="Cog Wheel" />
+                        <Label text="Directions" />
+                        <Label text="Flower" />
+                        <Label text="Help Icon" />
+                        <Label text="Home" />
+                        <Label text="Logout" />
+                        <Label text="Map Icon" />
+                        <Label text="Meal Times" />
+                        <Label text="Phone Call" />
+                        <Label text="Reject Icon" />
+                        <Label text="Reply Icon" />
+                        <Label text="Send Icon" />
+                        <Label text="Sofa" />
+                        <Label text="Street Sign" />
+                        <Label text="Workspace" />
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+        <Pane layoutX="218.0" layoutY="14.0" prefHeight="364.0" prefWidth="368.0">
+            <children>
+                <ImageView fitHeight="372.0" fitWidth="379.0" layoutX="-5.0" layoutY="-5.0" pickOnBounds="true" preserveRatio="true" />
+            </children>
+        </Pane>
+    </children>
+</Pane>
