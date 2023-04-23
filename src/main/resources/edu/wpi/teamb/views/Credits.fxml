@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-
 
 <!--<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="edu.wpi.teamb.controllers.CreditsController" prefHeight="400.0" prefWidth="600.0">-->
 <!--    -->
@@ -25,16 +21,16 @@
                 <Separator prefWidth="200.0" />
                 <VBox prefHeight="39.0" prefWidth="119.0">
                     <children>
-                        <Label prefHeight="39.0" prefWidth="122.0" text="       Ground Floor" textAlignment="CENTER" />
-                        <Label text="Lower Level 1" textAlignment="CENTER" />
-                        <Label text="Lower Level 2" />
-                        <Label text="First Floor" />
-                        <Label text="Second Floor" />
-                        <Label text="Third Floor" />
-                        <Label text="Breakfast" />
-                        <Label text="BWH Background" />
-                        <Label text="BWH Logo" />
-                        <Label text="BWH Logo 2" />
+                        <Label fx:id="groudFloor" prefHeight="39.0" prefWidth="122.0" text="       Ground Floor" textAlignment="CENTER" />
+                        <Label fx:id="LL1" text="Lower Level 1" textAlignment="CENTER" />
+                        <Label fx:id="LL2" text="Lower Level 2" />
+                        <Label fx:id="firstFloor" text="First Floor" />
+                        <Label fx:id="secondFloor" text="Second Floor" />
+                        <Label fx:id="thirdFloor" text="Third Floor" />
+                        <Label fx:id="breakfast" text="Breakfast" />
+                        <Label fx:id="BWH_Background" text="BWH Background" />
+                        <Label fx:id="BWH_Logo" text="BWH Logo" />
+                        <Label fx:id="BWH_Logo_2" text="BWH Logo 2" />
                     </children>
                 </VBox>
             </children>
@@ -45,28 +41,28 @@
                 <Separator prefWidth="200.0" />
                 <VBox prefHeight="200.0" prefWidth="100.0">
                     <children>
-                        <Label text="Cog Wheel" />
-                        <Label text="Directions" />
-                        <Label text="Flower" />
-                        <Label text="Help Icon" />
-                        <Label text="Home" />
-                        <Label text="Logout" />
-                        <Label text="Map Icon" />
-                        <Label text="Meal Times" />
-                        <Label text="Phone Call" />
-                        <Label text="Reject Icon" />
-                        <Label text="Reply Icon" />
-                        <Label text="Send Icon" />
-                        <Label text="Sofa" />
-                        <Label text="Street Sign" />
-                        <Label text="Workspace" />
+                        <Label fx:id="Cog_Wheel" text="Cog Wheel" />
+                        <Label fx:id="directions" text="Directions" />
+                        <Label fx:id="flower" text="Flower" />
+                        <Label fx:id="helpIcon" text="Help Icon" />
+                        <Label fx:id="Home" text="Home" />
+                        <Label fx:id="LogOut" text="Logout" />
+                        <Label fx:id="map" text="Map Icon" />
+                        <Label fx:id="mealTimes" text="Meal Times" />
+                        <Label fx:id="phoneCall" text="Phone Call" />
+                        <Label fx:id="reject" text="Reject Icon" />
+                        <Label fx:id="reply" text="Reply Icon" />
+                        <Label fx:id="send" text="Send Icon" />
+                        <Label fx:id="sofa" text="Sofa" />
+                        <Label fx:id="street" text="Street Sign" />
+                        <Label fx:id="workspace" text="Workspace" />
                     </children>
                 </VBox>
             </children>
         </VBox>
         <Pane layoutX="218.0" layoutY="14.0" prefHeight="364.0" prefWidth="368.0">
             <children>
-                <ImageView fitHeight="372.0" fitWidth="379.0" layoutX="-5.0" layoutY="-5.0" pickOnBounds="true" preserveRatio="true" />
+                <ImageView fx:id="popup" fitHeight="372.0" fitWidth="379.0" layoutX="-5.0" layoutY="-5.0" pickOnBounds="true" preserveRatio="true" />
             </children>
         </Pane>
     </children>
