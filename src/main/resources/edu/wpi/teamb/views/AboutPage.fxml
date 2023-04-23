@@ -13,5 +13,25 @@
         </font>
     </Text>
     <MFXButton fx:id="btnClose" layoutX="1163.0" layoutY="646.0" mnemonicParsing="false" text="Close" />
+      <Text fill="#cccccc" layoutX="30.0" layoutY="121.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Thanks for trying our Application!" wrappingWidth="549.4335327148438">
+         <font>
+            <Font name="System Bold" size="33.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="30.0" layoutY="224.0" strokeType="OUTSIDE" strokeWidth="0.0" text="This kiosk demo program was completed in conjunction with the WPI Computer Science Department in the CS3733-D23 Software Engineering Class with Professor Wilson Wong and Team Coach Nini Acquista." wrappingWidth="1167.0335083007812">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="30.0" layoutY="345.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Our team: Zimraan Ahmad (Documentation Analyst), Jackson Balcazar (Backend Engineer), Ronit Banerjee (Lead Software Engineer), Brian Borghesani (Scrum Master), Alexander Brelling (Product Owner), Ella Dunne (Frontend Engineer), Samara Holmes (Lead Frontend Engineer), James Mitchell (Project Manager), Alisha Peeriz (Lead Backend Engineer), Mahir Sowad (Frontend Engineer)" wrappingWidth="1167.0335083007812">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="30.0" layoutY="508.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Special Thanks to Brigham and Women’s Hospital and their representative, Andrew Shinn, for their time and input" wrappingWidth="1167.0335083007812">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Text>
 </children>
 </Pane>
