@@ -7,10 +7,7 @@ import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
@@ -44,6 +41,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Path;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import net.kurobako.gesturefx.GesturePane;
 import org.controlsfx.control.PopOver;
@@ -82,9 +80,10 @@ public class PathfinderController {
     public GesturePane pane = new GesturePane();
     ArrayList<FullNode> fullNodes = new ArrayList<>();
     HashMap<String,FullNode> fullNodesByLongname = new HashMap<>();
-    HashMap<Integer,FullNode> fullNodesByID = PathFinding.ASTAR.getFullNodesByID();
+    HashMap<Integer,FullNode> fullNodesByID = new HashMap<>();
     ArrayList<String> filtered_names = new ArrayList<>();
     Group pathGroup;
+    Group nameGroup;
     Pane locationCanvas;
   @FXML
   public void initialize() throws IOException {
@@ -93,12 +92,17 @@ public class PathfinderController {
       hoverHelp();
       initButtons();
       getMoveMap();
+
+      for (Integer id : PathFinding.ASTAR.getFullNodesByID().keySet()) {
+          fullNodesByID.put(id,PathFinding.ASTAR.getFullNodesByID().get(id));
+      }
       // Initialize the path
       //nodeList = editor.getNodeList();
 
       this.stackPaneMapView = new StackPane(); // no longer @FXML
       this.pathGroup = new Group();
       this.locationCanvas = new Pane();
+      this.nameGroup = new Group();
 //      this.filteredFullNodes = new HashMap<>();
       getFilteredLongnames();
       this.pane.setContent(stackPaneMapView);
@@ -107,6 +111,7 @@ public class PathfinderController {
       this.stackPaneMapView.getChildren().add(this.locationCanvas);
 
       this.locationCanvas.getChildren().add(pathGroup);
+      this.locationCanvas.getChildren().add(nameGroup);
       this.fullNodes = PathFinding.ASTAR.getFullNodes();
 //      this.filteredFullNodes = new HashMap<>();
 
@@ -193,6 +198,24 @@ public class PathfinderController {
       });
   }
 
+    void drawName(FullNode n, Integer x, Integer y) {
+        for (FullNode fn : fullNodes) {
+            if (!Objects.equals(fn.getNodeType(), "HALL") && Objects.equals(fn.getFloor(),currentFloor)) {
+                if (fn.getNodeID() == n.getNodeID()) {
+                    Text name = new Text(fn.getShortName());
+                    for (Integer i = 0; i <= 6; i++) {
+                        if (nameGroup.contains(new Point2D(x+i, y+i))) {
+                            y += 1;
+                        }
+                    }
+                    name.setX(x+5);
+                    name.setY(y+5);
+                    nameGroup.getChildren().add(name);
+                }
+            }
+        }
+    }
+
   public void handle_move() {
 //      System.out.println("handling moves");
       HashMap<Integer,Move> nodes_to_update = new HashMap<>();
@@ -237,12 +260,14 @@ public class PathfinderController {
 
     public void update_nodes_from_moves(HashMap<Integer,Move> nodes_to_update){
             fullNodes = new ArrayList<>();
+            ArrayList<FullNode> fn = Repository.getRepository().getAllFullNodes();
         for (Integer id : fullNodesByID.keySet()){
             if (nodes_to_update.containsKey(id)){
                 FullNode newNode = fullNodesByID.get(id);
                 newNode.setLongName(nodes_to_update.get(id).getLongName());
 //                System.out.println(nodes_to_update.get(id).getLongName()  + nodes_to_update.get(id).getNodeID());
-//                newNode.setShortName(PathFinding.ASTAR.getFullNodes().get(id).getShortName());
+//                newNode.setShortName(Repository.getRepository().getShortName(id)); // may be problematic
+                newNode.setShortName(PathFinding.ASTAR.getFullNodesByID().get(id).getShortName());
                 fullNodes.add(newNode);
             }
             else {
@@ -253,6 +278,7 @@ public class PathfinderController {
     }
 
   public ArrayList<String> getFilteredLongnames(){
+      nameGroup.getChildren().clear();
       ArrayList<String> filtered_names = new ArrayList<>();
       fullNodesByLongname = new HashMap<>();
       fullNodesByID = new HashMap<>();
@@ -260,7 +286,10 @@ public class PathfinderController {
           fullNodesByID.put(node.getNodeID(),node);
           fullNodesByLongname.put(node.getLongName(),node);
 
-          if (!node.getNodeType().equals("HALL")) {filtered_names.add(node.getLongName());}
+          if (!node.getNodeType().equals("HALL")) {
+              filtered_names.add(node.getLongName());
+              drawName(node, node.getxCoord(), node.getyCoord());
+          }
 //          if (node.getNodeType().equals("STAI") || node.getNodeType().equals("ELEV")) {
 //              filtered_names.remove(node.getLongName());
 //
@@ -271,6 +300,7 @@ public class PathfinderController {
       }
       Collections.sort(filtered_names);
       this.filtered_names = filtered_names;
+      nameGroup.toFront();
       return filtered_names;
   }
 
@@ -432,6 +462,7 @@ public class PathfinderController {
             drawPath(nodes_by_floor.get("L1"));
             changeButtonColor(currentFloor);
             locationCanvas.getChildren().add(pathGroup);
+            getFilteredLongnames();
         });
         btnL2.setOnMouseClicked(event->{
             currentFloor = "L2";
@@ -442,6 +473,7 @@ public class PathfinderController {
             drawPath(nodes_by_floor.get("L2"));
             changeButtonColor(currentFloor);
             locationCanvas.getChildren().add(pathGroup);
+            getFilteredLongnames();
         });
         btn1.setOnMouseClicked(event->{
             currentFloor = "1";
@@ -451,6 +483,7 @@ public class PathfinderController {
             imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(3));
             drawPath(nodes_by_floor.get("1"));
             locationCanvas.getChildren().add(pathGroup);
+            getFilteredLongnames();
         });
         btn2.setOnMouseClicked(event->{
             currentFloor = "2";
@@ -460,6 +493,7 @@ public class PathfinderController {
             imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(4));
             drawPath(nodes_by_floor.get("2"));
             locationCanvas.getChildren().add(pathGroup);
+            getFilteredLongnames();
         });
         btn3.setOnMouseClicked(event->{
             currentFloor = "3";
@@ -469,6 +503,7 @@ public class PathfinderController {
             imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(5));
             drawPath(nodes_by_floor.get("3"));
             locationCanvas.getChildren().add(pathGroup);
+            getFilteredLongnames();
         });
     }
 
