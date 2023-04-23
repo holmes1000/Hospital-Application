@@ -70,6 +70,7 @@ public class PathfinderController {
     @FXML private MFXButton btn3;
     @FXML private MFXDatePicker datePicker;
     @FXML private MFXToggleButton toggleAvoidStairs;
+    @FXML private MFXToggleButton toggleShowNames;
     private String currentFloor = "1";
     private HashMap<Integer,ArrayList<Move>> move_map = new HashMap<>();
 
@@ -201,7 +202,7 @@ public class PathfinderController {
     void drawName(FullNode n, Integer x, Integer y) {
         for (FullNode fn : fullNodes) {
             if (!Objects.equals(fn.getNodeType(), "HALL") && Objects.equals(fn.getFloor(),currentFloor)) {
-                if (fn.getNodeID() == n.getNodeID()) {
+                if (fn.getLongName().equals(n.getLongName())) {
                     Text name = new Text(fn.getShortName());
                     for (Integer i = 0; i <= 6; i++) {
                         if (nameGroup.contains(new Point2D(x+i, y+i))) {
@@ -266,8 +267,9 @@ public class PathfinderController {
                 FullNode newNode = fullNodesByID.get(id);
                 newNode.setLongName(nodes_to_update.get(id).getLongName());
 //                System.out.println(nodes_to_update.get(id).getLongName()  + nodes_to_update.get(id).getNodeID());
-//                newNode.setShortName(Repository.getRepository().getShortName(id)); // may be problematic
+                if (!newNode.getLongName().equals(fullNodesByID.get(id).getLongName())){
                 newNode.setShortName(PathFinding.ASTAR.getFullNodesByID().get(id).getShortName());
+                }
                 fullNodes.add(newNode);
             }
             else {
@@ -450,6 +452,20 @@ public class PathfinderController {
         clickFloorBtn("1");
         clickFloorBtn("2");
         clickFloorBtn("3");
+
+        toggleShowNames.setSelected(true);
+        toggleShowNames.setOnMouseClicked(event->{handleToggleShowNames();});
+    }
+
+   public void handleToggleShowNames() {
+       if(toggleShowNames.isSelected()){
+           nameGroup.setVisible(true);
+           System.out.println("Location names on");
+       } else {
+           nameGroup.setVisible(false);
+           System.out.println("Location names off");
+           toggleShowNames.setSelected(false);
+       }
     }
 
     public void clickFloorBtn(String floor) {
