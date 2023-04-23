@@ -267,7 +267,7 @@ public class PathfinderController {
   }
 
   public ArrayList<Integer> ListOfNodeIDs () throws SQLException {
-      PathFinding.ASTAR.init_pathfinder();
+      PathFinding.ASTAR.force_init();
         HashMap<Integer, Node> a = PathFinding.ASTAR.get_node_map();
 
         return new ArrayList<Integer>(a.keySet());

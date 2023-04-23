@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
 
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
@@ -31,6 +32,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -60,6 +62,7 @@ public class MoveMapController {
 
     public GesturePane pane = new GesturePane();
     private ArrayList<Move> allMoves;
+    private Tooltip nameToolTip;
 
     private HashMap<Integer,ArrayList<Move>> move_map = new HashMap<>();
     private ArrayList<Move> upcoming_moves = new ArrayList<>();
@@ -75,6 +78,7 @@ public class MoveMapController {
         initNavBar();
         hoverHelp();
         initButtons();
+        getMoveMap();
         PathFinding.ASTAR.force_init();
         this.stackPaneMapView = new StackPane(); // no longer @FXML
         this.pathGroup = new Group();
@@ -89,11 +93,12 @@ public class MoveMapController {
 
         this.locationCanvas.getChildren().add(pathGroup);
         this.locationCanvas.getChildren().add(moveInfo);
+        nameToolTip = new Tooltip();
 
         pane.setScrollMode(GesturePane.ScrollMode.ZOOM);
         pane.setScrollBarPolicy(GesturePane.ScrollBarPolicy.NEVER);
         Platform.runLater(() -> this.pane.centreOn(new Point2D(2190, 910)));
-        getMoveMap();
+//        getMoveMap();
         handle_move();
         this.fullNodesByID = PathFinding.ASTAR.getFullNodesByID();
         this.fullNodes = PathFinding.ASTAR.getFullNodes();
@@ -265,7 +270,8 @@ public class MoveMapController {
         ArrayList<Move> upcoming_moves = new ArrayList<>();
         ArrayList<Move> moved_today = new ArrayList<>();
 //        HashMap<Integer, ArrayList<Move>> upcoming_moves_map = new HashMap<>();
-        LocalDate current_date = new Date(System.currentTimeMillis()-1000*60*60*24).toLocalDate();
+        LocalDate current_date = LocalDate.now();
+        System.out.println(current_date);
         LocalDate tempDate;
         for (Integer id : move_map.keySet()) {
             if (move_map.get(id).size() >= 1) {
@@ -287,7 +293,7 @@ public class MoveMapController {
                 }
             }
         }
-        update_nodes_from_moves(nodes_to_update);
+        update_nodes_from_moves(nodes_to_update); //problem here
         this.upcoming_moves = upcoming_moves;
         this.moved_today = moved_today;
     }
@@ -334,13 +340,20 @@ public class MoveMapController {
                 Line line = new Line(originalX, originalY, newX, newY);
                 line.setStrokeWidth(4);
                 animateLine(line);
-                Circle circle = new Circle(originalX, originalY, 5, RED);
-                pathGroup.getChildren().add(circle);
-                circle = new Circle(newX, newY, 5, PURPLE);
-                pathGroup.getChildren().add(circle);
-                pathGroup.getChildren().add(line);
+                Circle c = new Circle(originalX, originalY, 5, RED);
+                Circle finalC = c;
                 if (moveInfo.contains(new Point2D(originalX,originalY))) {originalY -= 15;}
-                display_move_info(move,originalX,originalY);
+                c.setOnMouseEntered(event -> {
+                                if (nameToolTip.getText().isBlank() || nameToolTip.getText().contains(nameToolTip.getText())) {nameToolTip.setText(display_move_info(move));}
+                                else {nameToolTip.setText(display_move_info(move) + "\n" + nameToolTip.getText());}
+                                nameToolTip.setShowDelay(Duration.millis(1));
+                                nameToolTip.hideDelayProperty().set(Duration.seconds(.5));
+                                Tooltip.install(finalC, nameToolTip);
+                        });
+                pathGroup.getChildren().add(c);
+                c = new Circle(newX, newY, 5, PURPLE);
+                pathGroup.getChildren().add(c);
+                pathGroup.getChildren().add(line);
             }
 //            else if (!fullNodesByID.get(move.getNodeID()).getFloor().equals(fullNodesByLongname.get(move.getLongName()).getFloor())){
 //                System.out.println("Floor changed from " + fullNodesByID.get(move.getNodeID()).getFloor() + " to " + fullNodesByLongname.get(move.getLongName()).getFloor());
@@ -384,12 +397,11 @@ public class MoveMapController {
         timeline.play();
     }
 
-    public void display_move_info(Move move, Integer x, Integer y){
-        Text text = new Text();
-        text.setText(move.getLongName() + " will be moving to node " + move.getNodeID() + " on " + move.getDate());
-        text.setX(x - 200);
-        text.setY(y);
-        moveInfo.getChildren().add(text);
+    public String display_move_info(Move move){
+        String text = move.getLongName() + " will be moving to node " + move.getNodeID() + " on " + move.getDate();
+
+//        moveInfo.getChildren().add(text);
+        return text;
     }
 
     public void moveAlert(ArrayList<String> input) {
