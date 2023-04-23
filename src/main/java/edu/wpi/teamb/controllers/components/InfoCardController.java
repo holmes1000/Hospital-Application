@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -21,7 +22,6 @@ public class InfoCardController {
   @FXML private ImageView requestTypeIconImageView;
   @FXML private MFXButton editButton;
   @FXML private MFXButton deleteButton;
-  @FXML private MFXButton submitButton;
 
   @FXML private Label requestIdLabel;
   @FXML private Label dateSubmittedLabel;
@@ -56,11 +56,6 @@ public class InfoCardController {
           requestInfoAnchorPane.setVisible(false);
           ((VBox) requestInfoAnchorPane.getParent()).getChildren().remove(requestInfoAnchorPane);
         });
-    submitButton.setOnAction(
-            event -> {
-              //set the submit button to hidden
-              submitButton.setVisible(false);
-            });
     editButton.setOnMouseClicked(event -> {
         FXMLLoader loader = null;
         Scene editPageScene = null;
@@ -125,6 +120,13 @@ public class InfoCardController {
                 break;
         }
         editPageStage.setScene(editPageScene);
+        //sets the focus on the editPageStage until it is closed
+        editPageStage.initModality(Modality.APPLICATION_MODAL);
+        //set the icons of the edit page to the same as the icons of the parent page
+        for (int i = 0; i < ((Stage) requestInfoAnchorPane.getScene().getWindow()).getIcons().size(); i++) {
+            editPageStage.getIcons().add(((Stage) requestInfoAnchorPane.getScene().getWindow()).getIcons().get(i));
+        }
+        //show the edit page window
         editPageStage.show();
     });
   }
@@ -159,7 +161,7 @@ public class InfoCardController {
             ((FullMealRequest) fullRequest).setFood(mealFull.getFood());
             ((FullMealRequest) fullRequest).setOrderFrom(mealFull.getOrderFrom());
             ((FullMealRequest) fullRequest).setSnack(mealFull.getSnack());
-            ((FullMealRequest) fullRequest).setNotes(mealFull.getNotes());
+            (fullRequest).setNotes(mealFull.getNotes());
         } else if (Objects.equals(requestType, "Conference")) {
             FullConferenceRequest conferenceFull = (FullConferenceRequest) fullRequest;
             //set the conference specific fields
@@ -175,21 +177,21 @@ public class InfoCardController {
             ((FullFlowerRequest) fullRequest).setSize(flowerFull.getSize());
             ((FullFlowerRequest) fullRequest).setColor(flowerFull.getColor());
             ((FullFlowerRequest) fullRequest).setMessage(flowerFull.getMessage());
-
+            fullRequest.setNotes(fullRequest.getNotes());
         } else if (Objects.equals(requestType, "Furniture")) {
             FullFurnitureRequest furnitureRequest = (FullFurnitureRequest) fullRequest;
             //set the furniture specific fields
             ((FullFurnitureRequest) fullRequest).setType(furnitureRequest.getType());
             ((FullFurnitureRequest) fullRequest).setModel(furnitureRequest.getModel());
             ((FullFurnitureRequest) fullRequest).setAssembly(furnitureRequest.getAssembly());
-
+            fullRequest.setNotes(fullRequest.getNotes());
         } else if (Objects.equals(requestType, "Office")) {
             FullOfficeRequest officeRequest = (FullOfficeRequest) fullRequest;
             //set the office specific fields
             ((FullOfficeRequest) fullRequest).setQuantity(officeRequest.getQuantity());
             ((FullOfficeRequest) fullRequest).setItem(officeRequest.getItem());
             ((FullOfficeRequest) fullRequest).setType(officeRequest.getType());
-
+            fullRequest.setNotes(fullRequest.getNotes());
         }
         setSpecificFieldsOnCard();
     }
@@ -210,11 +212,14 @@ public class InfoCardController {
           drinkLabel.setStyle(commonCSStyles);
           Label snackLabel = new Label("Snack: " + ((FullMealRequest) fullRequest).getSnack());
           snackLabel.setStyle(commonCSStyles);
+          Label additionalNotesLabel = new Label("Additional Notes: " + fullRequest.getNotes());
+          additionalNotesLabel.setStyle(commonCSStyles);
           //set the meal specific fields
           subComponentContainer.getChildren().add(orderFromLabel);
           subComponentContainer.getChildren().add(foodLabel);
           subComponentContainer.getChildren().add(drinkLabel);
           subComponentContainer.getChildren().add(snackLabel);
+          subComponentContainer.getChildren().add(additionalNotesLabel);
       } else if (Objects.equals(requestType, "Conference")) {
           //make the labels and set the styling
           Label eventNameLabel = new Label("Event Name: " + ((FullConferenceRequest) fullRequest).getEventName());
@@ -225,11 +230,14 @@ public class InfoCardController {
           durationLabel.setStyle(commonCSStyles);
           Label dateRequestedLabel = new Label("Date Requested: " + ((FullConferenceRequest) fullRequest).getDateRequested());
           dateRequestedLabel.setStyle(commonCSStyles);
+          Label notesLabel = new Label("Additional Notes: " + fullRequest.getNotes());
+          notesLabel.setStyle(commonCSStyles);
           //set the conference specific fields
           subComponentContainer.getChildren().add(eventNameLabel);
           subComponentContainer.getChildren().add(bookingReasonLabel);
           subComponentContainer.getChildren().add(durationLabel);
           subComponentContainer.getChildren().add(dateRequestedLabel);
+          subComponentContainer.getChildren().add(notesLabel);
       } else if (Objects.equals(requestType, "Flower")) {
           //make the labels and set the styling
           Label flowerTypeLabel = new Label("Flower Type: " + ((FullFlowerRequest) fullRequest).getFlowerType());
@@ -240,11 +248,14 @@ public class InfoCardController {
           colorLabel.setStyle(commonCSStyles);
           Label messageLabel = new Label("Message: " + ((FullFlowerRequest) fullRequest).getMessage());
           messageLabel.setStyle(commonCSStyles);
+          Label specialInstructionsLabel = new Label("Special Instructions: " + fullRequest.getNotes());
+          specialInstructionsLabel.setStyle(commonCSStyles);
           //set the flower specific fields
           subComponentContainer.getChildren().add(flowerTypeLabel);
           subComponentContainer.getChildren().add(sizeLabel);
           subComponentContainer.getChildren().add(colorLabel);
           subComponentContainer.getChildren().add(messageLabel);
+          subComponentContainer.getChildren().add(specialInstructionsLabel);
       } else if (Objects.equals(requestType, "Furniture")) {
           //make the labels and set the styling
           Label typeLabel = new Label("Type: " + ((FullFurnitureRequest) fullRequest).getType());
@@ -253,10 +264,13 @@ public class InfoCardController {
           modelLabel.setStyle(commonCSStyles);
           Label assemblyLabel = new Label("Assembly: " + ((FullFurnitureRequest) fullRequest).getAssembly());
           assemblyLabel.setStyle(commonCSStyles);
+          Label specialInstructionsLabel = new Label("Special Instructions: " + fullRequest.getNotes());
+          specialInstructionsLabel.setStyle(commonCSStyles);
           //set the furniture specific fields
           subComponentContainer.getChildren().add(typeLabel);
           subComponentContainer.getChildren().add(modelLabel);
           subComponentContainer.getChildren().add(assemblyLabel);
+          subComponentContainer.getChildren().add(specialInstructionsLabel);
       } else if (Objects.equals(requestType, "Office")) {
           //make the labels and set the styling
           Label itemLabel = new Label("Item: " + ((FullOfficeRequest) fullRequest).getItem());
@@ -265,10 +279,13 @@ public class InfoCardController {
           quantityLabel.setStyle(commonCSStyles);
           Label typeLabel = new Label("Type: " + ((FullOfficeRequest) fullRequest).getType());
           typeLabel.setStyle(commonCSStyles);
+          Label specialInstructionsLabel = new Label("Special Instructions: " + fullRequest.getNotes());
+          specialInstructionsLabel.setStyle(commonCSStyles);
           //set the office specific fields
           subComponentContainer.getChildren().add(itemLabel);
           subComponentContainer.getChildren().add(quantityLabel);
           subComponentContainer.getChildren().add(typeLabel);
+          subComponentContainer.getChildren().add(specialInstructionsLabel);
       }
   }
 

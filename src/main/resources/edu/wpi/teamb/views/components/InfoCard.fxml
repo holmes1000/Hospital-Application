@@ -21,7 +21,7 @@
             <ColorAdjust brightness="1.0" />
          </effect>
       </ImageView>
-      <VBox fx:id="buttonContainerVBox" layoutX="879.0" layoutY="39.0" prefHeight="151.0" prefWidth="77.0">
+      <VBox fx:id="buttonContainerVBox" layoutX="879.0" layoutY="63.0" prefHeight="116.0" prefWidth="78.0">
          <children>
             <MFXButton fx:id="editButton" prefHeight="50.0" prefWidth="118.0" style="-fx-background-color: #1C4EFE; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Edit" textFill="WHITE">
                <font>
@@ -29,11 +29,6 @@
                </font>
             </MFXButton>
             <MFXButton fx:id="deleteButton" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #D2374A; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Delete" textFill="WHITE">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </MFXButton>
-            <MFXButton fx:id="submitButton" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #42f55a; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Submit" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
