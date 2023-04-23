@@ -27,6 +27,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
@@ -69,7 +71,7 @@ public class MoveMapController {
     private ArrayList<Move> moved_today = new ArrayList<>();
     private HashMap<Integer, FullNode> fullNodesByID = new HashMap<>();
     HashMap<String,FullNode> fullNodesByLongname = new HashMap<>();
-    private ArrayList<FullNode> fullNodes = new ArrayList();
+    private ArrayList<FullNode> fullNodes = new ArrayList<>();
     Group pathGroup;
     Group moveInfo;
     Pane locationCanvas;
@@ -99,10 +101,11 @@ public class MoveMapController {
         pane.setScrollBarPolicy(GesturePane.ScrollBarPolicy.NEVER);
         Platform.runLater(() -> this.pane.centreOn(new Point2D(2190, 910)));
 //        getMoveMap();
-        handle_move();
+//        handle_move();
         this.fullNodesByID = PathFinding.ASTAR.getFullNodesByID();
         this.fullNodes = PathFinding.ASTAR.getFullNodes();
         getFilteredLongnames();
+        handle_move();
         displayMoves(currentFloor);
         System.out.println("Move Map initialized");
     }
@@ -266,36 +269,36 @@ public class MoveMapController {
     }
 
     public void handle_move() {
-        HashMap<Integer, Move> nodes_to_update = new HashMap<>();
-        ArrayList<Move> upcoming_moves = new ArrayList<>();
-        ArrayList<Move> moved_today = new ArrayList<>();
-//        HashMap<Integer, ArrayList<Move>> upcoming_moves_map = new HashMap<>();
-        LocalDate current_date = LocalDate.now();
+        HashMap<Integer,Move> nodes_to_update = new HashMap<>();
+        upcoming_moves.clear();
+        LocalDate current_date = LocalDate.now(); // possibly not getting set to the right value
         System.out.println(current_date);
         LocalDate tempDate;
-        for (Integer id : move_map.keySet()) {
+        for (Integer id : move_map.keySet()){
             if (move_map.get(id).size() >= 1) {
                 tempDate = move_map.get(id).get(0).getDate().toLocalDate().minusYears(1);
                 for (Move move : move_map.get(id)) {
-                    LocalDate move_date = move.getDate().toLocalDate();
+                    LocalDate move_date =  move.getDate().toLocalDate();
 
                     if ((move_date.isAfter(tempDate)) && move_date.isBefore(current_date)) {
                         tempDate = move_date;
-                        nodes_to_update.put(move.getNodeID(), move);
-                    } else if (move_date.equals(current_date)) {
+                        nodes_to_update.put(move.getNodeID(),move);
+                    }
+
+                    else if (move_date.equals(current_date)) {
                         tempDate = move_date;
-                        nodes_to_update.put(move.getNodeID(), move);
+                        nodes_to_update.put(move.getNodeID(),move);
                     }
-                    if (move_date.isAfter(current_date)) {
-                        upcoming_moves.add(move);
-                    }
-                    else if (move_date.isEqual(current_date)) {moved_today.add(move);}
+                    if (move_date.isAfter(current_date)) {upcoming_moves.add(move);}
                 }
             }
         }
-        update_nodes_from_moves(nodes_to_update); //problem here
-        this.upcoming_moves = upcoming_moves;
-        this.moved_today = moved_today;
+//        System.out.println(nodes_to_update);
+        update_nodes_from_moves(nodes_to_update);
+//      System.out.println("nodes to update");
+//      System.out.println(nodes_to_update);
+
+
     }
 
     public void update_nodes_from_moves(HashMap<Integer,Move> nodes_to_update){
@@ -317,10 +320,17 @@ public class MoveMapController {
     public ArrayList<String> getFilteredLongnames(){
         ArrayList<String> filtered_names = new ArrayList<>();
         for (FullNode node : fullNodes){
-            this.fullNodesByID.put(node.getNodeID(),node);
-            this.fullNodesByLongname.put(node.getLongName(),node);
+            fullNodesByID.put(node.getNodeID(),node);
+            fullNodesByLongname.put(node.getLongName(),node);
 
             if (!node.getNodeType().equals("HALL")) {filtered_names.add(node.getLongName());}
+//          if (node.getNodeType().equals("STAI") || node.getNodeType().equals("ELEV")) {
+//              filtered_names.remove(node.getLongName());
+//
+//          }
+//          else {
+//              filteredFullNodes.put(node.getLongName(),node);
+//          }
         }
         Collections.sort(filtered_names);
 //        this.filtered_names = filtered_names;

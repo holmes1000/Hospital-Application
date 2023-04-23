@@ -194,6 +194,7 @@ public class PathfinderController {
   }
 
   public void handle_move() {
+//      System.out.println("handling moves");
       HashMap<Integer,Move> nodes_to_update = new HashMap<>();
       LocalDate current_date = datePicker.getValue();
       LocalDate tempDate;
@@ -215,11 +216,19 @@ public class PathfinderController {
               }
           }
       }
+      ArrayList<String> longname_list = new ArrayList<>();
+      for (Integer id : nodes_to_update.keySet()) {
+          if (longname_list.contains(nodes_to_update.get(id).getLongName())); {
+              if (nodes_to_update.get(id).getNodeID() == fullNodesByID.get(nodes_to_update.get(id).getNodeID()).getNodeID()) {nodes_to_update.remove(nodes_to_update.get(id));}
+          }
+          longname_list.add(nodes_to_update.get(id).getLongName());
+      }
       update_nodes_from_moves(nodes_to_update);
       ObservableList<String> nodes = FXCollections.observableArrayList();
       nodes.addAll(getFilteredLongnames());
       startNode.setItems(nodes);
       endNode.setItems(nodes);
+//      System.out.println("handled");
 //      System.out.println("nodes to update");
 //      System.out.println(nodes_to_update);
 
@@ -232,6 +241,7 @@ public class PathfinderController {
             if (nodes_to_update.containsKey(id)){
                 FullNode newNode = fullNodesByID.get(id);
                 newNode.setLongName(nodes_to_update.get(id).getLongName());
+//                System.out.println(nodes_to_update.get(id).getLongName()  + nodes_to_update.get(id).getNodeID());
 //                newNode.setShortName(PathFinding.ASTAR.getFullNodes().get(id).getShortName());
                 fullNodes.add(newNode);
             }
@@ -244,6 +254,8 @@ public class PathfinderController {
 
   public ArrayList<String> getFilteredLongnames(){
       ArrayList<String> filtered_names = new ArrayList<>();
+      fullNodesByLongname = new HashMap<>();
+      fullNodesByID = new HashMap<>();
       for (FullNode node : fullNodes){
           fullNodesByID.put(node.getNodeID(),node);
           fullNodesByLongname.put(node.getLongName(),node);
