@@ -84,14 +84,6 @@ public class MapEditorController {
   Group nameGroup;
   Pane locationCanvas;
   Pane fullNodeCanvas;
-
-  //node contextMenu items
-  private MenuItem locationItem;
-  private MenuItem editLocationItem;
-  private MenuItem viewConnectedEdges;
-  private MenuItem deleteItem;
-  private MenuItem editItem;
-
   private ArrayList<Node> nodeList = new ArrayList<>();
   private ArrayList<FullNode> fullNodesList = new ArrayList<>();
     private Node nodeL1;
@@ -102,19 +94,11 @@ public class MapEditorController {
 
   private ArrayList<Node> floorList = new ArrayList<>();
 
-
-  //Context menus
-  private ContextMenu contextMenu;
-
   //Other misc items
   private String currentFloor = "1";
   private ArrayList<LocationName> locationNameList = new ArrayList<>();
   @FXML private VBox vboxBtns;
 @FXML private VBox vboxAddNode;
-  private boolean abilityToSeeNames;
-  private boolean abilityToSeeEdges;
-  private Tooltip nameToolTip;
-
   private ArrayList<Node> floorNodes = new ArrayList<>();
   public boolean boolEditingNode = false;
   public boolean boolSubmittedDetails = false;
@@ -140,6 +124,8 @@ public class MapEditorController {
   MapEditorState viewState = new ViewState();
   private boolean handlingNodes = false;
   private boolean handlingEdges = false;
+  private int newX;
+  private int newY;
 
   int fullNodeX;
   int fullNodeY;
@@ -158,7 +144,6 @@ public class MapEditorController {
     // Initialize the edges, nodes, and names on the map
     nodeList = Repository.getRepository().getAllNodes();
     fullNodesList = Repository.getRepository().getAllFullNodes();
-    nameToolTip = new Tooltip();
 //    fullNodes = Repository.getRepository().getFullNodes();
 
     this.stackPaneMapView = new StackPane(); // no longer @FXML
@@ -186,21 +171,6 @@ public class MapEditorController {
     //Fitting the scrollpane
     pane.setScrollMode(GesturePane.ScrollMode.ZOOM);
     pane.setScrollBarPolicy(GesturePane.ScrollBarPolicy.NEVER);
-
-    // Method to allow for triple click to add a new node
-      stackPaneMapView.setOnMouseClicked(e -> {
-        if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 3) {
-          try {
-            editingNode = false;
-            fullNodeX = (int) e.getX();
-            fullNodeY = (int) e.getY();
-            addNodeToMap(e.getX(), e.getY());   // get the X and Y of the cursor
-            System.out.println("Added a node at " + e.getX() + ", " + e.getY());
-          } catch (SQLException ex) {
-            throw new RuntimeException(ex);
-          }
-        }
-      });
 
 
     btnSubmitNodeDetails.setOnMouseClicked(event -> handleSubmitNodeDetails());
@@ -321,7 +291,7 @@ public class MapEditorController {
 //      edgeGroup.getChildren().clear();
 
       //Gets the full node of the current node, as well as the neighbors of this node
-      ArrayList<Integer> neighbors = PathFinding.ASTAR.get_node_map().get(n.getNodeID()).getNeighborIds();
+      ArrayList<Integer> neighbors = PathFinding.ASTAR.get_node_map().get(n.getNodeID()).getNeighborIds(); // TODO this breaks reset from backup
 
       for (int i = 0; i < neighbors.size(); i++) {
 
@@ -477,12 +447,11 @@ public class MapEditorController {
       handleDeleteNode(e, n);
     }
     else if (mapEditorContext.getState() == addState) {
-      //handleAddNode(e);
+      //handleAddNode();
     }
     else if (mapEditorContext.getState() == editState) {
       handleEditNode(e, n);
     }
-
   }
 
 
@@ -490,6 +459,23 @@ public class MapEditorController {
    int nodeID = n.getNodeID();
    FullNode fullNode = Repository.getRepository().getFullNode(nodeID);
    System.out.println(fullNode.getShortName() + "\n" + fullNode.getLongName());
+  }
+
+  private void handleAddNode() {
+    // Method to allow for triple click to add a new node
+    stackPaneMapView.setOnMouseClicked(e -> {
+      if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2) {
+        try {
+          editingNode = false;
+          fullNodeX = (int) e.getX();
+          fullNodeY = (int) e.getY();
+          addNodeToMap(e.getX(), e.getY());   // get the X and Y of the cursor
+          System.out.println("Added a node at " + e.getX() + ", " + e.getY());
+        } catch (SQLException ex) {
+          throw new RuntimeException(ex);
+        }
+      }
+    });
   }
   /**
    * Handles the delete node event
@@ -528,7 +514,7 @@ public class MapEditorController {
   private void handleEditNode(MouseEvent e, Node n) throws SQLException {
     editingNode = true;
     // Get the node ID from the circle's ID
-    int nodeID = Integer.parseInt(contextMenu.getId());
+    int nodeID = n.getNodeID();
     tfNodeId.setText(String.valueOf(nodeID));     // set the items id in the menu
 
     // Get the node from the database
