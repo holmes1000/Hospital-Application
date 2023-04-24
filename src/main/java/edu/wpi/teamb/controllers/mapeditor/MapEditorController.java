@@ -20,9 +20,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tooltip;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -34,7 +33,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import javafx.util.Duration;
+import javafx.stage.Stage;
 import net.kurobako.gesturefx.GesturePane;
 import org.controlsfx.control.PopOver;
 
@@ -47,6 +46,7 @@ import java.util.Objects;
 import static javafx.scene.paint.Color.RED;
 
 public class MapEditorController {
+  public static Node currentNode;
   @FXML private JFXHamburger menuBurger;
   @FXML private JFXDrawer menuDrawer;
   @FXML private ImageView helpIcon;
@@ -84,18 +84,12 @@ public class MapEditorController {
   Group nameGroup;
   Pane locationCanvas;
   Pane fullNodeCanvas;
-  private ArrayList<Node> nodeList = new ArrayList<>();
+  public ArrayList<Node> nodeList = new ArrayList<>();
   private ArrayList<FullNode> fullNodesList = new ArrayList<>();
-    private Node nodeL1;
-    private  Node nodeL2;
-    private Node node1;
-    private  Node node2;
-    private Node node3;
-
   private ArrayList<Node> floorList = new ArrayList<>();
 
   //Other misc items
-  private String currentFloor = "1";
+  public String currentFloor = "1";
   private ArrayList<LocationName> locationNameList = new ArrayList<>();
   @FXML private VBox vboxBtns;
 @FXML private VBox vboxAddNode;
@@ -109,12 +103,6 @@ public class MapEditorController {
   @FXML private MFXButton btnEdit;
   @FXML private MFXButton btnDelete;
   @FXML private MFXButton btnView;
-  @FXML private MFXComboBox<String> cbNodeType;
-  @FXML private MFXTextField tfLongName;
-  @FXML private MFXTextField tfShortName;
-  @FXML private MFXButton btnSubmitNodeDetails;
-  @FXML private MFXTextField tfNodeId;
-  private boolean boolAddingNode = false;
 
   // Create the states
   MapEditorContext mapEditorContext = new MapEditorContext();
@@ -173,17 +161,13 @@ public class MapEditorController {
     pane.setScrollBarPolicy(GesturePane.ScrollBarPolicy.NEVER);
 
 
-    btnSubmitNodeDetails.setOnMouseClicked(event -> handleSubmitNodeDetails());
+
     draw( currentFloor);
 
     changeButtonColor(currentFloor);
     Platform.runLater(() -> this.pane.centreOn(new Point2D(2190, 910)));
 
     System.out.println("MapEditorController initialized");
-  }
-
-  private void handleSubmitNodeDetails() {
-    createNode();
   }
 
   private void handleNodes() {
@@ -215,6 +199,7 @@ public class MapEditorController {
     } else if (mapEditorContext.getState() == addState && handlingNodes) {
       System.out.println("Adding Node");
       tfState.setText("Adding Node");
+      handleAddNode();
     } else if (mapEditorContext.getState() == deleteState && handlingEdges) {
       System.out.println("Deleting edge");
       tfState.setText("Delete Edge");
@@ -224,7 +209,6 @@ public class MapEditorController {
     } else if (mapEditorContext.getState() == editState && handlingEdges) {
       System.out.println("Editing edge");
       tfState.setText("Editing Edge");
-
     } else if (mapEditorContext.getState() == editState && handlingNodes) {
       System.out.println("Editing node");
       tfState.setText("Editing Node");
@@ -234,38 +218,6 @@ public class MapEditorController {
     }
   }
 
-  private void createNode() {
-      String shortName = tfShortName.getText();
-      String longName = tfLongName.getText();
-      String nodeType = cbNodeType.getValue();
-      FullNode fullNode = null;
-
-      // Get the max ID of the list of nodes
-      int maxID = 0;
-      for (Node n : nodeList) {
-        if (n.getNodeID() > maxID) {
-          maxID = n.getNodeID();
-        }
-      }
-
-      fullNode = new FullNode(maxID+5, (int) fullNodeX, (int) fullNodeY, currentFloor, "Full Node Building", tfLongName.getText(), tfShortName.getText(), cbNodeType.getSelectedItem());
-      Repository.getRepository().addFullNode(fullNode);
-
-      Node newNode = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
-      nodeList.add(newNode); // Add the node to the nodeList
-
-      // Add node to the database
-      //Repository.getRepository().addNode(newNode);
-
-      System.out.println("Adding a new node with nodeID: " + newNode.getNodeID());
-      // Refresh the map
-      refreshMap();
-
-      // Reset the fields
-      tfShortName.setText("");
-      tfLongName.setText("");
-      tfNodeId.setText("");
-  }
 
   /**
    * Draws all the nodes on the map
@@ -362,7 +314,7 @@ public class MapEditorController {
     c.setOnMouseClicked(event -> {
       try {
         this.handleNodeClick(event, n);
-      } catch (SQLException e) {
+      } catch (SQLException | IOException e) {
         throw new RuntimeException(e);
       }
     }); // Set the handler for clicking on a node
@@ -414,7 +366,7 @@ public class MapEditorController {
       }
     }
 
-    tfNodeId.setText(String.valueOf(maxID + 5)); // Set the nodeID text field to the maxID + 5
+    //tfNodeId.setText(String.valueOf(maxID + 5)); // Set the nodeID text field to the maxID + 5
   }
 
 
@@ -442,12 +394,9 @@ public class MapEditorController {
    * @param e
    * @param n
    */
-  private void handleNodeClick(MouseEvent e, Node n) throws SQLException {
+  private void handleNodeClick(MouseEvent e, Node n) throws SQLException, IOException {
     if (mapEditorContext.getState() == deleteState) {
       handleDeleteNode(e, n);
-    }
-    else if (mapEditorContext.getState() == addState) {
-      //handleAddNode();
     }
     else if (mapEditorContext.getState() == editState) {
       handleEditNode(e, n);
@@ -461,21 +410,51 @@ public class MapEditorController {
    System.out.println(fullNode.getShortName() + "\n" + fullNode.getLongName());
   }
 
+
   private void handleAddNode() {
-    // Method to allow for triple click to add a new node
-    stackPaneMapView.setOnMouseClicked(e -> {
-      if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2) {
-        try {
-          editingNode = false;
-          fullNodeX = (int) e.getX();
-          fullNodeY = (int) e.getY();
-          addNodeToMap(e.getX(), e.getY());   // get the X and Y of the cursor
-          System.out.println("Added a node at " + e.getX() + ", " + e.getY());
-        } catch (SQLException ex) {
-          throw new RuntimeException(ex);
-        }
+    if (mapEditorContext.getState() == addState && handlingNodes) {
+      stackPaneMapView.addEventHandler(MouseEvent.MOUSE_CLICKED, this::tapToAddNode);
+        System.out.println("Added tapToAddNode event handler");
+    }
+    else {
+      stackPaneMapView.removeEventHandler(MouseEvent.MOUSE_CLICKED, this::tapToAddNode);
+      System.out.println("Removed tapToAddNode event handler");
+    }
+  }
+
+  private void tapToAddNode(MouseEvent e) {
+    // Method to allow for double click to add a new node
+      try {
+        showAddNodeMenu();
+        editingNode = false;
+        fullNodeX = (int) e.getX();
+        fullNodeY = (int) e.getY();
+        addNodeToMap(e.getX(), e.getY());   // get the X and Y of the cursor
+        System.out.println("Added a node at " + e.getX() + ", " + e.getY());
+      } catch (SQLException | IOException ex) {
+        throw new RuntimeException(ex);
       }
-    });
+  }
+
+
+  private void showAddNodeMenu() throws IOException {
+    Parent root;
+    //AddNodeMenuController.setCurrentNode();
+    root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("edu/wpi/teamb/views/mapeditor/EditNodeMenu.fxml")));
+    Stage stage = new Stage();
+    stage.setTitle("Add Node");
+    stage.setScene(new Scene(root, 400, 600));
+    stage.show();
+  }
+
+  private void showEditNodeMenu(Node n) throws IOException {
+    Parent root;
+    EditNodeMenuController.setCurrentNode(n);
+    root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("edu/wpi/teamb/views/mapeditor/EditNodeMenu.fxml")));
+    Stage stage = new Stage();
+    stage.setTitle("Edit Node");
+    stage.setScene(new Scene(root, 400, 600));
+    stage.show();
   }
   /**
    * Handles the delete node event
@@ -511,20 +490,18 @@ public class MapEditorController {
    * @param n
    * @throws SQLException
    */
-  private void handleEditNode(MouseEvent e, Node n) throws SQLException {
+  private void handleEditNode(MouseEvent e, Node n) throws SQLException, IOException {
     editingNode = true;
     // Get the node ID from the circle's ID
     int nodeID = n.getNodeID();
-    tfNodeId.setText(String.valueOf(nodeID));     // set the items id in the menu
+    //tfNodeId.setText(String.valueOf(nodeID));     // set the items id in the menu
 
     // Get the node from the database
     Node newNode = Repository.getRepository().getNode(nodeID);
-    FullNode newFullNode = Repository.getRepository().getFullNode(nodeID);
+    //FullNode newFullNode = Repository.getRepository().getFullNode(nodeID);
 
     // set the fields with the full node
-    tfShortName.setText(newFullNode.getShortName());
-    tfLongName.setText(newFullNode.getLongName());
-    cbNodeType.setValue(newFullNode.getNodeType());
+
 
     // Allow click and drag of the Circle
     for (javafx.scene.Node c: nodeGroup.getChildren()) {
@@ -536,6 +513,11 @@ public class MapEditorController {
         //System.out.println("Editing node: " + nodeID);
         stackPaneMapView.setOnMouseClicked(event -> {
           if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+            try {
+              showEditNodeMenu(n);
+            } catch (IOException ex) {
+              throw new RuntimeException(ex);
+            }
             pane.gestureEnabledProperty().set(true);
             // Update the node's location
             newNode.setxCoord((int) (event.getX()));
@@ -856,10 +838,6 @@ public class MapEditorController {
     tables.add("Moves");
     tables.add("Location Names");
     NodeSelector.setItems(FXCollections.observableList(tables));
-
-    // initialize cbNodeType options
-    ObservableList<String> listOfNodeTypes = FXCollections.observableArrayList(Repository.getRepository().getNodeTypesUniqueAlphabetical());
-    cbNodeType.setItems(listOfNodeTypes);
   }
 
   public void clickNodeSelector() {
