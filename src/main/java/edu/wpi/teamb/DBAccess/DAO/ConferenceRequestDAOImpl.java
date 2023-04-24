@@ -122,7 +122,7 @@ public class ConferenceRequestDAOImpl implements IDAO {
     @Override
     public void delete(Object request) {
         FullConferenceRequest fcr = (FullConferenceRequest) request;
-        DButils.deleteRow("conferencerequests", "id" + fcr.getId() + "");
+        DButils.deleteRow("conferencerequests", "id =" + fcr.getId() + "");
         DButils.deleteRow("requests", "id =" + fcr.getId() + "");
         conferenceRequests.remove(fcr);
         Request req = new Request(fcr.getId(), fcr.getEmployee(), fcr.getDateSubmitted(), fcr.getRequestStatus(), fcr.getRequestType(), fcr.getLocationName(), fcr.getNotes());

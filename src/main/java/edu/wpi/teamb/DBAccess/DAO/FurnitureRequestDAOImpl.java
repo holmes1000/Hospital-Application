@@ -114,7 +114,7 @@ public class FurnitureRequestDAOImpl implements IDAO {
         @Override
         public void delete(Object request) {
             FullFurnitureRequest ffr = (FullFurnitureRequest) request;
-            DButils.deleteRow("furniturerequests", "id" + ffr.getId() + "");
+            DButils.deleteRow("furniturerequests", "id =" + ffr.getId() + "");
             DButils.deleteRow("requests", "id =" + ffr.getId() + "");
             furnitureRequests.remove(ffr);
             Request req = new Request(ffr.getId(), ffr.getEmployee(), ffr.getDateSubmitted(), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getLocationName(), ffr.getNotes());

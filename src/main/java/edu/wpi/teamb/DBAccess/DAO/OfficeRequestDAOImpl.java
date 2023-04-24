@@ -110,7 +110,7 @@ public class OfficeRequestDAOImpl implements IDAO {
     @Override
     public void delete(Object request) {
         FullOfficeRequest ffr = (FullOfficeRequest) request;
-        DButils.deleteRow("officerequests", "id" + ffr.getId() + "");
+        DButils.deleteRow("officerequests", "id =" + ffr.getId() + "");
         DButils.deleteRow("requests", "id =" + ffr.getId() + "");
         officeRequests.remove(ffr);
         Request req = new Request(ffr.getId(), ffr.getEmployee(), ffr.getDateSubmitted(), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getLocationName(), ffr.getNotes());

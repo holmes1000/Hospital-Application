@@ -115,7 +115,7 @@ public class FlowerRequestDAOImpl implements IDAO {
     @Override
     public void delete(Object request) {
         FullFlowerRequest ffr = (FullFlowerRequest) request;
-        DButils.deleteRow("flowerrequests", "id" + ffr.getId() + "");
+        DButils.deleteRow("flowerrequests", "id =" + ffr.getId() + "");
         DButils.deleteRow("requests", "id =" + ffr.getId() + "");
         flowerRequests.remove(ffr);
         Request req = new Request(ffr.getId(), ffr.getEmployee(), ffr.getDateSubmitted(), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getLocationName(), ffr.getNotes());

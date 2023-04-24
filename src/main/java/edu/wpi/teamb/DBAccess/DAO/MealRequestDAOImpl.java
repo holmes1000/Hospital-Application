@@ -113,8 +113,8 @@ public class MealRequestDAOImpl implements IDAO {
      */
     @Override
     public void delete(Object request) {
-        FullOfficeRequest fmr = (FullOfficeRequest) request;
-        DButils.deleteRow("mealrequests", "id" + fmr.getId() + "");
+        FullMealRequest fmr = (FullMealRequest) request;
+        DButils.deleteRow("mealrequests", "id =" + fmr.getId() + "");
         DButils.deleteRow("requests", "id =" + fmr.getId() + "");
         mealRequests.remove(fmr);
         Request r = new Request(fmr.getId(), fmr.getEmployee(), fmr.getDateSubmitted(), fmr.getRequestStatus(), fmr.getRequestType(), fmr.getLocationName(), fmr.getNotes());
