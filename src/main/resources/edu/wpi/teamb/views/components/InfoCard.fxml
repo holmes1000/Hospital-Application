@@ -28,7 +28,12 @@
                   <Font name="System Bold" size="12.0" />
                </font>
             </MFXButton>
-            <MFXButton fx:id="deleteButton" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #D2374A; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Delete" textFill="WHITE">
+            <MFXButton fx:id="deleteButton" prefHeight="50.0" prefWidth="118.0" style="-fx-background-color: #D2374A; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Delete" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </MFXButton>
+            <MFXButton fx:id="completeButton" prefHeight="50.0" prefWidth="118.0" style="-fx-background-color: #D2374A; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Complete" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>

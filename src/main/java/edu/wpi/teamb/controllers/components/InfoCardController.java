@@ -22,6 +22,7 @@ public class InfoCardController {
   @FXML private ImageView requestTypeIconImageView;
   @FXML private MFXButton editButton;
   @FXML private MFXButton deleteButton;
+  @FXML private MFXButton completeButton;
 
   @FXML private Label requestIdLabel;
   @FXML private Label dateSubmittedLabel;
@@ -30,7 +31,6 @@ public class InfoCardController {
   @FXML private Label employeeAssignedLabel;
   @FXML private Label statusLabel; //deprecated implementation comment: make a button for this *Note: Please Disregard*
   @FXML private VBox buttonContainerVBox;
-  @FXML private Label roomNumberLabel;
   @FXML private VBox subComponentContainer;
 
   //fields for different conference request types
@@ -50,6 +50,15 @@ public class InfoCardController {
   }
 
   private void initBtns() {
+    completeButton.setOnMouseClicked(e -> {
+        //update fullRequest status
+        fullRequest.setRequestStatus("Completed");
+        //update the request in the database
+        EInfoCard.updateRequestStatus(fullRequest);
+        //update the status label
+        statusLabel.setText("Completed");
+    });
+
     deleteButton.setOnMouseClicked(
         event -> {
           //remove the request from the list of requests
