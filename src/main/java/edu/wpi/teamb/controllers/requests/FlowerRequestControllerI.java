@@ -60,7 +60,7 @@ public class FlowerRequestControllerI implements IRequestController {
     public void initializeFields() throws SQLException {
         //Initialize the list of locations to direct request to via dropdown
         ObservableList<String> longNames = FXCollections.observableArrayList();
-        longNames.addAll(Repository.getRepository().getAllLongNames());
+        longNames.addAll(Repository.getRepository().getPracticalLongNames());
         cbLongName.setItems(longNames);
 
         //Set types of flowers

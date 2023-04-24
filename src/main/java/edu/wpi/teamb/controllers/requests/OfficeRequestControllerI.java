@@ -58,7 +58,7 @@ public class OfficeRequestControllerI implements IRequestController{
     @Override
     public void initializeFields() throws SQLException {
         ObservableList<String> longNames = FXCollections.observableArrayList();
-        longNames.addAll(Repository.getRepository().getAllLongNames());
+        longNames.addAll(Repository.getRepository().getPracticalLongNames());
         cbLongName.setItems(longNames);
 
         //DROPDOWN INITIALIZATION

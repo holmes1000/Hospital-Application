@@ -55,7 +55,7 @@ public class FurnitureRequestControllerI implements IRequestController{
     @FXML
     public void initialize() throws IOException, SQLException {
         ObservableList<String> longNames = FXCollections.observableArrayList();
-        longNames.addAll(Repository.getRepository().getAllLongNames());
+        longNames.addAll(Repository.getRepository().getPracticalLongNames());
         cbLongName.setItems(longNames);
         initializeFields();
         initBtns();

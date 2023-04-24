@@ -58,11 +58,11 @@ public class MealRequestControllerI implements IRequestController{
     public void initializeFields() throws SQLException {
         // DROPDOWN INITIALIZATION
         ObservableList<String> longNames = FXCollections.observableArrayList();
-        longNames.addAll(Repository.getRepository().getAllLongNames());
+        longNames.addAll(Repository.getRepository().getPracticalLongNames());
         cbLongName.setItems(longNames);
 
         ObservableList<String> locations =
-                FXCollections.observableArrayList("Tower", "Connors Center", "Shapiro Center");
+                FXCollections.observableArrayList(Repository.getRepository().getLongNameByType("RETL"));
         cbOrderLocation.setItems(locations);
 
         // DROPDOWN INITIALIZATION

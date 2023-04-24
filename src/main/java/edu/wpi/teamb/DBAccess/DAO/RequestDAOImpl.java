@@ -408,5 +408,4 @@ public class RequestDAOImpl implements IDAO {
         }
         return fullRequests;
     }
-
 }
