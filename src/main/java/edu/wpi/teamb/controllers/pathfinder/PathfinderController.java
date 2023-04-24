@@ -75,13 +75,16 @@ public class PathfinderController {
     @FXML private MFXToggleButton toggleAvoidStairs;
     @FXML private MFXToggleButton toggleShowNames;
 
-    @FXML private MFXButton previous;
-    @FXML private MFXButton next;
+    @FXML private MFXButton previousFloor;
+    @FXML private MFXButton nextFloor;
 
     private String currentFloor = "1";
     private HashMap<Integer,ArrayList<Move>> move_map = new HashMap<>();
     private ArrayList<Move> upcoming_moves = new ArrayList<>();
 
+    private String firstFloorVisited;
+    private String lastFloorVisited;
+    private ArrayList<String> floorsVisited;
 
     HashMap<String,ArrayList<Node>> nodes_by_floor = new HashMap<>();
   private EPathfinder EPathfinder;
@@ -493,6 +496,8 @@ public class PathfinderController {
         clickFloorBtn("2");
         clickFloorBtn("3");
 
+        previousFloor.setVisible(false);
+        nextFloor.setVisible(false);
         toggleShowNames.setSelected(true);
         toggleShowNames.setOnMouseClicked(event->{handleToggleShowNames();});
     }
@@ -594,6 +599,10 @@ public class PathfinderController {
 
 
                   ArrayList<Integer> int_path = EPathfinder.getPath();
+                  //
+                  //firstFloorVisited = int_path.get(0);
+                  //lastFloorVisited = int_path.get(int_path.size()-1);
+                  //
                   ArrayList<Node> nodePath;
                   nodes_by_floor = new HashMap<>();
                   for (Integer id : int_path) {
@@ -624,9 +633,100 @@ public class PathfinderController {
               VboxPathfinder.getChildren().addAll(listView);
               listView.getSelectionModel().clearSelection();
           }
-
+          previousFloor.setVisible(true);
+          previousFloor.setDisable(true);
+          previousFloor.setOnMouseClicked(e->clickPreviousFloor());
+          nextFloor.setVisible(true);
+          nextFloor.setOnMouseClicked(e->clickNextFloor());
+          floorsVisited = new ArrayList<String>(nodes_by_floor.keySet());
+          firstFloorVisited = floorsVisited.get(0);
+          lastFloorVisited = floorsVisited.get(floorsVisited.size()-1);
       });
   }
+
+    public void clickPreviousFloor(){
+        //Set<String> floorsVisited = nodes_by_floor.keySet();
+
+        if(!currentFloor.equals(firstFloorVisited)){
+            if(currentFloor.equals(lastFloorVisited)){
+                int i = floorsVisited.indexOf(currentFloor);
+                currentFloor = floorsVisited.get(i-1);
+                switchFloor(currentFloor);
+                nextFloor.setDisable(false);
+                System.out.println("hi");
+            }else{
+                int i = floorsVisited.indexOf(currentFloor);
+                currentFloor = floorsVisited.get(i-1);
+                switchFloor(currentFloor);
+            }
+        }
+
+        if(currentFloor.equals(firstFloorVisited)){
+            previousFloor.setDisable(true);
+        }
+
+
+
+//            //currentFloorNum = listOfFloors.get(0);
+//            //maxFloorNum = listOfFloors.get(listOfFloors.size() - 1);
+//            if(currentFloorNum > minFloorNum){
+//                int index = listOfFloors.indexOf(currentFloorNum) - 1;
+//                currentFloor = Integer.toString(listOfFloors.get(index));
+//                currentFloorNum = listOfFloors.get(index);
+//                changeButtonColor(currentFloor);
+//                pathGroup.getChildren().clear();
+//                imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(currentFloorNum));
+//                drawPath(nodes_by_floor.get(currentFloor));
+//                locationCanvas.getChildren().add(pathGroup);
+//
+//            }
+//            if(listOfFloors.indexOf(currentFloorNum) == 0){
+//                previousArrow.setDisable(true);
+//            }
+
+    }
+
+    public void clickNextFloor(){
+
+        if(!currentFloor.equals(lastFloorVisited)){
+            if(currentFloor.equals(firstFloorVisited)){
+                int i = floorsVisited.indexOf(currentFloor);
+                currentFloor = floorsVisited.get(i+1);
+                switchFloor(currentFloor);
+                previousFloor.setDisable(false);
+                System.out.println("hi");
+            }else{
+                int i = floorsVisited.indexOf(currentFloor);
+                currentFloor = floorsVisited.get(i+1);
+                switchFloor(currentFloor);
+            }
+        }
+
+        if(currentFloor.equals(lastFloorVisited)){
+            nextFloor.setDisable(true);
+        }
+
+
+
+            //currentFloorNum = listOfFloors.get(0);
+            //maxFloorNum = listOfFloors.get(listOfFloors.size() - 1);
+//            if(currentFloorNum < minFloorNum){
+//                int index = listOfFloors.indexOf(currentFloorNum) + 1;
+//                currentFloor = Integer.toString(listOfFloors.get(index));
+//                currentFloorNum = listOfFloors.get(index);
+//                changeButtonColor(currentFloor);
+//                pathGroup.getChildren().clear();
+//                imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(currentFloorNum));
+//                drawPath(nodes_by_floor.get(currentFloor));
+//                locationCanvas.getChildren().add(pathGroup);
+//            }
+//            if(listOfFloors.indexOf(currentFloorNum) == listOfFloors.size()- 1){
+//                previousArrow.setDisable(true);
+//            }
+
+
+    }
+
 
     private void switchFloor(String floor) {
         Integer floorNum = 0;
