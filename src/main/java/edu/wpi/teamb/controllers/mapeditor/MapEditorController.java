@@ -79,13 +79,13 @@ public class MapEditorController {
   //Objects that get superimposed
 
   public GesturePane pane = new GesturePane();
-  Group nodeGroup;
-  Group edgeGroup;
-  Group nameGroup;
+  Group nodeGroup = new Group();
+  Group edgeGroup = new Group();
+  Group nameGroup = new Group();
   Pane locationCanvas;
   Pane fullNodeCanvas;
   public static ArrayList<Node> nodeList = new ArrayList<>();
-  private ArrayList<FullNode> fullNodesList = new ArrayList<>();
+  public static ArrayList<FullNode> fullNodesList = new ArrayList<>();
   private ArrayList<Node> floorList = new ArrayList<>();
 
   //Other misc items
@@ -138,9 +138,9 @@ public class MapEditorController {
     // Used for nodes
     this.locationCanvas = new Pane();
 
-    this.nodeGroup = new Group();
-    this.nameGroup = new Group();
-    this.edgeGroup = new Group();
+//    this.nodeGroup = new Group();
+//    this.nameGroup = new Group();
+//    this.edgeGroup = new Group();
 
     // Used for location names
     this.fullNodeCanvas = new Pane();
@@ -225,9 +225,9 @@ public class MapEditorController {
    * @throws SQLException
    */
   public void draw(String floor) throws SQLException {
-    nodeGroup.getChildren().clear();
-    nameGroup.getChildren().clear();
-    edgeGroup.getChildren().clear();
+    this.nodeGroup.getChildren().clear();
+    this.nameGroup.getChildren().clear();
+    this.edgeGroup.getChildren().clear();
     // For each node, create a circle
     for (Node n : nodeList) {
       if (n.getFloor().equals(floor)) {
@@ -420,7 +420,6 @@ public int getMaxID() {  // Get the max ID of the list of nodes
     if (mapEditorContext.getState() == addState && handlingNodes) {
       stackPaneMapView.addEventHandler(MouseEvent.MOUSE_CLICKED, this::tapToAddNode);
         System.out.println("Added tapToAddNode event handler");
-        System.out.println(nodeList);
     }
     else {
       stackPaneMapView.removeEventHandler(MouseEvent.MOUSE_CLICKED, this::tapToAddNode);
@@ -910,5 +909,17 @@ public int getMaxID() {  // Get the max ID of the list of nodes
                 menuDrawer.open();
               }
             });
+  }
+
+  public ArrayList<Node> getNodeList() {
+    return editor.getNodeList();
+  }
+
+  public void addToNodeList(Node n) {
+    nodeList.add(n);
+  }
+
+  public void addToFullNodeList(FullNode n) {
+    fullNodesList.add(n);
   }
 }

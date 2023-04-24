@@ -81,7 +81,10 @@ public class AddNodeMenuController {
         Repository.getRepository().addFullNode(fullNode);
 
         Node newNode = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
+
         MapEditorController.nodeList.add(newNode); // Add the node to the nodeList
+        MapEditorController.fullNodesList.add(fullNode);
+
         PathFinding.ASTAR.get_node_map().put(newNode.getNodeID(), newNode); // Add the node to the nodeMap
 
         // Add node to the database
@@ -90,6 +93,12 @@ public class AddNodeMenuController {
         System.out.println("Adding a new node with nodeID: " + newNode.getNodeID());
         // Refresh the map
         //mapEditorController.refreshMap();
+        try {
+            mapEditorController.draw(currentFloor);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
 
 
         // Close the window

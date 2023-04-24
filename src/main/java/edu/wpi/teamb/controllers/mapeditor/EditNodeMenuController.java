@@ -70,8 +70,6 @@ public class EditNodeMenuController {
 
     private void submitNode() {
         FullNode fullNode = null;
-
-
         fullNode = new FullNode(Integer.parseInt(tfNodeId.getText()), (int) mapEditorController.fullNodeX, (int) mapEditorController.fullNodeY, mapEditorController.currentFloor, "Full Node Building", tfLongName.getText(), tfShortName.getText(), cbNodeType.getSelectedItem());
         Repository.getRepository().addFullNode(fullNode);
 
