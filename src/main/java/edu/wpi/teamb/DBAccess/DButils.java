@@ -166,20 +166,20 @@ public class DButils {
             String insert = "INSERT INTO requests(employee, requeststatus, requesttype, locationname, notes) VALUES ( ?, ?, ?, ?, ?)";
             String query = "SELECT nextval(pg_get_serial_sequence('requests','id'))";
             String query1 = "SELECT currval(pg_get_serial_sequence('requests','id'))";
-            stmt = DBconnection.getDBconnection().getConnection().prepareStatement(insert);
+            stmt = c.prepareStatement(insert);
             stmt.setString(1, value[0]);
             stmt.setString(2, value[1]);
             stmt.setString(3, value[2]);
             stmt.setString(4, value[3]);
             stmt.setString(5, value[4]);
             stmt.executeUpdate();
-            currvalStatement = DBconnection.getDBconnection().getConnection().createStatement();
+            currvalStatement = c.createStatement();
             //currvalResultSet = currvalStatement.executeQuery(query);
             currvalResultSet = currvalStatement.executeQuery(query1);
             if (currvalResultSet.next()) {
                 id = currvalResultSet.getInt(1);
             }
-            DBconnection.getDBconnection().getConnection().commit();
+            c.commit();
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'DButils.insertRowRequests': " + e.getMessage());
         }
