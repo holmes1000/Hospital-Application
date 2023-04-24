@@ -127,6 +127,10 @@ public class SubmittedRequestsController {
             filteredListOfRequests = listOfRequests.stream()
                     .filter(request -> request.getRequestStatus().equals(filterOption))
                     .collect(Collectors.toCollection(ArrayList::new));
+        } else if (filterCategory.equals("Request Type")) {
+            filteredListOfRequests = listOfRequests.stream()
+                    .filter(request -> request.getRequestType().equals(filterOption))
+                    .collect(Collectors.toCollection(ArrayList::new));
         }
 
 
@@ -241,7 +245,7 @@ public class SubmittedRequestsController {
         //at the beginning set cbFilterOptions to invisible
         cbFilterOptions.setVisible(false);
         //add filtering options to cbFilterCategory
-        cbFilterCategory.getItems().addAll("", "Status");
+        cbFilterCategory.getItems().addAll("", "Status", "Request Type");
         //add change listener to cbFilterCategory
         cbFilterCategory.valueProperty().addListener(
                 (observable, oldValue, newValue) -> {
@@ -257,6 +261,15 @@ public class SubmittedRequestsController {
                         switch (newValue) {
                             case "Status":
                                 cbFilterOptions.getItems().addAll("", RequestStatus.PENDING.getStatus(), RequestStatus.COMPLETED.getStatus());
+                                break;
+                            case "Request Type":
+                                cbFilterOptions.getItems().addAll(
+                                        "",
+                                        RequestType.MEAL.getType(),
+                                        RequestType.CONFERENCE.getType(),
+                                        RequestType.FLOWER.getType(),
+                                        RequestType.OFFICE.getType(),
+                                        RequestType.FURNITURE.getType());
                                 break;
                         }
                     } else {
@@ -301,5 +314,22 @@ enum RequestStatus {
 
     public String getStatus() {
         return status;
+    }
+}
+
+enum RequestType {
+    MEAL("Meal"),
+    CONFERENCE("Conference"),
+    FLOWER("Flower"),
+    OFFICE("Office"),
+    FURNITURE("Furniture");
+    private final String type;
+
+    RequestType(String type) {
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
     }
 }
