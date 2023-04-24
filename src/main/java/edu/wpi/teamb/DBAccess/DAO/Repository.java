@@ -826,6 +826,10 @@ public class Repository {
         conferenceRequestDAO.delete(cr);
     }
 
+    public void deleteConferenceRequest(FullConferenceRequest cr) {
+        conferenceRequestDAO.delete(cr);
+    }
+
     public FullConferenceRequest getConferenceRequest(int id) { return (FullConferenceRequest) conferenceRequestDAO.get(id); }
 
     public ArrayList<FullConferenceRequest> getAllConferenceRequests() {
@@ -845,6 +849,10 @@ public class Repository {
     }
 
     public void deleteMealRequest(MealRequest mr) {
+        mealRequestDAO.delete(mr);
+    }
+
+    public void deleteMealRequest(FullMealRequest mr) {
         mealRequestDAO.delete(mr);
     }
 
@@ -953,6 +961,10 @@ public class Repository {
         flowerRequestDAO.delete(fr);
     }
 
+    public void deleteFlowerRequest(FullFlowerRequest fr) {
+        flowerRequestDAO.delete(fr);
+    }
+
     public FullFlowerRequest getFlowerRequest(int id) {
         return (FullFlowerRequest) flowerRequestDAO.get(id);
     }
@@ -993,6 +1005,10 @@ public class Repository {
         furnitureRequestDAO.delete(fr);
     }
 
+    public void deleteFurnitureRequest(FullFurnitureRequest fr) {
+        furnitureRequestDAO.delete(fr);
+    }
+
     public FullFurnitureRequest getFurnitureRequest(int id) {
         return (FullFurnitureRequest) furnitureRequestDAO.get(id);
     }
@@ -1014,6 +1030,10 @@ public class Repository {
     }
 
     public void deleteOfficeRequest(OfficeRequest or) {
+        officeRequestDAO.delete(or);
+    }
+
+    public void deleteOfficeRequest(FullOfficeRequest or) {
         officeRequestDAO.delete(or);
     }
 

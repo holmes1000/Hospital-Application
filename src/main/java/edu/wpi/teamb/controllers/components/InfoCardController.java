@@ -53,8 +53,10 @@ public class InfoCardController {
     deleteButton.setOnMouseClicked(
         event -> {
           //remove the request from the list of requests
-          requestInfoAnchorPane.setVisible(false);
-          ((VBox) requestInfoAnchorPane.getParent()).getChildren().remove(requestInfoAnchorPane);
+            requestInfoAnchorPane.setVisible(false);
+            ((VBox) requestInfoAnchorPane.getParent()).getChildren().remove(requestInfoAnchorPane);
+            //delete the request from the database
+            EInfoCard.deleteRequest(fullRequest);
         });
     editButton.setOnMouseClicked(event -> {
         FXMLLoader loader = null;
