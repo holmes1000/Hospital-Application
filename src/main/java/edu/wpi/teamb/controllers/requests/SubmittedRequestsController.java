@@ -39,9 +39,8 @@ public class SubmittedRequestsController {
 
     //entity object of class that contains all the methods to get the requests
     private EAllRequests allRequestsE;
-    //regular class fields
-    private String filterCategorySelection;
-    private String filterOptionsSelection;
+    //regular class fields below
+
 
     @FXML
     public void initialize() throws IOException, SQLException {
@@ -50,8 +49,6 @@ public class SubmittedRequestsController {
         initScrollPane();
         initComboBoxChangeListeners();
         loadRequestsIntoContainer();
-        filterCategorySelection = "";
-        filterOptionsSelection = "";
     }
 
     private void initScrollPane() {
@@ -248,35 +245,46 @@ public class SubmittedRequestsController {
         //add change listener to cbFilterCategory
         cbFilterCategory.valueProperty().addListener(
                 (observable, oldValue, newValue) -> {
-                    //if the new value is not empty
-                    if (!newValue.equals("")) {
+                    if (newValue == null) {
+                        //if selection is null
+                        loadRequestsIntoContainer();
+                    } else if (!newValue.equals("")) {
                         //set cbFilterOptions to visible
                         cbFilterOptions.setVisible(true);
                         //clear the items in cbFilterOptions
                         cbFilterOptions.getItems().clear();
                         //add filtering options to cbFilterOptions based on filter category
-                        switch(newValue) {
+                        switch (newValue) {
                             case "Status":
                                 cbFilterOptions.getItems().addAll("", RequestStatus.PENDING.getStatus(), RequestStatus.COMPLETED.getStatus());
                                 break;
                         }
                     } else {
+                        //if selection is empty
                         //set cbFilterOptions to invisible
                         cbFilterOptions.setVisible(false);
                         //clear the items in cbFilterOptions
                         cbFilterOptions.getItems().clear();
                         //clear cBFilterOptions selection
                         cbFilterOptions.getSelectionModel().clearSelection();
+                        //reset all requests in the container
+                        loadRequestsIntoContainer();
                     }
                 });
 
         //add change listener to cbFilterOptions
         cbFilterOptions.valueProperty().addListener(
                 (observable, oldValue, newValue) -> {
-                    //if the new value is not empty
-                    if (!newValue.equals("")) {
+                    if (newValue == null) {
+                        //if selection is null
+                        loadRequestsIntoContainer();
+                    } else if (!newValue.equals("")) {
+                        //if the new value is not empty
                         //set filterOption to the new value
                         loadRequestsIntoContainer(cbFilterCategory.getSelectedItem(), newValue);
+                    } else {
+                        //set filterOption to the new value
+                        loadRequestsIntoContainer();
                     }
                 });
     }
