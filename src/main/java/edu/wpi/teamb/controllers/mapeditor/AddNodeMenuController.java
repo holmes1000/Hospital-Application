@@ -50,9 +50,11 @@ public class AddNodeMenuController {
         ObservableList<String> listOfNodeTypes = FXCollections.observableArrayList(Repository.getRepository().getNodeTypesUniqueAlphabetical());
         cbNodeType.setItems(listOfNodeTypes);
         // Initialize the node data
-        FullNode newFullNode = Repository.getRepository().getFullNode(currentNode.getNodeID());
+        //FullNode newFullNode = Repository.getRepository().getFullNode(currentNode.getNodeID());
         // Initialize the user data
-        tfNodeId.setText(String.valueOf(newFullNode.getNodeID()));
+        tfNodeId.setText(String.valueOf(currentNode.getNodeID()));
+        tfXCoord.setText(String.valueOf(currentNode.getxCoord()));
+        tfYCoord.setText(String.valueOf(currentNode.getyCoord()));
     }
 
     public void initButtons() {

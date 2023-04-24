@@ -358,6 +358,12 @@ public class MapEditorController {
    * @throws SQLException
    */
   public void addNodeToMap(double x, double y) throws SQLException {
+    getMaxID();
+
+    //tfNodeId.setText(String.valueOf(maxID + 5)); // Set the nodeID text field to the maxID + 5
+  }
+
+  private int getMaxID() {
     // Get the max ID of the list of nodes
     int maxID = 0;
     for (Node n : nodeList) {
@@ -365,10 +371,8 @@ public class MapEditorController {
         maxID = n.getNodeID();
       }
     }
-
-    //tfNodeId.setText(String.valueOf(maxID + 5)); // Set the nodeID text field to the maxID + 5
+    return maxID;
   }
-
 
   /**
    * Refreshes the map
@@ -425,7 +429,12 @@ public class MapEditorController {
   private void tapToAddNode(MouseEvent e) {
     // Method to allow for double click to add a new node
       try {
-        showAddNodeMenu();
+        Node n = new Node();
+        n.setxCoord((int) e.getX());
+        n.setyCoord((int) e.getY());
+        n.setFloor(currentFloor);
+        n.setNodeID(getMaxID() + 5);
+        showAddNodeMenu(n);
         editingNode = false;
         fullNodeX = (int) e.getX();
         fullNodeY = (int) e.getY();
@@ -437,10 +446,10 @@ public class MapEditorController {
   }
 
 
-  private void showAddNodeMenu() throws IOException {
+  private void showAddNodeMenu(Node n) throws IOException {
     Parent root;
-    //AddNodeMenuController.setCurrentNode();
-    root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("edu/wpi/teamb/views/mapeditor/EditNodeMenu.fxml")));
+    AddNodeMenuController.setCurrentNode(n);
+    root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("edu/wpi/teamb/views/mapeditor/AddNodeMenu.fxml")));
     Stage stage = new Stage();
     stage.setTitle("Add Node");
     stage.setScene(new Scene(root, 400, 600));
