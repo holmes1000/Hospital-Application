@@ -404,16 +404,6 @@ public class PathfinderController {
           }
 
           pathGroup.toFront();
-          for (Move move : upcoming_moves){
-              if (startNode.getSelectedItem().equals(move.getLongName())) {
-                  moveAlert(startNode.getSelectedItem());
-              }
-              if (endNode.getSelectedItem().equals(move.getLongName())) {
-                  moveAlert(endNode.getSelectedItem());
-              }
-
-
-          }
       }
   }
 
@@ -656,6 +646,16 @@ public class PathfinderController {
 //          floorsVisited = new ArrayList<String>(nodes_by_floor.keySet());
               firstFloorVisited = floorsVisited.get(0);
               lastFloorVisited = floorsVisited.get(floorsVisited.size() - 1);
+          }
+          for (Move move : upcoming_moves){
+              if (startNode.getSelectedItem().equals(move.getLongName())) {
+                  moveAlert(startNode.getSelectedItem());
+              }
+              if (endNode.getSelectedItem().equals(move.getLongName())) {
+                  moveAlert(endNode.getSelectedItem());
+              }
+
+
           }
       });
   }
