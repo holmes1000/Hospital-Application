@@ -902,6 +902,10 @@ public class Repository {
         locationNameDAO.update(ln);
     }
 
+    public void updateExistingLocationName(LocationName ln, String longName) {
+        locationNameDAO.updateExisting(ln, longName);
+    }
+
     public void addUser(User u) {
         userDAO.add(u);
     }
@@ -1063,8 +1067,8 @@ public class Repository {
         FullNode.deleteFullNode(n);
     }
 
-    public void updateFullNode(Object n) {
-        FullNode.updateFullNode(n);
+    public void updateFullNode(Object n, int nodeID, String longName) {
+        FullNode.updateFullNode(n, nodeID, longName);
     }
 
     public ArrayList<IFull> getAllFullRequests() {

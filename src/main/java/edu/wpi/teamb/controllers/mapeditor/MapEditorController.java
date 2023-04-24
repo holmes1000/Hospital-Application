@@ -90,6 +90,7 @@ public class MapEditorController {
 
   //Other misc items
   public String currentFloor = "1";
+  public String currentBuilding = "";
   private ArrayList<LocationName> locationNameList = new ArrayList<>();
   @FXML private VBox vboxBtns;
 @FXML private VBox vboxAddNode;
@@ -433,13 +434,14 @@ public int getMaxID() {  // Get the max ID of the list of nodes
         Node n = new Node();
         n.setxCoord((int) e.getX());
         n.setyCoord((int) e.getY());
+        setFullNodeX((int) e.getX());
+        setFullNodeY((int) e.getY());
         n.setFloor(currentFloor);
         AddNodeMenuController.setCurrentFloor(currentFloor);
         n.setNodeID(getMaxID() + 5);
         showAddNodeMenu(n);
         editingNode = false;
-        setFullNodeX((int) e.getX());
-        setFullNodeY((int) e.getY());
+
         addNodeToMap(e.getX(), e.getY());   // get the X and Y of the cursor
         System.out.println("Added a node at " + e.getX() + ", " + e.getY());
         refreshMap();
@@ -519,6 +521,7 @@ public int getMaxID() {  // Get the max ID of the list of nodes
 
     // Get the node from the database
     Node newNode = Repository.getRepository().getNode(nodeID);
+    currentBuilding = newNode.getBuilding();
     //FullNode newFullNode = Repository.getRepository().getFullNode(nodeID);
 
     // set the fields with the full node

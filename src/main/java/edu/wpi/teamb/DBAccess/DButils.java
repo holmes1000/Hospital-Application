@@ -99,7 +99,7 @@ public class DButils {
             String query = "UPDATE " + table + " SET " + strArray2UpdateFormat(columns, value) + " WHERE " + cond;
             stmt.executeUpdate(query);
         } catch (SQLException e) {
-            System.err.println("ERROR Query Failed in method 'DB.updateRow': " + e.getMessage());
+            System.err.println("ERROR Query Failed in method 'DButils.updateRow': " + e.getMessage());
         }
     }
 
