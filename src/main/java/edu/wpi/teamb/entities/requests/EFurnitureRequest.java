@@ -2,6 +2,7 @@ package edu.wpi.teamb.entities.requests;
 
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.DButils;
+import edu.wpi.teamb.DBAccess.Full.FullFurnitureRequest;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -73,5 +74,9 @@ public EFurnitureRequest(String furnitureType,
 
     public boolean checkSpecialRequestFields() {
         return this.furnitureType != null && this.model != null && this.assembly != null;
+    }
+
+    public void updateFurnitureRequest(FullFurnitureRequest fullFurnitureRequest) {
+        Repository.getRepository().updateFurnitureRequest(fullFurnitureRequest);
     }
 }

@@ -60,41 +60,21 @@
                         <ColorAdjust brightness="1.0" />
                     </effect>
                 </ImageView>
-                <MFXTextField fx:id="eventNameTextField" floatingText="Event Name" layoutX="22.0" layoutY="261.0" prefHeight="40.0" prefWidth="366.0" />
-                <MFXTextField fx:id="bookingReasonTextField" floatingText="Reason for Booking" layoutX="22.0" layoutY="330.0" prefHeight="40.0" prefWidth="698.0" />
-            <MFXComboBox fx:id="cbEmployeesToAssign" floatingText="Employee Assigned" layoutX="819.0" layoutY="120.0" prefHeight="40.0" prefWidth="233.0">
+                <MFXTextField fx:id="eventNameTextField" floatingText="Event Name" layoutX="20.0" layoutY="267.0" prefHeight="40.0" prefWidth="366.0" />
+                <MFXTextField fx:id="bookingReasonTextField" floatingText="Reason for Booking" layoutX="20.0" layoutY="337.0" prefHeight="40.0" prefWidth="698.0" />
+            <MFXComboBox fx:id="cbEmployeesToAssign" floatingText="Employee Assigned" layoutX="841.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXComboBox>
-            <Text fill="RED" layoutX="264.0" layoutY="154.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+            <MFXFilterComboBox fx:id="cbLongName" floatingText="Room Name" layoutX="20.0" layoutY="187.0" prefHeight="40.0" prefWidth="410.0" />
+            <MFXTextField fx:id="tfNotes" floatingText="Notes" layoutX="20.0" layoutY="397.0" prefHeight="40.0" prefWidth="698.0" />
+            <MFXComboBox fx:id="cbDuration" floatingText="Duration (hrs)" layoutX="588.0" layoutY="117.0" />
+            <Text fill="RED" layoutX="968.0" layoutY="477.0" strokeType="OUTSIDE" strokeWidth="0.0" text="All fields required*">
                <font>
-                  <Font size="24.0" />
+                  <Font name="System Bold" size="12.0" />
                </font>
             </Text>
-            <Text fill="RED" layoutX="715.0" layoutY="145.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Text>
-            <Text fill="RED" layoutX="1052.0" layoutY="154.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Text>
-            <Text fill="RED" layoutX="388.0" layoutY="303.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Text>
-            <Text fill="RED" layoutX="438.0" layoutY="212.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Text>
-            <MFXFilterComboBox fx:id="cbLongName" floatingText="Room Name" layoutX="20.0" layoutY="183.0" prefHeight="40.0" prefWidth="410.0" />
-            <MFXTextField fx:id="tfNotes" floatingText="Notes" layoutX="22.0" layoutY="394.0" prefHeight="40.0" prefWidth="698.0" />
-            <MFXComboBox fx:id="cbDuration" floatingText="Duration (hrs)" layoutX="588.0" layoutY="116.0" />
             </children>
         </AnchorPane>
     </center>

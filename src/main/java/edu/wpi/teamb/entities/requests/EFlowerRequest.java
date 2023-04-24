@@ -9,6 +9,7 @@ import java.util.Objects;
 
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.DButils;
+import edu.wpi.teamb.DBAccess.Full.FullFlowerRequest;
 
 public class EFlowerRequest extends RequestImpl {
     private String flowerType;
@@ -82,4 +83,7 @@ public class EFlowerRequest extends RequestImpl {
         return this.color != null && this.flowerType != null && this.size != null && this.message != null;
     }
 
+    public void updateFlowerRequest(FullFlowerRequest fullFlowerRequest) {
+        Repository.getRepository().updateFlowerRequest(fullFlowerRequest);
+    }
 }

@@ -72,32 +72,39 @@ public class SubmittedRequestsController {
             switch (listOfRequests.get(i).getRequestType()) {
                 case "Meal":
                     IFull fullMealRequest = allRequestsE.getMealRequest(listOfRequests.get(i).getId());
+                    if(fullMealRequest == null){continue;}
                     Objects.requireNonNull(requestInfoCardController).sendRequest(fullMealRequest);
                     break;
                 case "Conference":
                     IFull fullConferenceRequest = allRequestsE.getConferenceRequest(listOfRequests.get(i).getId());
+                    if(fullConferenceRequest == null) {continue;}
                     Objects.requireNonNull(requestInfoCardController).sendRequest(fullConferenceRequest);
                     break;
                 case "Flower":
                     IFull fullFlowerRequest = allRequestsE.getFlowerRequest(listOfRequests.get(i).getId());
+                    if(fullFlowerRequest == null) {continue;}
                     Objects.requireNonNull(requestInfoCardController).sendRequest(fullFlowerRequest);
                     break;
                 case "Office":
                     IFull fullOfficeRequest = allRequestsE.getOfficeRequest(listOfRequests.get(i).getId());
+                    if(fullOfficeRequest == null){continue;}
                     Objects.requireNonNull(requestInfoCardController).sendRequest(fullOfficeRequest);
                     break;
-//                case "Furniture":
-//                    FullFurnitureRequest fullFurnitureRequest = allRequestsE.getFurnitureRequest(listOfRequests.get(i).getId());
-//                    break;
-                default:
+                case "Furniture":
+                    IFull fullFurnitureRequest = allRequestsE.getFurnitureRequest(listOfRequests.get(i).getId());
+                    if(fullFurnitureRequest == null){continue;}
+                    Objects.requireNonNull(requestInfoCardController).sendRequest(fullFurnitureRequest);
                     break;
+                default:
+                    //continue statement to skip any unrecognized types of request to avoid occurrence of empty cards
+                    continue;
             }
 
 
 //           add the request info card to the request container VBox
             allRequestsContainerVBox.getChildren().add(requestInfoCardRoot);
 //            add a margin to the children of allRequestsContainerVBox
-            VBox.setMargin(requestInfoCardRoot, new Insets(10, 0, 10, 0));
+            VBox.setMargin(requestInfoCardRoot, new Insets( 0, 0, 10, 0));
         }
     }
 
