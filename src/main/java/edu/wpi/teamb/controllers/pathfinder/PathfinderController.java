@@ -74,6 +74,10 @@ public class PathfinderController {
     @FXML private MFXDatePicker datePicker;
     @FXML private MFXToggleButton toggleAvoidStairs;
     @FXML private MFXToggleButton toggleShowNames;
+
+    @FXML private MFXButton previous;
+    @FXML private MFXButton next;
+
     private String currentFloor = "1";
     private HashMap<Integer,ArrayList<Move>> move_map = new HashMap<>();
     private ArrayList<Move> upcoming_moves = new ArrayList<>();
@@ -441,8 +445,6 @@ public class PathfinderController {
       timeline.play();
   }
 
-
-
     private void changeButtonColor(String currentFloor) {
         switch (currentFloor) {
             case "L1" -> {
@@ -665,7 +667,7 @@ public class PathfinderController {
   }
 
   public void initNavBar() {
-    // https://github.com/afsalashyana/JavaFX-Tutorial-Codes/tree/master/JavaFX%20Navigation%20Drawer/src/genuinecoder
+    //https://github.com/afsalashyana/JavaFX-Tutorial-Codes/tree/master/JavaFX%20Navigation%20Drawer/src/genuinecoder
     try {
       FXMLLoader loader =
           new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/components/NavDrawer.fxml"));

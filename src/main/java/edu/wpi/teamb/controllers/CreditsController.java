@@ -21,10 +21,7 @@ import java.util.HashMap;
 
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
-import edu.wpi.teamb.DBAccess.DB;
-import edu.wpi.teamb.DBAccess.FullNode;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
-import edu.wpi.teamb.entities.Pathfinder;
 import edu.wpi.teamb.pathfinding.PathFinding;
 import io.github.palexdev.materialfx.controls.*;
 import io.github.palexdev.materialfx.utils.SwingFXUtils;

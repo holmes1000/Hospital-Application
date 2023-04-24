@@ -49,7 +49,6 @@
                         <Shadow />
                      </bumpInput>
                      <light>
-                        <Light.Distant />
                      </light>
                   </Lighting>
                </effect>
