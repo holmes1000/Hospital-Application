@@ -62,7 +62,7 @@ public class PathfinderController {
 
 
   @FXML private MFXComboBox<String> algorithmDropdown;
-  @FXML private MFXListView<String> listView;
+  @FXML private MFXListView<String> listView = new MFXListView<>();
   @FXML private VBox VboxPathfinder;
   @FXML private StackPane stackPaneMapView;
   @FXML private ImageView imageViewPathfinder;
@@ -169,6 +169,8 @@ public class PathfinderController {
                   pane.centreOnX(n.getxCoord());
                   pane.centreOnY(n.getyCoord());
               }
+              if (currentFloor.equals(firstFloorVisited) && floorsVisited.size() >1 ) {nextFloor.setDisable(false); previousFloor.setDisable(true);}
+              else if (currentFloor.equals((lastFloorVisited))&& floorsVisited.size() >1) {nextFloor.setDisable(true); previousFloor.setDisable(false);}
           }
       });
 
@@ -570,6 +572,7 @@ public class PathfinderController {
 
   public void clickFindPath() throws SQLException {
       btnFindPath.setOnMouseClicked(event-> {
+          ArrayList<Node> nodePath = new ArrayList<>();
           ArrayList<String> string_path = new ArrayList<>();
           VboxPathfinder.getChildren().clear();
           if (!(startNode.getSelectedItem() == null)  && !(endNode.getSelectedItem() == null)) {
@@ -603,7 +606,6 @@ public class PathfinderController {
                   //firstFloorVisited = int_path.get(0);
                   //lastFloorVisited = int_path.get(int_path.size()-1);
                   //
-                  ArrayList<Node> nodePath;
                   nodes_by_floor = new HashMap<>();
                   for (Integer id : int_path) {
                       FullNode node = fullNodesByID.get(id);
@@ -629,35 +631,49 @@ public class PathfinderController {
 
               //Add the image to the Front
               ObservableList<String> items = FXCollections.observableArrayList(string_path);
+//              listView = new MFXListView<>();
               listView.setItems(items);
               VboxPathfinder.getChildren().addAll(listView);
               listView.getSelectionModel().clearSelection();
+              floorsVisited = new ArrayList<>();
+              String lastFloor = fullNodesByID.get(start).getFloor();
+              floorsVisited.add(lastFloor);
+              for (Node node : nodePath) {
+                  if (!lastFloor.equals(node.getFloor())){
+                      lastFloor = node.getFloor();
+                      floorsVisited.add(node.getFloor());
+                  }
+              }
           }
-          previousFloor.setVisible(true);
-          previousFloor.setDisable(true);
-          previousFloor.setOnMouseClicked(e->clickPreviousFloor());
-          nextFloor.setVisible(true);
-          nextFloor.setOnMouseClicked(e->clickNextFloor());
-          floorsVisited = new ArrayList<String>(nodes_by_floor.keySet());
-          firstFloorVisited = floorsVisited.get(0);
-          lastFloorVisited = floorsVisited.get(floorsVisited.size()-1);
+
+          if (floorsVisited != null) {
+              System.out.println(floorsVisited);
+              previousFloor.setVisible(true);
+              previousFloor.setDisable(true);
+              previousFloor.setOnMouseClicked(e->clickPreviousFloor());
+              nextFloor.setVisible(true);
+              nextFloor.setOnMouseClicked(e->clickNextFloor());
+//          floorsVisited = new ArrayList<String>(nodes_by_floor.keySet());
+              firstFloorVisited = floorsVisited.get(0);
+              lastFloorVisited = floorsVisited.get(floorsVisited.size() - 1);
+          }
       });
   }
 
     public void clickPreviousFloor(){
         //Set<String> floorsVisited = nodes_by_floor.keySet();
-
+        String next = currentFloor;
         if(!currentFloor.equals(firstFloorVisited)){
             if(currentFloor.equals(lastFloorVisited)){
                 int i = floorsVisited.indexOf(currentFloor);
-                currentFloor = floorsVisited.get(i-1);
-                switchFloor(currentFloor);
+                next = floorsVisited.get(i-1);
+                switchFloor(next);
                 nextFloor.setDisable(false);
                 System.out.println("hi");
             }else{
                 int i = floorsVisited.indexOf(currentFloor);
-                currentFloor = floorsVisited.get(i-1);
-                switchFloor(currentFloor);
+                next = floorsVisited.get(i-1);
+                switchFloor(next);
             }
         }
 
@@ -687,18 +703,19 @@ public class PathfinderController {
     }
 
     public void clickNextFloor(){
+      String next = currentFloor;
 
         if(!currentFloor.equals(lastFloorVisited)){
             if(currentFloor.equals(firstFloorVisited)){
                 int i = floorsVisited.indexOf(currentFloor);
-                currentFloor = floorsVisited.get(i+1);
-                switchFloor(currentFloor);
+                next = floorsVisited.get(i+1);
+                switchFloor(next);
                 previousFloor.setDisable(false);
                 System.out.println("hi");
             }else{
                 int i = floorsVisited.indexOf(currentFloor);
-                currentFloor = floorsVisited.get(i+1);
-                switchFloor(currentFloor);
+                next = floorsVisited.get(i+1);
+                switchFloor(next);
             }
         }
 
