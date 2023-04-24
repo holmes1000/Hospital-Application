@@ -104,6 +104,16 @@
             </Text>
             <MFXComboBox fx:id="algorithmDropdown" floatingText="Algorithm" layoutX="918.0" layoutY="211.0" prefHeight="40.0" prefWidth="199.0" />
             <MFXDatePicker fx:id="datePicker" layoutX="918.0" layoutY="271.0" />
+            <MFXButton fx:id="previousFloor" layoutX="130.0" layoutY="430.0" prefHeight="25.0" prefWidth="63.0" text="Previous Floor">
+               <font>
+                  <Font size="7.0" />
+               </font>
+            </MFXButton>
+            <MFXButton fx:id="nextFloor" layoutX="192.0" layoutY="430.0" prefHeight="25.0" prefWidth="64.0" text="Next Floor">
+               <font>
+                  <Font size="7.0" />
+               </font>
+            </MFXButton>
             </children>
         </AnchorPane>
     </center>
