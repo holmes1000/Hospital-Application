@@ -1,6 +1,7 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
-import edu.wpi.teamb.DBAccess.DB;
+import edu.wpi.teamb.DBAccess.DButils;
+import edu.wpi.teamb.DBAccess.Full.IFull;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
 import java.sql.ResultSet;
@@ -8,24 +9,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class RequestDAOImpl implements IDAO {
-    // TODO: check if this needs to implement IRequestDAO
-
     private ArrayList<Request> requests;
-
-    public ArrayList<Request> getRequests() {
-        return requests;
-    }
 
     public void setRequests(ArrayList<Request> requests) {
         this.requests = requests;
     }
 
     private RequestDAOImpl() {
-        try{
-            requests = getAllHelper();
-        } catch (SQLException e) {
-            System.out.println("SQL Exception in RequestDAOImpl constructor");
-        }
+        requests = getAllHelper();
     }
 
     private static class SingletonHelper {
@@ -36,10 +27,16 @@ public class RequestDAOImpl implements IDAO {
         return SingletonHelper.requestDaoImp;
     }
 
+    /**
+     * Gets a Request object from the database
+     *
+     * @param id of the Request object
+     * @return a Request object with information from request table
+     */
     @Override
-    public Object get(Object id) {
+    public IFull get(Object id) {
         int whichRequest = 0;
-        ResultSet rs = DB.getRowCond("requests", "requesttype", "id = " + id);
+        ResultSet rs = DButils.getRowCond("requests", "requesttype", "id = " + id);
         String requestType = null;
         while (true) {
             try {
@@ -53,17 +50,8 @@ public class RequestDAOImpl implements IDAO {
                 throw new RuntimeException(e);
             }
         }
-        if (requestType.equals("Meal")) {
-            whichRequest = 1;
-        } else if (requestType.equals("Conference")) {
-            whichRequest = 2;
-        } else if (requestType.equals("Flower")) {
-            whichRequest = 3;
-        } else {
-            whichRequest = 0;
-        }
-        switch (whichRequest) {
-            case 1:
+        switch (requestType) {
+            case "Meal":
                 MealRequestDAOImpl mr = null;
                 try {
                     mr = new MealRequestDAOImpl();
@@ -71,87 +59,130 @@ public class RequestDAOImpl implements IDAO {
                     throw new RuntimeException(e);
                 }
                 return mr.get(id);
-            case 2:
+            case "Conference":
                 ConferenceRequestDAOImpl cr = null;
-                try {
-                    cr = new ConferenceRequestDAOImpl();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                cr = new ConferenceRequestDAOImpl();
                 return cr.get(id);
-            case 3:
+            case "Flower":
                 FlowerRequestDAOImpl fr = null;
+                fr = new FlowerRequestDAOImpl();
+                return fr.get(id);
+            case "Furniture":
+                FurnitureRequestDAOImpl ffr = null;
+                ffr = new FurnitureRequestDAOImpl();
+                return ffr.get(id);
+            case "Office":
+                OfficeRequestDAOImpl or = null;
                 try {
-                    fr = new FlowerRequestDAOImpl();
+                    or = new OfficeRequestDAOImpl();
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
-                return fr.get(id);
-            default:
-                break;
         }
         return null;
     }
 
+    /**
+     * Gets all local Request objects
+     *
+     * @return an ArrayList of all local Request objects
+     */
     @Override
     public ArrayList<Request> getAll() {
         return requests;
     }
 
-    public ArrayList<Request> getAllHelper() throws SQLException {
-        ResultSet rs = DB.getCol("requests", "*");
+    /**
+     * Sets all Requests using the database
+     */
+    @Override
+    public void setAll() { requests = getAllHelper(); }
+
+    /**
+     * Gets all Request objects from the database
+     *
+     * @return an ArrayList of all Request objects
+     */
+    public ArrayList<Request> getAllHelper() {
         ArrayList<Request> rqs = new ArrayList<Request>();
-        while (rs.next()) {
-            Request r = new Request(rs);
-            rqs.add(r);
+        try {
+            ResultSet rs = DButils.getCol("requests", "*");
+            while (rs.next()) {
+                Request r = new Request(rs);
+                rqs.add(r);
+            }
+            return rqs;
+        } catch (SQLException e) {
+            System.out.println("ERROR Query Failed in method 'RequestDAOImpl.getAllHelper': " + e.getMessage());
+        }
+        return rqs;
+    }
+
+    public ArrayList<IFull> getAllHelper1() {
+        ResultSet rs = null;
+        ArrayList<IFull> rqs = new ArrayList<IFull>();
+        try {
+            rs = DButils.getCol("requests", "*");
+            while (rs.next()) {
+                Request r = new Request(rs);
+                rqs.add((IFull) get(r.getId()));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         return rqs;
     }
 
     /**
-     * adds given request
+     * Adds a Request object to the both the database and local list
      *
-     * @param request to add
+     * @param request the Request object to be added
      */
-    //TODO: figure out a way to NEVER DO THIS (pls dont make me do this)
     @Override
     public void add(Object request) {
         Request r = (Request) request;
-        Request req = new Request(r.getId(), r.getEmployee(), r.getFloor(), r.getRoomNumber(), r.getDateSubmitted(), r.getRequestStatus(), r.getRequestType(), r.getLocationName());
+        Request req = new Request(r.getId(), r.getEmployee(), r.getDateSubmitted(), r.getRequestStatus(), r.getRequestType(), r.getLocationName(), r.getNotes());
         addHelper(req);
     }
 
     public void addHelper(Object request) {
         Request r = (Request) request;
-        Request req = new Request(r.getId(), r.getEmployee(), r.getFloor(), r.getRoomNumber(), r.getDateSubmitted(), r.getRequestStatus(), r.getRequestType(), r.getLocationName());
+        Request req = new Request(r.getId(), r.getEmployee(), r.getDateSubmitted(), r.getRequestStatus(), r.getRequestType(), r.getLocationName(), r.getNotes());
         requests.add(req);
     }
 
     /**
-     * deletes given request
+     * Removes a Request object from the both the database and local list
      *
-     * @param request to delete
+     * @param request the Request object to be removed
      */
-    //TODO: figure out a way to NEVER DO THIS (pls dont make me do this) (again)
     @Override
     public void delete(Object request) {
 
     }
 
     /**
-     * updates given request with the given values
+     * Updates a Request object in the both the database and local list
      *
-     * @param request to update with new values
+     * @param request the Request object to be updated
      */
-    //TODO: figure out a way to NEVER DO THIS (pls dont make me do this) (again) (again)
     @Override
     public void update(Object request) {
         Request r = (Request) request;
-        Request req = new Request(r.getId(), r.getEmployee(), r.getFloor(), r.getRoomNumber(), r.getDateSubmitted(), r.getRequestStatus(), r.getRequestType(), r.getLocationName());
-        getRequestIndex(req.getId());
-        requests.set(getRequestIndex(req.getId()), req);
+        getRequestIndex(r.getId());
+        requests.set(getRequestIndex(r.getId()), r);
+        String[] cols = {"employee", "datesubmitted", "requeststatus", "requesttype", "locationname", "notes"};
+        String[] vals = {r.getEmployee(), String.valueOf(r.getDateSubmitted()), r.getRequestStatus(), r.getRequestType(), r.getLocationName(), r.getNotes()};
+        DButils.updateRow("requests", cols, vals, "id = " + r.getId());
     }
 
+    /**
+     * Gets the index of a Request object in the local list
+     *
+     * @param id the id of the Request object
+     * @return the index of the Request object in the local list, or
+     *         -1 if the Request object is not in the local list
+     */
     public int getRequestIndex(int id) {
         for (Request r : requests) {
             if (r.getId() == id) {
@@ -164,15 +195,14 @@ public class RequestDAOImpl implements IDAO {
     //Insert into Database Methods
 
     /**
-     * Inserts into the database the given request
+     * Inserts a new row into the requests table in the database
      *
-     * @param values the values to insert into the corresponding columns
+     * @param values the values to be inserted into the row
+     * @return the id of the new row
      */
-    //TODO: figure out a way to NEVER DO THIS (pls dont make me do this) (again) (again) (again)
-
     public static int insertDBRowNewRequest(String[] values) {
-        String[] col = {"employee", "floor", "roomNumber", "dateSubmitted", "requestStatus", "requestType", "location_names"};
-        int id = DB.insertRowRequests("requests", col, values);
+        String[] col = {"employee", "floor", "roomNumber", "dateSubmitted", "requestStatus", "requestType", "locationname"};
+        int id = DButils.insertRowRequests("requests", col, values);
         return id;
     }
 
@@ -181,19 +211,18 @@ public class RequestDAOImpl implements IDAO {
     // Methods to get information about the request from the database
 
     /**
-     * Searches through the database for the row(s) that matches the given column
-     * and value
+     * Returns a ResultSet of the row(s) that matches the given column and value in the Requests table
      *
-     * @param col   the column to search for
-     * @param value the value to search for
-     * @return the result set of the row(s) that matches the given column and value
+     * @param col the column to search for the value
+     * @param value the value to search for in the column
+     * @return a ResultSet of the row(s) that matches the given column and value
      */
     private static ResultSet getDBRowFromCol(String col, String value) {
-        return DB.getRowCond("requests", "*", col + " = " + value);
+        return DButils.getRowCond("requests", "*", col + " = " + value);
     }
 
     /**
-     * Gets the row from the database that matches the given employee
+     * Returns a ResultSet of the row(s) that matches the given employee in the Requests table
      *
      * @param employee the employee to search for
      * @return the result set of the row that matches the given employee
@@ -202,12 +231,18 @@ public class RequestDAOImpl implements IDAO {
         return getDBRowFromCol("employee", "'" + employee + "'");
     }
 
+    /**
+     * Returns a ResultSet of the row(s) that matches the given ID in the Requests table
+     *
+     * @param id the employee to search for
+     * @return the result set of the row that matches the given ID
+     */
     public static ResultSet getDBRowID(int id) {
         return getDBRowFromCol("id", Integer.toString(id));
     }
 
     /**
-     * Gets the row(s) from the database that matches the given floor
+     * Returns a ResultSet of the row(s) that matches the given floor in the Requests table
      *
      * @param floor the floor to search for
      * @return the result set of the row that matches the given floor
@@ -217,37 +252,38 @@ public class RequestDAOImpl implements IDAO {
     }
 
     /**
-     * Gets the row(s) from the database that matches the given room number
+     * Returns a ResultSet of the row(s) that matches the given room number in the Requests table
      *
-     * @param roomnumber the room number to search for
+     * @param roomNumber the room number to search for
      * @return the result set of the row that matches the given room number
      */
-    public ResultSet getDBRowPosition(String roomnumber) {
-        return getDBRowFromCol("roomnumber", roomnumber);
+    public ResultSet getDBRowPosition(String roomNumber) {
+        return getDBRowFromCol("roomNumber", roomNumber);
     }
 
     /**
-     * Gets all the rows from the database
+     * Gets all rows from the database of requests
      *
-     * @return the result set of all rows
+     * @return the result set of the row(s) that matches the given column and value
      */
     public ResultSet getDBRowAllRequests() {
-        return DB.getRowCond("Requests", "*", "TRUE");
+        return DButils.getRowCond("Requests", "*", "TRUE");
     }
 
     // Method to Update the Database
 
     /**
-     * Updates the database with the information in this Request object
+     * Updates the rows in the Requests table that match the given condition
      *
-     * @param col   the columns to update
-     * @param value the values to update
+     * @param col the columns to update
+     * @param val the values to update the columns to
+     * @param cond the condition to search for
      */
-    private void updateRows(String[] col, String[] value, String condition) {
-        if (col.length != value.length) {
+    private void updateRows(String[] col, String[] val, String cond) {
+        if (col.length != val.length) {
             throw new IllegalArgumentException("The column and value arrays must be the same length");
         }
-        DB.updateRow("Requests", col, value, condition);
+        DButils.updateRow("Requests", col, val, cond);
     }
 
     /**
@@ -263,39 +299,14 @@ public class RequestDAOImpl implements IDAO {
         r.setEmployee(newEmployee);
     }
 
-    /**
-     * Update the floor  in the database
-     *
-     * @param oldFloor the old floor
-     * @param newFloor the new employee
-     */
-    public void updateFloor(String oldFloor, String newFloor, Request r) {
-        String[] col = {"floor"};
-        String[] value = {"'" + newFloor + "'"};
-        updateRows(col, value, "floor = '" + oldFloor + "'");
-        r.setFloor(newFloor);
-    }
-
-    /**
-     * Update the room number  in the database
-     *
-     * @param oldRoomNumber the old room number
-     * @param newRoomNumber the new room number
-     */
-    public void updateRoomNumber(String oldRoomNumber, String newRoomNumber, Request r) {
-        String[] col = {"roomnumber"};
-        String[] value = {"'" + newRoomNumber + "'"};
-        updateRows(col, value, "roomnumber = '" + oldRoomNumber + "'");
-        r.setRoomNumber(newRoomNumber);
-    }
-
     //Get rid of oldrequeststatus param and just use the requeststatus field?
 
     /**
-     * Update the request status  in the database
+     * Update the request status in the database
      *
      * @param oldRequestStatus the old request status
      * @param newRequestStatus the new request status
+     * @param r the Request to update
      */
     public void updateRequestStatus(String oldRequestStatus, String newRequestStatus, Request r) {
         String[] col = {"requeststatus"};
@@ -309,6 +320,7 @@ public class RequestDAOImpl implements IDAO {
      *
      * @param oldRequestType the old request type
      * @param newRequestType the new request type
+     * @param r the Request to update
      */
     public void updateRequestType(String oldRequestType, String newRequestType, Request r) {
         String[] col = {"requesttype"};
@@ -316,14 +328,6 @@ public class RequestDAOImpl implements IDAO {
         updateRows(col, value, "requesttype = '" + oldRequestType + "'");
         r.setRequestType(newRequestType);
     }
-
-//  obsolete function below
-//  public void updateDBRequest() {
-//    updateEmployee(this.employee);
-//    updatePassword(this.password);
-//    updatePermissionLevel(this.permissionLevel);
-//    updatePosition(this.position);
-//  }
 
     // Method to Delete the Database
 
@@ -334,7 +338,7 @@ public class RequestDAOImpl implements IDAO {
      */
     public void deleteDBRequest(int confirm, Request r) {
         if (confirm == 0)
-            DB.deleteRow("Requests", "employee = '" + r.getEmployee() + "'");
+            DButils.deleteRow("Requests", "employee = '" + r.getEmployee() + "'");
         else {
             System.out.println("Delete cancelled");
         }
@@ -342,13 +346,67 @@ public class RequestDAOImpl implements IDAO {
 
     // list information about this Request object
 
+
     /**
-     * Returns a string of all the information about the Request
+     * Returns a Request object given an ID
      *
-     * @return String of all the information about the Request
+     * @return a Request object given an ID
      */
-    public String toString(Request r) {
-        return r.getId() + ", " + r.getEmployee() + ", " + r.getFloor() + ", " + r.getRoomNumber() + ", " + r.getRequestStatus() + ", " + r.getRequestType();
+    public static Request getRequest(int id) {
+        ResultSet rs = DButils.getRowCond("requests", "*", "id = " + id);
+        try {
+            if (rs.isBeforeFirst()) {
+                rs.next();
+                return new Request(rs);
+            } else throw new SQLException("No rows found");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * when deleting a user, all requests assigned to that user will be unassigned
+     * @param username username of user to be deleted
+     */
+    public void updateRequestDeleteUser(String username) {
+        for (int i = 0; i < requests.size(); i++) {
+            if (requests.get(i).getEmployee().equals(username)) {
+                Request newRequest = requests.get(i);
+                newRequest.setEmployee("Unassigned");
+                update(newRequest);
+            }
+        }
+    }
+
+    /**
+     * Returns a list of all requests that is assigned to given user
+     * @param employee user logged in
+     * @return list of requests that is assigned to given user
+     */
+    public ArrayList<IFull> getFullRequestsbyEmployee(String employee) {
+        ArrayList<IFull> fullRequests = new ArrayList<>();
+        for (int i = 0; i < requests.size(); i++) {
+            if (requests.get(i).getEmployee().equals(employee)) {
+                fullRequests.add(get(requests.get(i).getId()));
+            }
+        }
+        return fullRequests;
+    }
+
+    /**
+     * returns a list of requests that are a given status
+     * @param status given status
+     * @return list of requests that are a given status
+     */
+    public ArrayList<IFull> getFullRequestsbyStatus(String status) {
+        ArrayList<IFull> fullRequests = new ArrayList<>();
+        for (int i = 0; i < requests.size(); i++) {
+            if (requests.get(i).getRequestStatus().equals(status)) {
+                fullRequests.add(get(requests.get(i).getId()));
+            }
+        }
+        return fullRequests;
     }
 
 }

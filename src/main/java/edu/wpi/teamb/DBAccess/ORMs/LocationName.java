@@ -1,6 +1,6 @@
 package edu.wpi.teamb.DBAccess.ORMs;
 
-import edu.wpi.teamb.DBAccess.DB;
+import edu.wpi.teamb.DBAccess.DButils;
 
 import java.sql.*;
 
@@ -53,7 +53,7 @@ public class LocationName {
      * @param longName the node to look for to get Move data
      */
     public static LocationName getLocationNameFromLongName(String longName) {
-        ResultSet rs = DB.getRowCond("LocationNames", "*", "longName = '" + longName + "'");
+        ResultSet rs = DButils.getRowCond("LocationNames", "*", "longName = '" + longName + "'");
         try {
             if (rs.isBeforeFirst()) {
                 rs.next();
@@ -93,21 +93,6 @@ public class LocationName {
         this.nodeType = nodeType;
     }
 
-    public LocationName getLocationName(String name) throws SQLException {
-        ResultSet rs = DB.getRowCond("LocationNames", "*", "longname = " + name);
-        try {
-            if (rs.isBeforeFirst()) { // if there is something it found
-                rs.next();
-                return new LocationName(rs); // make the locationName
-            } else
-                throw new SQLException("No rows found");
-        } catch (SQLException e) {
-            // handle error
-
-            System.err.println("ERROR Query Failed: " + e.getMessage());
-            return null;
-        }
-    }
     @Override
     public String toString() {
         return "Long Name: " + longName + " Short Name: " + shortName + " Node Type: " + nodeType;

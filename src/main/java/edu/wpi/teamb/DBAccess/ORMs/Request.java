@@ -1,52 +1,49 @@
 package edu.wpi.teamb.DBAccess.ORMs;
-import edu.wpi.teamb.DBAccess.DB;
+import edu.wpi.teamb.DBAccess.DButils;
 
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 public class Request {
   private int id;
   private String employee;
-  private String floor;
-  private String roomNumber;
-  private java.sql.Date dateSubmitted;
+  private Timestamp dateSubmitted;
   private String requestStatus;
   private String requestType;
   private String locationName;
+  private String notes;
 
   public Request() {
     this.id = 0;
     this.employee = "";
-    this.floor = "";
-    this.roomNumber = "";
     this.dateSubmitted = null;
     this.requestStatus = "";
     this.requestType = "";
     this.locationName = "";
+    this.notes = "";
   }
 
-  public Request(int id, String employee, String floor, String roomNumber, Date dateSubmitted, String requestStatus, String requestType, String locationName) {
+  public Request(int id, String employee, Timestamp dateSubmitted, String requestStatus, String requestType, String locationName, String notes) {
     this.id = id;
     this.employee = employee;
-    this.floor = floor;
-    this.roomNumber = roomNumber;
     this.dateSubmitted = dateSubmitted;
     this.requestStatus = requestStatus;
     this.requestType = requestType;
     this.locationName = locationName;
+    this.notes = notes;
   }
 
   public Request(ResultSet rs) throws java.sql.SQLException {
     this(
             rs.getInt("id"),
             rs.getString("employee"),
-            rs.getString("floor"),
-            rs.getString("roomnumber"),
-            rs.getDate("datesubmitted"),
+            rs.getTimestamp("datesubmitted"),
             rs.getString("requeststatus"),
             rs.getString("requesttype"),
-            rs.getString("location_name")
+            rs.getString("locationname"),
+            rs.getString("notes")
     );
   }
 
@@ -66,27 +63,11 @@ public class Request {
     this.employee = employee;
   }
 
-  public String getFloor() {
-    return floor;
-  }
-
-  public void setFloor(String floor) {
-    this.floor = floor;
-  }
-
-  public String getRoomNumber() {
-    return roomNumber;
-  }
-
-  public void setRoomNumber(String roomNumber) {
-    this.roomNumber = roomNumber;
-  }
-
-  public Date getDateSubmitted() {
+  public Timestamp getDateSubmitted() {
     return dateSubmitted;
   }
 
-  public void setDateSubmitted(Date dateSubmitted) {
+  public void setDateSubmitted(Timestamp dateSubmitted) {
     this.dateSubmitted = dateSubmitted;
   }
 
@@ -106,19 +87,6 @@ public class Request {
     this.requestType = requestType;
   }
 
-  public static Request getRequest(int id) {
-    ResultSet rs = DB.getRowCond("requests", "*", "id = " + id);
-    try {
-      if (rs.isBeforeFirst()) {
-        rs.next();
-        return new Request(rs);
-      } else throw new SQLException("No rows found");
-    } catch (Exception e) {
-      e.printStackTrace();
-      return null;
-    }
-  }
-
   public String getLocationName() {
     return locationName;
   }
@@ -127,12 +95,18 @@ public class Request {
     this.locationName = locationName;
   }
 
+  public String getNotes() {
+    return notes;
+  }
+
+  public void setNotes(String notes) {
+    this.notes = notes;
+  }
+
   @Override
   public String toString() {
     return "Request ID: " + id + ",\t" +
             "employee: " + employee + ",\t" +
-            "floor: " + floor + ",\t" +
-            "Room Number: " + roomNumber + ",\t" +
             "Date Submitted: " + dateSubmitted + ",\t" +
             "Request Status: " + requestStatus + ",\t" +
             "Request Type: " + requestType + ".";

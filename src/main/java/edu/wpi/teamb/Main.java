@@ -1,21 +1,22 @@
 package edu.wpi.teamb;
 
-import com.jfoenix.controls.JFXDrawer;
-import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
-import edu.wpi.teamb.ProgressBar.RingProgressIndicator;
-import edu.wpi.teamb.controllers.NavDrawerController;
-import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.VBox;
 import com.sun.javafx.application.LauncherImpl;
-
-import java.io.IOException;
 
 public class Main {
 
   public static void main(String[] args) {
     Repository.getRepository();
+//    Repository.getRepository().exportNodesToCSV("Nodes_4_21", 3);
+//    Repository.getRepository().exportEdgesToCSV("Edges_4_21", 3);
+//    Repository.getRepository().exportLocationNamesToCSV("LocationNames_4_21", 3);
+//    Repository.getRepository().exportMovesToCSV("Moves_4_21", 3);
+//    Repository.getRepository().exportRequestsToCSV("Requests_4_21", 3);
+//    Repository.getRepository().exportConferenceRequestsToCSV("ConferenceRequests_4_21", 3);
+//    Repository.getRepository().exportFlowerRequestsToCSV("FlowerRequests_4_21", 3);
+//    Repository.getRepository().exportFurnitureRequestsToCSV("FurnitureRequests_4_21", 3);
+//    Repository.getRepository().exportMealRequestsToCSV("MealRequests_4_21", 3);
+//    Repository.getRepository().exportOfficeRequestsToCSV("OfficeRequests_4_21", 3);
     LauncherImpl.launchApplication(Bapp.class, CustomPreloader.class, args);
   }
 

@@ -1,6 +1,6 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
-import edu.wpi.teamb.DBAccess.DB;
+import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 
 import java.sql.ResultSet;
@@ -11,31 +11,35 @@ public class LocationNameDAOImpl implements IDAO {
 
     static ArrayList<LocationName> locationNames;
 
-    public LocationNameDAOImpl() throws SQLException {
+    public LocationNameDAOImpl() {
         locationNames = getAllHelper();
     }
 
+    /**
+     * Gets a LocationName by its ID
+     *
+     * @param id the ID of the LocationName
+     * @return the LocationName with the given ID
+     */
     public LocationName get(Object id) {
         String name = (String) id;
-        ResultSet rs = DB.getRowCond("LocationNames", "*", "longname = " + name);
+        ResultSet rs = DButils.getRowCond("LocationNames", "*", "longname = " + name);
         try {
         if (rs.isBeforeFirst()) { // if there is something it found
             rs.next();
             return new LocationName(rs); // make the locationName
         } else
             throw new SQLException("No rows found");
-    } catch (SQLException e) {
-        // handle error
-
-        System.err.println("ERROR Query Failed: " + e.getMessage());
-        return null;
-    }
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'LocationNameDAOImpl.get': " + e.getMessage());
+            return null;
+        }
     }
 
     /**
-     * Gets all locations
+     * Gets all local LocationName objects
      *
-     * @return A list of all locations
+     * @return an ArrayList of all local LocationName objects
      */
     @Override
     public ArrayList<LocationName> getAll() {
@@ -43,56 +47,67 @@ public class LocationNameDAOImpl implements IDAO {
     }
 
     /**
-     * Gets all locations
-     *
-     * @return A list of all locations
+     * Sets all LocationName objects using the database
      */
-    public ArrayList<LocationName> getAllHelper() throws SQLException {
-        ResultSet rs = DB.getCol("locationnames", "*");
+    @Override
+    public void setAll() { locationNames = getAllHelper(); }
+
+    /**
+     * Gets all LocationNames from the database
+     *
+     * @return a list of all locations
+     */
+    public ArrayList<LocationName> getAllHelper() {
         ArrayList<LocationName> lns = new ArrayList<LocationName>();
-        while (rs.next()) {
-            lns.add(new LocationName(rs));
+        try {
+            ResultSet rs = DButils.getCol("locationnames", "*");
+            while (rs.next()) {
+                lns.add(new LocationName(rs));
+            }
+            return lns;
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'LocationNameDAOImpl.getAllHelper': " + e.getMessage());
         }
         return lns;
     }
 
     /**
-     * Adds a location
+     * Adds a LocationName object to the both the database and local list
      *
-     * @param l The location to add
+     * @param l the LocationName object to be added
      */
     @Override
     public void add(Object l) {
         LocationName location = (LocationName) l;
         String[] cols = {"longName", "shortName", "nodeType"};
         String[] vals = {location.getLongName(), location.getShortName(), location.getNodeType()};
-        DB.insertRow("locationnames", cols, vals);
+        DButils.insertRow("locationnames", cols, vals);
         locationNames.add(location);
     }
 
     /**
-     * Deletes a location
+     * Removes a LocationName from the both the database and the local list
      *
-     * @param l The location to delete
+     * @param l the LocationName object to be removed
      */
     @Override
     public void delete(Object l) {
         LocationName location = (LocationName) l;
-        DB.deleteRow("LocationNames", "longName = " + location.getLongName());
+        DButils.deleteRow("LocationNames", "longName = " + location.getLongName());
         locationNames.remove(location);
     }
 
     /**
-     * Updates a location
+     * Updates a LocationName object in both the database and local list
      *
-     * @param l The location to update
+     * @param l the LocationName object to be updated
      */
     @Override
     public void update(Object l) {
         LocationName location = (LocationName) l;
         String[] cols = {"longName", "shortName", "nodeType"};
         String[] vals = {location.getLongName(), location.getShortName(), location.getNodeType()};
-        DB.updateRow("LocationNames", cols, vals, "longName = " + location.getLongName());
+        DButils.updateRow("LocationNames", cols, vals, "longName = " + location.getLongName());
         for (int i = 0; i < locationNames.size(); i++) {
             if (locationNames.get(i).getLongName().equals(location.getLongName())) {
                 locationNames.set(i, location);
@@ -100,20 +115,32 @@ public class LocationNameDAOImpl implements IDAO {
         }
     }
 
+    /**
+     * Searches through the database for the row(s) that matches the col and value in the LocationNames table
+     *
+     * @param col   the column to search for
+     * @param value the value to search for
+     * @return A ResultSet of the row(s) that match the col and value
+     */
     private ResultSet getDBRowFromCol(String col, String value) {
-        return DB.getRowCond("LocationNames", "*", col + " = " + value);
+        return DButils.getRowCond("LocationNames", "*", col + " = " + value);
     }
 
+    /**
+     * Gets a ResultSet of all rows from the LocationNames table
+     *
+     * @return a ResultSet of all rows from the LocationNames table
+     */
     public ResultSet getDBRowAllLocationNames() {
-        return DB.getRowCond("LocationNames", "*", "TRUE");
+        return DButils.getRowCond("LocationNames", "*", "TRUE");
     }
 
     /**
      * Gets a ResultSet of rows from the LocationNames table that match the given longName
      *
      * @param longName the longName to look for to get LocationName data
+     * @return a ResultSet of the row(s) that match the longName
      */
-
     public ResultSet getDBRowLongName(String longName) {
         return getDBRowFromCol("longName", "" + longName + "");
     }
@@ -122,8 +149,8 @@ public class LocationNameDAOImpl implements IDAO {
      * Gets a ResultSet of rows from the LocationNames table that match the given shortName
      *
      * @param shortName the shortName to look for to get LocationName data
+     * @return a ResultSet of the row(s) that match the shortName
      */
-
     public ResultSet getDBRowShortName(String shortName) {
         return getDBRowFromCol("shortName", "" + shortName + "");
     }
@@ -132,8 +159,8 @@ public class LocationNameDAOImpl implements IDAO {
      * Gets a ResultSet of rows from the LocationNames table that match the given nodeType
      *
      * @param nodeType the date to look for to get Move data
+     * @return A ResultSet of the row(s) that match the nodeType
      */
-
     public ResultSet getDBRowNodeType(String nodeType) {
         return getDBRowFromCol("nodeType", "" + nodeType + "");
     }
@@ -141,12 +168,17 @@ public class LocationNameDAOImpl implements IDAO {
     /**
      * Returns a string of all the information about the LocationName
      *
-     * @return String of all the information about the LocationName
+     * @return a String of all the information about the LocationName
      */
     public String toString(LocationName ln) {
         return ln.getLongName() + ", " + ln.getShortName() + ", " + ln.getNodeType();
     }
 
+    /**
+     * Returns an ArrayList of Strings of all the longNames in alphabetical order
+     *
+     * @return an ArrayList of Strings of all the longNames in alphabetical order
+     */
     public ArrayList<String> getLongNamesAlphebeticalOrder() {
         ArrayList<String> longNames = new ArrayList<>();
         for (LocationName ln : locationNames) {
@@ -156,6 +188,11 @@ public class LocationNameDAOImpl implements IDAO {
         return longNames;
     }
 
+    /**
+     * Returns an ArrayList of Strings of all the shortNames in alphabetical order
+     *
+     * @return an ArrayList of Strings of all the shortNames in alphabetical order
+     */
     public ArrayList<String> getShortNamesAlphebeticalOrder() {
         ArrayList<String> shortNames = new ArrayList<>();
         for (LocationName ln : locationNames) {
@@ -165,6 +202,11 @@ public class LocationNameDAOImpl implements IDAO {
         return shortNames;
     }
 
+    /**
+     * Returns an ArrayList of Strings of all the unique nodeTypes in alphabetical order
+     *
+     * @return an ArrayList of Strings of all the unique nodeTypes in alphabetical order
+     */
     public ArrayList<String> getNodeTypesUniqueAlphabetical() {
         ArrayList<String> uniqueAlphabetical = new ArrayList<>();
         for (LocationName ln : locationNames) {
@@ -174,6 +216,25 @@ public class LocationNameDAOImpl implements IDAO {
         }
         uniqueAlphabetical.sort(String::compareToIgnoreCase);
         return uniqueAlphabetical;
+    }
+
+    /**
+     * Returns a LocationName object of the given longName
+     *
+     * @return a LocationName object of the given longName
+     */
+    public LocationName getLocationName(String name) {
+        ResultSet rs = DButils.getRowCond("LocationNames", "*", "longname = " + name);
+        try {
+            if (rs.isBeforeFirst()) { // if there is something it found
+                rs.next();
+                return new LocationName(rs); // make the locationName
+            } else
+                throw new SQLException("No rows found");
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'LocationNameDAOImpl.getLocationName': " + e.getMessage());
+            return null;
+        }
     }
 
 }

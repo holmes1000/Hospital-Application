@@ -1,36 +1,39 @@
 package edu.wpi.teamb.DBAccess.ORMs;
 
-import edu.wpi.teamb.DBAccess.DB;
+import edu.wpi.teamb.DBAccess.DButils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class User {
+    private String name;
     private String username;
     private String password;
+    private String email;
     private int permissionLevel;
-    private String position;
 
     public User() {
+        this.name = "";
         this.username = "";
         this.password = "";
+        this.email = "";
         this.permissionLevel = 0;
-        this.position = "";
     }
 
     /**
      * Creates a node from the given parameters
-     *
-     * @param username the username of the user
-     * @param password the password of the user
-     * @param permissionLevel the permission level of the user
-     * @param position the position of the user
+     * @param name
+     * @param username
+     * @param password
+     * @param email
+     * @param permissionLevel
      */
-    public User(String username, String password, int permissionLevel, String position) {
+    public User(String name, String username, String password, String email, int permissionLevel) {
+        this.name = name;
         this.username = username;
         this.password = password;
+        this.email = email;
         this.permissionLevel = permissionLevel;
-        this.position = position;
     }
 
     /**
@@ -41,10 +44,12 @@ public class User {
      */
     public User(ResultSet rs) throws java.sql.SQLException {
         this(
+                rs.getString("name"),
                 rs.getString("username"),
                 rs.getString("password"),
-                rs.getInt("permissionLevel"),
-                rs.getString("position"));
+                rs.getString("email"),
+                rs.getInt("permissionLevel"));
+
     }
 
     // Getters and Setters
@@ -73,12 +78,20 @@ public class User {
         this.permissionLevel = permissionLevel;
     }
 
-    public String getPosition() {
-        return position;
+    public String getEmail() {
+        return email;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     // Access from Database Methods
@@ -93,7 +106,7 @@ public class User {
      * @return String of all the information about the user
      */
     public String toString() {
-        return username + ", " + permissionLevel + ", " + position;
+        return name + ", " + username + ", " + email + ", " + permissionLevel;
     }
 
     /**
@@ -102,21 +115,6 @@ public class User {
      * @return String of all the information about the user in a formatted way
      */
     public String userInfo() {
-        return "Username: " + username + "\tPermission Level: " + permissionLevel + "\tPosition: " + position;
-    }
-    public User getUser(String username) {
-        ResultSet rs = DB.getRowCond("Users", "*", "username like '" + username + "'");
-        try {
-            if (rs != null) {
-                if (rs.isBeforeFirst()) {
-                    rs.next();
-                    return new User(rs);
-                } else throw new SQLException("No rows found"); }
-        } catch (SQLException e) {
-            // handle error
-            System.err.println("ERROR Query Failed: " + e.getMessage());
-            return null;
-        }
-        return null;
+        return "Name" + name + "\tUsername: " + username + "\tEmail" + email + "\tPermission Level: " + permissionLevel;
     }
 }

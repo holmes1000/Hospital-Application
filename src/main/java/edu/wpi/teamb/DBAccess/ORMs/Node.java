@@ -1,7 +1,6 @@
 package edu.wpi.teamb.DBAccess.ORMs;
 
-import edu.wpi.teamb.DBAccess.DAO.NodeDAOImpl;
-import edu.wpi.teamb.DBAccess.DB;
+import edu.wpi.teamb.DBAccess.DButils;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,7 +10,6 @@ import java.util.Objects;
 
 public class Node {
     private int nodeID;
-    private int oldNodeID;
     private int xCoord;
     private int yCoord;
     private String floor;
@@ -19,8 +17,8 @@ public class Node {
     private String building;
     private Set<Edge> connectedEdges;
     private Double cost; // Alex added a cost value we can mess with to the nodes for A* pathfinding, we may change this implementation later
+    private Double cost_and_heuristic;
     private ArrayList<Integer> neighborIds;
-    //private Map<String, Edge> connectedEdges;
 
     private String nodeType = null; // implemented here for elevator vs. stair weighting
 
@@ -29,7 +27,6 @@ public class Node {
      */
     public Node() {
         this.nodeID = 0;
-        this.oldNodeID = 0;
         this.xCoord = 0;
         this.yCoord = 0;
         this.floor = "";
@@ -51,7 +48,6 @@ public class Node {
      */
     public Node(int ID, int xCoord, int yCoord, String floor, String building) {
         this.nodeID = ID;
-        this.oldNodeID = ID;//here to keep track of the old nodeID before we update the db
         this.xCoord = xCoord;
         this.yCoord = yCoord;
         this.floor = floor;
@@ -77,47 +73,43 @@ public class Node {
                 rs.getString("building"));
     }
 
-    /**
-     * Makes a node from the given nodeID
-     *
-     * @param nodeID the nodeID to make the node from
-     * @return the node with the given nodeID. Returns null if the nodeID is not
-     * found
-     */
+    // Getters and Setters
 
-    public static Node getNode(int nodeID) {
-        ResultSet rs = DB.getRowCond("Nodes", "*", "nodeID = " + nodeID + "");
-        try {
-            if (rs.isBeforeFirst()) {
-                rs.next();
-                Node returnNode = new Node(rs);
-                rs.close();
-                returnNode.setFloorNum();
-                return returnNode;
-            } else
-                rs.close();
-            throw new SQLException("No rows found");
-        } catch (SQLException e) {
-            // handel error
 
-            System.err.println("ERROR Query Failed: " + e.getMessage());
-            return null;
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                System.err.println("ERROR Query Failed: " + e.getMessage());
-            }
-        }
-
+    public Double getCost_and_heuristic() {
+        return cost_and_heuristic;
     }
 
-    public static Node nodeFill(int nodeID) throws SQLException {
-        Node node = Node.getNode(nodeID);
-        node.setNeighborIds(node.getNeighborIds());
-        return node;
+    public void setCost_and_heuristic(Double cost_and_heuristic) {
+        this.cost_and_heuristic = cost_and_heuristic;
+    }
+
+    public int getNodeID() {
+        return nodeID;
+    }
+
+    public void setNodeID(int nodeID) {
+        this.nodeID = nodeID;
+    }
+
+    public int getxCoord() {
+        return xCoord;
+    }
+
+    public void setxCoord(int xCoord) {
+        this.xCoord = xCoord;
+    }
+
+    public int getyCoord() {
+        return yCoord;
+    }
+
+    public void setyCoord(int yCoord) {
+        this.yCoord = yCoord;
+    }
+
+    public int getFloorNum() {
+        return floorNum;
     }
 
     public void setFloorNum(){
@@ -146,38 +138,8 @@ public class Node {
         }
     }
 
-    // Getters and Setters
-
-    public int getNodeID() {
-        return nodeID;
-    }
-
-    public void setNodeID(int nodeID) {
-        this.nodeID = nodeID;
-    }
-
-    public int getxCoord() {
-        return xCoord;
-    }
-
-    public void setxCoord(int xCoord) {
-        this.xCoord = xCoord;
-    }
-
-    public int getyCoord() {
-        return yCoord;
-    }
-
-    public void setyCoord(int yCoord) {
-        this.yCoord = yCoord;
-    }
-
     public String getFloor() {
         return floor;
-    }
-
-    public int getFloorNum() {
-        return floorNum;
     }
 
     public void setFloor(String floor) {
@@ -202,24 +164,6 @@ public class Node {
 
     public String getNodeType() {
         return nodeType;
-    }
-
-    // this function kinda sucks I also only want to run it when we're doing shitty pathfinding
-    // so it needs to be called on every node.
-    public static String getNodeType(int nodeID){
-        String name = DB.getShortNameFromNodeID(nodeID);
-        if(name.contains("Stair")){
-            return "STAI";
-        }
-        else if(name.contains("Elevator")){
-            return "ELAV";
-        }
-        else if(name.contains("Hallway")){ // this is also trash
-            return "HALL";
-        }
-        else {
-            return "OTHE"; // this is trash
-        }
     }
 
     public Set<Edge> getConnectedEdges() {

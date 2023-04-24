@@ -1,14 +1,16 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
-import edu.wpi.teamb.DBAccess.DB;
-import edu.wpi.teamb.DBAccess.FullMealRequest;
-import edu.wpi.teamb.DBAccess.FullOfficeRequest;
+import edu.wpi.teamb.DBAccess.DButils;
+import edu.wpi.teamb.DBAccess.Full.FullFactory;
+import edu.wpi.teamb.DBAccess.Full.FullMealRequest;
+import edu.wpi.teamb.DBAccess.Full.FullOfficeRequest;
+import edu.wpi.teamb.DBAccess.Full.IFull;
 import edu.wpi.teamb.DBAccess.ORMs.MealRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,13 +22,20 @@ public class MealRequestDAOImpl implements IDAO {
     public MealRequestDAOImpl() throws SQLException {
         mealRequests = getAllHelper();
     }
+
+    /**
+     * Gets a FullMealRequest object from the database
+     *
+     * @param id of the MealRequest object
+     * @return a FullMealRequest object with information from request and meal request tables
+     */
     @Override
     public FullMealRequest get(Object id) {
         int idInt = (Integer) id;
         MealRequest mr = null;
         Request r = null;
         try {
-            ResultSet rs = DB.getRowCond("mealrequests", "*", "id = " + idInt);
+            ResultSet rs = DButils.getRowCond("mealrequests", "*", "id = " + idInt);
             rs.next();
             mr = new MealRequest(rs);
             ResultSet rs1 = RequestDAOImpl.getDBRowID(idInt);
@@ -38,103 +47,120 @@ public class MealRequestDAOImpl implements IDAO {
         return new FullMealRequest(r, mr);
     }
 
+    /**
+     * Gets all local MealRequest objects
+     *
+     * @return an ArrayList of all local MealRequest objects
+     */
     @Override
     public ArrayList<FullMealRequest> getAll() {
         return mealRequests;
     }
 
     /**
-     * gets all Meal requests
-     *
-     * @return list of Meal requests
+     * Sets all MealRequest objects using the database
      */
-    public ArrayList<FullMealRequest> getAllHelper() throws SQLException {
-        ResultSet rs = getDBRowAllRequests();
+    @Override
+    public void setAll() { mealRequests = getAllHelper(); }
+
+    /**
+     * Gets all MealRequest objects from the database
+     *
+     * @return an ArrayList of all MealRequest objects
+     */
+    public ArrayList<FullMealRequest> getAllHelper() {
+        FullFactory ff = new FullFactory();
+        IFull mealRequest = ff.getFullRequest("Meal");
         ArrayList<MealRequest> mrs = new ArrayList<MealRequest>();
-        while (rs.next()) {
-            mrs.add(new MealRequest(rs));
+        try {
+            ResultSet rs = getDBRowAllRequests();
+            while (rs.next()) {
+                mrs.add(new MealRequest(rs));
+            }
+            return (ArrayList<FullMealRequest>) mealRequest.listFullRequests(mrs);
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'MealRequestDAOImpl.getAllHelper': " + e.getMessage());
         }
-        return FullMealRequest.listFullMealRequests(mrs);
+        return (ArrayList<FullMealRequest>) mealRequest.listFullRequests(mrs);
     }
 
     /**
-     * adds given request
+     * Adds a MealRequest object to the both the database and local list
      *
-     * @param request to add
+     * @param request the MealRequest object to be added
      */
     @Override
     public void add(Object request) {
         String[] mealReq = (String[]) request;
-       // DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        //Date dateSubmitted;
-        String[] values = {mealReq[0], mealReq[1], mealReq[2], mealReq[3], mealReq[4], mealReq[5], mealReq[6], mealReq[7], mealReq[8], mealReq[9], mealReq[10]};
+        String[] values = {mealReq[0], mealReq[1], "Meal", mealReq[2], mealReq[3], mealReq[4], mealReq[5], mealReq[6], mealReq[7]};
         int id = insertDBRowNewMealRequest(values);
-        ResultSet rs = DB.getRowCond("requests", "dateSubmitted", "id = " + id);
-        Date dateSubmitted = null;
+        ResultSet rs = DButils.getRowCond("requests", "datesubmitted", "id = " + id);
+        Timestamp dateSubmitted = null;
         try {
             rs.next();
-            dateSubmitted = rs.getDate("dateSubmitted");
+            dateSubmitted = rs.getTimestamp("datesubmitted");
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        mealRequests.add(new FullMealRequest(id, mealReq[0], mealReq[1], mealReq[2], dateSubmitted, mealReq[4], mealReq[5], mealReq[6], mealReq[7], mealReq[8], mealReq[9], mealReq[10]));
-        RequestDAOImpl.getRequestDaoImpl().getRequests().add(new Request(id, mealReq[0], mealReq[1], mealReq[2], dateSubmitted, mealReq[4], (mealReq[5]), mealReq[10]));
+        mealRequests.add(new FullMealRequest(id, mealReq[0], dateSubmitted, mealReq[1], mealReq[2], mealReq[3], mealReq[4], mealReq[5], mealReq[6], mealReq[7]));
+        RequestDAOImpl.getRequestDaoImpl().getAll().add(new Request(id, mealReq[0], dateSubmitted, mealReq[1], "Meal", mealReq[2], mealReq[3]));
     }
 
     /**
-     * deletes given request
+     * Removes a MealRequest from the both the database and the local list
      *
-     * @param request to delete
+     * @param request the MealRequest object to be removed
      */
     @Override
     public void delete(Object request) {
         FullOfficeRequest fmr = (FullOfficeRequest) request;
-        DB.deleteRow("mealrequests", "id" + fmr.getId() + "");
-        DB.deleteRow("requests", "id =" + fmr.getId() + "");
+        DButils.deleteRow("mealrequests", "id" + fmr.getId() + "");
+        DButils.deleteRow("requests", "id =" + fmr.getId() + "");
         mealRequests.remove(fmr);
-        Request r = new Request(fmr.getId(), fmr.getEmployee(), fmr.getFloor(), fmr.getRoomNumber(), fmr.getDateSubmitted(), fmr.getRequestStatus(), fmr.getRequestType(), fmr.getLocationName());
-        RequestDAOImpl.getRequestDaoImpl().getRequests().remove(r);
+        Request r = new Request(fmr.getId(), fmr.getEmployee(), fmr.getDateSubmitted(), fmr.getRequestStatus(), fmr.getRequestType(), fmr.getLocationName(), fmr.getNotes());
+        RequestDAOImpl.getRequestDaoImpl().getAll().remove(r);
     }
 
     /**
-     * updates given request with the given values
+     * Updates a MealRequest object in both the database and the local list
      *
-     * @param request to update with new values
+     * @param request the MealRequest object to be updated
      */
     @Override
     public void update(Object request) {
         FullMealRequest fmr = (FullMealRequest) request;
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String[] values = {
-                Integer.toString(fmr.getId()), fmr.getEmployee(), fmr.getFloor(), fmr.getRoomNumber(), dateFormat.format(fmr.getDateSubmitted()), fmr.getRequestStatus(), "Meal", fmr.getOrderFrom(), fmr.getFood(), fmr.getDrink(), fmr.getSnack(), fmr.getMealModification()};
-        String[] colsMeal = {"orderfrom", "food", "drink", "snack", "mealmodification"};
-        String[] valuesMeal = {values[7], values[8], values[9], values[10], values[11]};
-        String[] colsReq = {"employee", "floor", "roomnumber", "datesubmitted", "requeststatus", "requesttype"};
-        String[] valuesReq = {values[1], values[2], values[3], values[4], values[5], values[6]};
-        DB.updateRow("mealrequests", colsMeal, valuesMeal, "id = " + values[0]);
-        DB.updateRow("requests", colsReq, valuesReq, "id = " + values[0]);
+//        String[] values = {
+//                Integer.toString(fmr.getId()), fmr.getEmployee(), fmr.getDateSubmitted(), fmr.getRequestStatus(), "Meal", fmr.getOrderFrom(), fmr.getFood(), fmr.getDrink(), fmr.getSnack(), fmr.getMealModification()};
+        String[] colsMeal = {"orderfrom", "food", "drink", "snack"};
+        String[] valuesMeal = {fmr.getOrderFrom(), fmr.getFood(), fmr.getDrink(), fmr.getSnack()};
+        String[] colsReq = {"employee", "datesubmitted", "requeststatus", "requesttype", "locationname", "notes"};
+        String[] valuesReq = {fmr.getEmployee(), dateFormat.format(fmr.getDateSubmitted()), fmr.getRequestStatus(), fmr.getRequestType(), fmr.getLocationName(), fmr.getNotes()};
+        DButils.updateRow("mealrequests", colsMeal, valuesMeal, "id = " + fmr.getId());
+        DButils.updateRow("requests", colsReq, valuesReq, "id = " + fmr.getId());
         for (int i = 0; i < mealRequests.size(); i++) {
             if (mealRequests.get(i).getId() == fmr.getId()) {
                 mealRequests.set(i, fmr);
             }
         }
-        Request r = new Request(fmr.getId(), fmr.getEmployee(), fmr.getFloor(), fmr.getRoomNumber(), fmr.getDateSubmitted(), fmr.getRequestStatus(), fmr.getRequestType(), fmr.getLocationName());
+        Request r = new Request(fmr.getId(), fmr.getEmployee(), fmr.getDateSubmitted(), fmr.getRequestStatus(), fmr.getRequestType(), fmr.getLocationName(), fmr.getNotes());
         RequestDAOImpl.getRequestDaoImpl().update(r);
     }
     //Insert into Database Methods
 
     /**
-     * Inserts a new row into the meal request table
+     * Inserts a new row into the MealRequests table
      *
-     * @param value the values to insert into the corresponding columns
+     * @param values the values of the MealRequest you want to add
+     * @return an int representing the id of the new row
      */
-    public static int insertDBRowNewMealRequest(String[] value) {
-        String[] colMeal = {"id","orderfrom", "food", "drink", "snack", "mealmodification"};
-        String[] colRequest = {"employee", "floor", "roomnumber", "requeststatus", "requesttype", "location_name"};
-        String[] valuesReq = {value[0], value[1], value[2], value[3], value[4], value[10]};
-        int id = DB.insertRowRequests("requests", colRequest, valuesReq);
-        String[] valuesMeal = {Integer.toString(id), value [5], value[6], value[7], value[8], value[9]};
-        DB.insertRow("mealrequests", colMeal, valuesMeal);
+    public static int insertDBRowNewMealRequest(String[] values) {
+        String[] colMeal = {"id","orderfrom", "food", "drink", "snack"};
+        String[] colRequest = {"employee", "requeststatus", "requesttype", "location_name", "notes"};
+        String[] valuesReq = {values[0], values[1], values[2], values[3], values[4]};
+        int id = DButils.insertRowRequests("requests", colRequest, valuesReq);
+        String[] valuesMeal = {Integer.toString(id), values[5], values[6], values[7], values[8]};
+        DButils.insertRow("mealrequests", colMeal, valuesMeal);
         return id;
     }
 
@@ -144,26 +170,23 @@ public class MealRequestDAOImpl implements IDAO {
     // Methods to get information about the meal request from the database
 
     /**
-     * Searches through the database for the row(s) that matches the given column
-     * and value
+     * Returns a ResultSet of the row(s) that matches the given column and value in the MealRequests table
      *
-     * @param col   the column to search for
-     * @param value the value to search for
-     * @return the result set of the row(s) that matches the given column and value
+     * @param col the column to search for the value
+     * @param value the value to search for in the column
+     * @return a ResultSet of the row(s) that matches the given column and value
      */
     private ResultSet getDBRowFromCol(String col, String value) {
-        return DB.getRowCond("MealRequests", "*", col + " = " + value);
+        return DButils.getRowCond("MealRequests", "*", col + " = " + value);
     }
 
     /**
      * Gets all rows from the database of meal requests
      *
-     * @param col   the column to search for
-     * @param value the value to search for
      * @return the result set of the row(s) that matches the given column and value
      */
-    private ResultSet getDBRowAllRequests(String col, String value) {
-        return DB.getRowCond("MealRequests", "*", col + " = " + value);
+    private ResultSet getDBRowAllRequests() {
+        return DButils.getCol("MealRequests", "*");
     }
 
     /**
@@ -216,16 +239,6 @@ public class MealRequestDAOImpl implements IDAO {
         return getDBRowFromCol("snack",  "'" + snack  + "'");
     }
 
-    /**
-     * Gets the row(s) from the database that matches the given meal modification
-     *
-     * @param mealmodiification the meal modification with the order
-     * @return the result set of the row that matches the meal modification
-     */
-    public ResultSet getDBRowMealModification(String mealmodiification) {
-        return getDBRowFromCol("mealmodification",  "'" + mealmodiification  + "'");
-    }
-
     // Method to Update the Database
 
     /**
@@ -238,7 +251,7 @@ public class MealRequestDAOImpl implements IDAO {
         if (col.length == value.length) {
             throw new IllegalArgumentException("The column and value arrays must be the same length");
         }
-        DB.updateRow("MealRequests", col, value, condition);
+        DButils.updateRow("MealRequests", col, value, condition);
     }
 
     /**
@@ -261,15 +274,26 @@ public class MealRequestDAOImpl implements IDAO {
      * @return String of all the information about the MealRequest
      */
     public String toString(MealRequest mr) {
-        return "ID: " + mr.getId() + "\tOrder From: " + mr.getOrderFrom() + "\tFood: " + mr.getFood() + "\tDrink: " + mr.getDrink() + "\tSnack: " + mr.getSnack() + "\tMeal Modification: " + mr.getMealModification();
+        return "ID: " + mr.getId() + "\tOrder From: " + mr.getOrderFrom() + "\tFood: " + mr.getFood() + "\tDrink: " + mr.getDrink() + "\tSnack: " + mr.getSnack();
     }
 
     /**
-     * Gets all rows from the database of meal requests
+     * Gets a MealRequest object from the database
      *
-     * @return the result set of the row(s) that matches the given column and value
+     * @param id of the MealRequest object
+     * @return a MealRequest object with information from the MealRequests table
      */
-    private ResultSet getDBRowAllRequests() throws SQLException {
-        return DB.getCol("mealrequests", "*");
+    public static MealRequest getMealRequest(int id) {
+        ResultSet rs = DButils.getRowCond("MealRequests", "*", "id = '" + id + "'");
+        try {
+            if (rs.isBeforeFirst()) {
+                rs.next();
+                return new MealRequest(rs);
+            } else
+                throw new SQLException("Error in method 'MealRequestDAOImpl.getMealRequest': No rows found");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

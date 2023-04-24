@@ -1,10 +1,9 @@
 package edu.wpi.teamb.DBAccess.ORMs;
 
-import edu.wpi.teamb.DBAccess.DB;
+import edu.wpi.teamb.DBAccess.DButils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
 
 import static java.lang.Integer.parseInt;
 
@@ -119,39 +118,8 @@ public class Edge {
             this.endNode = endNode;
         //endNode.addEdge(this);
     }
-
-    public Edge getEdge(String endpoints) {
-        String[] endpointsArray = endpoints.split("_");
-        ResultSet rs = DB.getRowCond("Edges", "*", "startnode = " + endpointsArray[0] + " AND endnode = " + endpointsArray[1]);
-        try {
-            if (rs.isBeforeFirst()) { // if there is something it found
-                rs.next();
-                return new Edge(rs); // make the edge
-            } else
-                throw new SQLException("No rows found");
-        } catch (SQLException e) {
-            // handle error
-
-            System.err.println("ERROR Query Failed: " + e.getMessage());
-            return null;
-        }
-    }
     @Override
     public String toString() {
         return "StartNodeID: " + endpoints + " EndNodeID: " + endNodeID;
     }
 }
-
-// Access from Database Methods
-
-// /**
-// * Gets the row from the database that matches he edgeid
-// *
-// * @param edgeid the edge id to search for, make sure there are NO single
-// quotes
-// * surrounding the edgeid
-// * @return the row that matches the edgeid
-// */
-// public ResultSet getDBRowEdgeID(String edgeid) {
-// return getRowFromCol("edgeid", "'" + edgeid + "'");
-// }

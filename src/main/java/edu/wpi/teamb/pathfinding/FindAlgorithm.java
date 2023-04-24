@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 public class FindAlgorithm {
 
-    private PathFindingAlgorithm algorithm;
+    private IPathFindingAlgorithm algorithm;
 
-    public void FindAlgorithm(PathFindingAlgorithm algorithm){
+    public void FindAlgorithm(IPathFindingAlgorithm algorithm){
         this.algorithm = algorithm;
     }
 

@@ -15,7 +15,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="1107.0" style="-fx-background-color: #012D5A;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.requests.MoveRequestController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="1107.0" style="-fx-background-color: #012D5A;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.requests.MoveRequestControllerI">
    <right>
       <AnchorPane prefHeight="720.0" prefWidth="1159.0" BorderPane.alignment="CENTER">
          <children>
@@ -24,22 +24,22 @@
                   <Font name="System Bold" size="36.0" />
                </font>
             </Text>
-            <MFXButton fx:id="btnSubmit" defaultButton="true" layoutX="955.0" layoutY="481.0" onAction="#clickSubmit" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #1C4EFE;" text="Submit" textFill="#f1f1f1">
+            <MFXButton fx:id="btnSubmit" defaultButton="true" layoutX="955.0" layoutY="481.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #1C4EFE;" text="Submit" textFill="#f1f1f1">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </MFXButton>
-            <MFXButton fx:id="btnCancel" defaultButton="true" layoutX="170.0" layoutY="481.0" onAction="#clickCancel" prefHeight="45.0" prefWidth="170.0" style="-fx-background-color: #1C4EFE;" text="Cancel" textFill="#f1f1f1">
+            <MFXButton fx:id="btnCancel" defaultButton="true" layoutX="170.0" layoutY="481.0" prefHeight="45.0" prefWidth="170.0" style="-fx-background-color: #1C4EFE;" text="Cancel" textFill="#f1f1f1">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </MFXButton>
-            <MFXButton fx:id="btnReset" defaultButton="true" layoutX="20.0" layoutY="481.0" onAction="#clickResetForm" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #1C4EFE;" text="Reset" textFill="#f1f1f1">
+            <MFXButton fx:id="btnReset" defaultButton="true" layoutX="20.0" layoutY="481.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #1C4EFE;" text="Reset" textFill="#f1f1f1">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </MFXButton>
-            <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="1028.0" layoutY="25.0" onMouseEntered="#hoverHelp" onMouseExited="#hoverHelp" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="1028.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../img/helpicon.png" />
                </image>
@@ -89,12 +89,12 @@
             <TableView fx:id="tbFutureMoves" layoutX="613.0" layoutY="117.0" onMouseClicked="#tbSetAlter" prefHeight="331.0" prefWidth="369.0" />
                </children>
             </VBox>
-            <MFXButton fx:id="btnRemoveMove" defaultButton="true" layoutX="957.0" layoutY="135.0" onAction="#RemoveRequest" prefHeight="72.0" prefWidth="115.0" style="-fx-background-color: #1C4EFE;" text="Remove Request" textAlignment="CENTER" textFill="#f1f1f1" wrapText="true">
+            <MFXButton fx:id="btnRemoveMove" defaultButton="true" layoutX="957.0" layoutY="135.0" prefHeight="72.0" prefWidth="115.0" style="-fx-background-color: #1C4EFE;" text="Remove Request" textAlignment="CENTER" textFill="#f1f1f1" wrapText="true">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </MFXButton>
-            <MFXButton fx:id="btnEditRequuest" defaultButton="true" layoutX="957.0" layoutY="222.0" onAction="#EditRequest" prefHeight="72.0" prefWidth="115.0" style="-fx-background-color: #1C4EFE;" text="Edit Request" textAlignment="CENTER" textFill="#f1f1f1" wrapText="true">
+            <MFXButton fx:id="btnEditRequest" defaultButton="true" layoutX="957.0" layoutY="222.0" prefHeight="72.0" prefWidth="115.0" style="-fx-background-color: #1C4EFE;" text="Edit Request" textAlignment="CENTER" textFill="#f1f1f1" wrapText="true">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
@@ -104,6 +104,11 @@
                   <Font name="System Bold" size="12.0" />
                </font>
             </MFXRadioButton>
+            <MFXButton fx:id="btnViewMoveMap" defaultButton="true" layoutX="620.0" layoutY="481.0" prefHeight="45.0" prefWidth="170.0" style="-fx-background-color: #1C4EFE;" text="View Move Map" textFill="#f1f1f1">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </MFXButton>
          </children>
       </AnchorPane>
    </right>

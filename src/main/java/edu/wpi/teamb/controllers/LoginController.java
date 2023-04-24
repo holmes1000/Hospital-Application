@@ -1,6 +1,6 @@
 package edu.wpi.teamb.controllers;
 
-import edu.wpi.teamb.entities.Login;
+import edu.wpi.teamb.entities.ELogin;
 import edu.wpi.teamb.exceptions.EmptyLoginCredentialsException;
 import edu.wpi.teamb.exceptions.IncorrectPasswordException;
 import edu.wpi.teamb.navigation.Navigation;
@@ -10,10 +10,15 @@ import io.github.palexdev.materialfx.controls.MFXRadioButton;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Objects;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class LoginController {
   @FXML private MFXButton btnLogin;
@@ -23,10 +28,10 @@ public class LoginController {
   @FXML private MFXTextField textUsername;
   @FXML private MFXTextField textPassword;
   @FXML private Text errorMsg;
-  private Login login;
+  private ELogin ELogin;
 
   public LoginController() {
-    this.login = Login.getLogin();
+    this.ELogin = ELogin.getLogin();
   }
 
   @FXML
@@ -35,11 +40,17 @@ public class LoginController {
   }
 
   public void clickForgotPassword(ActionEvent event) throws IOException {
-    System.out.println("Not yet implemented");
-  }
-
-  public void clickCreateAccount(ActionEvent event) throws IOException {
-    System.out.println("Not yet implemented");
+    Parent root;
+    try {
+      root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("edu/wpi/teamb/views/settings/ForgotPassword.fxml")));
+      Stage stage = new Stage();
+      stage.setTitle("Forgot Password");
+      stage.setScene(new Scene(root, 400, 600));
+      stage.show();
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -52,7 +63,7 @@ public class LoginController {
     // otherwise send the username and password data over to Login entity to be checked with
     // database
     try {
-      if (login.checkLogin(textUsername.getText(), textPassword.getText())) {
+      if (ELogin.checkLogin(textUsername.getText(), textPassword.getText())) {
         errorMsg.setText("Logged in Successful!");
         Navigation.navigate(Screen.HOME);
       } else {
