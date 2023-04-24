@@ -126,12 +126,10 @@ public class SubmittedRequestsController {
         ArrayList<Request> listOfRequests = allRequestsE.getAllRequests();
         //applying status filter settings
         ArrayList<Request> filteredListOfRequests = new ArrayList<>();
-        if(filterCategory.equals("Status")) {
-            if(filterOption.equals("Completed")) {
-                filteredListOfRequests = listOfRequests.stream()
-                        .filter(request -> request.getRequestStatus().equals("Completed")) // Filter based on the field
-                        .collect(Collectors.toCollection(ArrayList::new));
-            }
+        if (filterCategory.equals("Status")) {
+            filteredListOfRequests = listOfRequests.stream()
+                    .filter(request -> request.getRequestStatus().equals(filterOption))
+                    .collect(Collectors.toCollection(ArrayList::new));
         }
 
 
@@ -256,8 +254,12 @@ public class SubmittedRequestsController {
                         cbFilterOptions.setVisible(true);
                         //clear the items in cbFilterOptions
                         cbFilterOptions.getItems().clear();
-                        //add filtering options to cbFilterOptions
-                        cbFilterOptions.getItems().addAll("", RequestStatus.COMPLETED.getStatus(), RequestStatus.PENDING.getStatus());
+                        //add filtering options to cbFilterOptions based on filter category
+                        switch(newValue) {
+                            case "Status":
+                                cbFilterOptions.getItems().addAll("", RequestStatus.PENDING.getStatus(), RequestStatus.COMPLETED.getStatus());
+                                break;
+                        }
                     } else {
                         //set cbFilterOptions to invisible
                         cbFilterOptions.setVisible(false);
@@ -274,7 +276,7 @@ public class SubmittedRequestsController {
                     //if the new value is not empty
                     if (!newValue.equals("")) {
                         //set filterOption to the new value
-                        loadRequestsIntoContainer(cbFilterCategory.getSelectedItem(),newValue);
+                        loadRequestsIntoContainer(cbFilterCategory.getSelectedItem(), newValue);
                     }
                 });
     }
