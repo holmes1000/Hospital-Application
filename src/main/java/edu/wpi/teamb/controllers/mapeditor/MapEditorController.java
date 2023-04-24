@@ -63,6 +63,11 @@ public class MapEditorController {
   @FXML private MFXButton btn2;
   @FXML private MFXButton btn3;
 
+  @FXML private MFXButton btnNode;
+  @FXML private MFXButton btnEdge;
+  @FXML private MFXButton btnAlign;
+  @FXML private MFXTextField tfState;
+
   @FXML private MFXButton uploadBtn;
   @FXML private MFXButton exportBtn;
   @FXML private MFXToggleButton toggleNodes;
@@ -133,6 +138,8 @@ public class MapEditorController {
   MapEditorState deleteState = new DeleteState();
   MapEditorState addState = new AddState();
   MapEditorState viewState = new ViewState();
+  private boolean handlingNodes = false;
+  private boolean handlingEdges = false;
 
   int fullNodeX;
   int fullNodeY;
@@ -209,6 +216,54 @@ public class MapEditorController {
     createNode();
   }
 
+  private void handleNodes() {
+    System.out.println("Handling nodes");
+    btnNode.setStyle("-fx-background-color: #f6bd38");
+    btnEdge.setStyle("-fx-background-color: #1C4EFE");
+    handlingNodes = true;
+    handlingEdges = false;
+    determineState();
+  }
+
+  private void handleEdges() {
+    System.out.println("Handling edges");
+    btnEdge.setStyle("-fx-background-color: #f6bd38");
+    btnNode.setStyle("-fx-background-color: #1C4EFE");
+    handlingEdges = true;
+    handlingNodes = false;
+    determineState();
+  }
+
+  private void handleAlign() {
+    System.out.println("Handling align");
+  }
+
+  private void determineState() {
+    if (mapEditorContext.getState() == addState && handlingEdges) {
+      System.out.println("Adding edge");
+      tfState.setText("Adding Edge");
+    } else if (mapEditorContext.getState() == addState && handlingNodes) {
+      System.out.println("Adding Node");
+      tfState.setText("Adding Node");
+    } else if (mapEditorContext.getState() == deleteState && handlingEdges) {
+      System.out.println("Deleting edge");
+      tfState.setText("Delete Edge");
+    } else if (mapEditorContext.getState() == deleteState && handlingNodes) {
+      System.out.println("Deleting node");
+      tfState.setText("Deleting Node");
+    } else if (mapEditorContext.getState() == editState && handlingEdges) {
+      System.out.println("Editing edge");
+      tfState.setText("Editing Edge");
+
+    } else if (mapEditorContext.getState() == editState && handlingNodes) {
+      System.out.println("Editing node");
+      tfState.setText("Editing Node");
+    } else if (mapEditorContext.getState() == viewState) {
+      System.out.println("Viewing State");
+      tfState.setText("Viewing State");
+    }
+  }
+
   private void createNode() {
       String shortName = tfShortName.getText();
       String longName = tfLongName.getText();
@@ -279,6 +334,7 @@ public class MapEditorController {
         if (neighborNode.getFloor().equals(n.getFloor())) {
           Line line = new Line(n.getxCoord(), n.getyCoord(), neighborNode.getxCoord(), neighborNode.getyCoord());
           line.setStrokeWidth(4);
+          line.setOnMouseClicked(event -> handleEdgeClick(line));
           edgeGroup.getChildren().add(line);
 
       }
@@ -334,8 +390,12 @@ public class MapEditorController {
     Circle c = new Circle(n.getxCoord(), n.getyCoord(), 5, RED);
     c.setId(String.valueOf(n.getNodeID())); // Set the circle's ID to the node's ID
     c.setOnMouseClicked(event -> {
-      this.handleNodeClick(event, n);
-    });
+      try {
+        this.handleNodeClick(event, n);
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      }
+    }); // Set the handler for clicking on a node
     drawEdge(n);
     drawName(c, n);
 
@@ -404,53 +464,25 @@ public class MapEditorController {
     }
   }
 
+  private void handleEdgeClick(Line line) {
+  }
+
   /**
    * Handles the node click event (creates a context menu)
    * @param e
    * @param n
    */
-  private void handleNodeClick(MouseEvent e, Node n) {
-    createNodeContextMenu(n);
-    contextMenu.show(this.pane, e.getScreenX(), e.getScreenY());
-  }
+  private void handleNodeClick(MouseEvent e, Node n) throws SQLException {
+    if (mapEditorContext.getState() == deleteState) {
+      handleDeleteNode(e, n);
+    }
+    else if (mapEditorContext.getState() == addState) {
+      //handleAddNode(e);
+    }
+    else if (mapEditorContext.getState() == editState) {
+      handleEditNode(e, n);
+    }
 
-  /**
-   * Method to create context menu and set the actions for the menu items
-   * @param n Node
-   */
-  private void createNodeContextMenu(Node n) {
-    // Create the context menu
-    contextMenu = new ContextMenu();
-    contextMenu.setAutoHide(true);
-    //System.out.println("Context menu created for node: " + n.getNodeID() );
-    contextMenu.setId(String.valueOf(n.getNodeID()));
-    System.out.println("Context menu created for node: " + n.getNodeID());
-
-    locationItem = new MenuItem("Location name: " + Repository.getRepository().getFullNode(n.getNodeID()).getShortName());
-    deleteItem = new MenuItem("Delete");
-    editItem = new MenuItem("Edit Node");
-    contextMenu.getItems().addAll(locationItem, deleteItem, editItem);
-    this.editLocationItem.setOnAction(e-> {
-      try {
-        handleEditName(e, n);
-      } catch (SQLException ex){
-        throw new RuntimeException(ex);
-      }
-    });
-    this.deleteItem.setOnAction(e-> {
-      try {
-        handleDeleteNode(e);
-      } catch (SQLException ex) {
-        throw new RuntimeException(ex);
-      }
-    });
-    this.editItem.setOnAction(e-> {
-      try {
-        handleEditNode(e, n);
-      } catch (SQLException ex) {
-        throw new RuntimeException(ex);
-      }
-    });
   }
 
 
@@ -464,21 +496,21 @@ public class MapEditorController {
    * @param e
    * @throws SQLException
    */
-  private void handleDeleteNode(javafx.event.ActionEvent e) throws SQLException {
+  private void handleDeleteNode(MouseEvent e, Node n) throws SQLException {
     // Get the node ID from the circle's ID
-    int nodeID = Integer.parseInt(contextMenu.getId());
+    int nodeID = n.getNodeID();
     // delete from move table
     Repository.getRepository().deleteMove(Repository.getRepository().getMove(nodeID));
     // Delete the node from the database
     Repository.getRepository().deleteNode(Repository.getRepository().getNode(nodeID));
 
     // Remove the node from the map
-    nodeGroup.getChildren().remove(contextMenu.getOwnerNode());
+    nodeGroup.getChildren().remove(n);
 
     // remove node from list
-    for (Node n : nodeList) {
-      if (n.getNodeID() == nodeID) {
-        nodeList.remove(n);
+    for (Node node : nodeList) {
+      if (node.getNodeID() == nodeID) {
+        nodeList.remove(node);
         break;
       }
     }
@@ -493,7 +525,7 @@ public class MapEditorController {
    * @param n
    * @throws SQLException
    */
-  private void handleEditNode(javafx.event.ActionEvent e, Node n) throws SQLException {
+  private void handleEditNode(MouseEvent e, Node n) throws SQLException {
     editingNode = true;
     // Get the node ID from the circle's ID
     int nodeID = Integer.parseInt(contextMenu.getId());
@@ -584,11 +616,7 @@ public class MapEditorController {
 
 
   public void initButtons() {
-    clickFloorBtn("L1");
-    clickFloorBtn("L2");
-    clickFloorBtn("1");
-    clickFloorBtn("2");
-    clickFloorBtn("3");
+    clickFloorBtn();
     uploadBtn.setOnMouseClicked(event->{handleUploadBtn();});
     exportBtn.setOnMouseClicked(event->{handleExportBtn();});
     resetFromBackupBtn.setOnMouseClicked(event->{handleResetFromBackupBtn();});
@@ -601,9 +629,12 @@ public class MapEditorController {
     toggleEdges.setOnMouseClicked(event->{handleToggleEdges();});
     toggleNodes.setOnMouseClicked(event->{handleToggleNodes();});
 
+    btnNode.setOnMouseClicked(event -> handleNodes());
+    btnEdge.setOnMouseClicked(event -> handleEdges());
+    btnAlign.setOnMouseClicked(event -> handleAlign());
   }
 
-  public void clickFloorBtn(String floor) {
+  public void clickFloorBtn() {
     btnL1.setOnMouseClicked(event->{
       imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(0));
       currentFloor = "L1";
