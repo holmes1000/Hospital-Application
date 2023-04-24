@@ -131,7 +131,7 @@ public class OfficeRequestDAOImpl implements IDAO {
         String[] valuesOffice = {ofr.getType(), ofr.getItem(), String.valueOf(ofr.getQuantity())};
         String[] colsReq = {"employee", "datesubmitted", "requeststatus", "requesttype", "locationname", "notes"};
         String[] valuesReq = {ofr.getEmployee(), String.valueOf(ofr.getDateSubmitted()), ofr.getRequestStatus(), ofr.getRequestType(), ofr.getLocationName(), ofr.getNotes()};
-        DButils.updateRow("furniturerequests", colsOffice, valuesOffice, "id = " + ofr.getId());
+        DButils.updateRow("officerequests", colsOffice, valuesOffice, "id = " + ofr.getId());
         DButils.updateRow("requests", colsReq, valuesReq, "id = " + ofr.getId());
         for (int i = 0; i < officeRequests.size(); i++) {
             if (officeRequests.get(i).getId() == ofr.getId()) {

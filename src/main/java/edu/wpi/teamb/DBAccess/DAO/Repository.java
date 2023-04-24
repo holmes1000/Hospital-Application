@@ -533,6 +533,12 @@ public class Repository {
 
     //TODO OfficeRequest methods
 
+    /**
+     * Updates an OfficeRequest in the database
+     * @param fullOfficeRequest
+     */
+    public void updateOfficeRequest(FullOfficeRequest fullOfficeRequest) { officeRequestDAO.update(fullOfficeRequest); }
+
 
 
     //TODO DBinput methods
@@ -830,6 +836,10 @@ public class Repository {
         conferenceRequestDAO.update(cr);
     }
 
+    public void updateConferenceRequest(FullConferenceRequest cr) {
+        conferenceRequestDAO.update(cr);
+    }
+
     public void addMealRequest(String[] mr) {
         mealRequestDAO.add(mr);
     }
@@ -847,6 +857,10 @@ public class Repository {
     }
 
     public void updateMealRequest(MealRequest mr) {
+        mealRequestDAO.update(mr);
+    }
+
+    public void updateMealRequest(FullMealRequest mr) {
         mealRequestDAO.update(mr);
     }
 
@@ -951,6 +965,10 @@ public class Repository {
         flowerRequestDAO.update(fr);
     }
 
+    public void updateFlowerRequest(FullFlowerRequest fr) {
+        flowerRequestDAO.update(fr);
+    }
+
     public ArrayList<Integer> getNeighbors(int nodeID) {
         return nodeDAO.getNeighborsAsNodeIDs(nodeID);
     }
@@ -984,6 +1002,10 @@ public class Repository {
     }
 
     public void updateFurnitureRequest(FurnitureRequest fr) {
+        furnitureRequestDAO.update(fr);
+    }
+
+    public void updateFurnitureRequest(FullFurnitureRequest fr) {
         furnitureRequestDAO.update(fr);
     }
 

@@ -2,6 +2,8 @@ package edu.wpi.teamb.controllers.requests;
 
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
+import edu.wpi.teamb.DBAccess.Full.FullMealRequest;
+import edu.wpi.teamb.controllers.components.InfoCardController;
 import edu.wpi.teamb.entities.requests.EMealRequest;
 import edu.wpi.teamb.entities.requests.IRequest;
 import edu.wpi.teamb.navigation.Navigation;
@@ -15,6 +17,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
 
 import java.io.IOException;
@@ -181,5 +184,37 @@ public class MealRequestControllerI implements IRequestController{
             throw new RuntimeException(e);
         }
         popOver.show(btnSubmit);
+    }
+
+    //functions for editable stage in InfoCardController
+    public void enterMealRequestEditableMode(FullMealRequest fullMealRequest, InfoCardController currentInfoCardController) {
+        cbOrderLocation.getSelectionModel().selectItem(fullMealRequest.getOrderFrom());
+        cbEmployeesToAssign.getSelectionModel().selectItem(fullMealRequest.getEmployee());
+        cbAvailableMeals.getSelectionModel().selectItem(fullMealRequest.getFood());
+        cbAvailableDrinks.getSelectionModel().selectItem(fullMealRequest.getDrink());
+        cbAvailableSnacks.getSelectionModel().selectItem(fullMealRequest.getSnack());
+        cbLongName.getSelectionModel().selectItem(fullMealRequest.getLocationName());
+        txtFldNotes.setText(fullMealRequest.getNotes());
+        btnSubmit.setText("Update");
+        //remove the current onAction event
+        btnSubmit.setOnAction(null);
+        //add a new onAction event
+        btnSubmit.setOnAction(e -> {
+            //update all the fields of the fullMealRequest
+            fullMealRequest.setOrderFrom(cbOrderLocation.getValue());
+            fullMealRequest.setEmployee(cbEmployeesToAssign.getValue());
+            fullMealRequest.setFood(cbAvailableMeals.getValue());
+            fullMealRequest.setDrink(cbAvailableDrinks.getValue());
+            fullMealRequest.setSnack(cbAvailableSnacks.getValue());
+            fullMealRequest.setLocationName(cbLongName.getValue());
+            fullMealRequest.setNotes(txtFldNotes.getText());
+            //update the database
+            EMealRequest.updateMealRequests(fullMealRequest);
+            //close the window
+            Stage stage = (Stage) btnSubmit.getScene().getWindow();
+            stage.close();
+            //send the fullmealrequest to the info card controller
+            currentInfoCardController.sendRequest(fullMealRequest);
+        });
     }
 }
