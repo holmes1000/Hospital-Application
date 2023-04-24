@@ -169,9 +169,11 @@ public class RequestDAOImpl implements IDAO {
     @Override
     public void update(Object request) {
         Request r = (Request) request;
-        Request req = new Request(r.getId(), r.getEmployee(), r.getDateSubmitted(), r.getRequestStatus(), r.getRequestType(), r.getLocationName(), r.getNotes());
-        getRequestIndex(req.getId());
-        requests.set(getRequestIndex(req.getId()), req);
+        getRequestIndex(r.getId());
+        requests.set(getRequestIndex(r.getId()), r);
+        String[] cols = {"employee", "datesubmitted", "requeststatus", "requesttype", "locationname", "notes"};
+        String[] vals = {r.getEmployee(), String.valueOf(r.getDateSubmitted()), r.getRequestStatus(), r.getRequestType(), r.getLocationName(), r.getNotes()};
+        DButils.updateRow("requests", cols, vals, "id = " + r.getId());
     }
 
     /**
@@ -361,6 +363,50 @@ public class RequestDAOImpl implements IDAO {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * when deleting a user, all requests assigned to that user will be unassigned
+     * @param username username of user to be deleted
+     */
+    public void updateRequestDeleteUser(String username) {
+        for (int i = 0; i < requests.size(); i++) {
+            if (requests.get(i).getEmployee().equals(username)) {
+                Request newRequest = requests.get(i);
+                newRequest.setEmployee("Unassigned");
+                update(newRequest);
+            }
+        }
+    }
+
+    /**
+     * Returns a list of all requests that is assigned to given user
+     * @param employee user logged in
+     * @return list of requests that is assigned to given user
+     */
+    public ArrayList<IFull> getFullRequestsbyEmployee(String employee) {
+        ArrayList<IFull> fullRequests = new ArrayList<>();
+        for (int i = 0; i < requests.size(); i++) {
+            if (requests.get(i).getEmployee().equals(employee)) {
+                fullRequests.add(get(requests.get(i).getId()));
+            }
+        }
+        return fullRequests;
+    }
+
+    /**
+     * returns a list of requests that are a given status
+     * @param status given status
+     * @return list of requests that are a given status
+     */
+    public ArrayList<IFull> getFullRequestsbyStatus(String status) {
+        ArrayList<IFull> fullRequests = new ArrayList<>();
+        for (int i = 0; i < requests.size(); i++) {
+            if (requests.get(i).getRequestStatus().equals(status)) {
+                fullRequests.add(get(requests.get(i).getId()));
+            }
+        }
+        return fullRequests;
     }
 
 }

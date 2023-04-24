@@ -884,6 +884,7 @@ public class Repository {
 
     public void deleteUser(User u) {
         userDAO.delete(u);
+        requestDAO.updateRequestDeleteUser(u.getUsername());
     }
 
     public User getUser(String id) {
@@ -1026,4 +1027,11 @@ public class Repository {
         return requestDAO.getAllHelper1();
     }
 
+    public ArrayList<IFull> getAllFullRequestsByUser(String username) {
+        return requestDAO.getFullRequestsbyEmployee(username);
+    }
+
+    public ArrayList<IFull> getAllFullRequestsByStatus(String status) {
+        return requestDAO.getFullRequestsbyStatus(status);
+    }
 }
