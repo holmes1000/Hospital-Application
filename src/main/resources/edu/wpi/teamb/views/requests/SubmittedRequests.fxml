@@ -2,7 +2,8 @@
 
 <?import com.jfoenix.controls.JFXDrawer?>
 <?import com.jfoenix.controls.JFXHamburger?>
-<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
@@ -26,16 +27,6 @@
                         <Font name="System Bold" size="36.0" />
                     </font>
                 </Text>
-<!--                <MFXButton fx:id="btnEditRequest" defaultButton="true" layoutX="755.0" layoutY="633.0" onAction="#clickEditRequest" prefHeight="46.0" prefWidth="174.0" style="-fx-background-color: #1C4EFE;" text="Edit Request" textFill="#f1f1f1">-->
-<!--                    <font>-->
-<!--                        <Font name="System Bold" size="18.0" />-->
-<!--                    </font>-->
-<!--                </MFXButton>-->
-                <MFXButton fx:id="btnCancel" defaultButton="true" layoutY="633.0" onAction="#clickCancel" prefHeight="46.0" prefWidth="110.0" style="-fx-background-color: #1C4EFE;" text="Cancel" textFill="#f1f1f1">
-                    <font>
-                        <Font name="System Bold" size="18.0" />
-                    </font>
-                </MFXButton>
                 <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="997.0" layoutY="25.0" onMouseEntered="#hoverHelp" onMouseExited="#hoverHelp" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@../../img/helpicon.png" />
@@ -44,12 +35,12 @@
                         <ColorAdjust brightness="1.0" />
                     </effect>
                 </ImageView>
-            <ScrollPane fx:id="allRequestsScrollPane" layoutY="130.0">
+            <ScrollPane fx:id="allRequestsScrollPane" layoutY="170.0">
                <content>
                   <VBox fx:id="allRequestsContainerVBox" layoutX="61.0" prefHeight="480.0" prefWidth="974.0" />
                </content>
             </ScrollPane>
-            <HBox layoutX="-1.0" layoutY="96.0" prefHeight="35.0" prefWidth="976.0">
+            <HBox layoutX="-1.0" layoutY="136.0" prefHeight="35.0" prefWidth="976.0">
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="35.0" prefWidth="85.0" text="Request ID" textFill="WHITE">
                      <font>
@@ -86,6 +77,20 @@
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
+               </children>
+            </HBox>
+            <HBox layoutX="-1.0" layoutY="88.0" prefHeight="40.0" prefWidth="1078.0" spacing="20.0">
+               <children>
+                  <Label text="Filter By: " textFill="WHITE">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets right="-5.0" top="7.0" />
+                     </HBox.margin>
+                  </Label>
+                  <MFXComboBox fx:id="cbFilterCategory" prefHeight="40.0" prefWidth="214.0" promptText="Select Filter Category" />
+                  <MFXComboBox fx:id="cbFilterOptions" prefHeight="40.0" prefWidth="227.0" promptText="Select An Option" />
                </children>
             </HBox>
 <!--            <MFXButton fx:id="btnSubmit" defaultButton="true" layoutX="564.0" layoutY="633.0" onAction="#clickSubmitEdits" prefHeight="46.0" prefWidth="174.0" style="-fx-background-color: #1C4EFE;" text="Submit" textFill="#f1f1f1">-->
