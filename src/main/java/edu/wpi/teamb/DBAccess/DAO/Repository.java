@@ -30,6 +30,7 @@ public class Repository {
             mealRequestDAO = new MealRequestDAOImpl();
             furnitureRequestDAO = new FurnitureRequestDAOImpl();
             officeRequestDAO = new OfficeRequestDAOImpl();
+            alertDAO = new AlertDAOImpl();
         } catch (SQLException e) {
             System.out.println("ERROR: Repository failed to initialize");
             throw new RuntimeException(e);
@@ -56,6 +57,7 @@ public class Repository {
     private final MealRequestDAOImpl mealRequestDAO;
     private final FurnitureRequestDAOImpl furnitureRequestDAO;
     private final OfficeRequestDAOImpl officeRequestDAO;
+    private final AlertDAOImpl alertDAO;
     private final DBconnection dbConnection;
 
     //TODO Node methods
@@ -1083,5 +1085,25 @@ public class Repository {
 
     public ArrayList<String> getPracticalLongNames() {
         return locationNameDAO.getLongNamePractical();
+    }
+
+    public Alert getAlert(int id) {
+        return alertDAO.get(id);
+    }
+
+    public ArrayList<Alert> getAllAlerts() {
+        return alertDAO.getAll();
+    }
+
+    public void addAlert(Alert a) {
+        alertDAO.add(a);
+    }
+
+    public void deleteAlert(Alert a) {
+        alertDAO.delete(a);
+    }
+
+    public void updateAlert(Alert a) {
+        alertDAO.update(a);
     }
 }
