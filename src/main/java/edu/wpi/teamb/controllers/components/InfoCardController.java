@@ -262,7 +262,7 @@ public class InfoCardController {
           typeLabel.setStyle(commonCSStyles);
           Label modelLabel = new Label("Model: " + ((FullFurnitureRequest) fullRequest).getModel());
           modelLabel.setStyle(commonCSStyles);
-          Label assemblyLabel = new Label("Assembly: " + ((FullFurnitureRequest) fullRequest).getAssembly());
+          Label assemblyLabel = new Label("Assembly: " + ((((FullFurnitureRequest) fullRequest).getAssembly() ? "Yes" : "No")));
           assemblyLabel.setStyle(commonCSStyles);
           Label specialInstructionsLabel = new Label("Special Instructions: " + fullRequest.getNotes());
           specialInstructionsLabel.setStyle(commonCSStyles);

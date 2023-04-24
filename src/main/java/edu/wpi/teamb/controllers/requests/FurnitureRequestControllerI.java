@@ -191,7 +191,7 @@ public class FurnitureRequestControllerI implements IRequestController{
         //set the editable fields to the values of the request
         cbAvailableFurniture.getSelectionModel().selectItem(fullFurnitureRequest.getType());
         cdAvailableModels.getSelectionModel().selectItem(fullFurnitureRequest.getModel());
-        cdAssembly.getSelectionModel().selectItem(Boolean.toString(fullFurnitureRequest.getAssembly()));
+        cdAssembly.getSelectionModel().selectItem(fullFurnitureRequest.getAssembly() ? "Yes" : "No");
         txtFldNotes.setText(fullFurnitureRequest.getNotes());
         cbEmployeesToAssign.getSelectionModel().selectItem(fullFurnitureRequest.getEmployee());
         cbLongName.getSelectionModel().selectItem(fullFurnitureRequest.getLocationName());
@@ -205,7 +205,7 @@ public class FurnitureRequestControllerI implements IRequestController{
             //set the request fields to the new values
             fullFurnitureRequest.setType(cbAvailableFurniture.getValue());
             fullFurnitureRequest.setModel(cdAvailableModels.getValue());
-            fullFurnitureRequest.setAssembly(Boolean.parseBoolean(cdAssembly.getValue()));
+            fullFurnitureRequest.setAssembly(stringToBoolean(cdAssembly.getValue()));
             fullFurnitureRequest.setNotes(txtFldNotes.getText());
             fullFurnitureRequest.setEmployee(cbEmployeesToAssign.getValue());
             fullFurnitureRequest.setLocationName(cbLongName.getValue());
