@@ -150,29 +150,29 @@ public class SubmittedRequestsController {
                 System.out.println("IOException in loadRequestsIntoContainer of AllRequestsController: " + e.getMessage());
             }
 
-            switch (listOfRequests.get(i).getRequestType()) {
+            switch (filteredListOfRequests.get(i).getRequestType()) {
                 case "Meal":
-                    IFull fullMealRequest = allRequestsE.getMealRequest(listOfRequests.get(i).getId());
+                    IFull fullMealRequest = allRequestsE.getMealRequest(filteredListOfRequests.get(i).getId());
                     if(fullMealRequest == null){continue;}
                     Objects.requireNonNull(requestInfoCardController).sendRequest(fullMealRequest);
                     break;
                 case "Conference":
-                    IFull fullConferenceRequest = allRequestsE.getConferenceRequest(listOfRequests.get(i).getId());
+                    IFull fullConferenceRequest = allRequestsE.getConferenceRequest(filteredListOfRequests.get(i).getId());
                     if(fullConferenceRequest == null) {continue;}
                     Objects.requireNonNull(requestInfoCardController).sendRequest(fullConferenceRequest);
                     break;
                 case "Flower":
-                    IFull fullFlowerRequest = allRequestsE.getFlowerRequest(listOfRequests.get(i).getId());
+                    IFull fullFlowerRequest = allRequestsE.getFlowerRequest(filteredListOfRequests.get(i).getId());
                     if(fullFlowerRequest == null) {continue;}
                     Objects.requireNonNull(requestInfoCardController).sendRequest(fullFlowerRequest);
                     break;
                 case "Office":
-                    IFull fullOfficeRequest = allRequestsE.getOfficeRequest(listOfRequests.get(i).getId());
+                    IFull fullOfficeRequest = allRequestsE.getOfficeRequest(filteredListOfRequests.get(i).getId());
                     if(fullOfficeRequest == null){continue;}
                     Objects.requireNonNull(requestInfoCardController).sendRequest(fullOfficeRequest);
                     break;
                 case "Furniture":
-                    IFull fullFurnitureRequest = allRequestsE.getFurnitureRequest(listOfRequests.get(i).getId());
+                    IFull fullFurnitureRequest = allRequestsE.getFurnitureRequest(filteredListOfRequests.get(i).getId());
                     if(fullFurnitureRequest == null){continue;}
                     Objects.requireNonNull(requestInfoCardController).sendRequest(fullFurnitureRequest);
                     break;
@@ -246,53 +246,50 @@ public class SubmittedRequestsController {
         //at the beginning set cbFilterOptions to invisible
         cbFilterOptions.setVisible(false);
         //add filtering options to cbFilterCategory
-        cbFilterCategory.getItems().addAll("", "Status", "Assigned To Me");
+        cbFilterCategory.getItems().addAll("", "Status");
         //add change listener to cbFilterCategory
-        cbFilterCategory.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            filterCategorySelection = newValue;
-            if (filterCategorySelection.equals("")){
-                //if the filterCategorySelection is empty, set cbFilterOptions to invisible
-                cbFilterOptions.setVisible(false);
-                //set the filterOptionsSelection to empty string
-                filterOptionsSelection = "";
-                //clear current selection from cbFilterOptions
-                cbFilterOptions.getSelectionModel().clearSelection();
-                //clear the list of items from cbFilterOptions
-                cbFilterOptions.getItems().clear();
-            } else {
-                //if the filterCategorySelection is not empty, set cbFilterOptions to visible
-                cbFilterOptions.setVisible(true);
-                //check for whether a filter options selection has already been made
-                if ((!filterOptionsSelection.equals(""))) {
-                    //clear the filterOptionsSelection
-                    filterOptionsSelection = "";
-                    //clear current selection from cbFilterOptions
-                    cbFilterOptions.getSelectionModel().clearSelection();
-                    //clear the list of items from cbFilterOptions
-                    cbFilterOptions.getItems().clear();
-                }
-
-                switch(cbFilterCategory.getSelectionModel().getSelectedItem()) {
-                    case "Status":
+        cbFilterCategory.valueProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    //if the new value is not empty
+                    if (!newValue.equals("")) {
+                        //set cbFilterOptions to visible
+                        cbFilterOptions.setVisible(true);
+                        //clear the items in cbFilterOptions
                         cbFilterOptions.getItems().clear();
-                        cbFilterOptions.getItems().addAll("", "Pending", "Canceled", "Completed");
-                        break;
-                    case "Assigned To Me":
+                        //add filtering options to cbFilterOptions
+                        cbFilterOptions.getItems().addAll("", RequestStatus.COMPLETED.getStatus(), RequestStatus.PENDING.getStatus());
+                    } else {
+                        //set cbFilterOptions to invisible
+                        cbFilterOptions.setVisible(false);
+                        //clear the items in cbFilterOptions
                         cbFilterOptions.getItems().clear();
-                        cbFilterOptions.getItems().addAll("", "Yes", "No");
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });
+                        //clear cBFilterOptions selection
+                        cbFilterOptions.getSelectionModel().clearSelection();
+                    }
+                });
 
         //add change listener to cbFilterOptions
-        cbFilterOptions.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            filterOptionsSelection = newValue;
-            if(!filterOptionsSelection.equals("")) {
-                loadRequestsIntoContainer(filterCategorySelection, filterOptionsSelection);
-            }
-        });
+        cbFilterOptions.valueProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    //if the new value is not empty
+                    if (!newValue.equals("")) {
+                        //set filterOption to the new value
+                        loadRequestsIntoContainer(cbFilterCategory.getSelectedItem(),newValue);
+                    }
+                });
+    }
+}
+
+enum RequestStatus {
+    PENDING("Pending"),
+    COMPLETED("Completed");
+    private final String status;
+
+    RequestStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
     }
 }
