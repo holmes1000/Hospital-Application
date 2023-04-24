@@ -1056,4 +1056,12 @@ public class Repository {
     public ArrayList<IFull> getAllFullRequestsByStatus(String status) {
         return requestDAO.getFullRequestsbyStatus(status);
     }
+
+    public ArrayList<String> getLongNameByType(String type) {
+        return locationNameDAO.getLongNameByType(type);
+    }
+
+    public ArrayList<String> getPracticalLongNames() {
+        return locationNameDAO.getLongNamePractical();
+    }
 }
