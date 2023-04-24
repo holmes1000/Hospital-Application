@@ -9,6 +9,7 @@ import java.util.Objects;
 
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.DButils;
+import edu.wpi.teamb.DBAccess.Full.FullOfficeRequest;
 
 public class EOfficeRequest extends RequestImpl {
     private String type;
@@ -75,5 +76,9 @@ public class EOfficeRequest extends RequestImpl {
 
     public boolean checkSpecialRequestFields() {
         return this.type != null && this.item != null && this.quantity != 0;
+    }
+
+    public void updateOfficeReqeust(FullOfficeRequest fullOfficeRequest) {
+        Repository.getRepository().updateOfficeRequest(fullOfficeRequest);
     }
 }

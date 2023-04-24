@@ -2,6 +2,7 @@ package edu.wpi.teamb.entities.requests;
 
 import edu.wpi.teamb.DBAccess.*;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
+import edu.wpi.teamb.DBAccess.Full.FullMealRequest;
 import edu.wpi.teamb.DBAccess.ORMs.MealRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
@@ -108,5 +109,9 @@ public class EMealRequest extends RequestImpl {
 
   public boolean checkSpecialRequestFields() {
     return this.orderFrom != null && this.food != null && this.drink != null && this.snack != null;
+  }
+
+  public void updateMealRequests(FullMealRequest fullMealRequest) {
+    Repository.getRepository().updateMealRequest(fullMealRequest);
   }
 }

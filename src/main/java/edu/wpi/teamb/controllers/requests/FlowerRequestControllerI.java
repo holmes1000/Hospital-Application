@@ -2,6 +2,8 @@ package edu.wpi.teamb.controllers.requests;
 
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
+import edu.wpi.teamb.DBAccess.Full.FullFlowerRequest;
+import edu.wpi.teamb.controllers.components.InfoCardController;
 import edu.wpi.teamb.entities.requests.EFlowerRequest;
 import edu.wpi.teamb.entities.requests.IRequest;
 import edu.wpi.teamb.navigation.Navigation;
@@ -15,12 +17,11 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.format.DateTimeFormatter;
 
 public class FlowerRequestControllerI implements IRequestController {
 
@@ -166,5 +167,40 @@ public class FlowerRequestControllerI implements IRequestController {
             throw new RuntimeException(e);
         }
         popOver.show(btnSubmit);
+    }
+
+    //functions for editable stage in InfoCardController
+    public void enterFlowerRequestEditableMode(FullFlowerRequest fullFlowerRequest, InfoCardController currentInfoCardController) {
+        //set the editable fields to the values of the request
+        cbAvailableFlowers.getSelectionModel().selectItem(fullFlowerRequest.getFlowerType());
+        cdAvailableColor.getSelectionModel().selectItem(fullFlowerRequest.getColor());
+        cdAvailableType.getSelectionModel().selectItem(fullFlowerRequest.getSize());
+        txtFldMessage.setText(fullFlowerRequest.getMessage());
+        txtFldNotes.setText(fullFlowerRequest.getNotes());
+        cbEmployeesToAssign.getSelectionModel().selectItem(fullFlowerRequest.getEmployee());
+        cbLongName.getSelectionModel().selectItem(fullFlowerRequest.getLocationName());
+
+        //set the submit button to say update
+        btnSubmit.setText("Update");
+        //remove the current onAction event
+        btnSubmit.setOnAction(null);
+        //add a new onAction event
+        btnSubmit.setOnAction(e -> {
+            //set the request fields to the new values
+            fullFlowerRequest.setFlowerType(cbAvailableFlowers.getValue());
+            fullFlowerRequest.setColor(cdAvailableColor.getValue());
+            fullFlowerRequest.setSize(cdAvailableType.getValue());
+            fullFlowerRequest.setMessage(txtFldMessage.getText());
+            fullFlowerRequest.setNotes(txtFldNotes.getText());
+            fullFlowerRequest.setEmployee(cbEmployeesToAssign.getValue());
+            fullFlowerRequest.setLocationName(cbLongName.getValue());
+
+            //update the request
+            EFlowerRequest.updateFlowerRequest(fullFlowerRequest);
+            //send the fullConferenceRequest to the info card controller
+            currentInfoCardController.sendRequest(fullFlowerRequest);
+            //close the stage
+            ((Stage) btnSubmit.getScene().getWindow()).close();
+        });
     }
 }
