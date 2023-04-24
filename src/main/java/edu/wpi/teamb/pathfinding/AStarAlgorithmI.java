@@ -41,8 +41,11 @@ public class AStarAlgorithmI implements IPathFindingAlgorithm {
     }
 
     public void create_all_nodes() {
+        this.fullNodesByID = new HashMap<>();
+        this.fullNodes = new ArrayList<>();
+        this.node_map = new HashMap<>();
         HashMap<Integer,Node> node_map = new HashMap<Integer,Node>();
-        Repository.getRepository().setAllNodes();
+//        Repository.getRepository().setAllNodes();
         ArrayList<Node> node_list = Repository.getRepository().getAllNodes();
         for (int i = 0; i < node_list.size(); i++) {
 //            System.out.println(node_list.get(i).getNodeID());
@@ -53,6 +56,7 @@ public class AStarAlgorithmI implements IPathFindingAlgorithm {
         this.node_map = node_map;
         this.fullNodes = Repository.getRepository().getAllFullNodes();
         generateFullNodeMap();
+
         System.out.println("Initialized all nodes. Ready for pathfinding");
     }
 

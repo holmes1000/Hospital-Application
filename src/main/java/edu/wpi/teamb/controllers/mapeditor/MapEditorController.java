@@ -84,7 +84,7 @@ public class MapEditorController {
   Group nameGroup;
   Pane locationCanvas;
   Pane fullNodeCanvas;
-  public ArrayList<Node> nodeList = new ArrayList<>();
+  public static ArrayList<Node> nodeList = new ArrayList<>();
   private ArrayList<FullNode> fullNodesList = new ArrayList<>();
   private ArrayList<Node> floorList = new ArrayList<>();
 
@@ -244,7 +244,7 @@ public class MapEditorController {
 
       //Gets the full node of the current node, as well as the neighbors of this node
       ArrayList<Integer> neighbors = PathFinding.ASTAR.get_node_map().get(n.getNodeID()).getNeighborIds(); // TODO this breaks reset from backup
-
+    if (neighbors != null) {
       for (int i = 0; i < neighbors.size(); i++) {
 
         //Get the full node of the neighbor, check to see if they're both elevators or stairs
@@ -259,6 +259,7 @@ public class MapEditorController {
           line.setOnMouseClicked(event -> handleEdgeClick(line));
           edgeGroup.getChildren().add(line);
 
+        }
       }
     }
     edgeGroup.toFront();
@@ -363,8 +364,7 @@ public class MapEditorController {
     //tfNodeId.setText(String.valueOf(maxID + 5)); // Set the nodeID text field to the maxID + 5
   }
 
-  private int getMaxID() {
-    // Get the max ID of the list of nodes
+public int getMaxID() {  // Get the max ID of the list of nodes
     int maxID = 0;
     for (Node n : nodeList) {
       if (n.getNodeID() > maxID) {
@@ -377,12 +377,13 @@ public class MapEditorController {
   /**
    * Refreshes the map
    */
-  private void refreshMap() {
+  void refreshMap() {
     // Clear the map
     nodeGroup.getChildren().clear();
     edgeGroup.getChildren().clear();
     // Redraw the map
     try {
+      //PathFinding.ASTAR.force_init();
       draw(currentFloor);
       System.out.println("Refreshing map for floor " + currentFloor + "...");
     } catch (SQLException e) {
@@ -419,6 +420,7 @@ public class MapEditorController {
     if (mapEditorContext.getState() == addState && handlingNodes) {
       stackPaneMapView.addEventHandler(MouseEvent.MOUSE_CLICKED, this::tapToAddNode);
         System.out.println("Added tapToAddNode event handler");
+        System.out.println(nodeList);
     }
     else {
       stackPaneMapView.removeEventHandler(MouseEvent.MOUSE_CLICKED, this::tapToAddNode);
@@ -433,16 +435,26 @@ public class MapEditorController {
         n.setxCoord((int) e.getX());
         n.setyCoord((int) e.getY());
         n.setFloor(currentFloor);
+        AddNodeMenuController.setCurrentFloor(currentFloor);
         n.setNodeID(getMaxID() + 5);
         showAddNodeMenu(n);
         editingNode = false;
-        fullNodeX = (int) e.getX();
-        fullNodeY = (int) e.getY();
+        setFullNodeX((int) e.getX());
+        setFullNodeY((int) e.getY());
         addNodeToMap(e.getX(), e.getY());   // get the X and Y of the cursor
         System.out.println("Added a node at " + e.getX() + ", " + e.getY());
+        refreshMap();
       } catch (SQLException | IOException ex) {
         throw new RuntimeException(ex);
       }
+  }
+
+  private void setFullNodeX(int x) {
+    fullNodeX = x;
+  }
+
+  private void setFullNodeY(int y) {
+    fullNodeY = y;
   }
 
 
@@ -477,6 +489,7 @@ public class MapEditorController {
     Repository.getRepository().deleteMove(Repository.getRepository().getMove(nodeID));
     // Delete the node from the database
     Repository.getRepository().deleteNode(Repository.getRepository().getNode(nodeID));
+    PathFinding.ASTAR.get_node_map().remove(n.getNodeID());
 
     // Remove the node from the map
     nodeGroup.getChildren().remove(n);

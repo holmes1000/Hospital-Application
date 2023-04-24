@@ -3,6 +3,7 @@ package edu.wpi.teamb.controllers.mapeditor;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.Full.FullNode;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
+import edu.wpi.teamb.pathfinding.PathFinding;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
@@ -31,10 +32,15 @@ public class AddNodeMenuController {
     MFXTextField tfYCoord;
 
     static Node currentNode = null;
+    static String currentFloor = null;
 
     MapEditorController mapEditorController = new MapEditorController();
 
     public AddNodeMenuController() throws SQLException {
+    }
+
+    public static void setCurrentFloor(String currentFloor) {
+        AddNodeMenuController.currentFloor = currentFloor;
     }
 
     @FXML
@@ -71,26 +77,19 @@ public class AddNodeMenuController {
         String nodeType = cbNodeType.getValue();
         FullNode fullNode = null;
 
-        // Get the max ID of the list of nodes
-        int maxID = 0;
-        for (Node n : mapEditorController.nodeList) {
-            if (n.getNodeID() > maxID) {
-                maxID = n.getNodeID();
-            }
-        }
-
-        fullNode = new FullNode(maxID+5, (int) mapEditorController.fullNodeX, (int) mapEditorController.fullNodeY, mapEditorController.currentFloor, "Full Node Building", tfLongName.getText(), tfShortName.getText(), cbNodeType.getSelectedItem());
+        fullNode = new FullNode(Integer.parseInt(tfNodeId.getText()), Integer.parseInt(tfXCoord.getText()), Integer.parseInt(tfYCoord.getText()), currentFloor, "Full Node Building", tfLongName.getText(), tfShortName.getText(), cbNodeType.getSelectedItem());
         Repository.getRepository().addFullNode(fullNode);
 
         Node newNode = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
-        mapEditorController.nodeList.add(newNode); // Add the node to the nodeList
+        MapEditorController.nodeList.add(newNode); // Add the node to the nodeList
+        PathFinding.ASTAR.get_node_map().put(newNode.getNodeID(), newNode); // Add the node to the nodeMap
 
         // Add node to the database
         //Repository.getRepository().addNode(newNode);
 
         System.out.println("Adding a new node with nodeID: " + newNode.getNodeID());
         // Refresh the map
-        //refreshMap();
+        //mapEditorController.refreshMap();
 
 
         // Close the window
