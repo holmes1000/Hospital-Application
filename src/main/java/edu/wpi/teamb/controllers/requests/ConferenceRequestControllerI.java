@@ -66,7 +66,7 @@ public class ConferenceRequestControllerI implements IRequestController{
     public void initializeFields() throws SQLException {
         //Initialize the list of locations to direct request to via dropdown
         ObservableList<String> longNames = FXCollections.observableArrayList();
-        longNames.addAll(Repository.getRepository().getAllLongNames());
+        longNames.addAll(Repository.getRepository().getLongNameByType("CONF"));
         cbLongName.setItems(longNames);
 
         //Dropdown for employee selection
