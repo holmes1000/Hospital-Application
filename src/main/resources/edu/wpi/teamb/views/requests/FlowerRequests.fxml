@@ -45,54 +45,34 @@
                   <ColorAdjust brightness="1.0" />
                </effect>
             </ImageView>
-            <MFXComboBox fx:id="cbAvailableFlowers" floatingText="Flower type" layoutX="28.0" layoutY="94.0" prefHeight="40.0" prefWidth="233.0">
+            <MFXComboBox fx:id="cbAvailableFlowers" floatingText="Flower type" layoutX="20.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXComboBox>
-            <MFXComboBox fx:id="cdAvailableColor" floatingText="Color" layoutX="296.0" layoutY="94.0" prefHeight="40.0" prefWidth="205.0">
+            <MFXComboBox fx:id="cdAvailableColor" floatingText="Color" layoutX="280.0" layoutY="117.0" prefHeight="40.0" prefWidth="205.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXComboBox>
-            <MFXComboBox fx:id="cdAvailableType" floatingText="Buschell type" layoutX="30.0" layoutY="156.0" prefHeight="40.0" prefWidth="218.0">
+            <MFXComboBox fx:id="cdAvailableType" floatingText="Buschell type" layoutX="20.0" layoutY="187.0" prefHeight="40.0" prefWidth="218.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXComboBox>
-            <MFXTextField fx:id="txtFldMessage" floatingText="Message Text" layoutX="20.0" layoutY="348.0" prefHeight="26.0" prefWidth="428.0" textLimit="80" />
-            <MFXComboBox fx:id="cbEmployeesToAssign" floatingText="Employee" layoutX="819.0" layoutY="101.0" prefHeight="40.0" prefWidth="233.0">
+            <MFXTextField fx:id="txtFldMessage" floatingText="Message Text" layoutX="20.0" layoutY="397.0" prefHeight="26.0" prefWidth="428.0" textLimit="80" />
+            <MFXComboBox fx:id="cbEmployeesToAssign" floatingText="Employee" layoutX="841.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXComboBox>
-            <MFXTextField fx:id="txtFldNotes" floatingText="Special Instructions" layoutX="502.0" layoutY="348.0" prefHeight="34.0" prefWidth="428.0" textLimit="80" />
-            <Text fill="RED" layoutX="261.0" layoutY="127.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+            <MFXTextField fx:id="txtFldNotes" floatingText="Special Instructions" layoutX="502.0" layoutY="397.0" prefHeight="34.0" prefWidth="428.0" textLimit="80" />
+            <MFXFilterComboBox fx:id="cbLongName" floatingText="Room Name" layoutX="20.0" layoutY="337.0" prefHeight="24.0" prefWidth="410.0" />
+            <Text fill="RED" layoutX="968.0" layoutY="477.0" strokeType="OUTSIDE" strokeWidth="0.0" text="All fields required*">
                <font>
-                  <Font size="24.0" />
+                  <Font name="System Bold" size="12.0" />
                </font>
             </Text>
-            <Text fill="RED" layoutX="1054.0" layoutY="131.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Text>
-            <Text fill="RED" layoutX="430.0" layoutY="309.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Text>
-            <Text fill="RED" layoutX="505.0" layoutY="127.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Text>
-            <Text fill="RED" layoutX="248.0" layoutY="189.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Text>
-            <MFXFilterComboBox fx:id="cbLongName" floatingText="Room Name" layoutX="20.0" layoutY="280.0" prefHeight="24.0" prefWidth="410.0" />
          </children>
       </AnchorPane>
    </left>
