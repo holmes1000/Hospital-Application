@@ -94,11 +94,11 @@ public class MealRequestDAOImpl implements IDAO {
         String[] mealReq = (String[]) request;
         String[] values = {mealReq[0], mealReq[1], "Meal", mealReq[2], mealReq[3], mealReq[4], mealReq[5], mealReq[6], mealReq[7]};
         int id = insertDBRowNewMealRequest(values);
-        ResultSet rs = DButils.getRowCond("requests", "dateSubmitted", "id = " + id);
+        ResultSet rs = DButils.getRowCond("requests", "datesubmitted", "id = " + id);
         Timestamp dateSubmitted = null;
         try {
             rs.next();
-            dateSubmitted = rs.getTimestamp("dateSubmitted");
+            dateSubmitted = rs.getTimestamp("datesubmitted");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -113,8 +113,8 @@ public class MealRequestDAOImpl implements IDAO {
      */
     @Override
     public void delete(Object request) {
-        FullOfficeRequest fmr = (FullOfficeRequest) request;
-        DButils.deleteRow("mealrequests", "id" + fmr.getId() + "");
+        FullMealRequest fmr = (FullMealRequest) request;
+        DButils.deleteRow("mealrequests", "id =" + fmr.getId() + "");
         DButils.deleteRow("requests", "id =" + fmr.getId() + "");
         mealRequests.remove(fmr);
         Request r = new Request(fmr.getId(), fmr.getEmployee(), fmr.getDateSubmitted(), fmr.getRequestStatus(), fmr.getRequestType(), fmr.getLocationName(), fmr.getNotes());

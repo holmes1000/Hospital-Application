@@ -45,48 +45,28 @@
                         <ColorAdjust brightness="1.0" />
                     </effect>
                 </ImageView>
-                <MFXComboBox fx:id="cbSupplyType" floatingText="Category" layoutX="20.0" layoutY="184.0" prefHeight="40.0" prefWidth="238.0">
+                <MFXComboBox fx:id="cbSupplyType" floatingText="Category" layoutX="20.0" layoutY="117.0" prefHeight="40.0" prefWidth="238.0">
                     <cursor>
                         <Cursor fx:constant="DEFAULT" />
                     </cursor>
                 </MFXComboBox>
-                <MFXComboBox fx:id="cbSupplyItems" floatingText="Item" layoutX="314.0" layoutY="186.0" prefHeight="40.0" prefWidth="205.0">
+                <MFXComboBox fx:id="cbSupplyItems" floatingText="Item" layoutX="280.0" layoutY="117.0" prefHeight="40.0" prefWidth="205.0">
                     <cursor>
                         <Cursor fx:constant="DEFAULT" />
                     </cursor>
                 </MFXComboBox>
-                <MFXTextField fx:id="txtFldNotes" floatingText="Special Instructions" layoutX="23.0" layoutY="385.0" prefHeight="40.0" prefWidth="854.0" textLimit="80" />
-                <MFXComboBox fx:id="cbEmployeesToAssign" floatingText="Employee" layoutX="761.0" layoutY="107.0" prefHeight="40.0" prefWidth="233.0">
+                <MFXTextField fx:id="txtFldNotes" floatingText="Special Instructions" layoutX="20.0" layoutY="397.0" prefHeight="40.0" prefWidth="854.0" textLimit="80" />
+                <MFXComboBox fx:id="cbEmployeesToAssign" floatingText="Employee" layoutX="841.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
                     <cursor>
                         <Cursor fx:constant="DEFAULT" />
                     </cursor>
                 </MFXComboBox>
-                <Text fill="RED" layoutX="994.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
-                    <font>
-                        <Font size="24.0" />
-                    </font>
-                </Text>
-                <Text fill="RED" layoutX="185.0" layoutY="280.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
-                    <font>
-                        <Font size="24.0" />
-                    </font>
-                </Text>
-                <Text fill="RED" layoutX="433.0" layoutY="352.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
-                    <font>
-                        <Font size="24.0" />
-                    </font>
-                </Text>
-                <MFXFilterComboBox fx:id="cbLongName" floatingText="Room Name" layoutX="23.0" layoutY="319.0" prefHeight="40.0" prefWidth="410.0" />
-            <MFXTextField fx:id="tbSupplyQuantities" alignment="TOP_LEFT" floatingText="Quantity" layoutX="21.0" layoutY="246.0" prefHeight="30.0" prefWidth="162.0" textLimit="10">
+                <MFXFilterComboBox fx:id="cbLongName" floatingText="Room Name" layoutX="20.0" layoutY="337.0" prefHeight="40.0" prefWidth="410.0" />
+            <MFXTextField fx:id="tbSupplyQuantities" alignment="TOP_LEFT" floatingText="Quantity" layoutX="20.0" layoutY="187.0" prefHeight="30.0" prefWidth="162.0" textLimit="10">
             </MFXTextField>
-            <Text fill="RED" layoutX="258.0" layoutY="215.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+            <Text fill="RED" layoutX="968.0" layoutY="477.0" strokeType="OUTSIDE" strokeWidth="0.0" text="All fields required*">
                <font>
-                  <Font size="24.0" />
-               </font>
-            </Text>
-            <Text fill="RED" layoutX="519.0" layoutY="215.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
-               <font>
-                  <Font size="24.0" />
+                  <Font name="System Bold" size="12.0" />
                </font>
             </Text>
             </children>

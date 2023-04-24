@@ -2,6 +2,7 @@ package edu.wpi.teamb.entities.requests;
 
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.DButils;
+import edu.wpi.teamb.DBAccess.Full.FullConferenceRequest;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -80,6 +81,10 @@ public class EConferenceRequest extends RequestImpl {
 
   public boolean checkSpecialRequestFields() {
     return this.dateRequested != null && this.eventName != null && this.bookingReason != null && this.duration != 0;
+  }
+
+  public void updateConferenceRequest(FullConferenceRequest fullConferenceRequest) {
+    Repository.getRepository().updateConferenceRequest(fullConferenceRequest);
   }
 
 }

@@ -30,6 +30,7 @@ public class Repository {
             mealRequestDAO = new MealRequestDAOImpl();
             furnitureRequestDAO = new FurnitureRequestDAOImpl();
             officeRequestDAO = new OfficeRequestDAOImpl();
+            alertDAO = new AlertDAOImpl();
         } catch (SQLException e) {
             System.out.println("ERROR: Repository failed to initialize");
             throw new RuntimeException(e);
@@ -56,6 +57,7 @@ public class Repository {
     private final MealRequestDAOImpl mealRequestDAO;
     private final FurnitureRequestDAOImpl furnitureRequestDAO;
     private final OfficeRequestDAOImpl officeRequestDAO;
+    private final AlertDAOImpl alertDAO;
     private final DBconnection dbConnection;
 
     //TODO Node methods
@@ -533,6 +535,12 @@ public class Repository {
 
     //TODO OfficeRequest methods
 
+    /**
+     * Updates an OfficeRequest in the database
+     * @param fullOfficeRequest
+     */
+    public void updateOfficeRequest(FullOfficeRequest fullOfficeRequest) { officeRequestDAO.update(fullOfficeRequest); }
+
 
 
     //TODO DBinput methods
@@ -820,6 +828,10 @@ public class Repository {
         conferenceRequestDAO.delete(cr);
     }
 
+    public void deleteConferenceRequest(FullConferenceRequest cr) {
+        conferenceRequestDAO.delete(cr);
+    }
+
     public FullConferenceRequest getConferenceRequest(int id) { return (FullConferenceRequest) conferenceRequestDAO.get(id); }
 
     public ArrayList<FullConferenceRequest> getAllConferenceRequests() {
@@ -830,11 +842,19 @@ public class Repository {
         conferenceRequestDAO.update(cr);
     }
 
+    public void updateConferenceRequest(FullConferenceRequest cr) {
+        conferenceRequestDAO.update(cr);
+    }
+
     public void addMealRequest(String[] mr) {
         mealRequestDAO.add(mr);
     }
 
     public void deleteMealRequest(MealRequest mr) {
+        mealRequestDAO.delete(mr);
+    }
+
+    public void deleteMealRequest(FullMealRequest mr) {
         mealRequestDAO.delete(mr);
     }
 
@@ -847,6 +867,10 @@ public class Repository {
     }
 
     public void updateMealRequest(MealRequest mr) {
+        mealRequestDAO.update(mr);
+    }
+
+    public void updateMealRequest(FullMealRequest mr) {
         mealRequestDAO.update(mr);
     }
 
@@ -884,6 +908,7 @@ public class Repository {
 
     public void deleteUser(User u) {
         userDAO.delete(u);
+        requestDAO.updateRequestDeleteUser(u.getUsername());
     }
 
     public User getUser(String id) {
@@ -938,6 +963,10 @@ public class Repository {
         flowerRequestDAO.delete(fr);
     }
 
+    public void deleteFlowerRequest(FullFlowerRequest fr) {
+        flowerRequestDAO.delete(fr);
+    }
+
     public FullFlowerRequest getFlowerRequest(int id) {
         return (FullFlowerRequest) flowerRequestDAO.get(id);
     }
@@ -947,6 +976,10 @@ public class Repository {
     }
 
     public void updateFlowerRequest(FlowerRequest fr) {
+        flowerRequestDAO.update(fr);
+    }
+
+    public void updateFlowerRequest(FullFlowerRequest fr) {
         flowerRequestDAO.update(fr);
     }
 
@@ -974,6 +1007,10 @@ public class Repository {
         furnitureRequestDAO.delete(fr);
     }
 
+    public void deleteFurnitureRequest(FullFurnitureRequest fr) {
+        furnitureRequestDAO.delete(fr);
+    }
+
     public FullFurnitureRequest getFurnitureRequest(int id) {
         return (FullFurnitureRequest) furnitureRequestDAO.get(id);
     }
@@ -986,11 +1023,19 @@ public class Repository {
         furnitureRequestDAO.update(fr);
     }
 
+    public void updateFurnitureRequest(FullFurnitureRequest fr) {
+        furnitureRequestDAO.update(fr);
+    }
+
     public void addOfficeRequest(String[] or) {
         officeRequestDAO.add(or);
     }
 
     public void deleteOfficeRequest(OfficeRequest or) {
+        officeRequestDAO.delete(or);
+    }
+
+    public void deleteOfficeRequest(FullOfficeRequest or) {
         officeRequestDAO.delete(or);
     }
 
@@ -1026,4 +1071,39 @@ public class Repository {
         return requestDAO.getAllHelper1();
     }
 
+    public ArrayList<IFull> getAllFullRequestsByUser(String username) {
+        return requestDAO.getFullRequestsbyEmployee(username);
+    }
+
+    public ArrayList<IFull> getAllFullRequestsByStatus(String status) {
+        return requestDAO.getFullRequestsbyStatus(status);
+    }
+
+    public ArrayList<String> getLongNameByType(String type) {
+        return locationNameDAO.getLongNameByType(type);
+    }
+
+    public ArrayList<String> getPracticalLongNames() {
+        return locationNameDAO.getLongNamePractical();
+    }
+
+    public Alert getAlert(int id) {
+        return alertDAO.get(id);
+    }
+
+    public ArrayList<Alert> getAllAlerts() {
+        return alertDAO.getAll();
+    }
+
+    public void addAlert(Alert a) {
+        alertDAO.add(a);
+    }
+
+    public void deleteAlert(Alert a) {
+        alertDAO.delete(a);
+    }
+
+    public void updateAlert(Alert a) {
+        alertDAO.update(a);
+    }
 }

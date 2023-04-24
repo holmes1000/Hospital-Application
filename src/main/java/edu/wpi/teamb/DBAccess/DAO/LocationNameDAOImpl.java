@@ -236,5 +236,51 @@ public class LocationNameDAOImpl implements IDAO {
             return null;
         }
     }
+    public ArrayList<String> getLongNameByType(String type) {
+        ArrayList<String> longNames = new ArrayList<>();
+        ResultSet rs = DButils.getRowCond("locationnames", "*", "nodeType = '" + type + "'");
+        try {
+            while (rs.next()) {
+                longNames.add(rs.getString("longname"));
+            }
+            rs.close();
+            return longNames;
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'NodeDAOImpl.getNodesByType': " + e.getMessage());
+            return null;
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                System.err.println("ERROR Query Failed in method 'NodeDAOImpl.getNodesByType': " + e.getMessage());
+            }
+        }
+    }
+
+    public ArrayList<String> getLongNamePractical() {
+        String[] nodeTypes = {"BATH", "REST", "ELEV", "STAI", "HALL", "EXIT"};
+        ArrayList<String> longNames = new ArrayList<>();
+        ResultSet rs = DButils.getRowCond("locationnames", "*", "nodeType != '" + nodeTypes[0] + "' AND nodeType != '" + nodeTypes[1] + "' AND nodeType != '" + nodeTypes[2] + "' AND nodeType != '" + nodeTypes[3] + "' AND nodeType != '" + nodeTypes[4] + "' AND nodeType != '" + nodeTypes[5] + "'");
+        try {
+            while (rs.next()) {
+                longNames.add(rs.getString("longname"));
+            }
+            rs.close();
+            return longNames;
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'NodeDAOImpl.getNodesByType': " + e.getMessage());
+            return null;
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                System.err.println("ERROR Query Failed in method 'NodeDAOImpl.getNodesByType': " + e.getMessage());
+            }
+        }
+    }
 
 }

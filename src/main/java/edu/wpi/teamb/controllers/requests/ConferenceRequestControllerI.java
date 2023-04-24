@@ -2,21 +2,27 @@ package edu.wpi.teamb.controllers.requests;
 
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
+import edu.wpi.teamb.DBAccess.Full.FullConferenceRequest;
+import edu.wpi.teamb.controllers.components.InfoCardController;
 import edu.wpi.teamb.entities.requests.EConferenceRequest;
 import edu.wpi.teamb.entities.requests.IRequest;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
+import edu.wpi.teamb.utils.TimeFormattingHelpers;
 import io.github.palexdev.materialfx.controls.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 
 
@@ -60,7 +66,7 @@ public class ConferenceRequestControllerI implements IRequestController{
     public void initializeFields() throws SQLException {
         //Initialize the list of locations to direct request to via dropdown
         ObservableList<String> longNames = FXCollections.observableArrayList();
-        longNames.addAll(Repository.getRepository().getAllLongNames());
+        longNames.addAll(Repository.getRepository().getLongNameByType("CONF"));
         cbLongName.setItems(longNames);
 
         //Dropdown for employee selection
@@ -209,5 +215,63 @@ public class ConferenceRequestControllerI implements IRequestController{
             throw new RuntimeException(e);
         }
         popOver.show(btnSubmit);
+    }
+
+    //functions for editable stage in InfoCardController
+    public void enterConferenceRequestEditableMode(FullConferenceRequest fullConferenceRequest, InfoCardController currentInfoCardController) {
+        //set the editable fields to the values of the request
+        cbEmployeesToAssign.getSelectionModel().selectItem(fullConferenceRequest.getEmployee());
+        cbLongName.getSelectionModel().selectItem(fullConferenceRequest.getLocationName());
+        tfNotes.setText(fullConferenceRequest.getNotes());
+        eventNameTextField.setText(fullConferenceRequest.getEventName());
+        bookingReasonTextField.setText(fullConferenceRequest.getBookingReason());
+        cbDuration.getSelectionModel().selectItem(fullConferenceRequest.getDuration());
+        datePicker.setValue(fullConferenceRequest.getDateRequested().toLocalDateTime().toLocalDate());
+        reservationHour.getSelectionModel().selectItem(TimeFormattingHelpers.get24to12Hour(fullConferenceRequest.getDateRequested().toLocalDateTime().getHour()));
+        String minutes;
+        if (fullConferenceRequest.getDateRequested().toLocalDateTime().getMinute() < 10) {
+            minutes = "0" + fullConferenceRequest.getDateRequested().toLocalDateTime().getMinute();
+        } else {
+            minutes = "" + fullConferenceRequest.getDateRequested().toLocalDateTime().getMinute();
+        }
+        reservationMinute.getSelectionModel().selectItem(minutes);
+        reservationAmPm.getSelectionModel().selectItem(fullConferenceRequest.getDateRequested().toLocalDateTime().getHour() < 12 ? "AM" : "PM");
+
+        //set the submit button to say update
+        btnSubmit.setText("Update");
+        //remove the current onAction event
+        btnSubmit.setOnAction(null);
+        //add a new onAction event
+        btnSubmit.setOnAction(e -> {
+            //update all the fields of the fullConferenceRequest
+            fullConferenceRequest.setEmployee(cbEmployeesToAssign.getValue());
+            fullConferenceRequest.setLocationName(cbLongName.getValue());
+            fullConferenceRequest.setNotes(tfNotes.getText());
+            fullConferenceRequest.setEventName(eventNameTextField.getText());
+            fullConferenceRequest.setBookingReason(bookingReasonTextField.getText());
+            fullConferenceRequest.setDuration(cbDuration.getValue());
+            String timerequested = "";
+            if (reservationAmPm.getText().equals("AM") && reservationHour.getText().equals("12")) {
+                timerequested = "00:" + reservationMinute.getText() + ":00";
+            } else if (reservationAmPm.getText().equals("AM")) {
+                timerequested = reservationHour.getText() + ":" + reservationMinute.getText() + ":00";
+            }  else if (reservationAmPm.getText().equals("PM") && reservationHour.getText().equals("12")) {
+                timerequested = reservationHour.getText() + ":" + reservationMinute.getText() + ":00";
+            } else if (reservationAmPm.getText().equals("PM")) {
+                int hour = Integer.parseInt(reservationHour.getText()) + 12;
+                timerequested = "" + hour + ":" + reservationMinute.getText() + ":00";
+            }
+            String daterequested = datePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));;
+            String timeStamp = daterequested + " " + timerequested;
+
+            fullConferenceRequest.setDateRequested(Timestamp.valueOf(timeStamp));
+            //update the database
+            EConferenceRequest.updateConferenceRequest(fullConferenceRequest);
+            //close the window
+            Stage stage = (Stage) btnSubmit.getScene().getWindow();
+            stage.close();
+            //send the fullConferenceRequest to the info card controller
+            currentInfoCardController.sendRequest(fullConferenceRequest);
+        });
     }
 }

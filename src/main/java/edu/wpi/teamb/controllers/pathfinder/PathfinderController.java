@@ -62,7 +62,7 @@ public class PathfinderController {
 
 
   @FXML private MFXComboBox<String> algorithmDropdown;
-  @FXML private MFXListView<String> listView;
+  @FXML private MFXListView<String> listView = new MFXListView<>();
   @FXML private VBox VboxPathfinder;
   @FXML private StackPane stackPaneMapView;
   @FXML private ImageView imageViewPathfinder;
@@ -74,10 +74,17 @@ public class PathfinderController {
     @FXML private MFXDatePicker datePicker;
     @FXML private MFXToggleButton toggleAvoidStairs;
     @FXML private MFXToggleButton toggleShowNames;
+
+    @FXML private MFXButton previousFloor;
+    @FXML private MFXButton nextFloor;
+
     private String currentFloor = "1";
     private HashMap<Integer,ArrayList<Move>> move_map = new HashMap<>();
     private ArrayList<Move> upcoming_moves = new ArrayList<>();
 
+    private String firstFloorVisited;
+    private String lastFloorVisited;
+    private ArrayList<String> floorsVisited;
 
     HashMap<String,ArrayList<Node>> nodes_by_floor = new HashMap<>();
   private EPathfinder EPathfinder;
@@ -162,6 +169,8 @@ public class PathfinderController {
                   pane.centreOnX(n.getxCoord());
                   pane.centreOnY(n.getyCoord());
               }
+              if (currentFloor.equals(firstFloorVisited) && floorsVisited.size() >1 ) {nextFloor.setDisable(false); previousFloor.setDisable(true);}
+              else if (currentFloor.equals((lastFloorVisited))&& floorsVisited.size() >1) {nextFloor.setDisable(true); previousFloor.setDisable(false);}
           }
       });
 
@@ -395,16 +404,6 @@ public class PathfinderController {
           }
 
           pathGroup.toFront();
-          for (Move move : upcoming_moves){
-              if (startNode.getSelectedItem().equals(move.getLongName())) {
-                  moveAlert(startNode.getSelectedItem());
-              }
-              if (endNode.getSelectedItem().equals(move.getLongName())) {
-                  moveAlert(endNode.getSelectedItem());
-              }
-
-
-          }
       }
   }
 
@@ -440,8 +439,6 @@ public class PathfinderController {
       timeline.setCycleCount(Timeline.INDEFINITE);
       timeline.play();
   }
-
-
 
     private void changeButtonColor(String currentFloor) {
         switch (currentFloor) {
@@ -491,6 +488,8 @@ public class PathfinderController {
         clickFloorBtn("2");
         clickFloorBtn("3");
 
+        previousFloor.setVisible(false);
+        nextFloor.setVisible(false);
         toggleShowNames.setSelected(true);
         toggleShowNames.setOnMouseClicked(event->{handleToggleShowNames();});
     }
@@ -563,6 +562,7 @@ public class PathfinderController {
 
   public void clickFindPath() throws SQLException {
       btnFindPath.setOnMouseClicked(event-> {
+          ArrayList<Node> nodePath = new ArrayList<>();
           ArrayList<String> string_path = new ArrayList<>();
           VboxPathfinder.getChildren().clear();
           if (!(startNode.getSelectedItem() == null)  && !(endNode.getSelectedItem() == null)) {
@@ -592,7 +592,10 @@ public class PathfinderController {
 
 
                   ArrayList<Integer> int_path = EPathfinder.getPath();
-                  ArrayList<Node> nodePath;
+                  //
+                  //firstFloorVisited = int_path.get(0);
+                  //lastFloorVisited = int_path.get(int_path.size()-1);
+                  //
                   nodes_by_floor = new HashMap<>();
                   for (Integer id : int_path) {
                       FullNode node = fullNodesByID.get(id);
@@ -618,13 +621,129 @@ public class PathfinderController {
 
               //Add the image to the Front
               ObservableList<String> items = FXCollections.observableArrayList(string_path);
+//              listView = new MFXListView<>();
               listView.setItems(items);
               VboxPathfinder.getChildren().addAll(listView);
               listView.getSelectionModel().clearSelection();
+              floorsVisited = new ArrayList<>();
+              String lastFloor = fullNodesByID.get(start).getFloor();
+              floorsVisited.add(lastFloor);
+              for (Node node : nodePath) {
+                  if (!lastFloor.equals(node.getFloor())){
+                      lastFloor = node.getFloor();
+                      floorsVisited.add(node.getFloor());
+                  }
+              }
           }
 
+          if (floorsVisited != null) {
+              System.out.println(floorsVisited);
+              previousFloor.setVisible(true);
+              previousFloor.setDisable(true);
+              previousFloor.setOnMouseClicked(e->clickPreviousFloor());
+              nextFloor.setVisible(true);
+              nextFloor.setOnMouseClicked(e->clickNextFloor());
+//          floorsVisited = new ArrayList<String>(nodes_by_floor.keySet());
+              firstFloorVisited = floorsVisited.get(0);
+              lastFloorVisited = floorsVisited.get(floorsVisited.size() - 1);
+          }
+          for (Move move : upcoming_moves){
+              if (startNode.getSelectedItem().equals(move.getLongName())) {
+                  moveAlert(startNode.getSelectedItem());
+              }
+              if (endNode.getSelectedItem().equals(move.getLongName())) {
+                  moveAlert(endNode.getSelectedItem());
+              }
+
+
+          }
       });
   }
+
+    public void clickPreviousFloor(){
+        //Set<String> floorsVisited = nodes_by_floor.keySet();
+        String next = currentFloor;
+        if(!currentFloor.equals(firstFloorVisited)){
+            if(currentFloor.equals(lastFloorVisited)){
+                int i = floorsVisited.indexOf(currentFloor);
+                next = floorsVisited.get(i-1);
+                switchFloor(next);
+                nextFloor.setDisable(false);
+                System.out.println("hi");
+            }else{
+                int i = floorsVisited.indexOf(currentFloor);
+                next = floorsVisited.get(i-1);
+                switchFloor(next);
+            }
+        }
+
+        if(currentFloor.equals(firstFloorVisited)){
+            previousFloor.setDisable(true);
+        }
+
+
+
+//            //currentFloorNum = listOfFloors.get(0);
+//            //maxFloorNum = listOfFloors.get(listOfFloors.size() - 1);
+//            if(currentFloorNum > minFloorNum){
+//                int index = listOfFloors.indexOf(currentFloorNum) - 1;
+//                currentFloor = Integer.toString(listOfFloors.get(index));
+//                currentFloorNum = listOfFloors.get(index);
+//                changeButtonColor(currentFloor);
+//                pathGroup.getChildren().clear();
+//                imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(currentFloorNum));
+//                drawPath(nodes_by_floor.get(currentFloor));
+//                locationCanvas.getChildren().add(pathGroup);
+//
+//            }
+//            if(listOfFloors.indexOf(currentFloorNum) == 0){
+//                previousArrow.setDisable(true);
+//            }
+
+    }
+
+    public void clickNextFloor(){
+      String next = currentFloor;
+
+        if(!currentFloor.equals(lastFloorVisited)){
+            if(currentFloor.equals(firstFloorVisited)){
+                int i = floorsVisited.indexOf(currentFloor);
+                next = floorsVisited.get(i+1);
+                switchFloor(next);
+                previousFloor.setDisable(false);
+                System.out.println("hi");
+            }else{
+                int i = floorsVisited.indexOf(currentFloor);
+                next = floorsVisited.get(i+1);
+                switchFloor(next);
+            }
+        }
+
+        if(currentFloor.equals(lastFloorVisited)){
+            nextFloor.setDisable(true);
+        }
+
+
+
+            //currentFloorNum = listOfFloors.get(0);
+            //maxFloorNum = listOfFloors.get(listOfFloors.size() - 1);
+//            if(currentFloorNum < minFloorNum){
+//                int index = listOfFloors.indexOf(currentFloorNum) + 1;
+//                currentFloor = Integer.toString(listOfFloors.get(index));
+//                currentFloorNum = listOfFloors.get(index);
+//                changeButtonColor(currentFloor);
+//                pathGroup.getChildren().clear();
+//                imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(currentFloorNum));
+//                drawPath(nodes_by_floor.get(currentFloor));
+//                locationCanvas.getChildren().add(pathGroup);
+//            }
+//            if(listOfFloors.indexOf(currentFloorNum) == listOfFloors.size()- 1){
+//                previousArrow.setDisable(true);
+//            }
+
+
+    }
+
 
     private void switchFloor(String floor) {
         Integer floorNum = 0;
@@ -665,7 +784,7 @@ public class PathfinderController {
   }
 
   public void initNavBar() {
-    // https://github.com/afsalashyana/JavaFX-Tutorial-Codes/tree/master/JavaFX%20Navigation%20Drawer/src/genuinecoder
+    //https://github.com/afsalashyana/JavaFX-Tutorial-Codes/tree/master/JavaFX%20Navigation%20Drawer/src/genuinecoder
     try {
       FXMLLoader loader =
           new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/components/NavDrawer.fxml"));
