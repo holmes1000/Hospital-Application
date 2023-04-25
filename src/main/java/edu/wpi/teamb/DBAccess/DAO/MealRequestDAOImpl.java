@@ -19,7 +19,7 @@ public class MealRequestDAOImpl implements IDAO {
 
     ArrayList<FullMealRequest> mealRequests;
 
-    public MealRequestDAOImpl() throws SQLException {
+    public MealRequestDAOImpl() {
         mealRequests = getAllHelper();
     }
 
