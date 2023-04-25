@@ -621,7 +621,7 @@ public class PathfinderController {
                       }
                   }
                   ArrayList<String> outputList = new ArrayList<>();
-                  String previousElement = null;
+                  String previousElement = "";
                   for (String element : string_floor_path) {
                       if (!element.equals(previousElement)) {
                           outputList.add(element);
@@ -629,6 +629,7 @@ public class PathfinderController {
                       }
                   }
                   floorsTraversed = outputList;
+
 //                  for(int i = 0; i< int_path.size() - 1;i++){
 //                      System.out.println(outputList.get(i));
 //                  }
@@ -675,9 +676,9 @@ public class PathfinderController {
 
           if (floorsTraversed != null) {
               //System.out.println(floorsVisited);
-              for (String element : floorsTraversed) {
-                  System.out.println(element);
-              }
+//              for (String element : floorsTraversed) {
+//                  System.out.println(element);
+//              }
               previousFloor.setVisible(true);
               previousFloor.setDisable(true);
               previousFloor.setOnMouseClicked(e->clickPreviousFloor());
@@ -706,11 +707,15 @@ public class PathfinderController {
             if(currentIndex == floorsTraversed.size()-1){
                 currentIndex--;
                 switchFloor(floorsTraversed.get(currentIndex));
+                pane.centreOnX(fullNode_by_floor.get(currentIndex).getxCoord());
+                pane.centreOnY(fullNode_by_floor.get(currentIndex).getyCoord());
                 nextFloor.setDisable(false);
             }
             else{
                 currentIndex--;
                 switchFloor(floorsTraversed.get(currentIndex));
+                pane.centreOnX(fullNode_by_floor.get(currentIndex).getxCoord());
+                pane.centreOnY(fullNode_by_floor.get(currentIndex).getyCoord());
             }
         }
         if (currentIndex == 0) {
@@ -742,10 +747,14 @@ public class PathfinderController {
           if(currentIndex == 0){
               currentIndex++;
               switchFloor(floorsTraversed.get(currentIndex));
+              pane.centreOnX(fullNode_by_floor.get(currentIndex).getxCoord());
+              pane.centreOnY(fullNode_by_floor.get(currentIndex).getyCoord());
               previousFloor.setDisable(false);
           }else{
               currentIndex++;
               switchFloor(floorsTraversed.get(currentIndex));
+              pane.centreOnX(fullNode_by_floor.get(currentIndex).getxCoord());
+              pane.centreOnY(fullNode_by_floor.get(currentIndex).getyCoord());
           }
       }
       if(currentIndex == floorsTraversed.size() - 1){
