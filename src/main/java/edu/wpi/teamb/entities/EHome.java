@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class EHome {
     public EHome() {}
 
-    public ArrayList<Request> getUserRequests() {
+    public ArrayList<Request> getAllRequests() {
         return Repository.getRepository().getAllRequests();
     }
 

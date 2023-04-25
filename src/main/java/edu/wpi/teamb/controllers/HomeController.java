@@ -13,7 +13,6 @@ import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -31,12 +30,10 @@ import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -76,7 +73,7 @@ public class HomeController {
 
     private void loadRequestsIntoContainer() {
         //getting the list of all requests
-        ArrayList<Request> listOfRequests = homeE.getUserRequests();
+        ArrayList<Request> listOfRequests = homeE.getAllRequests();
         ArrayList<Request> currentUserRequests = new ArrayList<>();
         //filtering the current user's requests
         for(int i = 0; i < listOfRequests.size(); i++) {
@@ -100,29 +97,29 @@ public class HomeController {
                 System.out.println("IOException in loadRequestsIntoContainer of AllRequestsController: " + e.getMessage());
             }
 
-            switch (listOfRequests.get(i).getRequestType()) {
+            switch (currentUserRequests.get(i).getRequestType()) {
                 case "Meal":
-                    IFull fullMealRequest = homeE.getMealRequest(listOfRequests.get(i).getId());
+                    IFull fullMealRequest = homeE.getMealRequest(currentUserRequests.get(i).getId());
                     if(fullMealRequest == null){continue;}
                     Objects.requireNonNull(requestInfoCardController).sendRequest(fullMealRequest);
                     break;
                 case "Conference":
-                    IFull fullConferenceRequest = homeE.getConferenceRequest(listOfRequests.get(i).getId());
+                    IFull fullConferenceRequest = homeE.getConferenceRequest(currentUserRequests.get(i).getId());
                     if(fullConferenceRequest == null) {continue;}
                     Objects.requireNonNull(requestInfoCardController).sendRequest(fullConferenceRequest);
                     break;
                 case "Flower":
-                    IFull fullFlowerRequest = homeE.getFlowerRequest(listOfRequests.get(i).getId());
+                    IFull fullFlowerRequest = homeE.getFlowerRequest(currentUserRequests.get(i).getId());
                     if(fullFlowerRequest == null) {continue;}
                     Objects.requireNonNull(requestInfoCardController).sendRequest(fullFlowerRequest);
                     break;
                 case "Office":
-                    IFull fullOfficeRequest = homeE.getOfficeRequest(listOfRequests.get(i).getId());
+                    IFull fullOfficeRequest = homeE.getOfficeRequest(currentUserRequests.get(i).getId());
                     if(fullOfficeRequest == null){continue;}
                     Objects.requireNonNull(requestInfoCardController).sendRequest(fullOfficeRequest);
                     break;
                 case "Furniture":
-                    IFull fullFurnitureRequest = homeE.getFurnitureRequest(listOfRequests.get(i).getId());
+                    IFull fullFurnitureRequest = homeE.getFurnitureRequest(currentUserRequests.get(i).getId());
                     if(fullFurnitureRequest == null){continue;}
                     Objects.requireNonNull(requestInfoCardController).sendRequest(fullFurnitureRequest);
                     break;
