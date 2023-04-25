@@ -5,9 +5,7 @@ import edu.wpi.teamb.DBAccess.DBinput;
 import edu.wpi.teamb.DBAccess.Full.*;
 import edu.wpi.teamb.DBAccess.ORMs.*;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -973,6 +971,36 @@ public class Repository {
         dbConnection.forceClose();
     }
 
+    /**
+     * Imports the alerts from a CSV file into the database
+     *
+     * @param filename The name of the CSV file to be imported as a String
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
+     */
+    public void importAlertsFromCSV(String filename, int location) {
+        DBinput.importAlertsFromCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    /**
+     * Imports the signage from a CSV file into the database
+     *
+     * @param filename The name of the CSV file to be imported as a String
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
+     */
+    public void importSignageFromCSV(String filename, int location) {
+        DBinput.importSignageFromCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
     //TODO DBoutput methods
 
     /**
@@ -1147,6 +1175,37 @@ public class Repository {
      */
     public void exportOfficeRequestsToCSV(String filename, int location) {
         DBoutput.exportOfficeRequestsToCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    /**
+     * This method exports the SanitationRequests table into a CSV file
+     *
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program), 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
+     */
+    public void exportAlertsToCSV(String filename, int location) {
+        DBoutput.exportAlertsToCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    /**
+     * This method exports the Signage table into a CSV file
+     *
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
+     */
+    public void exportSignageToCSV(String filename, int location) {
+        DBoutput.exportSignageToCSV(filename, location);
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
     }
@@ -1520,6 +1579,10 @@ public class Repository {
 
     public Connection getConnection() {
         return dbConnection.getConnection();
+    }
+
+    public void switchTo(int databaseServer) {
+        dbConnection.switchTo(databaseServer);
     }
 
     public ArrayList<String> getNodeTypesUniqueAlphabetical () {

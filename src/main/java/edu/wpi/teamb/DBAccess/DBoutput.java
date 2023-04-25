@@ -3,6 +3,7 @@ package edu.wpi.teamb.DBAccess;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -16,8 +17,8 @@ public class DBoutput {
      *                 location is 2)
      * @param location The location of the CSV file to be exported as an int --
      *                 int location can be 1 (root folder for program),
-     *                 2 (custom location), or 3
-     *                 (developer: CSV Files in package)
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
     public static void exportNodesToCSV(String filename, int location) {
 
@@ -31,6 +32,7 @@ public class DBoutput {
                 case 1 -> new BufferedWriter(new FileWriter("./" + filename + ".csv"));
                 case 2 -> new BufferedWriter(new FileWriter(filename + ".csv"));
                 case 3 -> new BufferedWriter(new FileWriter("./src/main/resources/CSV Files/" + filename + ".csv"));
+                case 4 -> new BufferedWriter(new FileWriter("./src/main/resources/DB Sync Files/" + filename + ".csv"));
                 default -> throw new IllegalStateException("Unexpected value: " + location);
             };
 
@@ -66,8 +68,8 @@ public class DBoutput {
      *                 location is 2)
      * @param location The location of the CSV file to be exported as an int --
      *                 int location can be 1 (root folder for program),
-     *                 2 (custom location), or 3
-     *                 (developer: CSV Files in package)
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
     public static void exportEdgesToCSV(String filename, int location) {
 
@@ -81,6 +83,7 @@ public class DBoutput {
                 case 1 -> new BufferedWriter(new FileWriter("./" + filename + ".csv"));
                 case 2 -> new BufferedWriter(new FileWriter(filename + ".csv"));
                 case 3 -> new BufferedWriter(new FileWriter("./src/main/resources/CSV Files/" + filename + ".csv"));
+                case 4 -> new BufferedWriter(new FileWriter("./src/main/resources/DB Sync Files/" + filename + ".csv"));
                 default -> throw new IllegalStateException("Unexpected value: " + location);
             };
 
@@ -111,8 +114,8 @@ public class DBoutput {
      *                 location is 2)
      * @param location The location of the CSV file to be exported as an int --
      *                 int location can be 1 (root folder for program),
-     *                 2 (custom location), or 3
-     *                 (developer: CSV Files in package)
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
     public static void exportLocationNamesToCSV(String filename, int location) {
 
@@ -126,6 +129,7 @@ public class DBoutput {
                 case 1 -> new BufferedWriter(new FileWriter("./" + filename + ".csv"));
                 case 2 -> new BufferedWriter(new FileWriter(filename + ".csv"));
                 case 3 -> new BufferedWriter(new FileWriter("./src/main/resources/CSV Files/" + filename + ".csv"));
+                case 4 -> new BufferedWriter(new FileWriter("./src/main/resources/DB Sync Files/" + filename + ".csv"));
                 default -> throw new IllegalStateException("Unexpected value: " + location);
             };
 
@@ -157,8 +161,8 @@ public class DBoutput {
      *                 location is 2)
      * @param location The location of the CSV file to be exported as an int --
      *                 int location can be 1 (root folder for program),
-     *                 2 (custom location), or 3
-     *                 (developer: CSV Files in package)
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
 
     public static void exportMovesToCSV(String filename, int location) {
@@ -173,10 +177,11 @@ public class DBoutput {
                 case 1 -> new BufferedWriter(new FileWriter("./" + filename + ".csv"));
                 case 2 -> new BufferedWriter(new FileWriter(filename + ".csv"));
                 case 3 -> new BufferedWriter(new FileWriter("./src/main/resources/CSV Files/" + filename + ".csv"));
+                case 4 -> new BufferedWriter(new FileWriter("./src/main/resources/DB Sync Files/" + filename + ".csv"));
                 default -> throw new IllegalStateException("Unexpected value: " + location);
             };
 
-            bw.write("nodeid,longname,date");
+            bw.write("nodeID,longName,date");
 
             while (allRS.next()) {
                 int nodeID = allRS.getInt("nodeID");
@@ -204,8 +209,8 @@ public class DBoutput {
      *                 location is 2)
      * @param location The location of the CSV file to be exported as an int --
      *                 int location can be 1 (root folder for program),
-     *                 2 (custom location), or 3
-     *                 (developer: CSV Files in package)
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
     public static void exportUsersToCSV(String filename, int location) {
         try {
@@ -218,6 +223,7 @@ public class DBoutput {
                 case 1 -> new BufferedWriter(new FileWriter("./" + filename + ".csv"));
                 case 2 -> new BufferedWriter(new FileWriter(filename + ".csv"));
                 case 3 -> new BufferedWriter(new FileWriter("./src/main/resources/CSV Files/" + filename + ".csv"));
+                case 4 -> new BufferedWriter(new FileWriter("./src/main/resources/DB Sync Files/" + filename + ".csv"));
                 default -> throw new IllegalStateException("Unexpected value: " + location);
             };
 
@@ -251,8 +257,8 @@ public class DBoutput {
      *                 location is 2)
      * @param location The location of the CSV file to be exported as an int --
      *                 int location can be 1 (root folder for program),
-     *                 2 (custom location), or 3
-     *                 (developer: CSV Files in package)
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
     public static void exportRequestsToCSV(String filename, int location) {
         try {
@@ -265,6 +271,7 @@ public class DBoutput {
                 case 1 -> new BufferedWriter(new FileWriter("./" + filename + ".csv"));
                 case 2 -> new BufferedWriter(new FileWriter(filename + ".csv"));
                 case 3 -> new BufferedWriter(new FileWriter("./src/main/resources/CSV Files/" + filename + ".csv"));
+                case 4 -> new BufferedWriter(new FileWriter("./src/main/resources/DB Sync Files/" + filename + ".csv"));
                 default -> throw new IllegalStateException("Unexpected value: " + location);
             };
 
@@ -300,8 +307,8 @@ public class DBoutput {
      *                 location is 2)
      * @param location The location of the CSV file to be exported as an int --
      *                 int location can be 1 (root folder for program),
-     *                 2 (custom location), or 3
-     *                 (developer: CSV Files in package)
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
     public static void exportConferenceRequestsToCSV(String filename, int location) {
         try {
@@ -314,6 +321,7 @@ public class DBoutput {
                 case 1 -> new BufferedWriter(new FileWriter("./" + filename + ".csv"));
                 case 2 -> new BufferedWriter(new FileWriter(filename + ".csv"));
                 case 3 -> new BufferedWriter(new FileWriter("./src/main/resources/CSV Files/" + filename + ".csv"));
+                case 4 -> new BufferedWriter(new FileWriter("./src/main/resources/DB Sync Files/" + filename + ".csv"));
                 default -> throw new IllegalStateException("Unexpected value: " + location);
             };
 
@@ -347,8 +355,8 @@ public class DBoutput {
      *                 location is 2)
      * @param location The location of the CSV file to be exported as an int --
      *                 int location can be 1 (root folder for program),
-     *                 2 (custom location), or 3
-     *                 (developer: CSV Files in package)
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
     public static void exportFlowerRequestsToCSV(String filename, int location) {
         try {
@@ -361,6 +369,7 @@ public class DBoutput {
                 case 1 -> new BufferedWriter(new FileWriter("./" + filename + ".csv"));
                 case 2 -> new BufferedWriter(new FileWriter(filename + ".csv"));
                 case 3 -> new BufferedWriter(new FileWriter("./src/main/resources/CSV Files/" + filename + ".csv"));
+                case 4 -> new BufferedWriter(new FileWriter("./src/main/resources/DB Sync Files/" + filename + ".csv"));
                 default -> throw new IllegalStateException("Unexpected value: " + location);
             };
 
@@ -394,8 +403,8 @@ public class DBoutput {
      *                 location is 2)
      * @param location The location of the CSV file to be exported as an int --
      *                 int location can be 1 (root folder for program),
-     *                 2 (custom location), or 3
-     *                 (developer: CSV Files in package)
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
     public static void exportFurnitureRequestsToCSV(String filename, int location) {
         try {
@@ -408,6 +417,7 @@ public class DBoutput {
                 case 1 -> new BufferedWriter(new FileWriter("./" + filename + ".csv"));
                 case 2 -> new BufferedWriter(new FileWriter(filename + ".csv"));
                 case 3 -> new BufferedWriter(new FileWriter("./src/main/resources/CSV Files/" + filename + ".csv"));
+                case 4 -> new BufferedWriter(new FileWriter("./src/main/resources/DB Sync Files/" + filename + ".csv"));
                 default -> throw new IllegalStateException("Unexpected value: " + location);
             };
 
@@ -440,8 +450,8 @@ public class DBoutput {
      *                 location is 2)
      * @param location The location of the CSV file to be exported as an int --
      *                 int location can be 1 (root folder for program),
-     *                 2 (custom location), or 3
-     *                 (developer: CSV Files in package)
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
     public static void exportMealRequestsToCSV(String filename, int location) {
         try {
@@ -454,6 +464,7 @@ public class DBoutput {
                 case 1 -> new BufferedWriter(new FileWriter("./" + filename + ".csv"));
                 case 2 -> new BufferedWriter(new FileWriter(filename + ".csv"));
                 case 3 -> new BufferedWriter(new FileWriter("./src/main/resources/CSV Files/" + filename + ".csv"));
+                case 4 -> new BufferedWriter(new FileWriter("./src/main/resources/DB Sync Files/" + filename + ".csv"));
                 default -> throw new IllegalStateException("Unexpected value: " + location);
             };
 
@@ -487,8 +498,8 @@ public class DBoutput {
      *                 location is 2)
      * @param location The location of the CSV file to be exported as an int --
      *                 int location can be 1 (root folder for program),
-     *                 2 (custom location), or 3
-     *                 (developer: CSV Files in package)
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
     public static void exportOfficeRequestsToCSV(String filename, int location) {
         try {
@@ -501,6 +512,7 @@ public class DBoutput {
                 case 1 -> new BufferedWriter(new FileWriter("./" + filename + ".csv"));
                 case 2 -> new BufferedWriter(new FileWriter(filename + ".csv"));
                 case 3 -> new BufferedWriter(new FileWriter("./src/main/resources/CSV Files/" + filename + ".csv"));
+                case 4 -> new BufferedWriter(new FileWriter("./src/main/resources/DB Sync Files/" + filename + ".csv"));
                 default -> throw new IllegalStateException("Unexpected value: " + location);
             };
 
@@ -523,6 +535,100 @@ public class DBoutput {
             System.err.println("ERROR: Could not write to file " + filename + " in method 'exportOfficeRequestsToCSV'");
         } catch (SQLException e) {
             System.err.println("ERROR: SQL query failed in method 'exportOfficeRequestsToCSV'");
+        }
+    }
+
+    /**
+     * This method exports the Alerts table into a CSV file
+     *
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
+     */
+    public static void exportAlertsToCSV(String filename, int location) {
+        try {
+            String allQuery = "SELECT * FROM alerts";
+            Statement allStmt = DBconnection.getDBconnection().getConnection().createStatement();
+            ResultSet allRS = allStmt.executeQuery(allQuery);
+
+            BufferedWriter bw = switch (location) {
+                case 0 -> new BufferedWriter(new FileWriter(filename));
+                case 1 -> new BufferedWriter(new FileWriter("./" + filename + ".csv"));
+                case 2 -> new BufferedWriter(new FileWriter(filename + ".csv"));
+                case 3 -> new BufferedWriter(new FileWriter("./src/main/resources/CSV Files/" + filename + ".csv"));
+                case 4 -> new BufferedWriter(new FileWriter("./src/main/resources/DB Sync Files/" + filename + ".csv"));
+                default -> throw new IllegalStateException("Unexpected value: " + location);
+            };
+
+            bw.write("id,item,quantity,type");
+
+            while (allRS.next()) {
+                int id = allRS.getInt("id");
+                String title = allRS.getString("title");
+                String description = allRS.getString("description");
+                Date created_at = allRS.getDate("created_at");
+
+                String line = String.format("%d,%s,%s,%s", id, title, description, created_at.toString());
+
+                bw.newLine();
+                bw.write(line);
+            }
+            allStmt.close();
+            bw.close();
+        } catch (IOException e) {
+            System.err.println("ERROR: Could not write to file " + filename + " in method 'exportAlertsToCSV'");
+        } catch (SQLException e) {
+            System.err.println("ERROR: SQL query failed in method 'exportAlertsToCSV'");
+        }
+    }
+
+    /**
+     * This method exports the Signage table into a CSV file
+     *
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
+     */
+    public static void exportSignageToCSV(String filename, int location) {
+        try {
+            String allQuery = "SELECT * FROM signage";
+            Statement allStmt = DBconnection.getDBconnection().getConnection().createStatement();
+            ResultSet allRS = allStmt.executeQuery(allQuery);
+
+            BufferedWriter bw = switch (location) {
+                case 0 -> new BufferedWriter(new FileWriter(filename));
+                case 1 -> new BufferedWriter(new FileWriter("./" + filename + ".csv"));
+                case 2 -> new BufferedWriter(new FileWriter(filename + ".csv"));
+                case 3 -> new BufferedWriter(new FileWriter("./src/main/resources/CSV Files/" + filename + ".csv"));
+                case 4 -> new BufferedWriter(new FileWriter("./src/main/resources/DB Sync Files/" + filename + ".csv"));
+                default -> throw new IllegalStateException("Unexpected value: " + location);
+            };
+
+            bw.write("direction,screen,date,locationname");
+
+            while (allRS.next()) {
+                String direction = allRS.getString("id");
+                int screen = allRS.getInt("screen");
+                Date date = allRS.getDate("date");
+                String locationname = allRS.getString("locationname");
+
+                String line = String.format("%s,%d,%s,%s", direction, screen, date.toString(), locationname);
+
+                bw.newLine();
+                bw.write(line);
+            }
+            allStmt.close();
+            bw.close();
+        } catch (IOException e) {
+            System.err.println("ERROR: Could not write to file " + filename + " in method 'exportSignageToCSV'");
+        } catch (SQLException e) {
+            System.err.println("ERROR: SQL query failed in method 'exportSignageToCSV'");
         }
     }
 }

@@ -18,8 +18,8 @@ public class DBinput {
      *                 location is 2)
      * @param location The location of the CSV file to be exported as an int --
      *                 int location can be 1 (root folder for program),
-     *                 2 (custom location), or 3
-     *                 (developer: CSV Files in package)
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
     public static void importNodesFromCSV(String filename, int location) {
 
@@ -35,6 +35,7 @@ public class DBinput {
                     case 1 -> new BufferedReader(new FileReader("./" + filename + ".csv"));
                     case 2 -> new BufferedReader(new FileReader(filename + ".csv"));
                     case 3 -> new BufferedReader(new FileReader("./src/main/resources/CSV Files/" + filename + ".csv"));
+                    case 4 -> new BufferedReader(new FileReader("./src/main/resources/DB Sync Files/" + filename + ".csv"));
                     default -> new BufferedReader(new FileReader("./" + filename + ".csv"));
                 };
             } catch (FileNotFoundException e) {
@@ -93,7 +94,7 @@ public class DBinput {
             tableStmt.close();
         } catch (SQLException e) {
             System.out.println("ERROR: Query could not be executed in the method 'DBinput.importNodesFromCSV'");
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
@@ -104,8 +105,8 @@ public class DBinput {
      *                 location is 2)
      * @param location The location of the CSV file to be exported as an int --
      *                 int location can be 1 (root folder for program),
-     *                 2 (custom location), or 3
-     *                 (developer: CSV Files in package)
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
     public static void importEdgesFromCSV(String filename, int location) {
 
@@ -121,6 +122,7 @@ public class DBinput {
                     case 1 -> new BufferedReader(new FileReader("./" + filename + ".csv"));
                     case 2 -> new BufferedReader(new FileReader(filename + ".csv"));
                     case 3 -> new BufferedReader(new FileReader("./src/main/resources/CSV Files/" + filename + ".csv"));
+                    case 4 -> new BufferedReader(new FileReader("./src/main/resources/DB Sync Files/" + filename + ".csv"));
                     default -> new BufferedReader(new FileReader("./" + filename + ".csv"));
                 };
             } catch (FileNotFoundException e) {
@@ -169,8 +171,8 @@ public class DBinput {
      *                 location is 2)
      * @param location The location of the CSV file to be exported as an int --
      *                 int location can be 1 (root folder for program),
-     *                 2 (custom location), or 3
-     *                 (developer: CSV Files in package)
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
     public static void importLocationNamesFromCSV(String filename, int location) {
 
@@ -186,6 +188,7 @@ public class DBinput {
                     case 1 -> new BufferedReader(new FileReader("./" + filename + ".csv"));
                     case 2 -> new BufferedReader(new FileReader(filename + ".csv"));
                     case 3 -> new BufferedReader(new FileReader("./src/main/resources/CSV Files/" + filename + ".csv"));
+                    case 4 -> new BufferedReader(new FileReader("./src/main/resources/DB Sync Files/" + filename + ".csv"));
                     default -> new BufferedReader(new FileReader("./" + filename + ".csv"));
                 };
             } catch (FileNotFoundException e) {
@@ -252,8 +255,8 @@ public class DBinput {
      *                 location is 2)
      * @param location The location of the CSV file to be exported as an int --
      *                 int location can be 1 (root folder for program),
-     *                 2 (custom location), or 3
-     *                 (developer: CSV Files in package)
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
     public static void importMovesFromCSV(String filename, int location) {
 
@@ -269,6 +272,7 @@ public class DBinput {
                     case 1 -> new BufferedReader(new FileReader("./" + filename + ".csv"));
                     case 2 -> new BufferedReader(new FileReader(filename + ".csv"));
                     case 3 -> new BufferedReader(new FileReader("./src/main/resources/CSV Files/" + filename + ".csv"));
+                    case 4 -> new BufferedReader(new FileReader("./src/main/resources/DB Sync Files/" + filename + ".csv"));
                     default -> new BufferedReader(new FileReader("./" + filename + ".csv"));
                 };
             } catch (FileNotFoundException e) {
@@ -316,6 +320,7 @@ public class DBinput {
             tableStmt.close();
         } catch (SQLException e) {
             System.out.println("ERROR: Query could not be executed in the method 'DBinput.importMovesFromCSV'");
+            System.out.println(e.getMessage());
         }
     }
 
@@ -326,8 +331,8 @@ public class DBinput {
      *                 location is 2)
      * @param location The location of the CSV file to be exported as an int --
      *                 int location can be 1 (root folder for program),
-     *                 2 (custom location), or 3
-     *                 (developer: CSV Files in package)
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
     public static void importUsersFromCSV(String filename, int location) {
 
@@ -343,6 +348,7 @@ public class DBinput {
                         case 1 -> new BufferedReader(new FileReader("./" + filename + ".csv"));
                         case 2 -> new BufferedReader(new FileReader(filename + ".csv"));
                         case 3 -> new BufferedReader(new FileReader("./src/main/resources/CSV Files/" + filename + ".csv"));
+                        case 4 -> new BufferedReader(new FileReader("./src/main/resources/DB Sync Files/" + filename + ".csv"));
                         default -> new BufferedReader(new FileReader("./" + filename + ".csv"));
                     };
                 } catch (FileNotFoundException e) {
@@ -362,7 +368,7 @@ public class DBinput {
                 try {
                     while (((line = br.readLine()) != null)) {
                         String[] userValues = line.split(splitBy);
-                        if (!(userValues[0].equals("userID"))) {
+                        if (!(userValues[0].equals("userid"))) {
                             // System.out.println(edgeValues[0]);
                             String rowQuery = "INSERT INTO Users (name, username, password, email, permissionlevel) VALUES ("
                                     + "'"
@@ -408,8 +414,8 @@ public class DBinput {
      *                 location is 2)
      * @param location The location of the CSV file to be exported as an int --
      *                 int location can be 1 (root folder for program),
-     *                 2 (custom location), or 3
-     *                 (developer: CSV Files in package)
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
     public static void importRequestsFromCSV(String filename, int location) {
 
@@ -425,6 +431,7 @@ public class DBinput {
                         case 1 -> new BufferedReader(new FileReader("./" + filename + ".csv"));
                         case 2 -> new BufferedReader(new FileReader(filename + ".csv"));
                         case 3 -> new BufferedReader(new FileReader("./src/main/resources/CSV Files/" + filename + ".csv"));
+                        case 4 -> new BufferedReader(new FileReader("./src/main/resources/DB Sync Files/" + filename + ".csv"));
                         default -> new BufferedReader(new FileReader("./" + filename + ".csv"));
                     };
                 } catch (FileNotFoundException e) {
@@ -455,26 +462,31 @@ public class DBinput {
                         "(id INT not null primary key references requests, item VARCHAR(255), quantity INT, type VARCHAR(255)," +
                         "locationName VARCHAR(255))";
                 int tableUpdateOfficeRequests = tableStmt.executeUpdate(createTableOfficeRequests);
+                importOfficeRequestsFromCSV("OfficeRequests_sync", 4);
 
                 String createTableMealRequests = "CREATE TABLE mealRequests " +
                         "(id INT not null primary key references requests, orderFrom VARCHAR(255), food VARCHAR(255), drink VARCHAR(255)," +
                         "snack VARCHAR(255))";
                 int tableUpdateMealRequests = tableStmt.executeUpdate(createTableMealRequests);
+                importMealRequestsFromCSV("MealRequests_sync", 4);
 
                 String createTableFurnitureRequests = "CREATE TABLE furnitureRequests " +
                         "(id INT not null primary key references requests, type VARCHAR(255), model VARCHAR(255)," +
                         "assembly BOOLEAN)";
                 int tableUpdateFurnitureRequests = tableStmt.executeUpdate(createTableFurnitureRequests);
+                importFurnitureRequestsFromCSV("FurnitureRequests_sync", 4);
 
                 String createTableFlowerRequests = "CREATE TABLE flowerRequests " +
                         "(id INT not null primary key references requests, flowerType VARCHAR(255), color VARCHAR(255)," +
                         "size VARCHAR(255), message TEXT)";
                 int tableUpdateFlowerRequests = tableStmt.executeUpdate(createTableFlowerRequests);
+                importFlowerRequestsFromCSV("FlowerRequests_sync", 4);
 
                 String createTableConferenceRequests = "CREATE TABLE conferenceRequests " +
                         "(id INT not null primary key references requests, dateRequested TIMESTAMP, eventName VARCHAR(255), bookingReason VARCHAR(255)," +
                         "duration INT)";
                 int tableUpdateConferenceRequests = tableStmt.executeUpdate(createTableConferenceRequests);
+                importConferenceRequestsFromCSV("ConferenceRequests_sync", 4);
 
                 try {
                     while (((line = br.readLine()) != null)) {
@@ -531,8 +543,8 @@ public class DBinput {
      * @param filename The name of the CSV file to be imported as a String
      * @param location The location of the CSV file to be exported as an int --
      *                 int location can be 1 (root folder for program),
-     *                 2 (custom location), or 3
-     *                 (developer: CSV Files in package)
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
     public static void importConferenceRequestsFromCSV(String filename, int location) {
 
@@ -548,6 +560,7 @@ public class DBinput {
                     case 1 -> new BufferedReader(new FileReader("./" + filename + ".csv"));
                     case 2 -> new BufferedReader(new FileReader(filename + ".csv"));
                     case 3 -> new BufferedReader(new FileReader("./src/main/resources/CSV Files/" + filename + ".csv"));
+                    case 4 -> new BufferedReader(new FileReader("./src/main/resources/DB Sync Files/" + filename + ".csv"));
                     default -> new BufferedReader(new FileReader("./" + filename + ".csv"));
                 };
             } catch (FileNotFoundException e) {
@@ -608,8 +621,8 @@ public class DBinput {
      * @param filename The name of the CSV file to be imported as a String
      * @param location The location of the CSV file to be exported as an int --
      *                 int location can be 1 (root folder for program),
-     *                 2 (custom location), or 3
-     *                 (developer: CSV Files in package)
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
     public static void importFlowerRequestsFromCSV(String filename, int location) {
 
@@ -625,6 +638,7 @@ public class DBinput {
                     case 1 -> new BufferedReader(new FileReader("./" + filename + ".csv"));
                     case 2 -> new BufferedReader(new FileReader(filename + ".csv"));
                     case 3 -> new BufferedReader(new FileReader("./src/main/resources/CSV Files/" + filename + ".csv"));
+                    case 4 -> new BufferedReader(new FileReader("./src/main/resources/DB Sync Files/" + filename + ".csv"));
                     default -> new BufferedReader(new FileReader("./" + filename + ".csv"));
                 };
             } catch (FileNotFoundException e) {
@@ -687,8 +701,8 @@ public class DBinput {
      * @param filename The name of the CSV file to be imported as a String
      * @param location The location of the CSV file to be exported as an int --
      *                 int location can be 1 (root folder for program),
-     *                 2 (custom location), or 3
-     *                 (developer: CSV Files in package)
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
     public static void importFurnitureRequestsFromCSV(String filename, int location) {
 
@@ -704,6 +718,7 @@ public class DBinput {
                     case 1 -> new BufferedReader(new FileReader("./" + filename + ".csv"));
                     case 2 -> new BufferedReader(new FileReader(filename + ".csv"));
                     case 3 -> new BufferedReader(new FileReader("./src/main/resources/CSV Files/" + filename + ".csv"));
+                    case 4 -> new BufferedReader(new FileReader("./src/main/resources/DB Sync Files/" + filename + ".csv"));
                     default -> new BufferedReader(new FileReader("./" + filename + ".csv"));
                 };
             } catch (FileNotFoundException e) {
@@ -760,8 +775,8 @@ public class DBinput {
      * @param filename The name of the CSV file to be imported as a String
      * @param location The location of the CSV file to be exported as an int --
      *                 int location can be 1 (root folder for program),
-     *                 2 (custom location), or 3
-     *                 (developer: CSV Files in package)
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
     public static void importMealRequestsFromCSV(String filename, int location) {
 
@@ -777,6 +792,7 @@ public class DBinput {
                     case 1 -> new BufferedReader(new FileReader("./" + filename + ".csv"));
                     case 2 -> new BufferedReader(new FileReader(filename + ".csv"));
                     case 3 -> new BufferedReader(new FileReader("./src/main/resources/CSV Files/" + filename + ".csv"));
+                    case 4 -> new BufferedReader(new FileReader("./src/main/resources/DB Sync Files/" + filename + ".csv"));
                     default -> new BufferedReader(new FileReader("./" + filename + ".csv"));
                 };
             } catch (FileNotFoundException e) {
@@ -839,8 +855,8 @@ public class DBinput {
      * @param filename The name of the CSV file to be imported as a String
      * @param location The location of the CSV file to be exported as an int --
      *                 int location can be 1 (root folder for program),
-     *                 2 (custom location), or 3
-     *                 (developer: CSV Files in package)
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
     public static void importOfficeRequestsFromCSV(String filename, int location) {
 
@@ -856,6 +872,7 @@ public class DBinput {
                     case 1 -> new BufferedReader(new FileReader("./" + filename + ".csv"));
                     case 2 -> new BufferedReader(new FileReader(filename + ".csv"));
                     case 3 -> new BufferedReader(new FileReader("./src/main/resources/CSV Files/" + filename + ".csv"));
+                    case 4 -> new BufferedReader(new FileReader("./src/main/resources/DB Sync Files/" + filename + ".csv"));
                     default -> new BufferedReader(new FileReader("./" + filename + ".csv"));
                 };
             } catch (FileNotFoundException e) {
@@ -903,6 +920,157 @@ public class DBinput {
             tableStmt.close();
         } catch (SQLException e) {
             System.out.println("ERROR: Query could not be executed in the method 'DBinput.importOfficeRequestsFromCSV'");
+        }
+    }
+
+    /**
+     * Imports the alerts from a CSV file into the database
+     *
+     * @param filename The name of the CSV file to be imported as a String
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
+     */
+    public static void importAlertsFromCSV(String filename, int location) {
+
+        String line = "";
+        String splitBy = ",";
+
+        BufferedReader br = null;
+
+        try {
+            try {
+                br = switch (location) {
+                    case 0 -> new BufferedReader(new FileReader(filename));
+                    case 1 -> new BufferedReader(new FileReader("./" + filename + ".csv"));
+                    case 2 -> new BufferedReader(new FileReader(filename + ".csv"));
+                    case 3 -> new BufferedReader(new FileReader("./src/main/resources/CSV Files/" + filename + ".csv"));
+                    case 4 -> new BufferedReader(new FileReader("./src/main/resources/DB Sync Files/" + filename + ".csv"));
+                    default -> new BufferedReader(new FileReader("./" + filename + ".csv"));
+                };
+            } catch (FileNotFoundException e) {
+                System.out.println("Error reading the file in the method 'DBinput.importAlertsFromCSV'");
+                e.printStackTrace();
+            }
+
+            Statement tableStmt = DBconnection.getDBconnection().getConnection().createStatement();
+            String dropAlertsTable = "DROP TABLE IF EXISTS alerts";
+            int dropUpdateAlerts = tableStmt.executeUpdate(dropAlertsTable);
+
+            String createTableAlerts = "CREATE TABLE alerts " +
+                    "(id INT generated always as identity primary key, title TEXT, description TEXT, " +
+                    "created_at TIMESTAMP)";
+            int tableUpdateAlerts = tableStmt.executeUpdate(createTableAlerts);
+
+            try {
+                while (((line = br.readLine()) != null)) {
+                    String[] requestValues = line.split(splitBy);
+                    if (!(requestValues[0].equals("id"))) {
+                        // System.out.println(edgeValues[0]);
+                        String rowQuery = "INSERT INTO alerts (id, title, description, created_at) VALUES ("
+                                + "DEFAULT"
+                                + ","
+                                + "'"
+                                + requestValues[1]
+                                + "'"
+                                + ","
+                                + "'"
+                                + requestValues[2]
+                                + "'"
+                                + ","
+                                + "'"
+                                + requestValues[3]
+                                + "'"
+                                + ");";
+                        Statement rowStmt = DBconnection.getDBconnection().getConnection().createStatement();
+                        int rowUpdate = rowStmt.executeUpdate(rowQuery);
+                        rowStmt.close();
+                    }
+                }
+                br.close();
+            } catch (IOException e) {
+                System.out.println("Error reading the file in the method 'DBinput.importAlertsFromCSV'");
+                e.printStackTrace();
+            }
+            tableStmt.close();
+        } catch (SQLException e) {
+            System.out.println("ERROR: Query could not be executed in the method 'DBinput.importAlertsFromCSV'");
+        }
+    }
+
+    /**
+     * Imports the signage from a CSV file into the database
+     *
+     * @param filename The name of the CSV file to be imported as a String
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
+     */
+    public static void importSignageFromCSV(String filename, int location) {
+        String line = "";
+        String splitBy = ",";
+
+        BufferedReader br = null;
+
+        try {
+            try {
+                br = switch (location) {
+                    case 0 -> new BufferedReader(new FileReader(filename));
+                    case 1 -> new BufferedReader(new FileReader("./" + filename + ".csv"));
+                    case 2 -> new BufferedReader(new FileReader(filename + ".csv"));
+                    case 3 -> new BufferedReader(new FileReader("./src/main/resources/CSV Files/" + filename + ".csv"));
+                    case 4 -> new BufferedReader(new FileReader("./src/main/resources/DB Sync Files/" + filename + ".csv"));
+                    default -> new BufferedReader(new FileReader("./" + filename + ".csv"));
+                };
+            } catch (FileNotFoundException e) {
+                System.out.println("Error reading the file in the method 'DBinput.importSignageFromCSV'");
+                e.printStackTrace();
+            }
+
+            Statement tableStmt = DBconnection.getDBconnection().getConnection().createStatement();
+            String dropSignageTable = "DROP TABLE IF EXISTS signage";
+            int dropUpdateSignage = tableStmt.executeUpdate(dropSignageTable);
+
+            String createTableSignage = "CREATE TABLE signage " +
+                    "(direction VARCHAR(255), screen INT, date date, locationname VARCHAR(255), " +
+                    "primary key (screen, date, locationname))";
+            int tableUpdateSignage = tableStmt.executeUpdate(createTableSignage);
+
+            try {
+                while (((line = br.readLine()) != null)) {
+                    String[] requestValues = line.split(splitBy);
+                    if (!(requestValues[0].equals("direction"))) {
+                        // System.out.println(edgeValues[0]);
+                        String rowQuery = "INSERT INTO signage (direction, screen, date, locationname) VALUES ("
+                                + "'"
+                                + requestValues[0]
+                                + "'"
+                                + ","
+                                + requestValues[1]
+                                + ","
+                                + "'"
+                                + requestValues[2]
+                                + "'"
+                                + ","
+                                + "'"
+                                + requestValues[3]
+                                + "'"
+                                + ");";
+                        Statement rowStmt = DBconnection.getDBconnection().getConnection().createStatement();
+                        int rowUpdate = rowStmt.executeUpdate(rowQuery);
+                        rowStmt.close();
+                    }
+                }
+                br.close();
+            } catch (IOException e) {
+                System.out.println("Error reading the file in the method 'DBinput.importSignageFromCSV'");
+                e.printStackTrace();
+            }
+            tableStmt.close();
+        } catch (SQLException e) {
+            System.out.println("ERROR: Query could not be executed in the method 'DBinput.importSignageFromCSV'");
         }
     }
 
