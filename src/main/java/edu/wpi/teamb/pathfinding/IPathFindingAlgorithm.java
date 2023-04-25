@@ -13,7 +13,7 @@ public interface IPathFindingAlgorithm {
     public HashMap<Integer, Node> get_node_map();
 
     public String[] getPathAsStrings(ArrayList<Integer> shortestPath);
-    public void force_init() throws SQLException;
+    public void force_init();
     public ArrayList<FullNode> getFullNodes();
 
     public HashMap<Integer, FullNode> getFullNodesByID();

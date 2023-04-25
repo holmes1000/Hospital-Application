@@ -123,7 +123,13 @@ public class Repository {
      * @param n the Node object to be removed
      */
     public void deleteNode(Object n) {
+        Node node = (Node) n;
         nodeDAO.delete(n);
+        ArrayList<Integer> nodeIDs = node.getNeighborIds();
+        for(int id : nodeIDs) {
+            Edge delete = getEdge(node.getNodeID() + "_" + id);
+            deleteEdge(delete);
+        }
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
     }
@@ -1356,6 +1362,12 @@ public class Repository {
         dbConnection.forceClose();
     }
 
+    public void updateExistingLocationName(LocationName ln, String longName) {
+        locationNameDAO.updateExisting(ln, longName);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
     public void addUser(User u) {
         userDAO.add(u);
         dbConnection.closeDBconnection();
@@ -1604,8 +1616,8 @@ public class Repository {
         dbConnection.forceClose();
     }
 
-    public void updateFullNode(Object n) {
-        FullNode.updateFullNode(n);
+    public void updateFullNode(Object n, int nodeID, String longName) {
+        FullNode.updateFullNode(n, nodeID, longName);
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
     }

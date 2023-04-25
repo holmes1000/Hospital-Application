@@ -18,7 +18,7 @@ public class DijkstraAlgorithmI implements IPathFindingAlgorithm {
     public void init_pathfinder() throws SQLException {
         if (node_map.isEmpty()){create_all_nodes();}
     }
-    public void force_init() throws SQLException {create_all_nodes();}
+    public void force_init() {create_all_nodes();}
 
     public HashMap<Integer, Node> get_node_map() {
         return node_map;
