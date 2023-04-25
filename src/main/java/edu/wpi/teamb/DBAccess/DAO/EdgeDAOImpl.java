@@ -320,7 +320,7 @@ public class EdgeDAOImpl implements IDAO {
 
         String recreateEdges =
                 """
-                CREATE TABLE edges(startNode INT, endNode INT, primary key (startNode, endNode);
+                CREATE TABLE edges(startNode INT, endNode INT, primary key (startNode, endNode));
                 
                 INSERT INTO edges SELECT * FROM edgeBackup;
                 """;
