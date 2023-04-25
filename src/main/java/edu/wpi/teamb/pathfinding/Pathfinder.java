@@ -70,7 +70,7 @@ public class Pathfinder {
 
     public LinkedList<Integer> newFrontiers(Integer location, ArrayList<Integer> visited) throws SQLException {
         LinkedList<Integer> newFrontiers = new LinkedList<Integer>();
-        for (int nodeID : Repository.getRepository().getNeighbors(location)) { // this is a junk function for edge data
+        for (int nodeID : Repository.getRepository().getNodeNeighborsAsNodeIDs(location)) { // this is a junk function for edge data
             if (!visited.contains(nodeID)){
                 newFrontiers.add(nodeID);
             }
@@ -176,7 +176,7 @@ public class Pathfinder {
         for (int i = 0; i < node_list.size(); i++) {
 //            System.out.println(node_list.get(i).getNodeID());
 //            System.out.println(node_list.get(i).toString());
-            node_list.get(i).setNeighborIds(Repository.getRepository().getNeighbors(node_list.get(i).getNodeID()));
+            node_list.get(i).setNeighborIds(Repository.getRepository().getNeighborsAsNodeIDs(node_list.get(i).getNodeID()));
             node_map.put(node_list.get(i).getNodeID(),node_list.get(i));
         }
         this.node_map = node_map;

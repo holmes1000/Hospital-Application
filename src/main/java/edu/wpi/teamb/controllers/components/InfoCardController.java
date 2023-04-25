@@ -7,6 +7,7 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -22,6 +23,7 @@ public class InfoCardController {
   @FXML private ImageView requestTypeIconImageView;
   @FXML private MFXButton editButton;
   @FXML private MFXButton deleteButton;
+  @FXML private MFXButton completeButton;
 
   @FXML private Label requestIdLabel;
   @FXML private Label dateSubmittedLabel;
@@ -30,7 +32,6 @@ public class InfoCardController {
   @FXML private Label employeeAssignedLabel;
   @FXML private Label statusLabel; //deprecated implementation comment: make a button for this *Note: Please Disregard*
   @FXML private VBox buttonContainerVBox;
-  @FXML private Label roomNumberLabel;
   @FXML private VBox subComponentContainer;
 
   //fields for different conference request types
@@ -49,7 +50,33 @@ public class InfoCardController {
     initBtns();
   }
 
-  private void initBtns() {
+    private void initBtns() {
+        completeButton.setOnMouseClicked(e -> {
+            if (!fullRequest.getRequestStatus().equals("Completed")) {
+                //update fullRequest status
+                fullRequest.setRequestStatus("Completed");
+                //update the request in the database
+                EInfoCard.updateRequestStatus(fullRequest);
+                //update the status label
+                statusLabel.setText("Completed");
+                //window popup with request completed message
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Request Marked as Completed!");
+                alert.setHeaderText(null);
+                alert.setContentText("Request with Id: " + fullRequest.getId() + " has been marked as completed!");
+                //set the icons of the alert to the same as the icons of the parent page
+                alert.initOwner((Stage) requestInfoAnchorPane.getScene().getWindow());
+
+                // set the alert icon to be the same as the parent window
+                Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+                for (int i = 0; i < ((Stage) requestInfoAnchorPane.getScene().getWindow()).getIcons().size(); i++) {
+                    alertStage.getIcons().add(((Stage) requestInfoAnchorPane.getScene().getWindow()).getIcons().get(i));
+                }
+                //show the alert
+                alert.showAndWait();
+            }
+        });
+
     deleteButton.setOnMouseClicked(
         event -> {
           //remove the request from the list of requests

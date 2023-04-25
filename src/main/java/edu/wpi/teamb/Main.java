@@ -7,17 +7,18 @@ public class Main {
 
   public static void main(String[] args) {
     Repository.getRepository();
-//    Repository.getRepository().exportNodesToCSV("Nodes_4_21", 3);
-//    Repository.getRepository().exportEdgesToCSV("Edges_4_21", 3);
-//    Repository.getRepository().exportLocationNamesToCSV("LocationNames_4_21", 3);
-//    Repository.getRepository().exportMovesToCSV("Moves_4_21", 3);
-//    Repository.getRepository().exportRequestsToCSV("Requests_4_21", 3);
-//    Repository.getRepository().exportConferenceRequestsToCSV("ConferenceRequests_4_21", 3);
-//    Repository.getRepository().exportFlowerRequestsToCSV("FlowerRequests_4_21", 3);
-//    Repository.getRepository().exportFurnitureRequestsToCSV("FurnitureRequests_4_21", 3);
-//    Repository.getRepository().exportMealRequestsToCSV("MealRequests_4_21", 3);
-//    Repository.getRepository().exportOfficeRequestsToCSV("OfficeRequests_4_21", 3);
-//    Repository.getRepository().importEdgesFromCSV("Edges_4_21", 3);
+//    Repository.getRepository().switchTo(1);
+//    Repository.getRepository().exportNodesToCSV("Nodes", 3);
+//    Repository.getRepository().exportEdgesToCSV("Edges", 3);
+//    Repository.getRepository().exportLocationNamesToCSV("LocationNames", 3);
+//    Repository.getRepository().exportMovesToCSV("Moves", 3);
+//    Repository.getRepository().exportRequestsToCSV("Requests", 3);
+//    Repository.getRepository().exportConferenceRequestsToCSV("ConferenceRequests", 3);
+//    Repository.getRepository().exportFlowerRequestsToCSV("FlowerRequests", 3);
+//    Repository.getRepository().exportFurnitureRequestsToCSV("FurnitureRequests", 3);
+//    Repository.getRepository().exportMealRequestsToCSV("MealRequests", 3);
+//    Repository.getRepository().exportOfficeRequestsToCSV("OfficeRequests", 3);
+
     LauncherImpl.launchApplication(Bapp.class, CustomPreloader.class, args);
   }
 

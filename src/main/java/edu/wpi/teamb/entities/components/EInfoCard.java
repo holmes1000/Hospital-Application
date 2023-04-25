@@ -36,4 +36,24 @@ public class EInfoCard {
                 break;
         }
     }
+
+    public void updateRequestStatus(IFull fullRequest) {
+        switch (fullRequest.getRequestType()) {
+            case "Meal":
+                Repository.getRepository().updateMealRequest((FullMealRequest) fullRequest);
+                break;
+            case "Conference":
+                Repository.getRepository().updateConferenceRequest((FullConferenceRequest) fullRequest);
+                break;
+            case "Flower":
+                Repository.getRepository().updateFlowerRequest((FullFlowerRequest) fullRequest);
+                break;
+            case "Office":
+                Repository.getRepository().updateOfficeRequest((FullOfficeRequest) fullRequest);
+                break;
+            case "Furniture":
+                Repository.getRepository().updateFurnitureRequest((FullFurnitureRequest) fullRequest);
+                break;
+        }
+    }
 }
