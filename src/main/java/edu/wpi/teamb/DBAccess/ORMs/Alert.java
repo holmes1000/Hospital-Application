@@ -74,6 +74,9 @@ public class Alert {
         this.createdAt = createdAt;
     }
 
+    /**
+     * @return the employee
+     */
     public String getEmployee() {
         return employee;
     }

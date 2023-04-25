@@ -82,6 +82,10 @@ public class AlertDAOImpl implements IDAO {
         DButils.insertRow("alerts", cols, values);
     }
 
+    /**
+     * Deletes an alert from the database
+     * @param a the alert to delete
+     */
     public void deleteAlert(Alert a) {
         DButils.deleteRow("alerts", "id = " + a.getId() + "");
     }
