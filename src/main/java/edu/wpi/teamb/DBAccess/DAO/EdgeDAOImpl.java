@@ -251,6 +251,7 @@ public class EdgeDAOImpl implements IDAO {
         updateDBEndNode(""+ e.getEndNode(), e);
     }
 
+
     /**
      * Deletes the row in the database that matches the edgeID
      * only use this if you are sure you want to delete the row

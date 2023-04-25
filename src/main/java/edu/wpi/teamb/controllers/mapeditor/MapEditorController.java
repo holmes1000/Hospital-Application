@@ -520,7 +520,7 @@ public class MapEditorController {
           if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
             pane.gestureEnabledProperty().set(true);
             // Update the node's location
-            newNode.setxCoord((int) (event.getX()));
+            newNode.setxCoord((int) (c.getScaleX()));
             newNode.setyCoord((int) (event.getY()));
             System.out.println("Node: " + nodeID + " edited");
             System.out.println("Location: " + newNode.getxCoord() + ", " + newNode.getyCoord());
