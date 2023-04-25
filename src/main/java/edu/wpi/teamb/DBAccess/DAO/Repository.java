@@ -749,6 +749,15 @@ public class Repository {
         return s;
     }
 
+    /**
+     * Resets the edge table using the backup table
+     */
+    public void resetEdgesFromBackup() {
+        edgeDAO.resetEdgesFromBackup();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
     //TODO LocationName methods
 
 
