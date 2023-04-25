@@ -144,6 +144,12 @@ public class SubmittedRequestsController {
                         .sorted(Comparator.comparing(Request::getDateSubmitted).reversed())
                         .collect(Collectors.toCollection(ArrayList::new));
             }
+        } else if (filterCategory.equals("employee")) {
+            if (filterOption.equals("Unassigned")) {
+                filteredListOfRequests = listOfRequests.stream()
+                        .filter(request -> request.getEmployee().equals(filterOption))
+                        .collect(Collectors.toCollection(ArrayList::new));
+            }
         }
 
 
@@ -258,13 +264,15 @@ public class SubmittedRequestsController {
         //at the beginning set cbFilterOptions to invisible
         cbFilterOptions.setVisible(false);
         //add filtering options to cbFilterCategory
-        cbFilterCategory.getItems().addAll("", "Status", "Request Type", "Date Submitted");
+        cbFilterCategory.getItems().addAll("", "Status", "Request Type", "Date Submitted", "Unassigned Task");
         //add change listener to cbFilterCategory
         cbFilterCategory.valueProperty().addListener(
                 (observable, oldValue, newValue) -> {
                     if (newValue == null) {
                         //if selection is null
                         loadRequestsIntoContainer();
+                    } else if (newValue.equals("Unassigned Task")) {
+                        loadRequestsIntoContainer("employee", "Unassigned");
                     } else if (!newValue.equals("")) {
                         //set cbFilterOptions to visible
                         cbFilterOptions.setVisible(true);
