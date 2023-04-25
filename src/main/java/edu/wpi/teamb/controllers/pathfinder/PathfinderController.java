@@ -85,6 +85,10 @@ public class PathfinderController {
     private String firstFloorVisited;
     private String lastFloorVisited;
     private ArrayList<String> floorsVisited;
+    private ArrayList<String> floorsTraversed;
+    private ArrayList<FullNode> fullNode_by_floor;
+
+    private Integer currentIndex;
 
     HashMap<String,ArrayList<Node>> nodes_by_floor = new HashMap<>();
   private EPathfinder EPathfinder;
@@ -169,8 +173,8 @@ public class PathfinderController {
                   pane.centreOnX(n.getxCoord());
                   pane.centreOnY(n.getyCoord());
               }
-              if (currentFloor.equals(firstFloorVisited) && floorsVisited.size() >1 ) {nextFloor.setDisable(false); previousFloor.setDisable(true);}
-              else if (currentFloor.equals((lastFloorVisited))&& floorsVisited.size() >1) {nextFloor.setDisable(true); previousFloor.setDisable(false);}
+              if (currentFloor.equals(firstFloorVisited) && floorsTraversed.size() >1 ) {nextFloor.setDisable(false); previousFloor.setDisable(true);}
+              else if (currentFloor.equals((lastFloorVisited))&& floorsTraversed.size() >1) {nextFloor.setDisable(true); previousFloor.setDisable(false);}
           }
       });
 
@@ -591,11 +595,44 @@ public class PathfinderController {
                   }
 
 
+
+//Node node = PathFinding.ASTAR.get_node_map().get(EPathfinder.getPath().get(index));
+//                  FullNode n = fullNodesByID.get(node.getNodeID());
+//                  String floor = n.getFloor();
+//                  if (!currentFloor.equals(floor)) {
+//                      switchFloor(floor);
+//                  }
+//                  pane.centreOnX(n.getxCoord());
+//                  pane.centreOnY(n.getyCoord());
+
                   ArrayList<Integer> int_path = EPathfinder.getPath();
-                  //
-                  //firstFloorVisited = int_path.get(0);
-                  //lastFloorVisited = int_path.get(int_path.size()-1);
-                  //
+                  String prevNode = "";
+                  ArrayList<String> string_floor_path = new ArrayList<>();
+                  fullNode_by_floor = new ArrayList<>();
+                  for(int i = 0; i< int_path.size()-1; i++){
+                      String currfloor = fullNodesByID.get(int_path.get(i)).getFloor();
+                      if(!currfloor.equals(prevNode)){
+                          prevNode = currfloor;
+                          string_floor_path.add(currfloor);
+                          fullNode_by_floor.add(fullNodesByID.get(int_path.get(i)));
+                      }
+                      else{
+                          string_floor_path.add(currfloor);
+                      }
+                  }
+                  ArrayList<String> outputList = new ArrayList<>();
+                  String previousElement = null;
+                  for (String element : string_floor_path) {
+                      if (!element.equals(previousElement)) {
+                          outputList.add(element);
+                          previousElement = element;
+                      }
+                  }
+                  floorsTraversed = outputList;
+//                  for(int i = 0; i< int_path.size() - 1;i++){
+//                      System.out.println(outputList.get(i));
+//                  }
+
                   nodes_by_floor = new HashMap<>();
                   for (Integer id : int_path) {
                       FullNode node = fullNodesByID.get(id);
@@ -625,27 +662,31 @@ public class PathfinderController {
               listView.setItems(items);
               VboxPathfinder.getChildren().addAll(listView);
               listView.getSelectionModel().clearSelection();
-              floorsVisited = new ArrayList<>();
-              String lastFloor = fullNodesByID.get(start).getFloor();
-              floorsVisited.add(lastFloor);
-              for (Node node : nodePath) {
-                  if (!lastFloor.equals(node.getFloor())){
-                      lastFloor = node.getFloor();
-                      floorsVisited.add(node.getFloor());
-                  }
-              }
+//              floorsVisited = new ArrayList<>();
+//              String lastFloor = fullNodesByID.get(start).getFloor();
+//              floorsVisited.add(lastFloor);
+//              for (Node node : nodePath) {
+//                  if (!lastFloor.equals(node.getFloor())){
+//                      lastFloor = node.getFloor();
+//                      floorsVisited.add(node.getFloor());
+//                  }
+//              }
           }
 
-          if (floorsVisited != null) {
-              System.out.println(floorsVisited);
+          if (floorsTraversed != null) {
+              //System.out.println(floorsVisited);
+              for (String element : floorsTraversed) {
+                  System.out.println(element);
+              }
               previousFloor.setVisible(true);
               previousFloor.setDisable(true);
               previousFloor.setOnMouseClicked(e->clickPreviousFloor());
               nextFloor.setVisible(true);
               nextFloor.setOnMouseClicked(e->clickNextFloor());
 //          floorsVisited = new ArrayList<String>(nodes_by_floor.keySet());
-              firstFloorVisited = floorsVisited.get(0);
-              lastFloorVisited = floorsVisited.get(floorsVisited.size() - 1);
+              //firstFloorVisited = floorsTraversed.get(0);
+             // lastFloorVisited = floorsTraversed.get(floorsTraversed.size() - 1);
+              currentIndex = 0;
           }
           for (Move move : upcoming_moves){
               if (startNode.getSelectedItem().equals(move.getLongName())) {
@@ -661,89 +702,56 @@ public class PathfinderController {
   }
 
     public void clickPreviousFloor(){
-        //Set<String> floorsVisited = nodes_by_floor.keySet();
-        String next = currentFloor;
-        if(!currentFloor.equals(firstFloorVisited)){
-            if(currentFloor.equals(lastFloorVisited)){
-                int i = floorsVisited.indexOf(currentFloor);
-                next = floorsVisited.get(i-1);
-                switchFloor(next);
+        if(currentIndex != 0){
+            if(currentIndex == floorsTraversed.size()-1){
+                currentIndex--;
+                switchFloor(floorsTraversed.get(currentIndex));
                 nextFloor.setDisable(false);
-                System.out.println("hi");
-            }else{
-                int i = floorsVisited.indexOf(currentFloor);
-                next = floorsVisited.get(i-1);
-                switchFloor(next);
+            }
+            else{
+                currentIndex--;
+                switchFloor(floorsTraversed.get(currentIndex));
             }
         }
-
-        if(currentFloor.equals(firstFloorVisited)){
+        if (currentIndex == 0) {
             previousFloor.setDisable(true);
         }
-
-
-
-//            //currentFloorNum = listOfFloors.get(0);
-//            //maxFloorNum = listOfFloors.get(listOfFloors.size() - 1);
-//            if(currentFloorNum > minFloorNum){
-//                int index = listOfFloors.indexOf(currentFloorNum) - 1;
-//                currentFloor = Integer.toString(listOfFloors.get(index));
-//                currentFloorNum = listOfFloors.get(index);
-//                changeButtonColor(currentFloor);
-//                pathGroup.getChildren().clear();
-//                imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(currentFloorNum));
-//                drawPath(nodes_by_floor.get(currentFloor));
-//                locationCanvas.getChildren().add(pathGroup);
+//        String next = currentFloor;
+//        if(!currentFloor.equals(firstFloorVisited)){
+//            if(currentFloor.equals(lastFloorVisited)){
+//                int i = floorsVisited.indexOf(currentFloor);
+//                next = floorsVisited.get(i-1);
+//                switchFloor(next);
+//                nextFloor.setDisable(false);
+//                System.out.println("hi");
+//            }else{
+//                int i = floorsVisited.indexOf(currentFloor);
+//                next = floorsVisited.get(i-1);
+//                switchFloor(next);
+//            }
+//        }
 //
-//            }
-//            if(listOfFloors.indexOf(currentFloorNum) == 0){
-//                previousArrow.setDisable(true);
-//            }
-
+//        if(currentFloor.equals(firstFloorVisited)){
+//            previousFloor.setDisable(true);
+//        }
     }
 
     public void clickNextFloor(){
-      String next = currentFloor;
-
-        if(!currentFloor.equals(lastFloorVisited)){
-            if(currentFloor.equals(firstFloorVisited)){
-                int i = floorsVisited.indexOf(currentFloor);
-                next = floorsVisited.get(i+1);
-                switchFloor(next);
-                previousFloor.setDisable(false);
-                System.out.println("hi");
-            }else{
-                int i = floorsVisited.indexOf(currentFloor);
-                next = floorsVisited.get(i+1);
-                switchFloor(next);
-            }
-        }
-
-        if(currentFloor.equals(lastFloorVisited)){
-            nextFloor.setDisable(true);
-        }
-
-
-
-            //currentFloorNum = listOfFloors.get(0);
-            //maxFloorNum = listOfFloors.get(listOfFloors.size() - 1);
-//            if(currentFloorNum < minFloorNum){
-//                int index = listOfFloors.indexOf(currentFloorNum) + 1;
-//                currentFloor = Integer.toString(listOfFloors.get(index));
-//                currentFloorNum = listOfFloors.get(index);
-//                changeButtonColor(currentFloor);
-//                pathGroup.getChildren().clear();
-//                imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(currentFloorNum));
-//                drawPath(nodes_by_floor.get(currentFloor));
-//                locationCanvas.getChildren().add(pathGroup);
-//            }
-//            if(listOfFloors.indexOf(currentFloorNum) == listOfFloors.size()- 1){
-//                previousArrow.setDisable(true);
-//            }
-
-
+      //String next = "";
+      if(currentIndex != floorsTraversed.size() - 1){
+          if(currentIndex == 0){
+              currentIndex++;
+              switchFloor(floorsTraversed.get(currentIndex));
+              previousFloor.setDisable(false);
+          }else{
+              currentIndex++;
+              switchFloor(floorsTraversed.get(currentIndex));
+          }
+      }
+      if(currentIndex == floorsTraversed.size() - 1){
+          nextFloor.setDisable(true);
+      }
     }
-
 
     private void switchFloor(String floor) {
         Integer floorNum = 0;
