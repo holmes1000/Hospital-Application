@@ -38,7 +38,7 @@ public class BStarAlgorithmI implements IPathFindingAlgorithm {
         for (int i = 0; i < node_list.size(); i++) {
 //            System.out.println(node_list.get(i).getNodeID());
 //            System.out.println(node_list.get(i).toString());
-            node_list.get(i).setNeighborIds(Repository.getRepository().getNeighbors(node_list.get(i).getNodeID()));
+            node_list.get(i).setNeighborIds(Repository.getRepository().getNeighborsAsNodeIDs(node_list.get(i).getNodeID()));
             node_map.put(node_list.get(i).getNodeID(),node_list.get(i));
         }
         this.node_map = node_map;

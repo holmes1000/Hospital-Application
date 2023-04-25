@@ -1,11 +1,13 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
+import edu.wpi.teamb.DBAccess.DBconnection;
 import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.ORMs.Edge;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -317,6 +319,45 @@ public class EdgeDAOImpl implements IDAO {
      */
     public String toString(Edge e) {
         return e.getStartNodeID() + " " + e.getEndNodeID();
+    }
+
+    /**
+     * Resets the edge table using the backup table
+     */
+    public void resetEdgesFromBackup() {
+
+        String dropEdges = "DROP TABLE IF EXISTS Edges";
+
+        Statement dropStatement = null;
+
+        try {
+
+            dropStatement = DBconnection.getDBconnection().getConnection().createStatement();
+            dropStatement.executeUpdate(dropEdges);
+            dropStatement.close();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        String recreateEdges =
+                """
+                CREATE TABLE edges(startNode INT, endNode INT, primary key (startNode, endNode));
+                
+                INSERT INTO edges SELECT * FROM edgeBackup;
+                """;
+
+        Statement recreateStatement = null;
+
+        try {
+
+            recreateStatement = DBconnection.getDBconnection().getConnection().createStatement();
+            recreateStatement.executeUpdate(recreateEdges);
+            recreateStatement.close();
+
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'EdgeDAOImpl.resetEdgesFromBackup': " + e.getMessage());
+        }
     }
 
 }
