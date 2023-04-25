@@ -123,7 +123,13 @@ public class Repository {
      * @param n the Node object to be removed
      */
     public void deleteNode(Object n) {
+        Node node = (Node) n;
         nodeDAO.delete(n);
+        ArrayList<Integer> nodeIDs = node.getNeighborIds();
+        for(int id : nodeIDs) {
+            Edge delete = getEdge(node.getNodeID() + "_" + id);
+            deleteEdge(delete);
+        }
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
     }

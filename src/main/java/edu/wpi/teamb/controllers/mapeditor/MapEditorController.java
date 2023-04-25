@@ -634,8 +634,10 @@ public class MapEditorController {
   private void handleDeleteEdge(MouseEvent e, Line l) {
     // Delete the edge from the database
     Repository.getRepository().deleteEdge(Repository.getRepository().getEdge(l.getId()));
+
     // Remove the edge from the map
     edgeGroup.getChildren().remove(l);
+
     System.out.println("Edge: " + l.getId() + " deleted");
     refreshMap();
   }
