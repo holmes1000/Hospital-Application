@@ -14,6 +14,8 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -131,6 +133,17 @@ public class SubmittedRequestsController {
             filteredListOfRequests = listOfRequests.stream()
                     .filter(request -> request.getRequestType().equals(filterOption))
                     .collect(Collectors.toCollection(ArrayList::new));
+        } else if (filterCategory.equals("Date Submitted")) {
+            //convert the string date to timestamp and sort the arraylist of requests by timestamp by option to either do ascending or descending
+            if (filterOption.equals("Ascending")) {
+                filteredListOfRequests = listOfRequests.stream()
+                        .sorted(Comparator.comparing(Request::getDateSubmitted))
+                        .collect(Collectors.toCollection(ArrayList::new));
+            } else if (filterOption.equals("Descending")) {
+                filteredListOfRequests = listOfRequests.stream()
+                        .sorted(Comparator.comparing(Request::getDateSubmitted).reversed())
+                        .collect(Collectors.toCollection(ArrayList::new));
+            }
         }
 
 
@@ -245,7 +258,7 @@ public class SubmittedRequestsController {
         //at the beginning set cbFilterOptions to invisible
         cbFilterOptions.setVisible(false);
         //add filtering options to cbFilterCategory
-        cbFilterCategory.getItems().addAll("", "Status", "Request Type");
+        cbFilterCategory.getItems().addAll("", "Status", "Request Type", "Date Submitted");
         //add change listener to cbFilterCategory
         cbFilterCategory.valueProperty().addListener(
                 (observable, oldValue, newValue) -> {
@@ -270,6 +283,9 @@ public class SubmittedRequestsController {
                                         RequestType.FLOWER.getType(),
                                         RequestType.OFFICE.getType(),
                                         RequestType.FURNITURE.getType());
+                                break;
+                            case "Date Submitted":
+                                cbFilterOptions.getItems().addAll("", "Ascending", "Descending");
                                 break;
                         }
                     } else {
@@ -331,5 +347,20 @@ enum RequestType {
 
     public String getType() {
         return type;
+    }
+}
+
+enum AscendingDescending {
+    ASCENDING("Ascending"),
+    DESCENDING("Descending");;
+
+    private final String ascendingDescending;
+
+    AscendingDescending(String ascendingDescending) {
+        this.ascendingDescending = ascendingDescending;
+    }
+
+    public String getAscendingDescending() {
+        return ascendingDescending;
     }
 }
