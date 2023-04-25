@@ -69,7 +69,10 @@ public class Repository {
      * @return The node with the given ID
      */
     public Node get(Object id) {
-        return nodeDAO.get(id);
+        Node n = nodeDAO.get(id);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return n;
     }
 
     /**
@@ -78,7 +81,10 @@ public class Repository {
      * @return an ArrayList of all local Node objects
      */
     public ArrayList<Node> getAllNodes() {
-        return nodeDAO.getAll();
+        ArrayList<Node> nodes = nodeDAO.getAll();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return nodes;
     }
 
     /**
@@ -87,41 +93,65 @@ public class Repository {
      * @return an ArrayList of all local FullNode objects
      */
     public ArrayList<FullNode> getAllFullNodes() {
-        return nodeDAO.getAllFullNodes();
+        ArrayList<FullNode> nodes = nodeDAO.getAllFullNodes();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return nodes;
     }
 
     /**
      * Sets all Node objects using the database
      */
-    public void setAllNodes () { nodeDAO.setAll(); }
+    public void setAllNodes () {
+        nodeDAO.setAll();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * Adds a Node object to the both the database and local list
      *
      * @param n the Node object to be added
      */
-    public void addNode(Object n) { nodeDAO.add(n); }
+    public void addNode(Object n) {
+        nodeDAO.add(n);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * Removes a Node from the both the database and the local list
      *
      * @param n the Node object to be removed
      */
-    public void deleteNode(Object n) { nodeDAO.delete(n); }
+    public void deleteNode(Object n) {
+        nodeDAO.delete(n);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * Updates a Node object in both the database and local list
      *
      * @param n the Node object to be updated
      */
-    public void updateNode(Object n) { nodeDAO.update(n); }
+    public void updateNode(Object n) {
+        nodeDAO.update(n);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * Gets all nodes from the database
      *
      * @return a list of all nodes
      */
-    public ArrayList<Node> getAllNodesFromDB() { return nodeDAO.getAllHelper(); }
+    public ArrayList<Node> getAllNodesFromDB() {
+        ArrayList<Node> nodes = nodeDAO.getAllHelper();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return nodes;
+    }
 
     /**
      * Searches through the database for the row(s) that matches the col and value in the Nodes table
@@ -130,14 +160,24 @@ public class Repository {
      * @param value the value to search for
      * @return A ResultSet of the row(s) that match the col and value
      */
-    private ResultSet getDBRowFromCol(String col, String value) { return nodeDAO.getDBRowFromCol(col, value); }
+    private ResultSet getDBRowFromCol(String col, String value) {
+        ResultSet rs = nodeDAO.getDBRowFromCol(col, value);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return rs;
+    }
 
     /**
      * Gets a ResultSet of all rows from the Nodes table
      *
      * @return a ResultSet of all rows from the Nodes table
      */
-    public ResultSet getDBRowAllNodes() { return nodeDAO.getDBRowAllNodes(); }
+    public ResultSet getDBRowAllNodes() {
+        ResultSet rs = nodeDAO.getDBRowAllNodes();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return rs;
+    }
 
     /**
      * Gets a ResultSet of rows from the Nodes table that match the given nodeID
@@ -146,7 +186,10 @@ public class Repository {
      * @return a ResultSet of the row(s) that match the nodeID
      */
     public ResultSet getDBRowNodeIDFromNodes(int nodeID) {
-        return nodeDAO.getDBRowNodeID(nodeID);
+        ResultSet rs = nodeDAO.getDBRowNodeID(nodeID);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return rs;
     }
 
     /**
@@ -155,7 +198,12 @@ public class Repository {
      * @param xCoord the longName to look for to get Node data
      * @return a ResultSet of the row(s) that match the xCoord
      */
-    public ResultSet getDBRowXCoordFromNodes(int xCoord) { return nodeDAO.getDBRowXCoord(xCoord); }
+    public ResultSet getDBRowXCoordFromNodes(int xCoord) {
+        ResultSet rs = nodeDAO.getDBRowXCoord(xCoord);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return rs;
+    }
 
     /**
      * Gets a ResultSet of rows from the Nodes table that match the given yCoord
@@ -163,7 +211,12 @@ public class Repository {
      * @param yCoord the longName to look for to get Node data
      * @return a ResultSet of the row(s) that match the yCoord
      */
-    public ResultSet getDBRowYCoordFromNodes(int yCoord) { return nodeDAO.getDBRowYCoord(yCoord); }
+    public ResultSet getDBRowYCoordFromNodes(int yCoord) {
+        ResultSet rs = nodeDAO.getDBRowYCoord(yCoord);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return rs;
+    }
 
     /**
      * Gets a ResultSet of rows from the Nodes table that match the given floor
@@ -171,7 +224,12 @@ public class Repository {
      * @param floor the floor to look for to get Node data
      * @return a ResultSet of the row(s) that match the floor
      */
-    public ResultSet getDBRowFloorFromNodes(String floor) { return nodeDAO.getDBRowFloor(floor); }
+    public ResultSet getDBRowFloorFromNodes(String floor) {
+        ResultSet rs = nodeDAO.getDBRowFloor(floor);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return rs;
+    }
 
     /**
      * Gets an ArrayList of Nodes from the Nodes table that are on the given floor
@@ -179,7 +237,12 @@ public class Repository {
      * @param floor the floor to look for to get Node data
      * @return an ArrayList of the Nodes that are on the given floor
      */
-    public ArrayList<Node> getNodesFromFloor(String floor) { return nodeDAO.getNodesFromFloor(floor); }
+    public ArrayList<Node> getNodesFromFloor(String floor) {
+        ArrayList<Node> nodes = nodeDAO.getNodesFromFloor(floor);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return nodes;
+    }
 
     /**
      * Gets a ResultSet of rows from the Nodes table that match the given building
@@ -187,35 +250,57 @@ public class Repository {
      * @param building the building to look for to get Node data
      * @return a ResultSet of the row(s) that match the building
      */
-    public ResultSet getDBRowBuilding(String building) { return nodeDAO.getDBRowBuilding(building); }
+    public ResultSet getDBRowBuilding(String building) {
+        ResultSet rs = nodeDAO.getDBRowBuilding(building);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return rs;
+    }
 
     /**
      * Updates the database with the information in this Node object
      *
      * @param value a String array containing values to update (nodeID, xCoord, yCoord, floor, building)
      */
-    private void updateRowNode(String value[]) { nodeDAO.updateRow(value); }
+    private void updateRowNode(String[] value) {
+        nodeDAO.updateRow(value);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * Deletes the row in the database that matches the nodeID of this Node object
      *
      * @param confirm 0 to confirm, anything else to cancel
      */
-    public void deleteDBNode(int confirm, Node n) { nodeDAO.deleteDBNode(confirm, n); }
+    public void deleteDBNode(int confirm, Node n) {
+        nodeDAO.deleteDBNode(confirm, n);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * Returns a String of all the information about the node
      *
      * @return a String of all the information about the node
      */
-    public String nodeToString(Node node) { return nodeDAO.toString(node); }
+    public String nodeToString(Node node) {
+        String nodeString = nodeDAO.toString(node);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return nodeString;
+    }
 
     /**
      * Inserts a Node object into the database
      *
      * @param n the Node to insert
      */
-    public void insertDBNode(Node n) { nodeDAO.insertDBNode(n); }
+    public void insertDBNode(Node n) {
+        nodeDAO.insertDBNode(n);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * Resets the node, location names, and moves tables using the backup tables
@@ -225,6 +310,8 @@ public class Repository {
         nodeDAO.setAll();
         locationNameDAO.setAll();
         moveDAO.setAll();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     /**
@@ -232,26 +319,46 @@ public class Repository {
      *
      * @return an ArrayList of all the neighbors of the given node using its nodeID
      */
-    public ArrayList<Node> getNodeNeighbors(int nodeID) { return nodeDAO.getNeighbors(nodeID); }
+    public ArrayList<Node> getNodeNeighbors(int nodeID) {
+        ArrayList<Node> nodes = nodeDAO.getNeighbors(nodeID);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return nodes;
+    }
 
     /**
      * Gets all the neighbors of a given Node using its nodeID
      *
      * @return an ArrayList of all the nodeIDs of the neighbors of the given node using its nodeID
      */
-    public ArrayList<Integer> getNodeNeighborsAsNodeIDs(int nodeID) { return nodeDAO.getNeighborsAsNodeIDs(nodeID); }
+    public ArrayList<Integer> getNodeNeighborsAsNodeIDs(int nodeID) {
+        ArrayList<Integer> nodes = nodeDAO.getNeighborsAsNodeIDs(nodeID);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return nodes;
+    }
 
     /**
      * Returns a list of nodeIDs given a list of nodes
      *
      * @return an integer ArrayList of nodeIDs
      */
-    public ArrayList<Integer> nodeToIDs(ArrayList<Node> nodes) { return nodeDAO.nodeToIDs(nodes); }
+    public ArrayList<Integer> nodeToIDs(ArrayList<Node> nodes) {
+        ArrayList<Integer> nodeIDs = nodeDAO.nodeToIDs(nodes);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return nodeIDs;
+    }
 
     /**
      * Instantiates all local nodes using the database
      */
-    public ArrayList<Node> instantiateNodes() { return nodeDAO.instantiateNodes(); }
+    public ArrayList<Node> instantiateNodes() {
+        ArrayList<Node> nodes = nodeDAO.instantiateNodes();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return nodes;
+    }
 
     /**
      * Updates a certain node in the database
@@ -265,6 +372,8 @@ public class Repository {
      */
     public void updateEditedNode(Node node, int newNodeID, int newXCoord, int newYCoord, String newFloor, String newBuilding) {
         nodeDAO.updateEditedNode(node, newNodeID, newXCoord, newYCoord, newFloor, newBuilding);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     /**
@@ -273,14 +382,24 @@ public class Repository {
      * @param nodeID the nodeID of the node
      * @return the short name of the node
      */
-    public String getShortName(int nodeID) { return nodeDAO.getShortName(nodeID); }
+    public String getShortName(int nodeID) {
+        String shortName = nodeDAO.getShortName(nodeID);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return shortName;
+    }
 
     /**
      * A helper function for getting a list of full nodes
      *
      * @return the long name of the node
      */
-    public ArrayList<FullNode> getFullNodesHelper() { return nodeDAO.getFullNodesHelper(); }
+    public ArrayList<FullNode> getFullNodesHelper() {
+        ArrayList<FullNode> fullNodes = nodeDAO.getFullNodesHelper();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return fullNodes;
+    }
 
     /**
      * A helper function for getting a FullNode object given its nodeID
@@ -288,7 +407,12 @@ public class Repository {
      * @param nodeID the nodeID of the node
      * @return a FullNode object
      */
-    public FullNode getFullNode(int nodeID) { return nodeDAO.getFullNode(nodeID); }
+    public FullNode getFullNode(int nodeID) {
+        FullNode fullNode = nodeDAO.getFullNode(nodeID);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return fullNode;
+    }
 
     /**
      * A helper function for getting a list of node neighbors given a list of nodes
@@ -296,7 +420,12 @@ public class Repository {
      * @param floorNodes the list of nodes on a certain floor
      * @return the long name of the node
      */
-    public ArrayList<ArrayList<Integer>> nodeNeighborIDs(ArrayList<Node> floorNodes) { return nodeDAO.nodeNeighborIDs(floorNodes); }
+    public ArrayList<ArrayList<Integer>> nodeNeighborIDs(ArrayList<Node> floorNodes) {
+        ArrayList<ArrayList<Integer>> nodeNeighborIDs = nodeDAO.nodeNeighborIDs(floorNodes);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return nodeNeighborIDs;
+    }
 
     /**
      * Gets the node type of a node given its nodeID
@@ -304,14 +433,24 @@ public class Repository {
      * @param n the Node object
      * @return the node type of the node
      */
-    public String getNodeType (Node n) { return nodeDAO.getNodeType(n); }
+    public String getNodeType (Node n) {
+        String nodeType = nodeDAO.getNodeType(n);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return nodeType;
+    }
 
     /**
      * Gets the value of the column from the table that matches the condition
      *
      * @return a ResultSet containing the full nodes table joined with the moves table and the locationnames table
      */
-    public ResultSet joinFullNodes() { return nodeDAO.joinFullNodes(); }
+    public ResultSet joinFullNodes() {
+        ResultSet rs = nodeDAO.joinFullNodes();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return rs;
+    }
 
     /**
      * Gets the value of the column from the table that matches the condition
@@ -319,7 +458,12 @@ public class Repository {
      * @param nodeID the nodeID to get the longName from
      * @return the longName of the node
      */
-    public String getLongNameFromNodeID(int nodeID) { return nodeDAO.getLongNameFromNodeID(nodeID); }
+    public String getLongNameFromNodeID(int nodeID) {
+        String longName = nodeDAO.getLongNameFromNodeID(nodeID);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return longName;
+    }
 
     /**
      * Gets the value of the column from the table that matches the condition
@@ -327,7 +471,12 @@ public class Repository {
      * @param nodeID NodeID to get shortname from
      * @return a String with the shortname associated with the given NodeID
      */
-    public String getShortNameFromNodeID(int nodeID) { return nodeDAO.getShortNameFromNodeID(nodeID); }
+    public String getShortNameFromNodeID(int nodeID) {
+        String shortName = nodeDAO.getShortNameFromNodeID(nodeID);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return shortName;
+    }
 
     /**
      * Gets a Node object given its nodeID
@@ -335,7 +484,12 @@ public class Repository {
      * @param nodeID the nodeID to get the node from
      * @return a Node object
      */
-    public Node getNode(int nodeID) { return nodeDAO.getNode(nodeID); }
+    public Node getNode(int nodeID) {
+        Node node = nodeDAO.getNode(nodeID);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return node;
+    }
 
     /**
      * 'Fills' a node with its neighbors
@@ -343,7 +497,12 @@ public class Repository {
      * @param nodeID the nodeID to get the neighbors from
      * @return a 'filled' Node object with the given nodeID
      */
-    public Node nodeFill(int nodeID) { return nodeDAO.nodeFill(nodeID); }
+    public Node nodeFill(int nodeID) {
+        Node node = nodeDAO.nodeFill(nodeID);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return node;
+    }
 
 
     //TODO Edge methods
@@ -354,7 +513,12 @@ public class Repository {
      * @param id The endpoints of the edge
      * @return The edge with the given endpoints
      */
-    public Edge getEdge(Object id) { return (Edge) edgeDAO.get(id); }
+    public Edge getEdge(Object id) {
+        Edge edge = edgeDAO.get(id);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return edge;
+    }
 
     /**
      * Gets all local Edge objects
@@ -362,19 +526,33 @@ public class Repository {
      * @return an ArrayList of all local Edge objects
      */
 
-    public ArrayList<Edge> getAllEdges() { return edgeDAO.getAll(); }
+    public ArrayList<Edge> getAllEdges() {
+        ArrayList<Edge> edges = edgeDAO.getAll();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return edges;
+    }
 
     /**
      * Sets all Edge objects using the database
      */
-    public void setAllEdges() { edgeDAO.setAll(); }
+    public void setAllEdges() {
+        edgeDAO.setAll();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * Gets all edges from the database
      *
      * @return a list of all edges
      */
-    public ArrayList<Edge> getAllHelper() { return edgeDAO.getAllHelper(); }
+    public ArrayList<Edge> getAllHelper() {
+        ArrayList<Edge> edges = edgeDAO.getAllHelper();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return edges;
+    }
 
     /**
      * Adds an Edge object to the both the database and local list
@@ -382,7 +560,11 @@ public class Repository {
      * @param edge the Edge object to be added
      */
 
-    public void addEdge(Object edge) { edgeDAO.add(edge); }
+    public void addEdge(Object edge) {
+        edgeDAO.add(edge);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * Removes an Edge from the both the database and the local list
@@ -390,7 +572,11 @@ public class Repository {
      * @param edge the Edge object to be removed
      */
 
-    public void deleteEdge(Object edge) { edgeDAO.delete(edge); }
+    public void deleteEdge(Object edge) {
+        edgeDAO.delete(edge);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * Updates an Edge object in both the database and local list
@@ -398,7 +584,11 @@ public class Repository {
      * @param edge the Edge object to be updated
      */
 
-    public void updateEdge(Object edge) { edgeDAO.update(edge); }
+    public void updateEdge(Object edge) {
+        edgeDAO.update(edge);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * Adds this edge to its start and end nodes. If the list of nodes does not
@@ -407,7 +597,11 @@ public class Repository {
      * @param nodes the list of nodes to look through add the edge to the start and
      *              end nodes
      */
-    public void addToNode(Map<Integer, Node> nodes, Edge e) { edgeDAO.addToNode(nodes, e); }
+    public void addToNode(Map<Integer, Node> nodes, Edge e) {
+        edgeDAO.addToNode(nodes, e);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * Gets the row(s) from the database that matches the startNode
@@ -416,7 +610,12 @@ public class Repository {
      *                  quotes surrounding the startNode
      * @return the row(s) that have a matching the startNode
      */
-    public static ResultSet getDBRowStartNodeFromEdges(String startNode) { return EdgeDAOImpl.getDBRowStartNode(startNode); }
+    public ResultSet getDBRowStartNodeFromEdges(String startNode) {
+        ResultSet rs = EdgeDAOImpl.getDBRowStartNode(startNode);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return rs;
+    }
 
     /**
      * Gets the row(s) from the database that matches the endNode
@@ -425,7 +624,12 @@ public class Repository {
      *                quotes surrounding the endNode
      * @return the row(s) that have a matching the endNode
      */
-    public static ResultSet getDBRowEndNodeFromEdges(String endNode) { return EdgeDAOImpl.getDBRowEndNode(endNode); }
+    public ResultSet getDBRowEndNodeFromEdges(String endNode) {
+        ResultSet rs = EdgeDAOImpl.getDBRowEndNode(endNode);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return rs;
+    }
 
     /**
      * Searches through the database for the row(s) that matches the col and value in the Edges table
@@ -434,12 +638,22 @@ public class Repository {
      * @param value the value to search for
      * @return A ResultSet of the row(s) that match the col and value
      */
-    private static ResultSet getRowFromCol(String col, String value) { return EdgeDAOImpl.getRowFromCol(col, value); }
+    private ResultSet getRowFromCol(String col, String value) {
+        ResultSet rs = EdgeDAOImpl.getRowFromCol(col, value);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return rs;
+    }
 
     /**
      * Gets all the rows from the Edge table
      */
-    public ResultSet getDBRowAllEdges() { return edgeDAO.getDBRowAllEdges(); }
+    public ResultSet getDBRowAllEdges() {
+        ResultSet rs = edgeDAO.getDBRowAllEdges();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return rs;
+    }
 
     /**
      * Inserts an edge into the database
@@ -447,7 +661,11 @@ public class Repository {
      * @param startNode the startNode of the edge
      * @param endNode the endNode of the edge
      */
-    public void insertEdge(int startNode, int endNode) { edgeDAO.insertEdge(startNode, endNode); }
+    public void insertEdge(int startNode, int endNode) {
+        edgeDAO.insertEdge(startNode, endNode);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * Updates the row in the database that matches the edgeID
@@ -455,14 +673,22 @@ public class Repository {
      * @param cols   the columns to update
      * @param values the values to update the columns to
      */
-    private void updateRow(String[] cols, String[] values, Edge e) { edgeDAO.updateRow(cols, values, e); }
+    private void updateRow(String[] cols, String[] values, Edge e) {
+        edgeDAO.updateRow(cols, values, e);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * Updates the startNode in the database
      *
      * @param startNode the new startNode
      */
-    public void updateDBStartNodeInEdges(String startNode, Edge e) { edgeDAO.updateDBStartNode(startNode, e);  }
+    public void updateDBStartNodeInEdges(String startNode, Edge e) {
+        edgeDAO.updateDBStartNode(startNode, e);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * Updates the endNode in the database
@@ -470,12 +696,20 @@ public class Repository {
      * @param endNode the new endNode
      * @param e the Edge to update
      */
-    public void updateDBEndNodeInEdges(String endNode, Edge e) { edgeDAO.updateDBEndNode(endNode, e);  }
+    public void updateDBEndNodeInEdges(String endNode, Edge e) {
+        edgeDAO.updateDBEndNode(endNode, e);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * Updates all attributes in the database to match the edge
      */
-    public void updateDBEdge(Edge e) { edgeDAO.updateDBEdge(e); }
+    public void updateDBEdge(Edge e) {
+        edgeDAO.updateDBEdge(e);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * Deletes the row in the database that matches the edgeID
@@ -484,7 +718,11 @@ public class Repository {
      * @param confirm 0 to confirm delete, anything else to cancel
      * @param e the edge to delete
      */
-    public void deleteDBEdge(int confirm, Edge e) { edgeDAO.deleteDBEdge(confirm, e); }
+    public void deleteDBEdge(int confirm, Edge e) {
+        edgeDAO.deleteDBEdge(confirm, e);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * Gets the edge from the database that matches the edgeID
@@ -492,14 +730,24 @@ public class Repository {
      * @param endpoints a String of endpoints in the format "startNode_endNode"
      * @return the edge that matches the endpoints
      */
-    public Edge getEdge(String endpoints) { return edgeDAO.getEdge(endpoints); }
+    public Edge getEdge(String endpoints) {
+        Edge e = edgeDAO.getEdge(endpoints);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return e;
+    }
 
     /**
      * Returns the edge in a string
      *
      * @return the edge in a string with the format "[edgeID] [startNode] [endNode]"
      */
-    public String edgeToString(Edge e) { return edgeDAO.toString(e); }
+    public String edgeToString(Edge e) {
+        String s = edgeDAO.toString(e);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return s;
+    }
 
     //TODO LocationName methods
 
@@ -555,7 +803,11 @@ public class Repository {
      *                 2 (custom location), or 3
      *                 (developer: CSV Files in package)
      */
-    public void importNodesFromCSV(String filename, int location) { DBinput.importNodesFromCSV(filename, location); }
+    public void importNodesFromCSV(String filename, int location) {
+        DBinput.importNodesFromCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * This method imports the Edges table from a CSV file
@@ -567,7 +819,11 @@ public class Repository {
      *                 2 (custom location), or 3
      *                 (developer: CSV Files in package)
      */
-    public void importEdgesFromCSV(String filename, int location) { DBinput.importEdgesFromCSV(filename, location); }
+    public void importEdgesFromCSV(String filename, int location) {
+        DBinput.importEdgesFromCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * This method imports the LocationNames table from a CSV file
@@ -579,7 +835,11 @@ public class Repository {
      *                 2 (custom location), or 3
      *                 (developer: CSV Files in package)
      */
-    public void importLocationNamesFromCSV(String filename, int location) { DBinput.importLocationNamesFromCSV(filename, location); }
+    public void importLocationNamesFromCSV(String filename, int location) {
+        DBinput.importLocationNamesFromCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * This method imports the Moves table from a CSV file
@@ -591,7 +851,11 @@ public class Repository {
      *                 2 (custom location), or 3
      *                 (developer: CSV Files in package)
      */
-    public void importMovesFromCSV(String filename, int location) { DBinput.importMovesFromCSV(filename, location); }
+    public void importMovesFromCSV(String filename, int location) {
+        DBinput.importMovesFromCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * This method imports the Users table from a CSV file
@@ -603,7 +867,11 @@ public class Repository {
      *                 2 (custom location), or 3
      *                 (developer: CSV Files in package)
      */
-    public void importUsersFromCSV(String filename, int location) { DBinput.importUsersFromCSV(filename, location); }
+    public void importUsersFromCSV(String filename, int location) {
+        DBinput.importUsersFromCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * This method imports the Requests table from a CSV file
@@ -615,7 +883,11 @@ public class Repository {
      *                 2 (custom location), or 3
      *                 (developer: CSV Files in package)
      */
-    public void importRequestsFromCSV(String filename, int location) { DBinput.importRequestsFromCSV(filename, location); }
+    public void importRequestsFromCSV(String filename, int location) {
+        DBinput.importRequestsFromCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * Imports the conference requests from a CSV file into the database
@@ -626,7 +898,11 @@ public class Repository {
      *                 2 (custom location), or 3
      *                 (developer: CSV Files in package)
      */
-    public void importConferenceRequestsFromCSV(String filename, int location) { DBinput.importConferenceRequestsFromCSV(filename, location); }
+    public void importConferenceRequestsFromCSV(String filename, int location) {
+        DBinput.importConferenceRequestsFromCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * Imports the flower requests from a CSV file into the database
@@ -637,7 +913,11 @@ public class Repository {
      *                 2 (custom location), or 3
      *                 (developer: CSV Files in package)
      */
-    public void importFlowerRequestsFromCSV(String filename, int location) { DBinput.importFlowerRequestsFromCSV(filename, location); }
+    public void importFlowerRequestsFromCSV(String filename, int location) {
+        DBinput.importFlowerRequestsFromCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * Imports the furniture requests from a CSV file into the database
@@ -648,7 +928,11 @@ public class Repository {
      *                 2 (custom location), or 3
      *                 (developer: CSV Files in package)
      */
-    public void importFurnitureRequestsFromCSV(String filename, int location) { DBinput.importFurnitureRequestsFromCSV(filename, location); }
+    public void importFurnitureRequestsFromCSV(String filename, int location) {
+        DBinput.importFurnitureRequestsFromCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * Imports the meal requests from a CSV file into the database
@@ -659,7 +943,11 @@ public class Repository {
      *                 2 (custom location), or 3
      *                 (developer: CSV Files in package)
      */
-    public void importMealRequestsFromCSV(String filename, int location) { DBinput.importMealRequestsFromCSV(filename, location); }
+    public void importMealRequestsFromCSV(String filename, int location) {
+        DBinput.importMealRequestsFromCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * Imports the office requests from a CSV file into the database
@@ -670,7 +958,11 @@ public class Repository {
      *                 2 (custom location), or 3
      *                 (developer: CSV Files in package)
      */
-    public void importOfficeRequestsFromCSV(String filename, int location) { DBinput.importOfficeRequestsFromCSV(filename, location); }
+    public void importOfficeRequestsFromCSV(String filename, int location) {
+        DBinput.importOfficeRequestsFromCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     //TODO DBoutput methods
 
@@ -684,7 +976,11 @@ public class Repository {
      *                 2 (custom location), or 3
      *                 (developer: CSV Files in package)
      */
-    public void exportNodesToCSV(String filename, int location) { DBoutput.exportNodesToCSV(filename, location); }
+    public void exportNodesToCSV(String filename, int location) {
+        DBoutput.exportNodesToCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * This method exports the Edges table into a CSV file
@@ -696,7 +992,11 @@ public class Repository {
      *                 2 (custom location), or 3
      *                 (developer: CSV Files in package)
      */
-    public void exportEdgesToCSV(String filename, int location) { DBoutput.exportEdgesToCSV(filename, location); }
+    public void exportEdgesToCSV(String filename, int location) {
+        DBoutput.exportEdgesToCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * This method exports the LocationNames table into a CSV file
@@ -708,7 +1008,11 @@ public class Repository {
      *                 2 (custom location), or 3
      *                 (developer: CSV Files in package)
      */
-    public void exportLocationNamesToCSV(String filename, int location) { DBoutput.exportLocationNamesToCSV(filename, location); }
+    public void exportLocationNamesToCSV(String filename, int location) {
+        DBoutput.exportLocationNamesToCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * This method exports the Moves table into a CSV file
@@ -720,7 +1024,11 @@ public class Repository {
      *                 2 (custom location), or 3
      *                 (developer: CSV Files in package)
      */
-    public void exportMovesToCSV(String filename, int location) { DBoutput.exportMovesToCSV(filename, location); }
+    public void exportMovesToCSV(String filename, int location) {
+        DBoutput.exportMovesToCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * This method exports the Users table into a CSV file
@@ -732,7 +1040,11 @@ public class Repository {
      *                 2 (custom location), or 3
      *                 (developer: CSV Files in package)
      */
-    public void exportUsersToCSV(String filename, int location) { DBoutput.exportUsersToCSV(filename, location); }
+    public void exportUsersToCSV(String filename, int location) {
+        DBoutput.exportUsersToCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * This method exports the Requests table into a CSV file
@@ -744,7 +1056,11 @@ public class Repository {
      *                 2 (custom location), or 3
      *                 (developer: CSV Files in package)
      */
-    public void exportRequestsToCSV(String filename, int location) { DBoutput.exportRequestsToCSV(filename, location); }
+    public void exportRequestsToCSV(String filename, int location) {
+        DBoutput.exportRequestsToCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * This method exports the ConferenceRequests table into a CSV file
@@ -756,7 +1072,11 @@ public class Repository {
      *                 2 (custom location), or 3
      *                 (developer: CSV Files in package)
      */
-    public void exportConferenceRequestsToCSV(String filename, int location) { DBoutput.exportConferenceRequestsToCSV(filename, location); }
+    public void exportConferenceRequestsToCSV(String filename, int location) {
+        DBoutput.exportConferenceRequestsToCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * This method exports the FlowerRequests table into a CSV file
@@ -768,7 +1088,11 @@ public class Repository {
      *                 2 (custom location), or 3
      *                 (developer: CSV Files in package)
      */
-    public void exportFlowerRequestsToCSV(String filename, int location) { DBoutput.exportFlowerRequestsToCSV(filename, location); }
+    public void exportFlowerRequestsToCSV(String filename, int location) {
+        DBoutput.exportFlowerRequestsToCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * This method exports the FurnitureRequests table into a CSV file
@@ -780,7 +1104,11 @@ public class Repository {
      *                 2 (custom location), or 3
      *                 (developer: CSV Files in package)
      */
-    public void exportFurnitureRequestsToCSV(String filename, int location) { DBoutput.exportFurnitureRequestsToCSV(filename, location); }
+    public void exportFurnitureRequestsToCSV(String filename, int location) {
+        DBoutput.exportFurnitureRequestsToCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * This method exports the MealRequests table into a CSV file
@@ -792,7 +1120,11 @@ public class Repository {
      *                 2 (custom location), or 3
      *                 (developer: CSV Files in package)
      */
-    public void exportMealRequestsToCSV(String filename, int location) { DBoutput.exportMealRequestsToCSV(filename, location); }
+    public void exportMealRequestsToCSV(String filename, int location) {
+        DBoutput.exportMealRequestsToCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     /**
      * This method exports the OfficeRequests table into a CSV file
@@ -804,42 +1136,66 @@ public class Repository {
      *                 2 (custom location), or 3
      *                 (developer: CSV Files in package)
      */
-    public void exportOfficeRequestsToCSV(String filename, int location) { DBoutput.exportOfficeRequestsToCSV(filename, location); }
+    public void exportOfficeRequestsToCSV(String filename, int location) {
+        DBoutput.exportOfficeRequestsToCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
 
     //TODO Unorganized stuff below
 
     public void addEdge(Edge e) {
         edgeDAO.add(e);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void deleteEdge(Edge e) {
         edgeDAO.delete(e);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void updateEdge(Edge e) {
         edgeDAO.update(e);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void addConferenceRequest(String[] cr) {
         conferenceRequestDAO.add(cr);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void deleteConferenceRequest(ConferenceRequest cr) {
         conferenceRequestDAO.delete(cr);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void deleteConferenceRequest(FullConferenceRequest cr) {
         conferenceRequestDAO.delete(cr);
     }
 
-    public FullConferenceRequest getConferenceRequest(int id) { return (FullConferenceRequest) conferenceRequestDAO.get(id); }
+    public FullConferenceRequest getConferenceRequest(int id) {
+        FullConferenceRequest fcr = (FullConferenceRequest) conferenceRequestDAO.get(id);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return fcr;
+    }
 
     public ArrayList<FullConferenceRequest> getAllConferenceRequests() {
-        return conferenceRequestDAO.getAll();
+        ArrayList<FullConferenceRequest> fcr = conferenceRequestDAO.getAll();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return fcr;
     }
 
     public void updateConferenceRequest(ConferenceRequest cr) {
         conferenceRequestDAO.update(cr);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void updateConferenceRequest(FullConferenceRequest cr) {
@@ -848,10 +1204,14 @@ public class Repository {
 
     public void addMealRequest(String[] mr) {
         mealRequestDAO.add(mr);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void deleteMealRequest(MealRequest mr) {
         mealRequestDAO.delete(mr);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void deleteMealRequest(FullMealRequest mr) {
@@ -859,15 +1219,23 @@ public class Repository {
     }
 
     public FullMealRequest getMealRequest(int id) {
-        return (FullMealRequest) mealRequestDAO.get(id);
+        FullMealRequest fmr = (FullMealRequest) mealRequestDAO.get(id);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return fmr;
     }
 
     public ArrayList<FullMealRequest> getAllMealRequests() {
-        return mealRequestDAO.getAll();
+        ArrayList<FullMealRequest> fmr = mealRequestDAO.getAll();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return fmr;
     }
 
     public void updateMealRequest(MealRequest mr) {
         mealRequestDAO.update(mr);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void updateMealRequest(FullMealRequest mr) {
@@ -875,92 +1243,144 @@ public class Repository {
     }
 
     public Object getRequest(int id) {
-        return requestDAO.get(id);
+        Object o = requestDAO.get(id);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return o;
     }
 
     public ArrayList<Request> getAllRequests() {
-        return requestDAO.getAll();
+        ArrayList<Request> r = requestDAO.getAll();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return r;
     }
 
     public void addLocationName(LocationName ln) {
         locationNameDAO.add(ln);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void deleteLocationName(LocationName ln) {
         locationNameDAO.delete(ln);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public LocationName getLocationName(int id) {
-        return (LocationName) locationNameDAO.get(id);
+        LocationName ln = (LocationName) locationNameDAO.get(id);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return ln;
     }
 
     public ArrayList<LocationName> getAllLocationNames() {
-        return locationNameDAO.getAll();
+        ArrayList<LocationName> ln = locationNameDAO.getAll();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return ln;
     }
 
     public void updateLocationName(LocationName ln) {
         locationNameDAO.update(ln);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void addUser(User u) {
         userDAO.add(u);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void deleteUser(User u) {
         userDAO.delete(u);
         requestDAO.updateRequestDeleteUser(u.getUsername());
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public User getUser(String id) {
-        return (User) userDAO.get(id);
+        User u = (User) userDAO.get(id);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return u;
     }
 
     public ArrayList<User> getAllUsers() {
-        return userDAO.getAll();
+        ArrayList<User> u = userDAO.getAll();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return u;
     }
 
     public void updateUser(User u) {
         userDAO.update(u);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void addNode(Node n) {
         nodeDAO.add(n);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void deleteNode(Node n) {
         nodeDAO.delete(n);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void updateNode(Node n) {
         nodeDAO.update(n);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void addMove(Move m) {
         moveDAO.add(m);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void deleteMove(Move m) {
         moveDAO.delete(m);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public Move getMove(int id) {
-        return (Move) moveDAO.get(id);
+        Move m = (Move) moveDAO.get(id);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return m;
     }
 
     public ArrayList<Move> getAllMoves() {
-        return moveDAO.getAll();
+        ArrayList<Move> m = moveDAO.getAll();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return m;
     }
 
     public void updateMove(Move m) {
         moveDAO.update(m);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void addFlowerRequest(String[] fr) {
         flowerRequestDAO.add(fr);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void deleteFlowerRequest(FlowerRequest fr) {
         flowerRequestDAO.delete(fr);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void deleteFlowerRequest(FullFlowerRequest fr) {
@@ -968,43 +1388,67 @@ public class Repository {
     }
 
     public FullFlowerRequest getFlowerRequest(int id) {
-        return (FullFlowerRequest) flowerRequestDAO.get(id);
+        FullFlowerRequest fcr = (FullFlowerRequest) flowerRequestDAO.get(id);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return fcr;
     }
 
     public ArrayList<FullFlowerRequest> getAllFlowerRequests() {
-        return flowerRequestDAO.getAll();
+        ArrayList<FullFlowerRequest> fcr = flowerRequestDAO.getAll();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return fcr;
     }
 
     public void updateFlowerRequest(FlowerRequest fr) {
         flowerRequestDAO.update(fr);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    public ArrayList<Integer> getNeighborsAsNodeIDs(int nodeID) {
+        ArrayList<Integer> neighbors = nodeDAO.getNeighborsAsNodeIDs(nodeID);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return neighbors;
     }
 
     public void updateFlowerRequest(FullFlowerRequest fr) {
         flowerRequestDAO.update(fr);
     }
 
-    public ArrayList<Integer> getNeighbors(int nodeID) {
-        return nodeDAO.getNeighborsAsNodeIDs(nodeID);
-    }
-
     public ArrayList<String> getAllLongNames() {
-        return locationNameDAO.getLongNamesAlphebeticalOrder();
+        ArrayList<String> longNames = locationNameDAO.getLongNamesAlphebeticalOrder();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return longNames;
     }
 
     public ArrayList<String> getAllShortNames() {
-        return locationNameDAO.getShortNamesAlphebeticalOrder();
+        ArrayList<String> shortNames = locationNameDAO.getShortNamesAlphebeticalOrder();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return shortNames;
     }
 
-    public ArrayList<Node> getNodesByFloor(String floor){
-        return nodeDAO.getNodesFromFloor(floor);
+    public ArrayList<Node> getNodesByFloor(String floor) {
+        ArrayList<Node> nodes = nodeDAO.getNodesFromFloor(floor);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return nodes;
     }
 
     public void addFurnitureRequest(String[] fr) {
         furnitureRequestDAO.add(fr);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void deleteFurnitureRequest(FurnitureRequest fr) {
         furnitureRequestDAO.delete(fr);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void deleteFurnitureRequest(FullFurnitureRequest fr) {
@@ -1012,15 +1456,23 @@ public class Repository {
     }
 
     public FullFurnitureRequest getFurnitureRequest(int id) {
-        return (FullFurnitureRequest) furnitureRequestDAO.get(id);
+        FullFurnitureRequest fcr = (FullFurnitureRequest) furnitureRequestDAO.get(id);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return fcr;
     }
 
     public ArrayList<FullFurnitureRequest> getAllFurnitureRequests() {
-        return furnitureRequestDAO.getAll();
+        ArrayList<FullFurnitureRequest> fcr = furnitureRequestDAO.getAll();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return fcr;
     }
 
     public void updateFurnitureRequest(FurnitureRequest fr) {
         furnitureRequestDAO.update(fr);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void updateFurnitureRequest(FullFurnitureRequest fr) {
@@ -1029,10 +1481,14 @@ public class Repository {
 
     public void addOfficeRequest(String[] or) {
         officeRequestDAO.add(or);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void deleteOfficeRequest(OfficeRequest or) {
         officeRequestDAO.delete(or);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void deleteOfficeRequest(FullOfficeRequest or) {
@@ -1040,11 +1496,17 @@ public class Repository {
     }
 
     public FullOfficeRequest getOfficeRequest(int id) {
-        return (FullOfficeRequest) officeRequestDAO.get(id);
+        FullOfficeRequest fcr = (FullOfficeRequest) officeRequestDAO.get(id);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return fcr;
     }
 
     public ArrayList<FullOfficeRequest> getAllOfficeRequests() {
-        return officeRequestDAO.getAll();
+        ArrayList<FullOfficeRequest> fcr = officeRequestDAO.getAll();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return fcr;
     }
 
     public Connection getConnection() {
@@ -1052,58 +1514,94 @@ public class Repository {
     }
 
     public ArrayList<String> getNodeTypesUniqueAlphabetical () {
-        return locationNameDAO.getNodeTypesUniqueAlphabetical();
+        ArrayList<String> nodeTypes = locationNameDAO.getNodeTypesUniqueAlphabetical();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return nodeTypes;
     }
 
     public void addFullNode (Object n) {
         FullNode.addFullNode(n);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void deleteFullNode(Object n) {
         FullNode.deleteFullNode(n);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void updateFullNode(Object n) {
         FullNode.updateFullNode(n);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public ArrayList<IFull> getAllFullRequests() {
-        return requestDAO.getAllHelper1();
+        ArrayList<IFull> requests = new ArrayList<>();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return requests;
     }
 
     public ArrayList<IFull> getAllFullRequestsByUser(String username) {
-        return requestDAO.getFullRequestsbyEmployee(username);
+        ArrayList<IFull> requests = requestDAO.getFullRequestsbyEmployee(username);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return requests;
     }
 
     public ArrayList<IFull> getAllFullRequestsByStatus(String status) {
-        return requestDAO.getFullRequestsbyStatus(status);
+        ArrayList<IFull> requests = requestDAO.getFullRequestsbyStatus(status);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return requests;
     }
 
     public ArrayList<String> getLongNameByType(String type) {
-        return locationNameDAO.getLongNameByType(type);
+        ArrayList<String> longNames = locationNameDAO.getLongNameByType(type);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return longNames;
     }
 
     public ArrayList<String> getPracticalLongNames() {
-        return locationNameDAO.getLongNamePractical();
+        ArrayList<String> longNames = locationNameDAO.getLongNamePractical();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return longNames;
     }
 
     public Alert getAlert(int id) {
-        return alertDAO.get(id);
+        Alert a = alertDAO.get(id);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return a;
     }
 
     public ArrayList<Alert> getAllAlerts() {
-        return alertDAO.getAll();
+        ArrayList<Alert> alerts = alertDAO.getAll();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return alerts;
     }
 
     public void addAlert(Alert a) {
         alertDAO.add(a);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void deleteAlert(Alert a) {
         alertDAO.delete(a);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public void updateAlert(Alert a) {
         alertDAO.update(a);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 }
