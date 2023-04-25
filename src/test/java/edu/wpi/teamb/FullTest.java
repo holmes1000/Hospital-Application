@@ -5,6 +5,7 @@ import edu.wpi.teamb.DBAccess.DAO.RequestDAOImpl;
 import edu.wpi.teamb.DBAccess.Full.FullConferenceRequest;
 import edu.wpi.teamb.DBAccess.Full.FullFlowerRequest;
 import edu.wpi.teamb.DBAccess.Full.FullMealRequest;
+import edu.wpi.teamb.DBAccess.Full.FullNode;
 import edu.wpi.teamb.DBAccess.ORMs.*;
 import org.junit.jupiter.api.Test;
 
@@ -47,14 +48,6 @@ public class FullTest {
 
     }
 
-
-
-
-
-
-
-
-    
     @Test
     public void testFullMealRequest() {
 
@@ -155,12 +148,63 @@ public class FullTest {
         FullFlowerRequest b = new FullFlowerRequest(r, f);
         ffrs.add(b);
         fr.add(f);
-        assertEquals(((ArrayList<FullFlowerRequest>) ffr.listFullRequests(fr)).get(0).getId(), ffrs.get(0).getId());
-        assertEquals(((ArrayList<FullFlowerRequest>) ffr.listFullRequests(fr)).get(0).getFlowerType(),
-                ffrs.get(0).getFlowerType());
-        assertEquals(((ArrayList<FullFlowerRequest>) ffr.listFullRequests(fr)).get(0).getColor(),
-                ffrs.get(0).getColor());
-        assertEquals(((ArrayList<FullFlowerRequest>) ffr.listFullRequests(fr)).get(0).getSize(), ffrs.get(0).getSize());
+        ArrayList<FullFlowerRequest> m = (ArrayList<FullFlowerRequest>) ffr.listFullRequests(fr);
+        assertEquals(m.get(0).getId(), ffrs.get(0).getId());
+        assertEquals(m.get(0).getFlowerType(), ffrs.get(0).getFlowerType());
+        assertEquals(m.get(0).getColor(), ffrs.get(0).getColor());
+        assertEquals(m.get(0).getSize(), ffrs.get(0).getSize());
+
+    }
+
+    @Test
+    public void testFullNode() {
+        FullNode n = new FullNode(0, 0, 0, "", "", "", "", "");
+        assertNotNull(n);
+        assertEquals(n.getNodeID(), 0);
+        assertEquals(n.getxCoord(), 0);
+        assertEquals(n.getyCoord(), 0);
+        assertEquals(n.getFloor(), "");
+        assertEquals(n.getBuilding(), "");
+        assertEquals(n.getShortName(), "");
+        assertEquals(n.getLongName(), "");
+        assertEquals(n.getNodeType(), "");
+
+        // Setters
+        n.setNodeID(150000);
+        n.setxCoord(10);
+        n.setyCoord(10);
+        n.setFloor("2");
+        n.setBuilding("nice");
+        n.setShortName("ni2");
+        n.setLongName("nice2");
+        n.setNodeType("Hall");
+
+        // tests
+        assertEquals(n.getNodeID(), 150000);
+        assertEquals(n.getxCoord(), 10);
+        assertEquals(n.getyCoord(), 10);
+        assertEquals(n.getFloor(), "2");
+        assertEquals(n.getBuilding(), "nice");
+        assertEquals(n.getShortName(), "ni2");
+        assertEquals(n.getLongName(), "nice2");
+        assertEquals(n.getNodeType(), "Hall");
+
+        FullNode.addFullNode(n);
+        FullNode.deleteFullNode(n);
+
+
+        FullNode.addFullNode(n);
+        n.setNodeID(150000);
+        n.setxCoord(10);
+        n.setyCoord(100);
+        n.setFloor("L");
+        n.setBuilding("onice");
+        n.setShortName("oni2");
+        n.setLongName("onice2");
+        n.setNodeType("oHall");
+        //TODO: Should update and remove the node but some issues aren't lettigng it happen
+        FullNode.updateFullNode(n);
+        FullNode.deleteFullNode(n);
 
     }
 
