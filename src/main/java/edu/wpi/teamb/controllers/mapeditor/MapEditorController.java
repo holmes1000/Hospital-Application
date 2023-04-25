@@ -41,6 +41,7 @@ import org.controlsfx.control.PopOver;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Array;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -115,7 +116,6 @@ public class MapEditorController {
 
   //Other misc items
   public String currentFloor = "1";
-  public String currentBuilding = "";
   private ArrayList<LocationName> locationNameList = new ArrayList<>();
   @FXML
   private VBox vboxBtns;
@@ -145,9 +145,12 @@ public class MapEditorController {
   private boolean handlingNodes = false;
   private boolean handlingEdges = false;
   private Set<Circle> selectedNodes = new HashSet<>();
-  private int newX;
-  private int newY;
 
+  private Set<Circle> nodesToAlign = new HashSet<>();
+  boolean canAlignNodes = false;
+
+  private double m = 0;
+  private double c = 0;
   int fullNodeX;
   int fullNodeY;
   Circle c1;
@@ -209,6 +212,7 @@ public class MapEditorController {
     System.out.println("Handling nodes");
     btnNode.setStyle("-fx-background-color: #f6bd38");
     btnEdge.setStyle("-fx-background-color: #1C4EFE");
+    btnAlign.setStyle("-fx-background-color: #1C4EFE");
     handlingNodes = true;
     handlingEdges = false;
     determineState();
@@ -218,13 +222,20 @@ public class MapEditorController {
     System.out.println("Handling edges");
     btnEdge.setStyle("-fx-background-color: #f6bd38");
     btnNode.setStyle("-fx-background-color: #1C4EFE");
+    btnAlign.setStyle("-fx-background-color: #1C4EFE");
     handlingEdges = true;
     handlingNodes = false;
     determineState();
   }
 
-  private void handleAlign() {
-    System.out.println("Handling align");
+  private void alignNodes() {
+    for (Circle c : nodesToAlign) {
+      Node n = Repository.getRepository().getNode(Integer.parseInt(c.getId()));
+      n.setyCoord(startAndEndPoints(n.getxCoord()));
+      Repository.getRepository().updateNode(n);
+    }
+    nodesToAlign.clear();
+    System.out.println("Aligning all selected nodes");
   }
 
   private void determineState() {
@@ -248,6 +259,9 @@ public class MapEditorController {
     } else if (mapEditorContext.getState() == editState && handlingNodes) {
       System.out.println("Editing node");
       tfState.setText("Editing Node");
+    } else if (mapEditorContext.getState() == editState && !handlingNodes && !handlingEdges) {
+      System.out.println("Selecting nodes");
+      tfState.setText("Selecting Nodes");
     } else if (mapEditorContext.getState() == viewState) {
       System.out.println("Viewing State");
       tfState.setText("Viewing State");
@@ -354,8 +368,10 @@ public class MapEditorController {
     c.setId(String.valueOf(n.getNodeID())); // Set the circle's ID to the node's ID
     c.setOnMouseClicked(event -> {
       try {
-        selectedNodes.add(c);
-        checkSelectedNodes();
+        selectedNodes.add(c); // Used for creating edges
+        nodesToAlign.add(c); // Used for aligning nodes
+        checkSelectedNodes(); // Check if two circles are selected to create an edge
+        checkNodesToAlign(); // Check if at least two circles are selected to align
         this.handleNodeClick(event, n);
         System.out.println("Node " + n.getNodeID() + " clicked");
       } catch (SQLException | IOException e) {
@@ -370,6 +386,47 @@ public class MapEditorController {
     nodeGroup.getChildren().add(c);
     nodeGroup.toFront();
   }
+
+  private void checkNodesToAlign() {
+    List<Integer> xCoords = new ArrayList<>();
+    List<Integer> yCoords = new ArrayList<>();
+
+    // Populate the list
+    if (nodesToAlign.size() >= 2 && canAlignNodes) {
+      for (Circle c : nodesToAlign) {
+        xCoords.add((int) c.getCenterX());
+        yCoords.add((int) c.getCenterY());
+        System.out.println(c);
+      }
+      System.out.println(nodesToAlign.size());
+    }
+
+    // Assign new Y coordinates
+    if (mapEditorContext.getState() == editState && !handlingNodes && !handlingEdges && canAlignNodes) {
+      calcBestFit(xCoords, yCoords);  // Calculate the best fit
+      alignNodes(); // Align the nodes
+    }
+  }
+
+  private int startAndEndPoints(int x) {
+    return (int) (m*x+c);
+  }
+
+  private void calcBestFit(List<Integer> x, List<Integer> y) {
+    int n = x.size();
+    double sum_x = 0, sum_y = 0,
+            sum_xy = 0, sum_x2 = 0;
+    for (int i = 0; i < n; i++) {
+      sum_x += x.get(i);
+      sum_y += y.get(i);
+      sum_xy += x.get(i) * y.get(i);
+      sum_x2 += Math.pow(x.get(i), 2);
+    }
+
+    m = (n * sum_xy - sum_x * sum_y) / (n * sum_x2 - Math.pow(sum_x, 2));
+    c = (sum_y - m * sum_x) / n;
+  }
+
 
   /**
    * Method to check if two nodes are selected and if so, add an edge between them (in the add edge state)
@@ -476,6 +533,9 @@ public class MapEditorController {
       handleEditNode(n);
     } else if (mapEditorContext.getState() == editState && handlingEdges) {
       handleAddEdge(c1, c2);
+    }
+    else if (mapEditorContext.getState() == editState && canAlignNodes) {
+      alignNodes();
     }
   }
 
@@ -622,10 +682,6 @@ public class MapEditorController {
     // Get the node ID from the circle's ID
     int nodeID = n.getNodeID();
 
-    // Get the node from the database
-    Node newNode = Repository.getRepository().getNode(nodeID);
-    currentBuilding = newNode.getBuilding();
-
     // Allow click and drag of the Circle
     for (javafx.scene.Node c: nodeGroup.getChildren()) {
       if (c.getId().equals(String.valueOf(nodeID))) {
@@ -638,19 +694,21 @@ public class MapEditorController {
         stackPaneMapView.setOnMouseClicked(event -> {
           if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
             try {
+              // Update the node's location
+              System.out.println("Node: " + nodeID + " edited");
+              //newNode.setxCoord((int) (event.getX()));
+              //newNode.setyCoord((int) (event.getY()));
+              //System.out.println("Location: " + newNode.getxCoord() + ", " + newNode.getyCoord());
+              //showEditNodeMenu(newNode);
+              n.setxCoord((int) (event.getX()));
+              n.setyCoord((int) (event.getY()));
+              System.out.println("Location: " + n.getxCoord() + ", " + n.getyCoord());
               showEditNodeMenu(n);
             } catch (IOException ex) {
               throw new RuntimeException(ex);
             }
             pane.gestureEnabledProperty().set(true);
-            // Update the node's location
-            newNode.setxCoord((int) (event.getX()));
-            newNode.setyCoord((int) (event.getY()));
-            System.out.println("Node: " + nodeID + " edited");
-            System.out.println("Location: " + newNode.getxCoord() + ", " + newNode.getyCoord());
             boolEditingNode = false;
-            // Update the node in the database
-            Repository.getRepository().updateNode(newNode);
           }
         });
       }
@@ -722,7 +780,7 @@ public class MapEditorController {
 
     btnNode.setOnMouseClicked(event -> handleNodes());
     btnEdge.setOnMouseClicked(event -> handleEdges());
-    btnAlign.setOnMouseClicked(event -> handleAlign());
+    btnAlign.setOnMouseClicked(event -> canAlignNodes = true);
   }
 
   public void clickFloorBtn() {

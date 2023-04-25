@@ -59,13 +59,14 @@ public class EditNodeMenuController {
         cbNodeType.setItems(listOfNodeTypes);
         // Initialize the node data
         FullNode newFullNode = Repository.getRepository().getFullNode(currentNode.getNodeID());
+
         // Initialize the user data
         tfNodeId.setText(String.valueOf(newFullNode.getNodeID()));
         tfLongName.setText(newFullNode.getLongName());
         tfShortName.setText(newFullNode.getShortName());
         cbNodeType.selectItem(newFullNode.getNodeType());
-        tfXCoord.setText(String.valueOf(newFullNode.getxCoord()));
-        tfYCoord.setText(String.valueOf(newFullNode.getyCoord()));
+        tfXCoord.setText(String.valueOf(currentNode.getxCoord()));
+        tfYCoord.setText(String.valueOf(currentNode.getyCoord()));
         oldLongName = newFullNode.getLongName();
         oldShortName = newFullNode.getShortName();
         oldNodeType = newFullNode.getNodeType();
@@ -96,7 +97,7 @@ public class EditNodeMenuController {
         Repository.getRepository().deleteLocationName(ln);
 
         // Create new full node based on the user input
-        fullNode = new FullNode(Integer.parseInt(tfNodeId.getText()), (int) Integer.parseInt(tfXCoord.getText()), (int) Integer.parseInt(tfYCoord.getText()), mapEditorController.currentFloor, "Full Node Building", tfLongName.getText(), tfShortName.getText(), cbNodeType.getSelectedItem());
+        fullNode = new FullNode(Integer.parseInt(tfNodeId.getText()), (int) Integer.parseInt(tfXCoord.getText()), (int) Integer.parseInt(tfYCoord.getText()), mapEditorController.currentFloor, currentNode.getBuilding(), tfLongName.getText(), tfShortName.getText(), cbNodeType.getSelectedItem());
 
 
         Repository.getRepository().deleteNode(currentNode); // Remove old node from the database

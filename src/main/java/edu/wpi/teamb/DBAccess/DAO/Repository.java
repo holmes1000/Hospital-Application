@@ -1356,6 +1356,12 @@ public class Repository {
         dbConnection.forceClose();
     }
 
+    public void updateExistingLocationName(LocationName ln, String longName) {
+        locationNameDAO.updateExisting(ln, longName);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
     public void addUser(User u) {
         userDAO.add(u);
         dbConnection.closeDBconnection();
@@ -1604,8 +1610,8 @@ public class Repository {
         dbConnection.forceClose();
     }
 
-    public void updateFullNode(Object n) {
-        FullNode.updateFullNode(n);
+    public void updateFullNode(Object n, int nodeID, String longName) {
+        FullNode.updateFullNode(n, nodeID, longName);
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
     }
