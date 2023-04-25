@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -13,5 +15,170 @@
         </font>
     </Text>
     <MFXButton fx:id="btnClose" layoutX="1163.0" layoutY="646.0" mnemonicParsing="false" text="Close" />
+      <Text fill="WHITE" layoutX="27.0" layoutY="106.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Thanks for trying our Application! This kiosk demo program was a group effort completed in conjunction with the WPI Computer Science Department in the CS3733-D23 Software Engineering Class with Professor Wilson Wong and Team Coach Nini Acquista." wrappingWidth="1167.0335083007812">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="30.0" layoutY="650.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Special Thanks to Brigham and Women’s Hospital and their representative, Andrew Shinn, for their time and input" wrappingWidth="1071.0335083007812">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Text>
+      <ImageView fitHeight="128.0" fitWidth="165.0" layoutX="550.0" layoutY="243.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/team/Ronit.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="128.0" fitWidth="165.0" layoutX="152.0" layoutY="243.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/team/Zimraan.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="128.0" fitWidth="165.0" layoutX="952.0" layoutY="244.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/team/Alex.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="128.0" fitWidth="165.0" layoutX="351.0" layoutY="243.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/team/Jackson.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="128.0" fitWidth="165.0" layoutX="751.0" layoutY="243.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/team/Brian.jpg" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="128.0" fitWidth="165.0" layoutX="550.0" layoutY="427.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/team/James.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="128.0" fitWidth="165.0" layoutX="152.0" layoutY="427.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/team/Ella.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="128.0" fitWidth="165.0" layoutX="952.0" layoutY="428.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/team/Mahir.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="128.0" fitWidth="165.0" layoutX="351.0" layoutY="427.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/team/Samara.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="128.0" fitWidth="165.0" layoutX="751.0" layoutY="427.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/team/Alisha.png" />
+         </image>
+      </ImageView>
+      <Text fill="WHITE" layoutX="124.0" layoutY="395.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zimraan Ahmad" textAlignment="CENTER" wrappingWidth="184.63345336914062">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="323.0" layoutY="395.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Jackson Balcazar" textAlignment="CENTER" wrappingWidth="184.63345336914062">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="521.0" layoutY="395.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ronit Banerjee" textAlignment="CENTER" wrappingWidth="184.63345336914062">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="723.0" layoutY="395.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Brian Borghesani" textAlignment="CENTER" wrappingWidth="184.63345336914062">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="917.0" layoutY="395.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Alexander Brelling" textAlignment="CENTER" wrappingWidth="193.43350219726562">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="124.0" layoutY="579.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ella Dunne" textAlignment="CENTER" wrappingWidth="184.63345336914062">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="323.0" layoutY="579.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Samara Holmes" textAlignment="CENTER" wrappingWidth="184.63345336914062">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="521.0" layoutY="579.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" James Mitchell" textAlignment="CENTER" wrappingWidth="184.63345336914062">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="723.0" layoutY="579.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Alisha Peeriz" textAlignment="CENTER" wrappingWidth="184.63345336914062">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="924.0" layoutY="580.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mahir Sowad" textAlignment="CENTER" wrappingWidth="184.63345336914062">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="116.0" layoutY="412.0" strokeType="OUTSIDE" strokeWidth="0.0" text="(Documentation Analyst)" textAlignment="CENTER" wrappingWidth="199.83346557617188">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="315.0" layoutY="411.0" strokeType="OUTSIDE" strokeWidth="0.0" text="(Backend Engineer)" textAlignment="CENTER" wrappingWidth="199.83346557617188">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="514.0" layoutY="411.0" strokeType="OUTSIDE" strokeWidth="0.0" text="(Lead Software Engineer)" textAlignment="CENTER" wrappingWidth="199.83346557617188">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="715.0" layoutY="410.0" strokeType="OUTSIDE" strokeWidth="0.0" text="(Scrum Master)" textAlignment="CENTER" wrappingWidth="199.83346557617188">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="916.0" layoutY="412.0" strokeType="OUTSIDE" strokeWidth="0.0" text="(Product Owner)" textAlignment="CENTER" wrappingWidth="199.83346557617188">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="114.0" layoutY="596.0" strokeType="OUTSIDE" strokeWidth="0.0" text="(Frontend Engineer)" textAlignment="CENTER" wrappingWidth="199.83346557617188">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="313.0" layoutY="595.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" (Lead Frontend Engineer)" textAlignment="CENTER" wrappingWidth="199.83346557617188">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="512.0" layoutY="595.0" strokeType="OUTSIDE" strokeWidth="0.0" text="(Project Manager)" textAlignment="CENTER" wrappingWidth="199.83346557617188">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="713.0" layoutY="594.0" strokeType="OUTSIDE" strokeWidth="0.0" text="(Lead Backend Engineer)" textAlignment="CENTER" wrappingWidth="199.83346557617188">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="914.0" layoutY="596.0" strokeType="OUTSIDE" strokeWidth="0.0" text="(Frontend Engineer)" textAlignment="CENTER" wrappingWidth="199.83346557617188">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Text>
+      <Text fill="#f1f1f1" layoutX="33.0" layoutY="217.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Our Team" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold" size="36.0" />
+         </font>
+      </Text>
 </children>
 </Pane>
