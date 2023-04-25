@@ -3,8 +3,8 @@
 <?import com.jfoenix.controls.JFXDrawer?>
 <?import com.jfoenix.controls.JFXHamburger?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.effect.ColorAdjust?>
-<?import javafx.scene.effect.Light.Distant?>
 <?import javafx.scene.effect.Lighting?>
 <?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.image.Image?>
@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -39,6 +40,11 @@
                   <MFXButton fx:id="btnAbout" layoutX="981.0" layoutY="645.0" mnemonicParsing="false" text="About" />
                   <MFXButton fx:id="btnClear" layoutX="833.0" layoutY="645.0" mnemonicParsing="false" text="Clear" visible="false" />
                   <MFXButton fx:id="btnSecret" layoutX="774.0" layoutY="645.0" mnemonicParsing="false" text="Secret" />
+                  <VBox layoutX="14.0" layoutY="90.0" prefHeight="200.0" prefWidth="443.0">
+                     <children>
+                        <TableView fx:id="alertsTable" prefHeight="200.0" prefWidth="200.0" />
+                     </children>
+                  </VBox>
                </children></Pane>
             <ImageView fitHeight="150.0" fitWidth="456.0" layoutX="258.0" layoutY="551.0" pickOnBounds="true" preserveRatio="true">
                <image>

@@ -3,6 +3,7 @@
 <?import com.jfoenix.controls.JFXDrawer?>
 <?import com.jfoenix.controls.JFXHamburger?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.TableView?>
@@ -34,7 +35,7 @@
                         <Font name="System Bold" size="36.0" />
                     </font>
                 </Text>
-            <VBox layoutX="25.0" layoutY="154.0">
+            <VBox layoutX="25.0" layoutY="154.0" style="-fx-spacing: 20;">
                <children>
                   <MFXTextField fx:id="textTitle" floatingText="Title" prefHeight="50.0" prefWidth="362.0">
                      <opaqueInsets>
@@ -52,6 +53,12 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </MFXTextField>
+                  <MFXComboBox fx:id="cbEmployees" floatingText="Assigned Employee" popupOffsetY="5.0" prefHeight="50.0" prefWidth="362.0" />
+                      <MFXButton fx:id="btnAddAlert" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #1C4EFE; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Add" textFill="WHITE">
+                          <font>
+                              <Font name="System Bold" size="12.0" />
+                          </font>
+                      </MFXButton>
                </children>
                <opaqueInsets>
                   <Insets />
@@ -68,11 +75,6 @@
                </font>
             </Text>
                 <MFXButton fx:id="btnEditAlert" layoutX="855.0" layoutY="612.0" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #1C4EFE; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Edit" textFill="WHITE">
-                    <font>
-                        <Font name="System Bold" size="12.0" />
-                    </font>
-                </MFXButton>
-                <MFXButton fx:id="btnAddAlert" layoutX="25.0" layoutY="276.0" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #1C4EFE; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Add" textFill="WHITE">
                     <font>
                         <Font name="System Bold" size="12.0" />
                     </font>

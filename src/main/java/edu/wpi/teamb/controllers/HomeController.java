@@ -4,12 +4,15 @@ import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import edu.wpi.teamb.Bapp;
+import edu.wpi.teamb.DBAccess.DAO.Repository;
+import edu.wpi.teamb.DBAccess.ORMs.Alert;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
 
-import java.awt.*;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Objects;
 
 import javafx.animation.Animation;
@@ -22,12 +25,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -40,7 +44,9 @@ public class HomeController {
     @FXML private MFXButton btnCredits;
     @FXML private  MFXButton btnSecret;
     @FXML private MFXButton btnClear;
+    @FXML private TableView<Alert> alertsTable;
     private MFXButton pathfinderImgBtn = new MFXButton();
+
     Bounds bounds;
 
     @FXML
@@ -48,6 +54,7 @@ public class HomeController {
         initNavBar();
         initPathfinderBtn();
         initializeBtns();
+        loadAlerts();
         bounds = homePane.getBoundsInLocal();
     }
 
@@ -62,6 +69,39 @@ public class HomeController {
         pathfinderImgBtn.setLayoutY(100);
         pathfinderImgBtn.setGraphic(imageView);
         homePane.getChildren().add(pathfinderImgBtn);
+    }
+
+    public void loadAlerts(){
+        ArrayList<Alert> allAlerts = Repository.getRepository().getAllAlerts();
+
+        alertsTable.setEditable(false);
+        TableColumn<Alert, String> titles = new TableColumn<>("Title");
+        titles.setMinWidth(60);
+        titles.setCellValueFactory(new PropertyValueFactory<>("title"));
+
+        TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, String> descriptions = new TableColumn<>("Description");
+        descriptions.setMinWidth(260);
+        descriptions.setCellValueFactory(new PropertyValueFactory<>("description"));
+
+
+        TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, Timestamp> time = new TableColumn<>("Created at");
+        time.setCellValueFactory((new PropertyValueFactory<>("createdAt")));
+        alertsTable.getColumns().addAll(titles, descriptions, time);
+        time.setSortType(TableColumn.SortType.DESCENDING);
+        alertsTable.getSortOrder().setAll(time);
+
+
+        for(Alert alert : allAlerts){
+            alertsTable.getItems().add(alert);
+        }
+
+        alertsTable.getSortOrder().setAll(alertsTable.getColumns().get(2));
+        time.setVisible(false);
+
+    }
+
+    public void alertTable(){
+
     }
 
 

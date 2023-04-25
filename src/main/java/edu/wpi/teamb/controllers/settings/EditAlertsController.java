@@ -4,10 +4,12 @@ import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
+import edu.wpi.teamb.DBAccess.ORMs.User;
 import edu.wpi.teamb.controllers.NavDrawerController;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -42,6 +44,8 @@ public class EditAlertsController {
     @FXML private MFXTextField textTitle;
     @FXML private MFXTextField textDescription;
 
+    @FXML private MFXComboBox<String> cbEmployees;
+
     @FXML private MFXButton btnAddAlert;
     @FXML private MFXButton btnDeleteAlert;
     @FXML private MFXButton btnEditAlert;
@@ -67,6 +71,12 @@ public class EditAlertsController {
 //        ObservableList<String> permissionLevels = FXCollections.observableArrayList();
 
 
+        ArrayList<User> users = Repository.getRepository().getAllUsers();
+        ArrayList<String> usernames = new ArrayList<>();
+        for(int i = 0; i < users.size(); i++){
+            usernames.add(users.get(i).getName());
+        }
+        cbEmployees.getItems().addAll(usernames);
         alertTable();
         // Hide the edit vbox
         //vboxEditUser.setVisible(false);
@@ -112,7 +122,7 @@ public class EditAlertsController {
     }
 
     public void sortTable(){
-        tbAlerts.getSortOrder().setAll(tbAlerts.getColumns().get(2));
+        tbAlerts.getSortOrder().setAll(tbAlerts.getColumns().get(3));
     }
 
 
@@ -130,6 +140,8 @@ public class EditAlertsController {
         edu.wpi.teamb.DBAccess.ORMs.Alert newAlert = new edu.wpi.teamb.DBAccess.ORMs.Alert();
         newAlert.setTitle(textTitle.getText());
         newAlert.setDescription(textDescription.getText().toLowerCase());
+        newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
+        newAlert.setEmployee(cbEmployees.getText());
         Repository.getRepository().addAlert(newAlert);
         createAlert("Alert added", "Alert added successfully");
         initializeFields(); // Refresh the combo box
@@ -149,22 +161,26 @@ public class EditAlertsController {
         tbAlerts.setEditable(false);
         TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, String> titles = new TableColumn<>("Title");
         titles.setMinWidth(60);
-        titles.setMaxWidth(60);
+//        titles.setMaxWidth(60);
         titles.setCellValueFactory(new PropertyValueFactory<edu.wpi.teamb.DBAccess.ORMs.Alert, String>("title"));
 
         TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, String> descriptions = new TableColumn<>("Description");
         descriptions.setMinWidth(260);
-        descriptions.setMaxWidth(260);
+//        descriptions.setMaxWidth(260);
         descriptions.setCellValueFactory(new PropertyValueFactory<edu.wpi.teamb.DBAccess.ORMs.Alert, String>("description"));
 
 
         TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, Timestamp> time = new TableColumn<>("Created at");
         time.setCellValueFactory((new PropertyValueFactory<edu.wpi.teamb.DBAccess.ORMs.Alert, Timestamp>("createdAt")));
+
+        TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, String> employees = new TableColumn<>("Assigned employee");
+        employees.setCellValueFactory((new PropertyValueFactory<edu.wpi.teamb.DBAccess.ORMs.Alert, String>("employee")));
         time.setMinWidth(150);
-        time.setMaxWidth(150);
+//        time.setMaxWidth(150);
+        employees.setMinWidth(150);
 //        ObservableList<edu.wpi.teamb.DBAccess.ORMs.Alert> data = FXCollections.observableArrayList();
 
-        tbAlerts.getColumns().addAll(titles, descriptions, time);
+        tbAlerts.getColumns().addAll(employees, titles, descriptions, time);
         time.setSortType(TableColumn.SortType.DESCENDING);
         tbAlerts.getSortOrder().setAll(time);
         updateTable();
