@@ -203,6 +203,7 @@ public class EditUsersController {
     }
 
     private void userTable() {
+        tbUsers.getColumns().clear();
         // add User attributes to the table (Name, Username, Password, Email, Permission Level)
         TableColumn<User, String> names = new TableColumn<>("Name");
         names.setCellValueFactory(new PropertyValueFactory<User, String>("name"));

@@ -21,6 +21,7 @@ public class SettingsController {
     ELogin.PermissionLevel adminTest;
     @FXML private MFXButton btnEditUsers;
     @FXML private MFXButton btnEditAccount;
+    @FXML private MFXButton btnEditAlerts;
 
     @FXML
     public void initialize() throws IOException {
@@ -29,10 +30,12 @@ public class SettingsController {
         adminTest = ELogin.getLogin().getPermissionLevel();
         if (adminTest != ELogin.PermissionLevel.ADMIN) {
             btnEditUsers.setVisible(false);
+            btnEditAlerts.setVisible(false);
         }
     }
 
     public void initButtons() {
+        btnEditAlerts.setOnMouseClicked(event -> Navigation.navigate(Screen.EDIT_ALERTS));
         btnEditAccount.setOnMouseClicked(event -> Navigation.navigate(Screen.EDIT_ACCOUNT));
         btnEditUsers.setOnMouseClicked(event -> Navigation.navigate(Screen.EDIT_USERS));
     }

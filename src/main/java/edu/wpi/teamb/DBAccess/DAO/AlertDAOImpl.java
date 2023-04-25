@@ -73,12 +73,11 @@ public class AlertDAOImpl implements IDAO {
     public void update(Object object) {
         Alert a = (Alert) object;
         updateAlert(a);
-        alerts.set(alerts.indexOf(a), a);
     }
 
     public void insertAlert(Alert a) {
-        String[] cols = { "id", "title", "description", "created_at" };
-        String[] values = { "'" + a.getId() + "'", "'" + a.getTitle() + "'", "'" + a.getDescription() + "'", "'" + a.getCreatedAt() + "'" };
+        String[] cols = {"title", "description"};
+        String[] values = { a.getTitle(), a.getDescription()};
         DButils.insertRow("alerts", cols, values);
     }
 
@@ -87,8 +86,8 @@ public class AlertDAOImpl implements IDAO {
     }
 
     public void updateAlert(Alert a) {
-        String[] cols = { "title", "description", "created_at" };
-        String[] values = { "'" + a.getTitle() + "'", "'" + a.getDescription() + "'", "'" + a.getCreatedAt() + "'" };
+        String[] cols = { "title", "description" };
+        String[] values = { a.getTitle(), a.getDescription()};
         DButils.updateRow("alerts", cols, values, "id = " + a.getId() + "");
     }
 }
