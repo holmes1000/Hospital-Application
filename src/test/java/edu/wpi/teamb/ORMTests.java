@@ -30,17 +30,16 @@ public class ORMTests {
     }
 
     @Test
-    public void testAlertGettersAndSetters()
-    {
+    public void testAlertGettersAndSetters() {
         Alert alert = new Alert();
         alert.setId(1);
         alert.setTitle("Test Title");
         alert.setDescription("Test Description");
         alert.setCreated_at(Timestamp.valueOf("2020-01-01 00:00:00"));
-        assertEquals (alert.getId() , 1);
-        assertEquals (alert.getTitle(),"Test Title");
-        assertEquals (alert.getDescription(), "Test Description");
-        assertEquals (alert.getCreatedAt(), Timestamp.valueOf("2020-01-01 00:00:00"));
+        assertEquals(alert.getId(), 1);
+        assertEquals(alert.getTitle(), "Test Title");
+        assertEquals(alert.getDescription(), "Test Description");
+        assertEquals(alert.getCreatedAt(), Timestamp.valueOf("2020-01-01 00:00:00"));
     }
 
     // Test Edge
