@@ -285,7 +285,10 @@ public class SubmittedRequestsController {
                                         RequestType.FURNITURE.getType());
                                 break;
                             case "Date Submitted":
-                                cbFilterOptions.getItems().addAll("", "Ascending", "Descending");
+                                cbFilterOptions.getItems().addAll(
+                                        "",
+                                        AscendingDescending.ASCENDING.getAscendingDescending(),
+                                        AscendingDescending.DESCENDING.getAscendingDescending());
                                 break;
                         }
                     } else {
@@ -317,50 +320,50 @@ public class SubmittedRequestsController {
                     }
                 });
     }
-}
 
-enum RequestStatus {
-    PENDING("Pending"),
-    COMPLETED("Completed");
-    private final String status;
+    private enum RequestStatus {
+        PENDING("Pending"),
+        COMPLETED("Completed");
+        private final String status;
 
-    RequestStatus(String status) {
-        this.status = status;
+        RequestStatus(String status) {
+            this.status = status;
+        }
+
+        public String getStatus() {
+            return status;
+        }
     }
 
-    public String getStatus() {
-        return status;
-    }
-}
+    private enum RequestType {
+        MEAL("Meal"),
+        CONFERENCE("Conference"),
+        FLOWER("Flower"),
+        OFFICE("Office"),
+        FURNITURE("Furniture");
+        private final String type;
 
-enum RequestType {
-    MEAL("Meal"),
-    CONFERENCE("Conference"),
-    FLOWER("Flower"),
-    OFFICE("Office"),
-    FURNITURE("Furniture");
-    private final String type;
+        RequestType(String type) {
+            this.type = type;
+        }
 
-    RequestType(String type) {
-        this.type = type;
-    }
-
-    public String getType() {
-        return type;
-    }
-}
-
-enum AscendingDescending {
-    ASCENDING("Ascending"),
-    DESCENDING("Descending");;
-
-    private final String ascendingDescending;
-
-    AscendingDescending(String ascendingDescending) {
-        this.ascendingDescending = ascendingDescending;
+        public String getType() {
+            return type;
+        }
     }
 
-    public String getAscendingDescending() {
-        return ascendingDescending;
+    private enum AscendingDescending {
+        ASCENDING("Ascending"),
+        DESCENDING("Descending");;
+
+        private final String ascendingDescending;
+
+        AscendingDescending(String ascendingDescending) {
+            this.ascendingDescending = ascendingDescending;
+        }
+
+        public String getAscendingDescending() {
+            return ascendingDescending;
+        }
     }
 }
