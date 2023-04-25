@@ -59,8 +59,8 @@ public class SignageDAOImpl implements IDAO {
     @Override
     public void add(Object object) {
         Signage s = (Signage) object;
-        String[] cols = {"direction", "screen", "date"};
-        String[] vals = {s.getDirection(), Integer.toString(s.getScreen()), String.valueOf(s.getDate())};
+        String[] cols = {"direction", "screen", "date", "locationname"};
+        String[] vals = {s.getDirection(), Integer.toString(s.getScreen()), String.valueOf(s.getDate()), s.getLocationName()};
         DButils.insertRow("Signage", cols, vals);
         signs.add(s);
     }
@@ -75,8 +75,8 @@ public class SignageDAOImpl implements IDAO {
     @Override
     public void update(Object object) {
         Signage s = (Signage) object;
-        String[] cols = {"direction", "screen", "date"};
-        String[] vals = {s.getDirection(), Integer.toString(s.getScreen()), String.valueOf(s.getDate())};
+        String[] cols = {"direction", "screen", "date", "locationname"};
+        String[] vals = {s.getDirection(), Integer.toString(s.getScreen()), String.valueOf(s.getDate()), s.getLocationName()};
         DButils.updateRow("Signage", cols, vals, "date = '" + s.getDate() + "'");
         setAll();
     }

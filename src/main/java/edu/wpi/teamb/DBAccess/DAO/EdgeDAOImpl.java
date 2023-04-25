@@ -17,6 +17,9 @@ public class EdgeDAOImpl implements IDAO {
     static ArrayList<Edge> getEdges() {
         return edges;
     }
+    static void setEdges() {
+        edges = getAllHelper();
+    }
 
     public EdgeDAOImpl() {
         edges = getAllHelper();
@@ -66,7 +69,7 @@ public class EdgeDAOImpl implements IDAO {
      *
      * @return a list of all edges
      */
-    public ArrayList<Edge> getAllHelper() {
+    public static ArrayList<Edge> getAllHelper() {
         ArrayList<Edge> edges = new ArrayList<Edge>();
         try {
             ResultSet rs = DButils.getCol("Edges", "*");

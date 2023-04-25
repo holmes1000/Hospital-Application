@@ -390,7 +390,9 @@ public class Repository {
      * @param edge the Edge object to be removed
      */
 
-    public void deleteEdge(Object edge) { edgeDAO.delete(edge); }
+    public void deleteEdge(Object edge) {
+        edgeDAO.delete(edge);
+    }
 
     /**
      * Updates an Edge object in both the database and local list
@@ -929,6 +931,7 @@ public class Repository {
 
     public void deleteNode(Node n) {
         nodeDAO.delete(n);
+
     }
 
     public void updateNode(Node n) {

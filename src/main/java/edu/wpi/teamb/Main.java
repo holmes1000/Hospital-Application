@@ -17,6 +17,7 @@ public class Main {
 //    Repository.getRepository().exportFurnitureRequestsToCSV("FurnitureRequests_4_21", 3);
 //    Repository.getRepository().exportMealRequestsToCSV("MealRequests_4_21", 3);
 //    Repository.getRepository().exportOfficeRequestsToCSV("OfficeRequests_4_21", 3);
+//    Repository.getRepository().importEdgesFromCSV("Edges_4_21", 3);
     LauncherImpl.launchApplication(Bapp.class, CustomPreloader.class, args);
   }
 

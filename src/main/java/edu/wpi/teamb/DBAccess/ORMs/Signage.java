@@ -7,17 +7,20 @@ public class Signage {
     String direction;
     int screen;
     Date date;
+    String locationName;
 
-    public Signage(String direction, int screen, Date date) {
+    public Signage(String direction, int screen, Date date, String locationName) {
         this.direction = direction;
         this.screen = screen;
         this.date = date;
+        this.locationName = locationName;
     }
 
     public Signage() {
         this.direction = "";
         this.screen = 0;
         this.date = new Date(0);
+        this.locationName = "";
     }
 
     public Signage(ResultSet rs) {
@@ -25,6 +28,7 @@ public class Signage {
             this.direction = rs.getString("direction");
             this.screen = rs.getInt("screen");
             this.date = rs.getDate("date");
+            this.locationName = rs.getString("locationname");
         } catch (Exception e) {
             System.err.println("ERROR: " + e.getMessage());
         }
@@ -52,5 +56,13 @@ public class Signage {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public String getLocationName() {
+        return locationName;
+    }
+
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
     }
 }

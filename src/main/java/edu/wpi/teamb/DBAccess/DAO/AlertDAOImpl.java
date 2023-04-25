@@ -72,13 +72,13 @@ public class AlertDAOImpl implements IDAO {
     @Override
     public void update(Object object) {
         Alert a = (Alert) object;
-        updateAlert(a);
-        alerts.set(alerts.indexOf(a), a);
+        delete(a);
+        add(a);
     }
 
     public void insertAlert(Alert a) {
-        String[] cols = { "id", "title", "description", "created_at" };
-        String[] values = { "'" + a.getId() + "'", "'" + a.getTitle() + "'", "'" + a.getDescription() + "'", "'" + a.getCreatedAt() + "'" };
+        String[] cols = { "title", "description", "created_at", "employee" };
+        String[] values = {a.getTitle(), a.getDescription(), String.valueOf(a.getCreatedAt()), a.getEmployee()};
         DButils.insertRow("alerts", cols, values);
     }
 
@@ -87,8 +87,8 @@ public class AlertDAOImpl implements IDAO {
     }
 
     public void updateAlert(Alert a) {
-        String[] cols = { "title", "description", "created_at" };
-        String[] values = { "'" + a.getTitle() + "'", "'" + a.getDescription() + "'", "'" + a.getCreatedAt() + "'" };
+        String[] cols = { "title", "description", "created_at", "employee" };
+        String[] values = {a.getTitle(), a.getDescription(), String.valueOf(a.getCreatedAt()), a.getEmployee()};
         DButils.updateRow("alerts", cols, values, "id = " + a.getId() + "");
     }
 }
