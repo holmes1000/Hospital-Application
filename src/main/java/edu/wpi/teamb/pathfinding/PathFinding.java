@@ -30,7 +30,7 @@ public enum PathFinding {
 
     public void init_pathfinder() throws SQLException {this.algorithm.init_pathfinder();}
 
-    public void force_init() throws SQLException {this.algorithm.force_init();}
+    public void force_init() {this.algorithm.force_init();}
 
     public void setAlgorithm(IPathFindingAlgorithm algorithm) {
         this.algorithm = algorithm;

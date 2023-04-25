@@ -380,8 +380,8 @@ public class NodeDAOImpl implements IDAO {
     public ArrayList<Integer> getNeighborsAsNodeIDs(int nodeID) {
         // set up an empty list
         ArrayList<Node> neighbors = new ArrayList<Node>();
-
-        for (Edge e : EdgeDAOImpl.getEdges()) {
+        ArrayList<Edge> edges = Repository.getRepository().getAllEdges();
+        for (Edge e : edges) {
             if (e.getStartNodeID() == nodeID) {
                 for (Node m : getNodes()) {
                     if (m.getNodeID() == e.getEndNodeID()) {
