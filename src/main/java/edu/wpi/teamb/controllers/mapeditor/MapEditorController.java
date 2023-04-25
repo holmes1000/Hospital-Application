@@ -7,6 +7,7 @@ import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.DBoutput;
 import edu.wpi.teamb.DBAccess.Full.FullNode;
+import edu.wpi.teamb.DBAccess.ORMs.Edge;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 import edu.wpi.teamb.entities.EMapEditor;
@@ -589,13 +590,26 @@ public class MapEditorController {
     }
   }
 
+
+  /**
+   * Handles the add edge event
+   * @param c1
+   * @param c2
+   */
   private void handleAddEdge(Circle c1, Circle c2) {
-//      stackPaneMapView.setOnMouseClicked(event -> {tapToAddEdge(ev);});
-      Line line = new Line(c1.getCenterX(), c1.getCenterY(), c2.getCenterX(), c2.getCenterY());
-      line.setStrokeWidth(4);
-      line.setId(c1.getId() + "_" + c2.getId());
-      edgeGroup.getChildren().add(line);
-      System.out.println("Added Edge with ID = " + line.getId());
+
+    // Generate the line between the two nodes
+    Line line = new Line(c1.getCenterX(), c1.getCenterY(), c2.getCenterX(), c2.getCenterY());
+    line.setStrokeWidth(4);
+    line.setId(c1.getId() + "_" + c2.getId());
+    edgeGroup.getChildren().add(line);
+    System.out.println("Added Edge with ID = " + line.getId());
+
+    // Add edge to the database
+    Edge edge = new Edge();
+    edge.setStartNode(Repository.getRepository().get(Integer.parseInt(c1.getId())));
+    edge.setEndNode(Repository.getRepository().get(Integer.parseInt(c2.getId())));
+    Repository.getRepository().addEdge(edge);
   }
 
   /**
@@ -607,17 +621,13 @@ public class MapEditorController {
     editingNode = true;
     // Get the node ID from the circle's ID
     int nodeID = n.getNodeID();
-    //tfNodeId.setText(String.valueOf(nodeID));     // set the items id in the menu
 
     // Get the node from the database
     Node newNode = Repository.getRepository().getNode(nodeID);
     currentBuilding = newNode.getBuilding();
-    //FullNode newFullNode = Repository.getRepository().getFullNode(nodeID);
 
     // Allow click and drag of the Circle
     for (javafx.scene.Node c: nodeGroup.getChildren()) {
-    //for (int i = 0; i < nodeGroup.getChildren().size(); i++) {
-      //if (nodeGroup.getChildren().get(i).getId().equals(String.valueOf(nodeID))) {
       if (c.getId().equals(String.valueOf(nodeID))) {
         //makeDraggable((Circle) nodeGroup.getChildren().get(i));
         makeDraggable((Circle) c);
@@ -625,7 +635,6 @@ public class MapEditorController {
         System.out.println("Node: " + nodeID + " is draggable");
       }
       if (boolEditingNode) {
-        //System.out.println("Editing node: " + nodeID);
         stackPaneMapView.setOnMouseClicked(event -> {
           if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
             try {

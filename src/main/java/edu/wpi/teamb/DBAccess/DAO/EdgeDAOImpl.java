@@ -203,7 +203,7 @@ public class EdgeDAOImpl implements IDAO {
      */
     public void insertEdge(int startNode, int endNode) {
         String[] cols = { "startnode", "endnode" };
-        String[] values = { "'" + startNode + "'", "'" + endNode + "'" };
+        String[] values = {String.valueOf(startNode), String.valueOf(endNode)};
         DButils.insertRow("edges", cols, values);
     }
 

@@ -82,6 +82,8 @@ public class EditNodeMenuController {
 
     private void submitNode() {
         FullNode fullNode = null;
+
+        // Delete old moves from the database
         ArrayList<Move> moves = new ArrayList<>(Repository.getRepository().getAllMoves());
         for (Move mv : moves) {
             if (mv.getNodeID() == currentNode.getNodeID()) {
@@ -89,16 +91,20 @@ public class EditNodeMenuController {
             }
         }
 
+        // Delete old location name from the database
         LocationName ln = new LocationName(oldLongName, oldShortName, oldNodeType);
         Repository.getRepository().deleteLocationName(ln);
 
-        fullNode = new FullNode(Integer.parseInt(tfNodeId.getText()), (int) mapEditorController.fullNodeX, (int) mapEditorController.fullNodeY, mapEditorController.currentFloor, "Full Node Building", tfLongName.getText(), tfShortName.getText(), cbNodeType.getSelectedItem());
+        // Create new full node based on the user input
+        fullNode = new FullNode(Integer.parseInt(tfNodeId.getText()), (int) Integer.parseInt(tfXCoord.getText()), (int) Integer.parseInt(tfYCoord.getText()), mapEditorController.currentFloor, "Full Node Building", tfLongName.getText(), tfShortName.getText(), cbNodeType.getSelectedItem());
 
-        // Remove old node from the database
-        Repository.getRepository().deleteNode(currentNode);
-        Repository.getRepository().addFullNode(fullNode);
+
+        Repository.getRepository().deleteNode(currentNode); // Remove old node from the database
+        Repository.getRepository().addFullNode(fullNode);  // Add new node to the database
 
         Node newNode = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
+
+        // Remove full node from the MapEditor's list and add the new one
         for (FullNode fn : MapEditorController.fullNodesList) {
             if (fn.getNodeID() == newNode.getNodeID()) {
                 MapEditorController.fullNodesList.remove(fn);
@@ -107,6 +113,7 @@ public class EditNodeMenuController {
             }
         }
 
+        // Remove Node from the MapEditor's list and add the new one
         for (Node n : MapEditorController.nodeList) {
             if (n.getNodeID() == newNode.getNodeID()) {
                 MapEditorController.nodeList.remove(n);
@@ -115,13 +122,9 @@ public class EditNodeMenuController {
             }
         }
 
-        // Add node to the database
-        //Repository.getRepository().addNode(newNode);
 
         System.out.println("Adding a new node with nodeID: " + newNode.getNodeID());
-        // Refresh the map
         //refreshMap();
-
 
         // Close the window
         Stage stage = (Stage) btnSubmitNodeDetails.getScene().getWindow();
