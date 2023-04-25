@@ -257,12 +257,12 @@ public class PathfinderController {
           }
       }
       ArrayList<String> longname_list = new ArrayList<>();
-      for (Integer id : nodes_to_update.keySet()) {
-          if (longname_list.contains(nodes_to_update.get(id).getLongName())); {
-              if (nodes_to_update.get(id).getNodeID() == fullNodesByID.get(nodes_to_update.get(id).getNodeID()).getNodeID()) {nodes_to_update.remove(nodes_to_update.get(id));}
-          }
-          longname_list.add(nodes_to_update.get(id).getLongName());
-      }
+//      for (Integer id : nodes_to_update.keySet()) {
+//          if (longname_list.contains(nodes_to_update.get(id).getLongName())); {
+//              if (nodes_to_update.get(id).getNodeID() == fullNodesByID.get(nodes_to_update.get(id).getNodeID()).getNodeID()) {nodes_to_update.remove(nodes_to_update.get(id));}
+//          }
+//          longname_list.add(nodes_to_update.get(id).getLongName());
+//      }
       update_nodes_from_moves(nodes_to_update);
       ObservableList<String> nodes = FXCollections.observableArrayList();
       nodes.addAll(getFilteredLongnames());
@@ -669,7 +669,7 @@ public class PathfinderController {
                 next = floorsVisited.get(i-1);
                 switchFloor(next);
                 nextFloor.setDisable(false);
-                System.out.println("hi");
+//                System.out.println("hi");
             }else{
                 int i = floorsVisited.indexOf(currentFloor);
                 next = floorsVisited.get(i-1);
@@ -722,6 +722,7 @@ public class PathfinderController {
         if(currentFloor.equals(lastFloorVisited)){
             nextFloor.setDisable(true);
         }
+        if (floorsVisited.size() == 1){nextFloor.setDisable(true); previousFloor.setDisable(true);}
 
 
 
