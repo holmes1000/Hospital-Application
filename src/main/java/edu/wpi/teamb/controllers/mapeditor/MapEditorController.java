@@ -41,8 +41,7 @@ import org.controlsfx.control.PopOver;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.*;
 
 import static javafx.scene.paint.Color.RED;
 
@@ -144,11 +143,14 @@ public class MapEditorController {
   MapEditorState viewState = new ViewState();
   private boolean handlingNodes = false;
   private boolean handlingEdges = false;
+  private Set<Circle> selectedNodes = new HashSet<>();
   private int newX;
   private int newY;
 
   int fullNodeX;
   int fullNodeY;
+  Circle c1;
+  Circle c2;
 
   public MapEditorController() throws SQLException {
     this.editor = new EMapEditor();
@@ -228,6 +230,7 @@ public class MapEditorController {
     if (mapEditorContext.getState() == addState && handlingEdges) {
       System.out.println("Adding edge");
       tfState.setText("Adding Edge");
+      handleAddNode();  // Disable the ability to click and add nodes
     } else if (mapEditorContext.getState() == addState && handlingNodes) {
       System.out.println("Adding Node");
       tfState.setText("Adding Node");
@@ -350,7 +353,10 @@ public class MapEditorController {
     c.setId(String.valueOf(n.getNodeID())); // Set the circle's ID to the node's ID
     c.setOnMouseClicked(event -> {
       try {
+        selectedNodes.add(c);
+        checkSelectedNodes();
         this.handleNodeClick(event, n);
+        System.out.println("Node " + n.getNodeID() + " clicked");
       } catch (SQLException | IOException e) {
         throw new RuntimeException(e);
       }
@@ -362,6 +368,25 @@ public class MapEditorController {
     floorList.add(n);
     nodeGroup.getChildren().add(c);
     nodeGroup.toFront();
+  }
+
+  /**
+   * Method to check if two nodes are selected and if so, add an edge between them (in the add edge state)
+   */
+  private void checkSelectedNodes() {
+    if (selectedNodes.size() == 2)
+    {
+      Iterator<Circle> iterator = selectedNodes.iterator();
+      c1 = iterator.next();
+      c2 = iterator.next();
+      System.out.println(c1.toString());
+      System.out.println(c2.toString());
+      selectedNodes.clear();
+      if (c1 != null && c2 != null && handlingEdges && mapEditorContext.getState() == addState)
+      {
+        handleAddEdge(c1, c2);
+      }
+    }
   }
 
   void drawName(Circle c, Node n) {
@@ -449,15 +474,8 @@ public class MapEditorController {
     } else if (mapEditorContext.getState() == editState && handlingNodes) {
       handleEditNode(n);
     } else if (mapEditorContext.getState() == editState && handlingEdges) {
-      handleAddEdge(n);
+      handleAddEdge(c1, c2);
     }
-  }
-
-
-  private void handleEditName(javafx.event.ActionEvent e, Node n) throws SQLException {
-    int nodeID = n.getNodeID();
-    FullNode fullNode = Repository.getRepository().getFullNode(nodeID);
-    System.out.println(fullNode.getShortName() + "\n" + fullNode.getLongName());
   }
 
 
@@ -466,7 +484,7 @@ public class MapEditorController {
       stackPaneMapView.addEventHandler(MouseEvent.MOUSE_CLICKED, this::tapToAddNode);
       System.out.println("Added tapToAddNode event handler");
     } else {
-      stackPaneMapView.removeEventHandler(MouseEvent.MOUSE_CLICKED, this::tapToAddNode);
+      stackPaneMapView.setDisable(false);
       System.out.println("Removed tapToAddNode event handler");
     }
   }
@@ -571,61 +589,14 @@ public class MapEditorController {
     }
   }
 
-  private void handleAddEdge(Node n) {
-    if (mapEditorContext.getState() == addState && handlingEdges) {
-      stackPaneMapView.setOnMouseClicked(event -> {tapToAddEdge(event, n);});
-      System.out.println("Added tapToAddEdge event handler");
-    } else {
-      //stackPaneMapView.removeEventHandler(MouseEvent.MOUSE_CLICKED, this::tapToAddEdge);
-      System.out.println("Removed tapToAddEdge event handler");
-    }
+  private void handleAddEdge(Circle c1, Circle c2) {
+//      stackPaneMapView.setOnMouseClicked(event -> {tapToAddEdge(ev);});
+      Line line = new Line(c1.getCenterX(), c1.getCenterY(), c2.getCenterX(), c2.getCenterY());
+      line.setStrokeWidth(4);
+      line.setId(c1.getId() + "_" + c2.getId());
+      edgeGroup.getChildren().add(line);
+      System.out.println("Added Edge with ID = " + line.getId());
   }
-
-  private void tapToAddEdge(MouseEvent e, Node n) {
-    // Method to allow for selecting two nodes
-    // and adding an edge between them
-
-//    if (e.getClickCount() == 2 && n.getNodeID() != null) {
-//      System.out.println("Double clicked on node " + n.getNodeID());
-//    }
-    // Method to allow for the clicking of a start and end node
-    // to add an edge between them
-    int startNodeID = n.getNodeID();
-
-    //tfNodeId.setText(String.valueOf(nodeID));     // set the items id in the menu
-
-    // Get the node from the database
-    Node newNode = Repository.getRepository().getNode(startNodeID);
-    currentBuilding = newNode.getBuilding();
-    //FullNode newFullNode = Repository.getRepository().getFullNode(nodeID);
-
-//    // Allow click and drag of the Circle
-//    for (javafx.scene.Node c : nodeGroup.getChildren()) {
-//      //for (int i = 0; i < nodeGroup.getChildren().size(); i++) {
-//      //if (nodeGroup.getChildren().get(i).getId().equals(String.valueOf(nodeID))) {
-//      if (c.getId().equals(String.valueOf(startNodeID))) {
-//        if (t.getEventType() == MouseEvent.MOUSE_CLICKED) {
-//          MouseEvent e = (MouseEvent) t;
-//          Node startNode = null;
-//          Node endNode = null;
-//          if (e.getButton() == MouseButton.PRIMARY) {
-//            if (startNode == null) {
-//              startNode = getNodeFromClick(e);
-//              System.out.println("Start node: " + startNode.getNodeID());
-//            } else if (endNode == null) {
-//              endNode = getNodeFromClick(e);
-//              System.out.println("End node: " + endNode.getNodeID());
-//              try {
-//                showAddEdgeMenu(startNode, endNode);
-//              } catch (IOException ex) {
-//                throw new RuntimeException(ex);
-//              }
-//            }
-//          }
-//        }
-//      }
-//    }
-}
 
   /**
    * Handles the edit node event
