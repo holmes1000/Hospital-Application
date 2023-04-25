@@ -12,16 +12,24 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.Objects;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Bounds;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class HomeController {
     @FXML private JFXHamburger menuBurger;
@@ -30,12 +38,17 @@ public class HomeController {
     @FXML private Pane homePane;
     @FXML private MFXButton btnAbout;
     @FXML private MFXButton btnCredits;
+    @FXML private  MFXButton btnSecret;
+    @FXML private MFXButton btnClear;
     private MFXButton pathfinderImgBtn = new MFXButton();
+    Bounds bounds;
+
     @FXML
     public void initialize() throws IOException {
         initNavBar();
         initPathfinderBtn();
         initializeBtns();
+        bounds = homePane.getBoundsInLocal();
     }
 
     private void initPathfinderBtn() {
@@ -51,9 +64,73 @@ public class HomeController {
         homePane.getChildren().add(pathfinderImgBtn);
     }
 
+
+    Circle circle = new Circle();
+    Image img = new Image("edu/wpi/teamb/img/secret.png");
+    ImageView secretView = new ImageView(img);
+
+    private void secret(Boolean go){
+        btnSecret.setVisible(false);
+        secretView.setImage(img);
+        secretView.setFitHeight(150);
+        secretView.setPreserveRatio(true);
+        secretView.setVisible(true);
+        secretView.setX(300);
+        secretView.setY(300);
+        btnClear.setVisible(true);
+        if (!homePane.getChildren().contains(secretView)) {homePane.getChildren().add(secretView);}
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
+            double deltaX = 2;
+            double deltaY = 2;
+
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+                secretView.setX(secretView.getX() + deltaX);
+                secretView.setY(secretView.getY() + deltaY);
+
+//                System.out.println(bounds);
+                boolean rightBorder = secretView.getX() >= (bounds.getMaxX());
+                boolean leftBorder = secretView.getX() <= (bounds.getMinX());
+                boolean bottomBorder = secretView.getY() >= (bounds.getMaxY());
+                boolean topBorder = secretView.getY() <= (bounds.getMinY());
+
+                if (rightBorder || leftBorder) {
+                    deltaX *= -1;
+                }
+                if (bottomBorder || topBorder) {
+                    deltaY *= -1;
+                }
+                homePane.toFront();
+                secretView.toFront();
+            }
+
+        }));
+        if (go) {
+            timeline.setCycleCount(Animation.INDEFINITE);
+            timeline.play();
+        }
+        else {
+//            timeline.stop();
+//            btnClear.setVisible(false);
+//            btnSecret.setVisible(true);
+//            homePane.getChildren().remove(secretView);
+//            secretView = new ImageView();
+            Navigation.navigate(Screen.HOME);
+        }
+
+    }
+
+    public void clearSecret(){
+
+
+    }
+
     private void initializeBtns() {
         btnCredits.setOnMouseClicked(e -> handleCredits());
         btnAbout.setOnMouseClicked(e -> handleAbout());
+        btnSecret.setOnMouseClicked(e -> secret(true));
+        btnClear.setOnMouseClicked(e -> secret(false));
     }
 
     private void handleAbout() {
