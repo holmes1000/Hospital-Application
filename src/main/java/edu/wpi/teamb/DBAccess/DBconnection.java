@@ -67,7 +67,7 @@ public class DBconnection {
     /**
      * Closes the database connection if it is open
      */
-    private void closeDBconnection() {
+    public void closeDBconnection() {
         try {
             if (c != null) {
                 c.close();
@@ -82,7 +82,7 @@ public class DBconnection {
     /**
      * Tries forcibly closing the database connection
      */
-    private void forceClose() {
+    public void forceClose() {
         try {
             c.close();
         } catch (Exception e) {
