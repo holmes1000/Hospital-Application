@@ -216,5 +216,9 @@ public class MealRequestControllerI implements IRequestController{
             //send the fullmealrequest to the info card controller
             currentInfoCardController.sendRequest(fullMealRequest);
         });
+
+        //make the reset and cancel buttons not visible
+        btnReset.setVisible(false);
+        btnCancel.setVisible(false);
     }
 }

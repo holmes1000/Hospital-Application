@@ -273,5 +273,9 @@ public class ConferenceRequestControllerI implements IRequestController{
             //send the fullConferenceRequest to the info card controller
             currentInfoCardController.sendRequest(fullConferenceRequest);
         });
+
+        //set the cancel and reset buttons to not be visible
+        cancelBtn.setVisible(false);
+        resetBtn.setVisible(false);
     }
 }
