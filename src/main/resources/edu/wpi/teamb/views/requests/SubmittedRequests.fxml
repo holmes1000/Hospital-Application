@@ -27,7 +27,7 @@
                         <Font name="System Bold" size="36.0" />
                     </font>
                 </Text>
-                <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="997.0" layoutY="25.0" onMouseEntered="#hoverHelp" onMouseExited="#hoverHelp" pickOnBounds="true" preserveRatio="true">
+                <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="997.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@../../img/helpicon.png" />
                     </image>

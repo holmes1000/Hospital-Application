@@ -49,6 +49,7 @@ public class SubmittedRequestsController {
         initNavBar();
         allRequestsE = new EAllRequests();
         initScrollPane();
+        hoverHelp();
         initComboBoxChangeListeners();
         loadRequestsIntoContainer();
     }
@@ -218,9 +219,11 @@ public class SubmittedRequestsController {
                 event -> {
                     Tooltip helpTip =
                             new Tooltip(
-                                    "On this page: Please select what request to look at.\n"
-                                            + "The selected requests information is listed on the right.\n"
-                                            + "If possible, you can decide to edit the request. \n");
+                                    "On this page: Please use the filter to filter requests by \n"
+                                            + "request status, request type, date submitted (ascending or  + \n" +
+                                            "descending), or unassigned requests. The selected requests information \n" +
+                                            "is listed on the right. You can decide to edit, delete, or mark a request \n + " +
+                                            "as complete using the buttons on the side. \n");
                     helpTip.setStyle("-fx-size: 18");
                     helpTip.setShowDelay(Duration.millis(1));
                     helpTip.hideDelayProperty().set(Duration.seconds(1.5));
