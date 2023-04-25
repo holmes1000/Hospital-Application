@@ -21,7 +21,7 @@ public class AStarAlgorithmElevatorBiasI implements IPathFindingAlgorithm {
     }
 
     @Override
-    public void force_init() throws SQLException {}
+    public void force_init() {}
 
     public HashMap<Integer, Node> get_node_map() {
         return node_map;

@@ -107,7 +107,7 @@ public class LocationNameDAOImpl implements IDAO {
         LocationName location = (LocationName) l;
         String[] cols = {"longName", "shortName", "nodeType"};
         String[] vals = {location.getLongName(), location.getShortName(), location.getNodeType()};
-        DButils.updateRow("LocationNames", cols, vals, "longName like '" + location.getLongName() + "'");
+        DButils.updateRow("LocationNames", cols, vals, "longName = '" + location.getLongName() + "'");
         for (int i = 0; i < locationNames.size(); i++) {
             if (locationNames.get(i).getLongName().equals(location.getLongName())) {
                 locationNames.set(i, location);

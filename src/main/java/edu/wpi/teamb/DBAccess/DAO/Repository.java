@@ -107,7 +107,15 @@ public class Repository {
      *
      * @param n the Node object to be removed
      */
-    public void deleteNode(Object n) { nodeDAO.delete(n); }
+    public void deleteNode(Object n) {
+        Node node = (Node) n;
+        nodeDAO.delete(n);
+        ArrayList<Integer> nodeIDs = node.getNeighborIds();
+        for(int id : nodeIDs) {
+            Edge delete = getEdge(node.getNodeID() + "_" + id);
+            deleteEdge(delete);
+        }
+    }
 
     /**
      * Updates a Node object in both the database and local list
@@ -236,7 +244,7 @@ public class Repository {
 
     /**
      * Gets all the neighbors of a given Node using its nodeID
-     *
+     *d
      * @return an ArrayList of all the nodeIDs of the neighbors of the given node using its nodeID
      */
     public ArrayList<Integer> getNodeNeighborsAsNodeIDs(int nodeID) { return nodeDAO.getNeighborsAsNodeIDs(nodeID); }
@@ -932,7 +940,14 @@ public class Repository {
     }
 
     public void deleteNode(Node n) {
+        Node node = (Node) n;
         nodeDAO.delete(n);
+        node.setNeighborIds(getNeighbors(n.getNodeID()));
+        ArrayList<Integer> nodeIDs = node.getNeighborIds();
+        for(int id : nodeIDs) {
+            Edge delete = getEdge(node.getNodeID() + "_" + id);
+            deleteEdge(delete);
+        }
     }
 
     public void updateNode(Node n) {

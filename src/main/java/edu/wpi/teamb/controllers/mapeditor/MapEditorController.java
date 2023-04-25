@@ -15,6 +15,7 @@ import io.github.palexdev.materialfx.controls.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
@@ -47,34 +48,58 @@ import static javafx.scene.paint.Color.RED;
 
 public class MapEditorController {
   public static Node currentNode;
-  @FXML private JFXHamburger menuBurger;
-  @FXML private JFXDrawer menuDrawer;
-  @FXML private ImageView helpIcon;
-  @FXML private MFXComboBox<String> NodeSelector;
-  @FXML private MFXListView NodeInfo;
-  @FXML private VBox VboxNodes;
-  @FXML private ImageView imageViewPathfinder;
-  @FXML private StackPane stackPaneMapView;
+  @FXML
+  private JFXHamburger menuBurger;
+  @FXML
+  private JFXDrawer menuDrawer;
+  @FXML
+  private ImageView helpIcon;
+  @FXML
+  private MFXComboBox<String> NodeSelector;
+  @FXML
+  private MFXListView NodeInfo;
+  @FXML
+  private VBox VboxNodes;
+  @FXML
+  private ImageView imageViewPathfinder;
+  @FXML
+  private StackPane stackPaneMapView;
 
   private EMapEditor editor;
-  @FXML private MFXButton btnL1;
-  @FXML private MFXButton btnL2;
-  @FXML private MFXButton btn1;
-  @FXML private MFXButton btn2;
-  @FXML private MFXButton btn3;
+  @FXML
+  private MFXButton btnL1;
+  @FXML
+  private MFXButton btnL2;
+  @FXML
+  private MFXButton btn1;
+  @FXML
+  private MFXButton btn2;
+  @FXML
+  private MFXButton btn3;
 
-  @FXML private MFXButton btnNode;
-  @FXML private MFXButton btnEdge;
-  @FXML private MFXButton btnAlign;
-  @FXML private MFXTextField tfState;
+  @FXML
+  private MFXButton btnNode;
+  @FXML
+  private MFXButton btnEdge;
+  @FXML
+  private MFXButton btnAlign;
+  @FXML
+  private MFXTextField tfState;
 
-  @FXML private MFXButton uploadBtn;
-  @FXML private MFXButton exportBtn;
-  @FXML private MFXToggleButton toggleNodes;
-  @FXML private MFXToggleButton toggleLocationNames;
-  @FXML private MFXToggleButton toggleEdges;
-  @FXML private FileChooser fileChooser;
-  @FXML private MFXButton resetFromBackupBtn;
+  @FXML
+  private MFXButton uploadBtn;
+  @FXML
+  private MFXButton exportBtn;
+  @FXML
+  private MFXToggleButton toggleNodes;
+  @FXML
+  private MFXToggleButton toggleLocationNames;
+  @FXML
+  private MFXToggleButton toggleEdges;
+  @FXML
+  private FileChooser fileChooser;
+  @FXML
+  private MFXButton resetFromBackupBtn;
 
   //Objects that get superimposed
 
@@ -92,18 +117,24 @@ public class MapEditorController {
   public String currentFloor = "1";
   public String currentBuilding = "";
   private ArrayList<LocationName> locationNameList = new ArrayList<>();
-  @FXML private VBox vboxBtns;
-@FXML private VBox vboxAddNode;
+  @FXML
+  private VBox vboxBtns;
+  @FXML
+  private VBox vboxAddNode;
   private ArrayList<Node> floorNodes = new ArrayList<>();
   public boolean boolEditingNode = false;
   public boolean boolSubmittedDetails = false;
   private Pane menuPane;
   private boolean editingNode = false; // Used for the submitting details button
 
-  @FXML private MFXButton btnAdd;
-  @FXML private MFXButton btnEdit;
-  @FXML private MFXButton btnDelete;
-  @FXML private MFXButton btnView;
+  @FXML
+  private MFXButton btnAdd;
+  @FXML
+  private MFXButton btnEdit;
+  @FXML
+  private MFXButton btnDelete;
+  @FXML
+  private MFXButton btnView;
 
   // Create the states
   MapEditorContext mapEditorContext = new MapEditorContext();
@@ -118,6 +149,7 @@ public class MapEditorController {
 
   int fullNodeX;
   int fullNodeY;
+
   public MapEditorController() throws SQLException {
     this.editor = new EMapEditor();
   }
@@ -162,8 +194,7 @@ public class MapEditorController {
     pane.setScrollBarPolicy(GesturePane.ScrollBarPolicy.NEVER);
 
 
-
-    draw( currentFloor);
+    draw(currentFloor);
 
     changeButtonColor(currentFloor);
     Platform.runLater(() -> this.pane.centreOn(new Point2D(2190, 910)));
@@ -222,10 +253,12 @@ public class MapEditorController {
 
   /**
    * Draws all the nodes on the map
+   *
    * @param floor
    * @throws SQLException
    */
   public void draw(String floor) throws SQLException {
+    System.out.println("Clearing the children");
     this.nodeGroup.getChildren().clear();
     this.nameGroup.getChildren().clear();
     this.edgeGroup.getChildren().clear();
@@ -235,16 +268,17 @@ public class MapEditorController {
         drawNode(n);
       }
     }
+    System.out.println("Drawing the edges, names, and nodes for floor " + floor);
     nodeGroup.toFront();
   }
 
   //Draws edges for a single node, taking in a node
   //From node it grabs the neighbors from the repository and then creates the 1-3 lines required
-  public void drawEdge(Node n){
+  public void drawEdge(Node n) {
 //      edgeGroup.getChildren().clear();
 
-      //Gets the full node of the current node, as well as the neighbors of this node
-      ArrayList<Integer> neighbors = PathFinding.ASTAR.get_node_map().get(n.getNodeID()).getNeighborIds(); // TODO this breaks reset from backup
+    //Gets the full node of the current node, as well as the neighbors of this node
+    ArrayList<Integer> neighbors = PathFinding.ASTAR.get_node_map().get(n.getNodeID()).getNeighborIds(); // TODO this breaks reset from backup
     if (neighbors != null) {
       for (int i = 0; i < neighbors.size(); i++) {
 
@@ -257,7 +291,8 @@ public class MapEditorController {
         if (neighborNode.getFloor().equals(n.getFloor())) {
           Line line = new Line(n.getxCoord(), n.getyCoord(), neighborNode.getxCoord(), neighborNode.getyCoord());
           line.setStrokeWidth(4);
-          line.setOnMouseClicked(event -> handleEdgeClick(line));
+          line.setId(neighborNode.getNodeID() + "_" + n.getNodeID());
+          line.setOnMouseClicked(event -> handleEdgeClick(event, line));
           edgeGroup.getChildren().add(line);
 
         }
@@ -271,19 +306,19 @@ public class MapEditorController {
   //Takes in current ability to see them in relation to the bar
   //When on it adds the ability to generate them in the node drawing method
   //When off it replaces text with "bruh" and removed ability to see them by adding delay.
-  public void handleToggleLocationNames(){
-      if(toggleLocationNames.isSelected()){
-        nameGroup.setVisible(true);
-        System.out.println("Location names on");
-      } else {
-        nameGroup.setVisible(false);
-        System.out.println("Location names off");
-        toggleLocationNames.setSelected(false);
-      }
+  public void handleToggleLocationNames() {
+    if (toggleLocationNames.isSelected()) {
+      nameGroup.setVisible(true);
+      System.out.println("Location names on");
+    } else {
+      nameGroup.setVisible(false);
+      System.out.println("Location names off");
+      toggleLocationNames.setSelected(false);
+    }
   }
 
-  public void handleToggleNodes(){
-    if(toggleNodes.isSelected()){
+  public void handleToggleNodes() {
+    if (toggleNodes.isSelected()) {
       nodeGroup.setVisible(true);
       System.out.println("Nodes on");
     } else {
@@ -293,8 +328,8 @@ public class MapEditorController {
     }
   }
 
-  public void handleToggleEdges(){
-    if(toggleEdges.isSelected()){
+  public void handleToggleEdges() {
+    if (toggleEdges.isSelected()) {
       edgeGroup.setVisible(true);
       System.out.println("Edges on");
     } else {
@@ -355,6 +390,7 @@ public class MapEditorController {
 
   /**
    * Adds a node to the map
+   *
    * @param x coordinate
    * @param y coordinate
    * @throws SQLException
@@ -365,7 +401,7 @@ public class MapEditorController {
     //tfNodeId.setText(String.valueOf(maxID + 5)); // Set the nodeID text field to the maxID + 5
   }
 
-public int getMaxID() {  // Get the max ID of the list of nodes
+  public int getMaxID() {  // Get the max ID of the list of nodes
     int maxID = 0;
     for (Node n : nodeList) {
       if (n.getNodeID() > maxID) {
@@ -384,7 +420,9 @@ public int getMaxID() {  // Get the max ID of the list of nodes
     edgeGroup.getChildren().clear();
     // Redraw the map
     try {
-      //PathFinding.ASTAR.force_init();
+      if (mapEditorContext.getState() != editState) {
+        PathFinding.ASTAR.force_init();
+      }
       draw(currentFloor);
       System.out.println("Refreshing map for floor " + currentFloor + "...");
     } catch (SQLException e) {
@@ -392,37 +430,42 @@ public int getMaxID() {  // Get the max ID of the list of nodes
     }
   }
 
-  private void handleEdgeClick(Line line) {
+  private void handleEdgeClick(MouseEvent e, Line line) {
+    if (mapEditorContext.getState() == deleteState) {
+      handleDeleteEdge(e, line);
+    }
+    PathFinding.ASTAR.force_init();
   }
 
   /**
    * Handles the node click event (creates a context menu)
+   *
    * @param e
    * @param n
    */
   private void handleNodeClick(MouseEvent e, Node n) throws SQLException, IOException {
     if (mapEditorContext.getState() == deleteState) {
       handleDeleteNode(e, n);
-    }
-    else if (mapEditorContext.getState() == editState) {
-      handleEditNode(e, n);
+    } else if (mapEditorContext.getState() == editState && handlingNodes) {
+      handleEditNode(n);
+    } else if (mapEditorContext.getState() == editState && handlingEdges) {
+      handleAddEdge(n);
     }
   }
 
 
-  private void handleEditName(javafx.event.ActionEvent e, Node n) throws  SQLException {
-   int nodeID = n.getNodeID();
-   FullNode fullNode = Repository.getRepository().getFullNode(nodeID);
-   System.out.println(fullNode.getShortName() + "\n" + fullNode.getLongName());
+  private void handleEditName(javafx.event.ActionEvent e, Node n) throws SQLException {
+    int nodeID = n.getNodeID();
+    FullNode fullNode = Repository.getRepository().getFullNode(nodeID);
+    System.out.println(fullNode.getShortName() + "\n" + fullNode.getLongName());
   }
 
 
   private void handleAddNode() {
     if (mapEditorContext.getState() == addState && handlingNodes) {
       stackPaneMapView.addEventHandler(MouseEvent.MOUSE_CLICKED, this::tapToAddNode);
-        System.out.println("Added tapToAddNode event handler");
-    }
-    else {
+      System.out.println("Added tapToAddNode event handler");
+    } else {
       stackPaneMapView.removeEventHandler(MouseEvent.MOUSE_CLICKED, this::tapToAddNode);
       System.out.println("Removed tapToAddNode event handler");
     }
@@ -430,24 +473,24 @@ public int getMaxID() {  // Get the max ID of the list of nodes
 
   private void tapToAddNode(MouseEvent e) {
     // Method to allow for double click to add a new node
-      try {
-        Node n = new Node();
-        n.setxCoord((int) e.getX());
-        n.setyCoord((int) e.getY());
-        setFullNodeX((int) e.getX());
-        setFullNodeY((int) e.getY());
-        n.setFloor(currentFloor);
-        AddNodeMenuController.setCurrentFloor(currentFloor);
-        n.setNodeID(getMaxID() + 5);
-        showAddNodeMenu(n);
-        editingNode = false;
+    try {
+      Node n = new Node();
+      n.setxCoord((int) e.getX());
+      n.setyCoord((int) e.getY());
+      setFullNodeX((int) e.getX());
+      setFullNodeY((int) e.getY());
+      n.setFloor(currentFloor);
+      AddNodeMenuController.setCurrentFloor(currentFloor);
+      n.setNodeID(getMaxID() + 5);
+      showAddNodeMenu(n);
+      editingNode = false;
 
-        addNodeToMap(e.getX(), e.getY());   // get the X and Y of the cursor
-        System.out.println("Added a node at " + e.getX() + ", " + e.getY());
-        refreshMap();
-      } catch (SQLException | IOException ex) {
-        throw new RuntimeException(ex);
-      }
+      addNodeToMap(e.getX(), e.getY());   // get the X and Y of the cursor
+      System.out.println("Added a node at " + e.getX() + ", " + e.getY());
+      refreshMap();
+    } catch (SQLException | IOException ex) {
+      throw new RuntimeException(ex);
+    }
   }
 
   private void setFullNodeX(int x) {
@@ -478,8 +521,10 @@ public int getMaxID() {  // Get the max ID of the list of nodes
     stage.setScene(new Scene(root, 400, 600));
     stage.show();
   }
+
   /**
    * Handles the delete node event
+   *
    * @param e
    * @throws SQLException
    */
@@ -507,13 +552,87 @@ public int getMaxID() {  // Get the max ID of the list of nodes
     System.out.println("Node: " + nodeID + " deleted");
   }
 
+  private void handleDeleteEdge(MouseEvent e, Line l) {
+    // Delete the edge from the database
+    Repository.getRepository().deleteEdge(Repository.getRepository().getEdge(l.getId()));
+    // Remove the edge from the map
+    edgeGroup.getChildren().remove(l);
+    System.out.println("Edge: " + l.getId() + " deleted");
+    refreshMap();
+  }
+
+  private void handleEditEdge() {
+    if (mapEditorContext.getState() == editState && handlingEdges) {
+      //stackPaneMapView.addEventHandler(MouseEvent.MOUSE_CLICKED, this::tapToEditEdge);
+      System.out.println("Added tapToEditEdge event handler");
+    } else {
+      //stackPaneMapView.removeEventHandler(MouseEvent.MOUSE_CLICKED, this::tapToEditEdge);
+      System.out.println("Removed tapToEditEdge event handler");
+    }
+  }
+
+  private void handleAddEdge(Node n) {
+    if (mapEditorContext.getState() == addState && handlingEdges) {
+      stackPaneMapView.setOnMouseClicked(event -> {tapToAddEdge(event, n);});
+      System.out.println("Added tapToAddEdge event handler");
+    } else {
+      //stackPaneMapView.removeEventHandler(MouseEvent.MOUSE_CLICKED, this::tapToAddEdge);
+      System.out.println("Removed tapToAddEdge event handler");
+    }
+  }
+
+  private void tapToAddEdge(MouseEvent e, Node n) {
+    // Method to allow for selecting two nodes
+    // and adding an edge between them
+
+//    if (e.getClickCount() == 2 && n.getNodeID() != null) {
+//      System.out.println("Double clicked on node " + n.getNodeID());
+//    }
+    // Method to allow for the clicking of a start and end node
+    // to add an edge between them
+    int startNodeID = n.getNodeID();
+
+    //tfNodeId.setText(String.valueOf(nodeID));     // set the items id in the menu
+
+    // Get the node from the database
+    Node newNode = Repository.getRepository().getNode(startNodeID);
+    currentBuilding = newNode.getBuilding();
+    //FullNode newFullNode = Repository.getRepository().getFullNode(nodeID);
+
+//    // Allow click and drag of the Circle
+//    for (javafx.scene.Node c : nodeGroup.getChildren()) {
+//      //for (int i = 0; i < nodeGroup.getChildren().size(); i++) {
+//      //if (nodeGroup.getChildren().get(i).getId().equals(String.valueOf(nodeID))) {
+//      if (c.getId().equals(String.valueOf(startNodeID))) {
+//        if (t.getEventType() == MouseEvent.MOUSE_CLICKED) {
+//          MouseEvent e = (MouseEvent) t;
+//          Node startNode = null;
+//          Node endNode = null;
+//          if (e.getButton() == MouseButton.PRIMARY) {
+//            if (startNode == null) {
+//              startNode = getNodeFromClick(e);
+//              System.out.println("Start node: " + startNode.getNodeID());
+//            } else if (endNode == null) {
+//              endNode = getNodeFromClick(e);
+//              System.out.println("End node: " + endNode.getNodeID());
+//              try {
+//                showAddEdgeMenu(startNode, endNode);
+//              } catch (IOException ex) {
+//                throw new RuntimeException(ex);
+//              }
+//            }
+//          }
+//        }
+//      }
+//    }
+}
+
   /**
    * Handles the edit node event
-   * @param e
    * @param n
    * @throws SQLException
    */
-  private void handleEditNode(MouseEvent e, Node n) throws SQLException, IOException {
+  private void handleEditNode(Node n) throws SQLException, IOException {
     editingNode = true;
     // Get the node ID from the circle's ID
     int nodeID = n.getNodeID();
@@ -524,14 +643,15 @@ public int getMaxID() {  // Get the max ID of the list of nodes
     currentBuilding = newNode.getBuilding();
     //FullNode newFullNode = Repository.getRepository().getFullNode(nodeID);
 
-    // set the fields with the full node
-
-
     // Allow click and drag of the Circle
     for (javafx.scene.Node c: nodeGroup.getChildren()) {
+    //for (int i = 0; i < nodeGroup.getChildren().size(); i++) {
+      //if (nodeGroup.getChildren().get(i).getId().equals(String.valueOf(nodeID))) {
       if (c.getId().equals(String.valueOf(nodeID))) {
+        //makeDraggable((Circle) nodeGroup.getChildren().get(i));
         makeDraggable((Circle) c);
         boolEditingNode = true;
+        System.out.println("Node: " + nodeID + " is draggable");
       }
       if (boolEditingNode) {
         //System.out.println("Editing node: " + nodeID);
@@ -555,8 +675,7 @@ public int getMaxID() {  // Get the max ID of the list of nodes
         });
       }
     }
-
-
+    //refreshMap();
   }
 
 

@@ -5,6 +5,7 @@ import edu.wpi.teamb.DBAccess.Full.FullNode;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 import edu.wpi.teamb.DBAccess.ORMs.Move;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
+import edu.wpi.teamb.pathfinding.PathFinding;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
@@ -76,6 +77,7 @@ public class EditNodeMenuController {
 
     private void handleSubmitNodeDetails() {
         submitNode();
+        //PathFinding.ASTAR.force_init();
     }
 
     private void submitNode() {
