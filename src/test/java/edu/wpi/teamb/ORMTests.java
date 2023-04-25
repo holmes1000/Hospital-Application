@@ -27,7 +27,20 @@ public class ORMTests {
         assert (alert.getDescription().equals("Test Description"));
         assert (alert.getCreatedAt().equals(Timestamp.valueOf("2020-01-01 00:00:00")));
 
+    }
 
+    @Test
+    public void testAlertGettersAndSetters()
+    {
+        Alert alert = new Alert();
+        alert.setId(1);
+        alert.setTitle("Test Title");
+        alert.setDescription("Test Description");
+        alert.setCreated_at(Timestamp.valueOf("2020-01-01 00:00:00"));
+        assertEquals (alert.getId() , 1);
+        assertEquals (alert.getTitle(),"Test Title");
+        assertEquals (alert.getDescription(), "Test Description");
+        assertEquals (alert.getCreatedAt(), Timestamp.valueOf("2020-01-01 00:00:00"));
     }
 
     // Test Edge
@@ -58,6 +71,17 @@ public class ORMTests {
         assertEquals(edge.getEndNodeID(), 2);
         assertEquals(edge.getStartNodeID(), 1);
 
+    }
+
+    @Test
+    public void testEdgeGettersAndSetter() {
+        Node n1 = new Node(1, 1, 1, "Test2", "Test2");
+        Node n2 = new Node(2, 2, 2, "Test2", "Test2");
+        Edge edge = new Edge();
+        edge.setStartNode(n1);
+        edge.setEndNode(n2);
+        assertEquals(edge.getStartNodeID(), 1);
+        assertEquals(edge.getEndNodeID(), 2);
     }
 
     // Test Node
@@ -133,6 +157,25 @@ public class ORMTests {
 
     }
 
+    @Test
+    public void testNodeGettersAndSetters() {
+        Node node = new Node();
+        node.setNodeID(1);
+        node.setxCoord(1);
+        node.setyCoord(1);
+        node.setFloor("L");
+        node.setBuilding("Test");
+        node.setCost(1000.0);
+        assertEquals(node.getNodeID(), 1);
+        assertEquals(node.getxCoord(), 1);
+        assertEquals(node.getyCoord(), 1);
+        assertEquals(node.getFloor(), "L");
+        assertEquals(node.getFloorNum(), -1);
+        assertEquals(node.getBuilding(), "Test");
+        ;
+        assertEquals(node.getCost(), 1000);
+    }
+
     // Test LocationName
     @Test
     public void testLocationNameCreation() {
@@ -161,6 +204,16 @@ public class ORMTests {
         assertEquals(locationName.getShortName(), "Information Desk");
     }
 
+    @Test
+    public void testLocationNameGettersAndSetters() {
+        LocationName locationName = new LocationName();
+        locationName.setNodeType("TEST");
+        locationName.setLongName("TEST2");
+        locationName.setShortName("TEST3");
+        assertEquals(locationName.getNodeType(), "TEST");
+        assertEquals(locationName.getLongName(), "TEST2");
+        assertEquals(locationName.getShortName(), "TEST3");
+    }
     // Test User
 
     @Test
@@ -373,13 +426,14 @@ public class ORMTests {
         assertEquals(conferenceRequest.getId(), 0);
         assertEquals(conferenceRequest.getEventName(), "");
         assertEquals(conferenceRequest.getBookingReason(), "");
-        assertEquals(conferenceRequest.getDuration(),0);
+        assertEquals(conferenceRequest.getDuration(), 0);
         assertNull(conferenceRequest.getDateRequested());
     }
 
     @Test
     public void testConferenceRequestCreation() {
-        ConferenceRequest conferenceRequest = new ConferenceRequest(17, Timestamp.valueOf("2019-04-17 00:00:00.0"), "Test", "Test2", 1 );
+        ConferenceRequest conferenceRequest = new ConferenceRequest(17, Timestamp.valueOf("2019-04-17 00:00:00.0"),
+                "Test", "Test2", 1);
         assertNotNull(conferenceRequest);
         assertEquals(conferenceRequest.getId(), 17);
         assertEquals(conferenceRequest.getEventName(), "Test");
@@ -402,7 +456,8 @@ public class ORMTests {
 
     @Test
     public void testConferenceRequestGettersAndSetters() {
-        ConferenceRequest conferenceRequest = new ConferenceRequest(17, Timestamp.valueOf("2019-04-17 00:00:00.0"), "Test", "Test2", 1 );
+        ConferenceRequest conferenceRequest = new ConferenceRequest(17, Timestamp.valueOf("2019-04-17 00:00:00.0"),
+                "Test", "Test2", 1);
         assertNotNull(conferenceRequest);
         assertEquals(conferenceRequest.getId(), 17);
         assertEquals(conferenceRequest.getEventName(), "Test");
@@ -437,8 +492,7 @@ public class ORMTests {
     }
 
     @Test
-    public void testOfficeRequestGettersAndSetters()
-    {
+    public void testOfficeRequestGettersAndSetters() {
         OfficeRequest officeRequest = new OfficeRequest(1, "Test", "Test2", 1);
         assertNotNull(officeRequest);
         assertEquals(officeRequest.getId(), 1);
@@ -457,12 +511,10 @@ public class ORMTests {
         assertEquals(officeRequest.getQuantity(), 2);
     }
 
-
     // Test FurnitureRequest
 
     @Test
-    public void testEmptyFurnitureRequestCreation()
-    {
+    public void testEmptyFurnitureRequestCreation() {
         FurnitureRequest fr = new FurnitureRequest();
 
         assertNotNull(fr);
@@ -471,11 +523,10 @@ public class ORMTests {
         assertEquals(fr.getModel(), "");
         assertEquals(fr.isAssembly(), false);
 
-    } 
+    }
 
     @Test
-    public void testFurnitureRequestCreation()
-    {
+    public void testFurnitureRequestCreation() {
         FurnitureRequest fr = new FurnitureRequest(1, "Test", "Test2", true);
 
         assertNotNull(fr);
@@ -484,13 +535,11 @@ public class ORMTests {
         assertEquals(fr.getModel(), "Test2");
         assertEquals(fr.isAssembly(), true);
 
-
     }
 
     @Test
 
-    public void testFurnitureRequestGettersAndSetters()
-    {
+    public void testFurnitureRequestGettersAndSetters() {
         FurnitureRequest fr = new FurnitureRequest(1, "Test", "Test2", true);
 
         assertNotNull(fr);
@@ -513,9 +562,8 @@ public class ORMTests {
 
     // Test MealRequest
 
-    @Test 
-    public void testEmptyMealRequestCreation()
-    {
+    @Test
+    public void testEmptyMealRequestCreation() {
         MealRequest mr = new MealRequest();
         assertNotNull(mr);
         assertEquals(mr.getId(), 0);
@@ -526,8 +574,7 @@ public class ORMTests {
     }
 
     @Test
-    public void testMealRequestCreation()
-    {
+    public void testMealRequestCreation() {
         MealRequest mr = new MealRequest(1, "Test", "Test2", "Test3", "Test4");
         assertNotNull(mr);
         assertEquals(mr.getId(), 1);
@@ -538,8 +585,7 @@ public class ORMTests {
     }
 
     @Test
-    public void testMealRequestGettersAndSetters()
-    {
+    public void testMealRequestGettersAndSetters() {
         MealRequest mr = new MealRequest(1, "Test", "Test2", "Test3", "Test4");
         assertNotNull(mr);
         assertEquals(mr.getId(), 1);
