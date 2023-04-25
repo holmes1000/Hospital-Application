@@ -21,7 +21,7 @@ public class AStarAlgorithmStairsBiasI implements IPathFindingAlgorithm {
         if (node_map.isEmpty()){create_all_nodes();}
     }
     @Override
-    public void force_init() throws SQLException {}
+    public void force_init() {}
 
     public HashMap<Integer, Node> get_node_map() {
         return node_map;
@@ -34,7 +34,7 @@ public class AStarAlgorithmStairsBiasI implements IPathFindingAlgorithm {
         for (int i = 0; i < node_list.size(); i++) {
 //            System.out.println(node_list.get(i).getNodeID());
 //            System.out.println(node_list.get(i).toString());
-            node_list.get(i).setNeighborIds(Repository.getRepository().getNeighbors(node_list.get(i).getNodeID()));
+            node_list.get(i).setNeighborIds(Repository.getRepository().getNodeNeighborsAsNodeIDs(node_list.get(i).getNodeID()));
             node_map.put(node_list.get(i).getNodeID(),node_list.get(i));
         }
         this.node_map = node_map;

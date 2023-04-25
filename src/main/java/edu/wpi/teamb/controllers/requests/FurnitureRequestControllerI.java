@@ -217,5 +217,9 @@ public class FurnitureRequestControllerI implements IRequestController{
             //close the stage
             ((Stage) btnSubmit.getScene().getWindow()).close();
         });
+
+        //set the reset and cancel buttons to not be visible
+        btnReset.setVisible(false);
+        btnCancel.setVisible(false);
     }
 }
