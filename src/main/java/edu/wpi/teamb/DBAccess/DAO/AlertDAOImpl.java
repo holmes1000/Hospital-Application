@@ -72,7 +72,8 @@ public class AlertDAOImpl implements IDAO {
     @Override
     public void update(Object object) {
         Alert a = (Alert) object;
-        updateAlert(a);
+        delete(a);
+        add(a);
     }
 
     public void insertAlert(Alert a) {

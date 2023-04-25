@@ -45,6 +45,7 @@ public class EditAlertsController {
     @FXML private MFXButton btnAddAlert;
     @FXML private MFXButton btnDeleteAlert;
     @FXML private MFXButton btnEditAlert;
+    @FXML private MFXButton btnRefresh;
     @FXML private VBox vboxEditUser;
     @FXML private VBox tableVbox;
     @FXML private TableView<edu.wpi.teamb.DBAccess.ORMs.Alert> tbAlerts;
@@ -52,9 +53,10 @@ public class EditAlertsController {
 
     @FXML
     public void initialize() throws IOException {
+        initButtons();
         initNavBar();
         initializeFields();
-        initButtons();
+
     }
 
     //EditUserController editUserController = new EditUserController();
@@ -79,6 +81,10 @@ public class EditAlertsController {
                 throw new RuntimeException(e);
             }
         });
+        btnRefresh.setOnMouseClicked(event-> {
+            updateTable();
+        });
+
         btnDeleteAlert.setOnMouseClicked(event -> handleDeleteAlert());
         btnEditAlert.setDisable(true);
         btnDeleteAlert.setDisable(true);
@@ -93,11 +99,20 @@ public class EditAlertsController {
     }
 
     private void handleEditAlert() throws IOException {
-        edu.wpi.teamb.DBAccess.ORMs.Alert a = tbAlerts.getSelectionModel().getSelectedItem();
-        System.out.println("Edit alert button");
-        showEditMenu(a);
-        tbAlerts.refresh();
-        updateTable();
+        if(btnRefresh.isVisible()){
+            createAlert("Table not up-to-date", "Cannot edit while table not up-to-date");
+        } else {
+            edu.wpi.teamb.DBAccess.ORMs.Alert a = tbAlerts.getSelectionModel().getSelectedItem();
+            System.out.println("Edit alert button");
+            showEditMenu(a);
+            tbAlerts.refresh();
+            sortTable();
+            btnRefresh.setVisible(true);
+        }
+    }
+
+    public void sortTable(){
+        tbAlerts.getSortOrder().setAll(tbAlerts.getColumns().get(2));
     }
 
 
@@ -144,7 +159,6 @@ public class EditAlertsController {
 
 
         TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, Timestamp> time = new TableColumn<>("Created at");
-        time.setSortType(TableColumn.SortType.DESCENDING);
         time.setCellValueFactory((new PropertyValueFactory<edu.wpi.teamb.DBAccess.ORMs.Alert, Timestamp>("createdAt")));
         time.setMinWidth(150);
         time.setMaxWidth(150);
@@ -178,12 +192,13 @@ public class EditAlertsController {
         // empty the table and refill database
         tbAlerts.getItems().clear();
         ArrayList<edu.wpi.teamb.DBAccess.ORMs.Alert> alerts = Repository.getRepository().getAllAlerts();
-        for (edu.wpi.teamb.DBAccess.ORMs.Alert a : alerts) {
-            tbAlerts.getItems().add(a);
+        for (edu.wpi.teamb.DBAccess.ORMs.Alert alert : alerts) {
+            tbAlerts.getItems().add(alert);
             tableSize++;
         }
-        tbAlerts.getSortOrder().setAll(tbAlerts.getColumns().get(2));
         tbAlerts.refresh();
+        sortTable();
+        btnRefresh.setVisible(false);
     }
 
     /**

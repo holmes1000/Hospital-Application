@@ -12,6 +12,8 @@ import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.Instant;
 
 public class EditAlertController {
 
@@ -38,6 +40,7 @@ public class EditAlertController {
     private void handleSaveEdits() {
         currentAlert.setTitle(tfTitle.getText());
         currentAlert.setDescription(tfDescription.getText());
+        currentAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
         Repository.getRepository().updateAlert(currentAlert);
 
         // Create an alert
