@@ -69,6 +69,7 @@ public class AddNodeMenuController {
 
     private void handleSubmitNodeDetails() {
         submitNode();
+        mapEditorController.refreshMap();
     }
 
     private void submitNode() {
@@ -92,18 +93,19 @@ public class AddNodeMenuController {
 
         System.out.println("Adding a new node with nodeID: " + newNode.getNodeID());
         // Refresh the map
-        //mapEditorController.refreshMap();
-        try {
-            mapEditorController.draw(currentFloor);
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
+        mapEditorController.refreshMap();
+//        try {
+//            mapEditorController.draw(currentFloor);
+//        }
+//        catch (SQLException e) {
+//            e.printStackTrace();
+//        }
 
 
         // Close the window
         Stage stage = (Stage) btnSubmitNodeDetails.getScene().getWindow();
         stage.close();
+        mapEditorController.refreshMap();
     }
 
 

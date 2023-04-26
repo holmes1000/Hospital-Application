@@ -427,8 +427,8 @@ public class Repository {
      * @param floorNodes the list of nodes on a certain floor
      * @return the long name of the node
      */
-    public ArrayList<ArrayList<Integer>> nodeNeighborIDs(ArrayList<Node> floorNodes) {
-        ArrayList<ArrayList<Integer>> nodeNeighborIDs = nodeDAO.nodeNeighborIDs(floorNodes);
+    public ArrayList<ArrayList<Integer>> nodeNeighborIDs(ArrayList<Node> floorNodes, ArrayList<Edge> edges) {
+        ArrayList<ArrayList<Integer>> nodeNeighborIDs = nodeDAO.nodeNeighborIDs(floorNodes, edges);
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
         return nodeNeighborIDs;
@@ -1807,5 +1807,12 @@ public class Repository {
         alertDAO.update(a);
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
+    }
+
+    public ArrayList<Edge> getEdgesByNode(Node n) {
+        ArrayList<Edge> edges = edgeDAO.getEdgesByNode(n);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return edges;
     }
 }

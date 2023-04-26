@@ -38,30 +38,12 @@ public class NodeDAOImpl implements IDAO {
      */
     public Node get(Object id) {
         int nodeID = (int) id;
-        ResultSet rs = DButils.getRowCond("Nodes", "*", "nodeID = " + nodeID + "");
-        try {
-            if (rs.isBeforeFirst()) {
-                rs.next();
-                Node returnNode = new Node(rs);
-                rs.close();
-                return returnNode;
-            } else
-                rs.close();
-            throw new SQLException("No rows found");
-        } catch (SQLException e) {
-            // handel error
-
-            System.err.println("ERROR Query Failed in method 'NodeDAOImpl.get': " + e.getMessage());
-            return null;
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
+                for (Node n : nodes) {
+                    if (n.getNodeID() == nodeID) {
+                        return n;
+                    }
                 }
-            } catch (SQLException e) {
-                System.err.println("ERROR Query Failed in method 'NodeDAOImpl.get': " + e.getMessage());
-            }
-        }
+        return null;
     }
 
     /**
@@ -509,7 +491,7 @@ public class NodeDAOImpl implements IDAO {
      * @param floorNodes the list of nodes on a certain floor
      * @return the long name of the node
      */
-    public ArrayList<ArrayList<Integer>> nodeNeighborIDs(ArrayList<Node> floorNodes) {
+    public ArrayList<ArrayList<Integer>> nodeNeighborIDs(ArrayList<Node> floorNodes, ArrayList<Edge> edges) {
         ArrayList<ArrayList<Integer>> nodesNeighborids = new ArrayList<>();
         for (Node n : floorNodes) {
             ArrayList<Integer> neighborIDs = getNeighborsAsNodeIDs(n.getNodeID());
