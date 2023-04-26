@@ -30,6 +30,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
@@ -343,6 +344,15 @@ public class MapEditorController {
     // Create the circle
     Circle c = new Circle(n.getxCoord(), n.getyCoord(), 5, RED);
     c.setId(String.valueOf(n.getNodeID())); // Set the circle's ID to the node's ID
+    // change the color of a circle when hovered
+    c.setOnMouseEntered(event -> {
+      c.setFill(Color.GREEN);
+      c.setRadius(10);
+    });
+    c.setOnMouseExited(event -> {
+      c.setFill(Color.RED);
+      c.setRadius(5);
+    });
     c.setOnMouseClicked(event -> {
       try {
         selectedNodes.add(c); // Used for creating edges
