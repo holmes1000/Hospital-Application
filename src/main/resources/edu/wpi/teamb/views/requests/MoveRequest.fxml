@@ -104,11 +104,6 @@
                   <Font name="System Bold" size="12.0" />
                </font>
             </MFXRadioButton>
-            <MFXButton fx:id="btnViewMoveMap" defaultButton="true" layoutX="620.0" layoutY="481.0" prefHeight="45.0" prefWidth="170.0" style="-fx-background-color: #f6bd38;" text="View Move Map" textFill="#f1f1f1">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </MFXButton>
          </children>
       </AnchorPane>
    </right>

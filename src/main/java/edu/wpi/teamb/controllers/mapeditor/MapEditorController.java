@@ -11,6 +11,8 @@ import edu.wpi.teamb.DBAccess.ORMs.Edge;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 import edu.wpi.teamb.entities.EMapEditor;
+import edu.wpi.teamb.navigation.Navigation;
+import edu.wpi.teamb.navigation.Screen;
 import edu.wpi.teamb.pathfinding.PathFinding;
 import io.github.palexdev.materialfx.controls.*;
 import javafx.application.Platform;
@@ -91,6 +93,7 @@ public class MapEditorController {
   private MFXToggleButton toggleEdges;
   @FXML
   private MFXButton resetFromBackupBtn;
+  @FXML private MFXButton btnViewMoveMap;
 
   //Objects that get superimposed
 
@@ -753,6 +756,8 @@ public class MapEditorController {
     resetFromBackupBtn.setOnMouseClicked(event -> {
       handleResetFromBackupBtn();
     });
+
+    btnViewMoveMap.setOnMouseClicked(e -> Navigation.navigate(Screen.MOVE_MAP));
 
     // initialize the toggles
     toggleEdges.setSelected(true);
