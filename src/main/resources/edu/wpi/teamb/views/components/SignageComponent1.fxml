@@ -1,75 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="442.0" prefWidth="778.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.components.SignageComponent1Controller">
-<children>
-    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f1f1f1" height="57.0" layoutX="42.0" layoutY="305.0" stroke="#f1f1f1" strokeType="INSIDE" width="695.0" />
-    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f1f1f1" height="57.0" layoutX="42.0" layoutY="218.0" stroke="#f1f1f1" strokeType="INSIDE" width="695.0" />
-    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f1f1f1" height="57.0" layoutX="42.0" layoutY="134.0" stroke="#f1f1f1" strokeType="INSIDE" width="695.0" />
-    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f1f1f1" height="57.0" layoutX="42.0" layoutY="52.0" stroke="#f1f1f1" strokeType="INSIDE" width="695.0" />
-      <Text fill="#465777" layoutX="229.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Watkins Clinic &amp; EP (this floor)">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Text>
-      <Text fill="#465777" layoutX="237.0" layoutY="171.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Echocardiography (this floor)">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Text>
-      <Text fill="#465777" layoutX="128.0" layoutY="255.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Brigham Circle Medical Associates (Hale Building)">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Text>
-      <Text fill="#465777" layoutX="210.0" layoutY="342.0" strokeType="OUTSIDE" strokeWidth="0.0" text="L2PRU (down to Lower Level &quot;L2&quot;)">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Text>
-      <Text fill="#465777" layoutX="62.0" layoutY="342.0" strokeType="OUTSIDE" strokeWidth="0.0" text="v">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Text>
-      <Text fill="#465777" layoutX="55.0" layoutY="255.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;-">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Text>
-      <Text fill="#465777" layoutX="683.0" layoutY="171.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-&gt;">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Text>
-      <Text fill="#465777" layoutX="683.0" layoutY="255.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;-">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Text>
-      <Text fill="#465777" layoutX="54.0" layoutY="171.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-&gt;">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Text>
-      <Text fill="#465777" layoutX="690.0" layoutY="342.0" strokeType="OUTSIDE" strokeWidth="0.0" text="v">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Text>
-      <Text fill="#465777" layoutX="59.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="^">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Text>
-      <Text fill="#465777" layoutX="693.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="^">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Text>
-</children>
-</Pane>
+<AnchorPane prefHeight="442.0" prefWidth="778.0" style="-fx-background-color: #e6e6e6;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.components.SignageComponent1Controller">
+   <children>
+      <VBox fx:id="signsContainerVBox" layoutX="41.0" layoutY="60.0" prefHeight="360.0" prefWidth="695.0" />
+   </children>
+</AnchorPane>
