@@ -1728,6 +1728,8 @@ public class Repository {
         officeRequestDAO.setAll();
         alertDAO.setAll();
         signDAO.setAll();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public ArrayList<String> getNodeTypesUniqueAlphabetical () {
