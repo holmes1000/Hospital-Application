@@ -68,7 +68,7 @@ public class SignageController {
 
   public void initializeFields() {
       ObservableList<String> locations =
-              FXCollections.observableArrayList("Screen 1", "Screen 2");
+              FXCollections.observableArrayList("Screen 3", "Screen 2");
       cbLocation.setItems(locations);
   }
 
