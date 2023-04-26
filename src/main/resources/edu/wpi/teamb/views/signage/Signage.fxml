@@ -31,9 +31,9 @@
                     <Font name="System Bold" size="36.0" />
                 </font>
             </Text>
-            <VBox layoutX="3.0" layoutY="117.0" prefHeight="40.0" prefWidth="174.0">
+            <VBox layoutX="3.0" layoutY="117.0" prefHeight="40.0" prefWidth="706.0">
                <children>
-                  <MFXComboBox fx:id="cbLocation" floatingText="Location" onAction="#clickCbLocation" prefHeight="40.0" prefWidth="175.0" style="-fx-border-color: #1C4EFE" />
+                  <MFXComboBox fx:id="cbLocation" floatingText="Location" onAction="#clickCbLocation" prefHeight="40.0" prefWidth="376.0" style="-fx-border-color: #1C4EFE" />
                </children></VBox>
             <VBox fx:id="signVbox" layoutX="138.0" layoutY="170.0" prefHeight="489.0" prefWidth="705.0" />
         </children>

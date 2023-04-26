@@ -18,6 +18,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
@@ -68,6 +69,7 @@ public class SignageController {
               groupSigns.add(sign);
           }
       }
+      int index = 0;
       for (Sign s : groupSigns) {
           try {
               FXMLLoader loader =
@@ -78,6 +80,13 @@ public class SignageController {
               //set the location of the sign
               controller.setSignageLocationText(s.getSignageGroup());
               //set the direction of the sign
+              if(s.getDirection().equals("stop here") && index== 0){
+                  index++;
+                  Label label = new Label();
+                  label.setText("Stop Here");
+                  label.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+                  signVbox.getChildren().add(0, label);
+              }
               controller.setSignageDirectionIcons(s.getDirection());
               signVbox.getChildren().addAll(pane);
           } catch (IOException e) {

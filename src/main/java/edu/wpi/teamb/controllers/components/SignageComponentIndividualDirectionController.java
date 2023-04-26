@@ -20,8 +20,27 @@ public class SignageComponentIndividualDirectionController {
      * sets both signageDirectionIconLeft and signageDirectionIconRight to the same text
      */
     public void setSignageDirectionIcons(String text) {
-        signageDirectionIconLeft.setText(text);
-        signageDirectionIconRight.setText(text);
+        String directionIcon = "";
+        switch (text) {
+            case "left":
+                directionIcon = "<";
+                break;
+            case "right":
+                directionIcon = ">";
+                break;
+            case "up":
+                directionIcon = "/\\";
+                break;
+            case "down":
+                directionIcon = "\\/";
+                break;
+            default:
+                directionIcon = " ";
+                break;
+        }
+
+        signageDirectionIconLeft.setText(directionIcon);
+        signageDirectionIconRight.setText(directionIcon);
     }
 
     /**

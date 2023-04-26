@@ -13,12 +13,12 @@
             <Font size="24.0" />
          </font>
       </Text>
-      <Text fx:id="signageDirectionIconRight" fill="#465777" layoutX="646.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="^">
+      <Text fx:id="signageDirectionIconRight" fill="#465777" layoutX="608.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="^">
          <font>
             <Font size="24.0" />
          </font>
       </Text>
-      <Text fx:id="signageLocationText" fill="#465777" layoutX="187.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Watkins Clinic &amp; EP (this floor)">
+      <Text fx:id="signageLocationText" fill="#465777" layoutX="149.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Watkins Clinic &amp; EP (this floor)">
          <font>
             <Font size="24.0" />
          </font>
