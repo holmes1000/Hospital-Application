@@ -78,7 +78,7 @@ public class SignageController {
               //get the controller that was loaded by the loader
               SignageComponentIndividualDirectionController controller = loader.getController();
               //set the location of the sign
-              controller.setSignageLocationText(s.getSignageGroup());
+              controller.setSignageLocationText(s.getLocationName());
               //set the direction of the sign
               if(s.getDirection().equals("stop here") && index== 0){
                   index++;
