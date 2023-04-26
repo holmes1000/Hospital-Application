@@ -5,7 +5,6 @@ import edu.wpi.teamb.DBAccess.DBinput;
 import edu.wpi.teamb.DBAccess.Full.*;
 import edu.wpi.teamb.DBAccess.ORMs.*;
 
-import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -822,7 +821,7 @@ public class Repository {
         return s;
     }
 
-    public ArrayList<Sign> getAll() {
+    public ArrayList<Sign> getAllSigns() {
         ArrayList<Sign> signs = signDAO.getAll();
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
@@ -911,7 +910,7 @@ public class Repository {
     }
 
     public HashSet<String> getSignageGroups() {
-        HashSet<String> hset = new HashSet<String>();
+        HashSet<String> hset = signDAO.getSignageGroups();
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
         return hset;

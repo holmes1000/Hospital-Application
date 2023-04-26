@@ -35,7 +35,7 @@
                <children>
                   <MFXComboBox fx:id="cbLocation" floatingText="Location" onAction="#clickCbLocation" prefHeight="40.0" prefWidth="175.0" style="-fx-border-color: #1C4EFE" />
                </children></VBox>
-            <VBox fx:id="signVbox" layoutX="64.0" layoutY="170.0" prefHeight="489.0" prefWidth="914.0" />
+            <VBox fx:id="signVbox" layoutX="138.0" layoutY="170.0" prefHeight="489.0" prefWidth="705.0" />
         </children>
     </AnchorPane>
     </center>
