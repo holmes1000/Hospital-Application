@@ -194,5 +194,9 @@ public class OfficeRequestControllerI implements IRequestController{
             //close the stage
             ((Stage) btnSubmit.getScene().getWindow()).close();
         });
+
+        //set the cancel and reset button to not be visible
+        btnCancel.setVisible(false);
+        btnReset.setVisible(false);
     }
 }

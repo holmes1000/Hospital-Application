@@ -109,7 +109,7 @@ public class BreadthFirstSearchAlgorithmI implements IPathFindingAlgorithm {
     public HashMap<Integer, Node> get_node_map() {return null;}
 
     @Override
-    public void force_init() throws SQLException {}
+    public void force_init() {}
 
 
 

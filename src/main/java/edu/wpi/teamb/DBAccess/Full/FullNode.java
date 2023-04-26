@@ -136,12 +136,12 @@ public class FullNode {
         Repository.getRepository().deleteNode(node);
     }
 
-    public static void updateFullNode(Object n) {
+    public static void updateFullNode(Object n, int nodeID, String longName) {
         FullNode fn = (FullNode) n;
         Node node = new Node(fn.getNodeID(), fn.getxCoord(), fn.getyCoord(), fn.getFloor(), fn.getBuilding());
         Repository.getRepository().updateNode(node);
         LocationName ln = new LocationName(fn.getLongName(), fn.getShortName(), fn.getNodeType());
-        Repository.getRepository().updateLocationName(ln);
+        Repository.getRepository().updateExistingLocationName(ln, longName);
         Move m = new Move(fn.getNodeID(), fn.getLongName(), Date.valueOf("2023-04-18"));
         Repository.getRepository().updateMove(m);
     }

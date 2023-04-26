@@ -134,7 +134,7 @@ public class FlowerRequestDAOImpl implements IDAO {
         String[] valuesFlower = {ffr.getFlowerType(), ffr.getColor(), ffr.getSize(), ffr.getMessage()};
         String[] colsReq = {"employee", "datesubmitted", "requeststatus", "requesttype", "locationname", "notes"};
         String[] valuesReq = {ffr.getEmployee(), String.valueOf(ffr.getDateSubmitted()), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getLocationName(), ffr.getNotes()};
-        DButils.updateRow("conferencerequests", colsFlower, valuesFlower, "id = " + ffr.getId());
+        DButils.updateRow("flowerrequests", colsFlower, valuesFlower, "id = " + ffr.getId());
         DButils.updateRow("requests", colsReq, valuesReq, "id = " + ffr.getId());
         for (int i = 0; i < flowerRequests.size(); i++) {
             if (flowerRequests.get(i).getId() == ffr.getId()) {
