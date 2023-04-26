@@ -8,6 +8,7 @@ import org.postgresql.util.PSQLException;
 public class Main {
 
   public static void main(String[] args) {
+//    Repository.getRepository().importAlertsFromCSV("C:\\Users\\Ronit\\Desktop\\alerts.csv", 0);
     Repository.getRepository();
 //    try {
 //      DBconnection.getDBconnection().getConnection();

@@ -960,7 +960,7 @@ public class DBinput {
 
             String createTableAlerts = "CREATE TABLE alerts " +
                     "(id INT generated always as identity primary key, title TEXT, description TEXT, " +
-                    "created_at TIMESTAMP)";
+                    "created_at TIMESTAMP, employee VARCHAR(255))";
             int tableUpdateAlerts = tableStmt.executeUpdate(createTableAlerts);
 
             try {
@@ -968,7 +968,7 @@ public class DBinput {
                     String[] requestValues = line.split(splitBy);
                     if (!(requestValues[0].equals("id"))) {
                         // System.out.println(edgeValues[0]);
-                        String rowQuery = "INSERT INTO alerts (id, title, description, created_at) VALUES ("
+                        String rowQuery = "INSERT INTO alerts (id, title, description, created_at, employee) VALUES ("
                                 + "DEFAULT"
                                 + ","
                                 + "'"
@@ -981,6 +981,10 @@ public class DBinput {
                                 + ","
                                 + "'"
                                 + requestValues[3]
+                                + "'"
+                                + ","
+                                + "'"
+                                + requestValues[4]
                                 + "'"
                                 + ");";
                         Statement rowStmt = DBconnection.getDBconnection().getConnection().createStatement();

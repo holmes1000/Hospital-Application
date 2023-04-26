@@ -563,15 +563,16 @@ public class DBoutput {
                 default -> throw new IllegalStateException("Unexpected value: " + location);
             };
 
-            bw.write("id,item,quantity,type");
+            bw.write("id,item,quantity,type,employee");
 
             while (allRS.next()) {
                 int id = allRS.getInt("id");
                 String title = allRS.getString("title");
                 String description = allRS.getString("description");
                 Date created_at = allRS.getDate("created_at");
+                String employee = allRS.getString("employee");
 
-                String line = String.format("%d,%s,%s,%s", id, title, description, created_at.toString());
+                String line = String.format("%d,%s,%s,%s,%s", id, title, description, created_at.toString(), employee);
 
                 bw.newLine();
                 bw.write(line);
