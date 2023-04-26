@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="405.0" prefWidth="975.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.CurrentUserRequestsController">
+   <children>
+      <VBox prefHeight="402.0" prefWidth="980.0">
+         <children>
+            <MFXScrollPane fx:id="userRequestsScrollPane" prefHeight="402.0" prefWidth="980.0">
+               <content>
+                  <VBox fx:id="userRequestsVBox" prefHeight="402.0" prefWidth="971.0" />
+               </content>
+            </MFXScrollPane>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

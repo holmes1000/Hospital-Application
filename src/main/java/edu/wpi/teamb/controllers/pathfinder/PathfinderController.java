@@ -12,11 +12,8 @@ import java.util.*;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.Full.FullNode;
-import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.ORMs.Move;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
-import edu.wpi.teamb.navigation.Navigation;
-import edu.wpi.teamb.navigation.Screen;
 import edu.wpi.teamb.pathfinding.PathFinding;
 import edu.wpi.teamb.controllers.NavDrawerController;
 import edu.wpi.teamb.entities.EPathfinder;
@@ -41,9 +38,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Path;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import net.kurobako.gesturefx.GesturePane;
@@ -77,7 +74,12 @@ public class PathfinderController {
 
     @FXML private MFXButton previousFloor;
     @FXML private MFXButton nextFloor;
+    @FXML private Pane navPane;
 
+    @FXML private VBox vboxActivateNav;
+    @FXML private VBox vboxActivateNav1;
+
+    private boolean navLoaded;
     private String currentFloor = "1";
     private HashMap<Integer,ArrayList<Move>> move_map = new HashMap<>();
     private ArrayList<Move> upcoming_moves = new ArrayList<>();
@@ -93,6 +95,7 @@ public class PathfinderController {
     HashMap<String,ArrayList<Node>> nodes_by_floor = new HashMap<>();
   private EPathfinder EPathfinder;
 
+
     public GesturePane pane = new GesturePane();
     ArrayList<FullNode> fullNodes = new ArrayList<>();
     HashMap<String,FullNode> fullNodesByLongname = new HashMap<>();
@@ -104,10 +107,18 @@ public class PathfinderController {
   @FXML
   public void initialize() throws IOException {
       Platform.setImplicitExit(false);
+
       initNavBar();
       hoverHelp();
       initButtons();
       getMoveMap();
+      navPane.setPickOnBounds(false);
+      menuDrawer.setPickOnBounds(false);
+      navLoaded = false;
+      navPane.setMouseTransparent(true);
+      activateNav();
+      deactivateNav();
+
 
       for (Integer id : PathFinding.ASTAR.getFullNodesByID().keySet()) {
           fullNodesByID.put(id,PathFinding.ASTAR.getFullNodesByID().get(id));
@@ -143,7 +154,7 @@ public class PathfinderController {
       algorithms.add("Breadth First Search");
       algorithms.add("Depth First Search");
       algorithms.add("Dijkstra Search");
-      algorithms.add("BStar");
+      algorithms.add("BStar (My Fault)");
 
 
       nodes.addAll(getFilteredLongnames());
@@ -371,15 +382,20 @@ public class PathfinderController {
               // Check if nodes are neighboring before drawing the line
               if (PathFinding.ASTAR.get_node_map().get(n.getNodeID()).getNeighborIds().contains(PathFinding.ASTAR.get_node_map().get(next.getNodeID()).getNodeID())) {
                   Line line = new Line(n.getxCoord(), n.getyCoord(), next.getxCoord(), next.getyCoord());
+                  Line big_line = new Line(n.getxCoord(), n.getyCoord(), next.getxCoord(), next.getyCoord());
+                  line.setStroke(Color.web("BBE0A1"));
+                  big_line.setStroke(GREEN);
                   animateLine(line);
                   line.setStrokeWidth(4);
+                  big_line.setStrokeWidth(8);
+                  pathGroup.getChildren().add(big_line);
                   pathGroup.getChildren().add(line);
               }
           }
           for (Node n : nodes) {
 //          pathGroup.getChildren().clear();
               if (n == nodes.get(0)) {
-                  Circle circle = new Circle(n.getxCoord(), n.getyCoord(), 5, GREEN);
+                  Circle circle = new Circle(n.getxCoord(), n.getyCoord(), 5, BLUE);
                   pathGroup.getChildren().add(circle);
                   Tooltip tooltip = new Tooltip(fullNodesByID.get(n.getNodeID()).getLongName());
                   Tooltip.install(circle,tooltip);
@@ -448,37 +464,37 @@ public class PathfinderController {
         switch (currentFloor) {
             case "L1" -> {
                 btnL1.setStyle("-fx-background-color: #f6bd38");
-                btnL2.setStyle("-fx-background-color: #1C4EFE");
-                btn1.setStyle("-fx-background-color: #1C4EFE");
-                btn2.setStyle("-fx-background-color: #1C4EFE");
-                btn3.setStyle("-fx-background-color: #1C4EFE");
+                btnL2.setStyle("-fx-background-color: #012d5a");
+                btn1.setStyle("-fx-background-color: #012d5a");
+                btn2.setStyle("-fx-background-color: #012d5a");
+                btn3.setStyle("-fx-background-color: #012d5a");
             }
             case "L2" -> {
-                btnL1.setStyle("-fx-background-color: #1C4EFE");
+                btnL1.setStyle("-fx-background-color: #012d5a");
                 btnL2.setStyle("-fx-background-color: #f6bd38");
-                btn1.setStyle("-fx-background-color: #1C4EFE");
-                btn2.setStyle("-fx-background-color: #1C4EFE");
-                btn3.setStyle("-fx-background-color: #1C4EFE");
+                btn1.setStyle("-fx-background-color: #012d5a");
+                btn2.setStyle("-fx-background-color: #012d5a");
+                btn3.setStyle("-fx-background-color: #012d5a");
             }
             case "1" -> {
-                btnL1.setStyle("-fx-background-color: #1C4EFE");
-                btnL2.setStyle("-fx-background-color: #1C4EFE");
+                btnL1.setStyle("-fx-background-color: #012d5a");
+                btnL2.setStyle("-fx-background-color: #012d5a");
                 btn1.setStyle("-fx-background-color: #f6bd38");
-                btn2.setStyle("-fx-background-color: #1C4EFE");
-                btn3.setStyle("-fx-background-color: #1C4EFE");
+                btn2.setStyle("-fx-background-color: #012d5a");
+                btn3.setStyle("-fx-background-color: #012d5a");
             }
             case "2" -> {
-                btnL1.setStyle("-fx-background-color: #1C4EFE");
-                btnL2.setStyle("-fx-background-color: #1C4EFE");
-                btn1.setStyle("-fx-background-color: #1C4EFE");
+                btnL1.setStyle("-fx-background-color: #012d5a");
+                btnL2.setStyle("-fx-background-color: #012d5a");
+                btn1.setStyle("-fx-background-color: #012d5a");
                 btn2.setStyle("-fx-background-color: #f6bd38");
-                btn3.setStyle("-fx-background-color: #1C4EFE");
+                btn3.setStyle("-fx-background-color: #012d5a");
             }
             case "3" -> {
-                btnL1.setStyle("-fx-background-color: #1C4EFE");
-                btnL2.setStyle("-fx-background-color: #1C4EFE");
-                btn1.setStyle("-fx-background-color: #1C4EFE");
-                btn2.setStyle("-fx-background-color: #1C4EFE");
+                btnL1.setStyle("-fx-background-color: #012d5a");
+                btnL2.setStyle("-fx-background-color: #012d5a");
+                btn1.setStyle("-fx-background-color: #012d5a");
+                btn2.setStyle("-fx-background-color: #012d5a");
                 btn3.setStyle("-fx-background-color: #f6bd38");
             }
         }
@@ -658,7 +674,7 @@ public class PathfinderController {
               //Assume all images were already added to the stackPane
 
               //Add the image to the Front
-              ObservableList<String> items = FXCollections.observableArrayList(string_path);
+              ObservableList<String> items = FXCollections.observableArrayList(listSeparator(string_path));
 //              listView = new MFXListView<>();
               listView.setItems(items);
               VboxPathfinder.getChildren().addAll(listView);
@@ -697,9 +713,25 @@ public class PathfinderController {
                   moveAlert(endNode.getSelectedItem());
               }
 
-
           }
       });
+  }
+
+  public ArrayList<String> listSeparator(ArrayList<String> listOfNodes){
+      // this is a function for adding "next go to" between the non-ending parts of the list"
+      ArrayList<String> output = new ArrayList<>();
+      for (int i = 0; i < listOfNodes.size(); i++) {
+          if (i == 0) {
+              output.add("Start at " + listOfNodes.get(i));
+          }
+          else if (i == listOfNodes.size()-1) {
+              output.add("You've arrived at " + listOfNodes.get(i));
+          }
+          else {
+              output.add("Continue to " + listOfNodes.get(i));
+          }
+      }
+      return output;
   }
 
     public void clickPreviousFloor(){
@@ -799,6 +831,40 @@ public class PathfinderController {
             popOver.show(helpIcon);
         });
   }
+
+    /**
+     * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+     * Swaps ownership of the strip to the navdraw
+     */
+
+    public void activateNav(){
+        vboxActivateNav.setOnMouseEntered(event -> {
+            if(!navLoaded) {
+                System.out.println("on");
+                navPane.setPickOnBounds(false);
+                navPane.setMouseTransparent(false);
+                navLoaded = true;
+                vboxActivateNav.setDisable(true);
+                vboxActivateNav1.setDisable(false);
+            }
+        });
+    }
+
+    /**
+     * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+     * Swaps ownership of the strip to the page
+     */
+    public void deactivateNav(){
+        vboxActivateNav1.setOnMouseEntered(event -> {
+            if(navLoaded){
+                System.out.println("off");
+                navPane.setMouseTransparent(true);
+                vboxActivateNav.setDisable(false);
+                navLoaded = false;
+                vboxActivateNav1.setDisable(true);
+            }
+        });
+    }
 
   public void initNavBar() {
     //https://github.com/afsalashyana/JavaFX-Tutorial-Codes/tree/master/JavaFX%20Navigation%20Drawer/src/genuinecoder

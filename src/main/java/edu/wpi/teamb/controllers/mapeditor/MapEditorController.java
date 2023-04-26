@@ -466,7 +466,6 @@ public class MapEditorController {
    * @throws SQLException
    */
   public void addNodeToMap(double x, double y) throws SQLException {
-
     getMaxID();
 
     //tfNodeId.setText(String.valueOf(maxID + 5)); // Set the nodeID text field to the maxID + 5
@@ -637,7 +636,6 @@ public class MapEditorController {
 
   /**
    * Handles the add edge event
-   *
    * @param c1
    * @param c2
    */
@@ -662,7 +660,6 @@ public class MapEditorController {
 
   /**
    * Handles the edit node event
-   *
    * @param n
    * @throws SQLException
    */
@@ -907,8 +904,24 @@ public class MapEditorController {
     fileChooser.setTitle("Open Resource File");
     fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("CSV", "*.csv"));
     File file = fileChooser.showOpenDialog(null);
+    String selectedItem = getSelectedItem();
+    String absolutePath = null;
     if (file != null) {
-      System.out.println(file.getAbsolutePath());
+      switch (selectedItem) {
+        case "Moves" -> Repository.getRepository().importMovesFromCSV(file.getAbsolutePath(), 0);
+        case "Nodes" -> Repository.getRepository().importNodesFromCSV(file.getAbsolutePath(), 0);
+        case "Edges" -> Repository.getRepository().importEdgesFromCSV(file.getAbsolutePath(), 0);
+        case "Location Names" -> Repository.getRepository().importLocationNamesFromCSV(file.getAbsolutePath(), 0);
+        case "Users" -> Repository.getRepository().importUsersFromCSV(file.getAbsolutePath(), 0);
+        case "Requests" -> Repository.getRepository().importRequestsFromCSV(file.getAbsolutePath(), 0);
+        case "Conference Requests" -> Repository.getRepository().importConferenceRequestsFromCSV(file.getAbsolutePath(), 0);
+        case "Flower Requests" -> Repository.getRepository().importFlowerRequestsFromCSV(file.getAbsolutePath(), 0);
+        case "Furniture Requests" -> Repository.getRepository().importFurnitureRequestsFromCSV(file.getAbsolutePath(), 0);
+        case "Meal Requests" -> Repository.getRepository().importMealRequestsFromCSV(file.getAbsolutePath(), 0);
+        case "Office Requests" -> Repository.getRepository().importOfficeRequestsFromCSV(file.getAbsolutePath(), 0);
+        case "Alerts" -> Repository.getRepository().importAlertsFromCSV(file.getAbsolutePath(), 0);
+        case "Signs" -> Repository.getRepository().importSignsFromCSV(file.getAbsolutePath(), 0);
+      }
     }
   }
 
@@ -922,32 +935,44 @@ public class MapEditorController {
     String item = getSelectedItem();
     if (selectedDirectory != null) {
       switch (item) {
-        case "Moves" -> absolutePath = selectedDirectory.getAbsolutePath() + "/movetest";
-        case "Nodes" -> absolutePath = selectedDirectory.getAbsolutePath() + "/nodetest";
-        case "Edges" -> absolutePath = selectedDirectory.getAbsolutePath() + "/edgetest";
-        case "Location Names" -> absolutePath = selectedDirectory.getAbsolutePath() + "/locationnametest";
+        case "Moves" -> absolutePath = selectedDirectory.getAbsolutePath() + "/moves";
+        case "Nodes" -> absolutePath = selectedDirectory.getAbsolutePath() + "/nodes";
+        case "Edges" -> absolutePath = selectedDirectory.getAbsolutePath() + "/edges";
+        case "Location Names" -> absolutePath = selectedDirectory.getAbsolutePath() + "/locationNames";
+        case "Users" -> absolutePath = selectedDirectory.getAbsolutePath() + "/users";
+        case "Requests" -> absolutePath = selectedDirectory.getAbsolutePath() + "/requests";
+        case "Conference Requests" -> absolutePath = selectedDirectory.getAbsolutePath() + "/conferenceRequests";
+        case "Flower Requests" -> absolutePath = selectedDirectory.getAbsolutePath() + "/flowerRequests";
+        case "Furniture Requests" -> absolutePath = selectedDirectory.getAbsolutePath() + "/furnitureRequests";
+        case "Meal Requests" -> absolutePath = selectedDirectory.getAbsolutePath() + "/mealRequests";
+        case "Office Requests" -> absolutePath = selectedDirectory.getAbsolutePath() + "/officeRequests";
+        case "Alerts" -> absolutePath = selectedDirectory.getAbsolutePath() + "/alerts";
+        case "Signs" -> absolutePath = selectedDirectory.getAbsolutePath() + "/signs";
+
         default -> absolutePath = selectedDirectory.getAbsolutePath() + "/defaulttest";
-      }
-      ;
+      };
       switch (item) {
-        case "Moves" -> DBoutput.exportMovesToCSV(absolutePath, 2);
-        case "Nodes" -> DBoutput.exportNodesToCSV(absolutePath, 2);
-        case "Edges" -> {
-          DBoutput.exportEdgesToCSV(absolutePath, 2);
-        }
-        case "Location Names" -> {
-          DBoutput.exportLocationNamesToCSV(absolutePath, 2);
-        }
+        case "Nodes" -> Repository.getRepository().exportNodesToCSV(absolutePath, 2);
+        case "Location Names" -> DBoutput.exportLocationNamesToCSV(absolutePath, 2);
+        case "Moves" -> Repository.getRepository().exportMovesToCSV(absolutePath, 2);
+        case "Edges" -> Repository.getRepository().exportEdgesToCSV(absolutePath, 2);
+        case "Users" -> Repository.getRepository().exportUsersToCSV(absolutePath, 2);
+        case "Requests" -> Repository.getRepository().exportRequestsToCSV(absolutePath, 2);
+        case "Conference Requests" -> Repository.getRepository().exportConferenceRequestsToCSV(absolutePath, 2);
+        case "Flower Requests" -> Repository.getRepository().exportFlowerRequestsToCSV(absolutePath, 2);
+        case "Furniture Requests" -> Repository.getRepository().exportFurnitureRequestsToCSV(absolutePath, 2);
+        case "Meal Requests" -> Repository.getRepository().exportMealRequestsToCSV(absolutePath, 2);
+        case "Office Requests" -> Repository.getRepository().exportOfficeRequestsToCSV(absolutePath, 2);
+        case "Alerts" -> Repository.getRepository().exportAlertsToCSV(absolutePath, 2);
+        case "Signs" -> Repository.getRepository().exportSignsToCSV(absolutePath, 2);
         default -> new ArrayList<>();
-      }
-      ;
+      };
     }
     System.out.println("here"); // 1 means success, 0 means failure
   }
 
   /**
    * Changes the color of the buttons to indicate which floor is currently being viewed
-   *
    * @param currentFloor
    */
   private void changeButtonColor(String currentFloor) {
@@ -992,7 +1017,7 @@ public class MapEditorController {
 
   private void changeStateButtonColor(String state) {
     switch (state) {
-      case "View" -> {
+      case "View"-> {
         btnView.setStyle("-fx-background-color: #f6bd38");
         btnEdit.setStyle("-fx-background-color: #1C4EFE");
         btnDelete.setStyle("-fx-background-color: #1C4EFE");
@@ -1036,8 +1061,7 @@ public class MapEditorController {
               }
               popOver.show(helpIcon);
             });
-    helpIcon.setOnMouseExited(event -> {
-    });
+    helpIcon.setOnMouseExited(event -> {});
   }
 
   private void initializeFields() {
@@ -1046,6 +1070,15 @@ public class MapEditorController {
     tables.add("Edges");
     tables.add("Moves");
     tables.add("Location Names");
+    tables.add("Users");
+    tables.add("Requests");
+    tables.add("Conference Requests");
+    tables.add("Flower Requests");
+    tables.add("Furniture Requests");
+    tables.add("Meal Requests");
+    tables.add("Office Requests");
+    tables.add("Alerts");
+    tables.add("Signs");
     NodeSelector.setItems(FXCollections.observableList(tables));
   }
 
@@ -1111,4 +1144,3 @@ public class MapEditorController {
     fullNodesList.add(n);
   }
 }
-

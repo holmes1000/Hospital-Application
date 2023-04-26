@@ -8,19 +8,22 @@ public class Alert {
     private String title;
     private String description;
     private Timestamp createdAt;
+    private String employee;
 
     public Alert() {
         this.id = 0;
         this.title = "";
         this.description = "";
         this.createdAt = null;
+        this.employee = "";
     }
 
-    public Alert(int id, String title, String description, Timestamp created_at) {
+    public Alert(int id, String title, String description, Timestamp created_at, String employee) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.createdAt = created_at;
+        this.employee = employee;
     }
 
     public Alert(ResultSet rs) {
@@ -29,6 +32,7 @@ public class Alert {
             this.title = rs.getString("title");
             this.description = rs.getString("description");
             this.createdAt = rs.getTimestamp("created_at");
+            this.employee = rs.getString("employee");
         } catch (Exception e) {
             System.err.println("ERROR Query Failed: " + e.getMessage());
         }
@@ -64,5 +68,20 @@ public class Alert {
 
     public void setCreated_at(Timestamp created_at) {
         this.createdAt = created_at;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    /**
+     * @return the employee
+     */
+    public String getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(String employee) {
+        this.employee = employee;
     }
 }

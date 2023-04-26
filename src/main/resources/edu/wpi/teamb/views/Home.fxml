@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXDrawer?>
+<?import com.jfoenix.controls.JFXDrawersStack?>
 <?import com.jfoenix.controls.JFXHamburger?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.effect.ColorAdjust?>
-<?import javafx.scene.effect.Light.Distant?>
 <?import javafx.scene.effect.Lighting?>
 <?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.image.Image?>
@@ -13,6 +14,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -27,18 +29,23 @@
                   <Image url="@../img/bwh-background.jpg" />
                </image>
             </ImageView>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#465777" height="667.0" layoutX="-66.0" layoutY="21.0" stroke="#465777" strokeType="INSIDE" width="1136.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#7089a2" height="667.0" layoutX="-66.0" layoutY="21.0" stroke="WHITE" strokeType="INSIDE" width="1136.0" />
             <Text fx:id="welcomeBackText" fill="#f1f1f1" layoutX="-46.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your Dashboard" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="36.0" />
                </font>
             </Text>
+            <VBox fx:id="vboxActivateNav" layoutX="-170.0" onMouseEntered="#activateNav" prefHeight="720.0" prefWidth="70.0" />
             <Pane fx:id="homePane" prefHeight="691.0" prefWidth="1067.0">
                <children>
                   <MFXButton fx:id="btnCredits" layoutX="904.0" layoutY="645.0" mnemonicParsing="false" text="Credits" />
                   <MFXButton fx:id="btnAbout" layoutX="981.0" layoutY="645.0" mnemonicParsing="false" text="About" />
                   <MFXButton fx:id="btnClear" layoutX="833.0" layoutY="645.0" mnemonicParsing="false" text="Clear" visible="false" />
                   <MFXButton fx:id="btnSecret" layoutX="774.0" layoutY="645.0" mnemonicParsing="false" text="Secret" />
+                  <MFXButton fx:id="viewUserRequestButton" layoutX="315.0" layoutY="103.0" prefHeight="50.0" prefWidth="200.0" text="View My Requests" />
+                  <VBox fx:id="vboxActivateNav1" layoutX="-52.0" layoutY="10.0" onMouseClicked="#deactivateNav" prefHeight="720.0" prefWidth="1162.0" visible="false" />
+                  <JFXDrawersStack layoutX="14.0" layoutY="230.0" prefHeight="63.0" prefWidth="85.0" />
+                  <TableView fx:id="alertsTable" layoutX="-46.0" layoutY="103.0" prefHeight="159.0" prefWidth="340.0" />
                </children></Pane>
             <ImageView fitHeight="150.0" fitWidth="456.0" layoutX="258.0" layoutY="551.0" pickOnBounds="true" preserveRatio="true">
                <image>
