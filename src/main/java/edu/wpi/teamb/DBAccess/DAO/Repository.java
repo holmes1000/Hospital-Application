@@ -822,7 +822,7 @@ public class Repository {
         return s;
     }
 
-    public ArrayList<Sign> getAll() {
+    public ArrayList<Sign> getAllSigns() {
         ArrayList<Sign> signs = signDAO.getAll();
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
@@ -911,14 +911,14 @@ public class Repository {
     }
 
     public HashSet<String> getSignageGroups() {
-        HashSet<String> hset = new HashSet<String>();
+        HashSet<String> hset = signDAO.getSignageGroups();
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
         return hset;
     }
 
     public ArrayList<String> getLocationNames(String signBlock) {
-        ArrayList<String> names = new ArrayList<String>();
+        ArrayList<String> names = signDAO.getLocationNames(signBlock);
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
         return names;
