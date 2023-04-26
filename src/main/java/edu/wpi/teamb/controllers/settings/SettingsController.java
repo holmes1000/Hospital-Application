@@ -3,6 +3,7 @@ package edu.wpi.teamb.controllers.settings;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
+import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.controllers.NavDrawerController;
 import edu.wpi.teamb.entities.ELogin;
 import edu.wpi.teamb.navigation.Navigation;
@@ -10,6 +11,7 @@ import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -22,6 +24,7 @@ public class SettingsController {
     @FXML private MFXButton btnEditUsers;
     @FXML private MFXButton btnEditAccount;
     @FXML private MFXButton btnEditAlerts;
+    @FXML private MFXButton btnChangeServer;
 
     @FXML
     public void initialize() throws IOException {
@@ -31,6 +34,7 @@ public class SettingsController {
         if (adminTest != ELogin.PermissionLevel.ADMIN) {
             btnEditUsers.setVisible(false);
             btnEditAlerts.setVisible(false);
+            btnChangeServer.setVisible(false);
         }
     }
 
@@ -38,6 +42,22 @@ public class SettingsController {
         btnEditAlerts.setOnMouseClicked(event -> Navigation.navigate(Screen.EDIT_ALERTS));
         btnEditAccount.setOnMouseClicked(event -> Navigation.navigate(Screen.EDIT_ACCOUNT));
         btnEditUsers.setOnMouseClicked(event -> Navigation.navigate(Screen.EDIT_USERS));
+        btnChangeServer.setOnMouseClicked(event -> changeServer());
+    }
+
+    private void changeServer() {
+        int server = Repository.getRepository().getDatabaseServer();
+        if (server == 0) { // if server is WPI
+            Repository.getRepository().switchTo(1);       // Swap to AWS
+        } else if (server == 1){    // if server is AWS
+            Repository.getRepository().switchTo(0);     // Else swap to WPI
+        }
+        System.out.println("Server changed to: " + server);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Server changed!");
+        alert.setHeaderText(null);
+        alert.setContentText("Successfully changed server to: " + server);
+        alert.showAndWait();
     }
 
     public void initNavBar() {
