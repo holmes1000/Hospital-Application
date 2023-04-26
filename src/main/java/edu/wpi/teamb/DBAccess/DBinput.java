@@ -1045,16 +1045,16 @@ public class DBinput {
                         startDate date NOT NULL DEFAULT CURRENT_DATE,
                         endDate date,
                         singleBlock boolean DEFAULT true,
-                        PRIMARY KEY (signageGroup, locationName))
+                        PRIMARY KEY (signageGroup, locationName, startDate))
                     """;
             int tableUpdateSignage = tableStmt.executeUpdate(createTableSignage);
 
             try {
                 while (((line = br.readLine()) != null)) {
                     String[] requestValues = line.split(splitBy);
-                    if (!(requestValues[0].equals("direction"))) {
+                    if (!(requestValues[0].equals("signageGroup"))) {
                         // System.out.println(edgeValues[0]);
-                        String rowQuery = "INSERT INTO signage (direction, screen, date, locationname) VALUES ("
+                        String rowQuery = "INSERT INTO signs (signagegroup, locationname, direction, startdate, enddate, singleblock) VALUES ("
                                 + "'"
                                 + requestValues[0]
                                 + "'"

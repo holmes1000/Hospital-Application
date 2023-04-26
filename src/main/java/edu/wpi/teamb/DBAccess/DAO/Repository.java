@@ -917,7 +917,7 @@ public class Repository {
     }
 
     public ArrayList<String> getLocationNames(String signBlock) {
-        ArrayList<String> names = new ArrayList<String>();
+        ArrayList<String> names = signDAO.getLocationNames(signBlock);
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
         return names;
@@ -1712,8 +1712,27 @@ public class Repository {
         return dbConnection.getConnection();
     }
 
+    public int getDatabaseServer() {
+        return dbConnection.getDatabaseServer();
+    }
+
     public void switchTo(int databaseServer) {
         dbConnection.switchTo(databaseServer);
+        nodeDAO.setAll();
+        edgeDAO.setAll();
+        locationNameDAO.setAll();
+        moveDAO.setAll();
+        userDAO.setAll();
+        requestDAO.setAll();
+        conferenceRequestDAO.setAll();
+        flowerRequestDAO.setAll();
+        mealRequestDAO.setAll();
+        furnitureRequestDAO.setAll();
+        officeRequestDAO.setAll();
+        alertDAO.setAll();
+        signDAO.setAll();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 
     public ArrayList<String> getNodeTypesUniqueAlphabetical () {

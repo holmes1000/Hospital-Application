@@ -615,7 +615,7 @@ public class DBoutput {
 
             while (allRS.next()) {
                 String signageGroup = allRS.getString("signageGroup");
-                String locationName = allRS.getString("locatioName");
+                String locationName = allRS.getString("locationName");
                 String direction = allRS.getString("direction");
                 Date startDate = allRS.getDate("startDate");
                 Date endDate = allRS.getDate("endDate");

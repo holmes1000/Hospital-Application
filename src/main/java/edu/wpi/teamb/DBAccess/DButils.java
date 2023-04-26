@@ -32,7 +32,7 @@ public class DButils {
         ResultSet rs = null;
         try {
             Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
-            String query = "SELECT " + columns + " FROM " + table + " WHERE " + cond;
+            String query = "SELECT " + columns + " FROM teamb." + table + " WHERE " + cond;
             rs = stmt.executeQuery(query);
             if (rs != null) {
                 return rs;
@@ -54,7 +54,7 @@ public class DButils {
     public static ResultSet getCol(String table, String column) {
         try {
             Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
-            String query = "SELECT " + column + " FROM " + table;
+            String query = "SELECT " + column + " FROM teamb." + table;
             ResultSet rs = stmt.executeQuery(query);
             return rs;
         } catch (SQLException e) {
@@ -96,7 +96,7 @@ public class DButils {
     public static void updateRow(String table, String[] columns, String[] value, String cond) {
         try {
             Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
-            String query = "UPDATE " + table + " SET " + strArray2UpdateFormat(columns, value) + " WHERE " + cond;
+            String query = "UPDATE teamb." + table + " SET " + strArray2UpdateFormat(columns, value) + " WHERE " + cond;
             stmt.executeUpdate(query);
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'DButils.updateRow': " + e.getMessage());
@@ -137,7 +137,7 @@ public class DButils {
     public static void insertRow(String table, String[] columns, String[] value) {
         try {
             Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
-            String update = "INSERT INTO "  + table + " (" + strArray2InsertFormatCol(columns) + ") VALUES ("
+            String update = "INSERT INTO teamb."  + table + " (" + strArray2InsertFormatCol(columns) + ") VALUES ("
                     + strArray2InsertFormat(value) + ")";
             stmt.executeUpdate(update);
         } catch (SQLException e) {
@@ -163,7 +163,7 @@ public class DButils {
         try {
             c = DBconnection.getDBconnection().getConnection();
             c.setAutoCommit(false);
-            String insert = "INSERT INTO requests(employee, requeststatus, requesttype, locationname, notes) VALUES ( ?, ?, ?, ?, ?)";
+            String insert = "INSERT INTO teamb.requests(employee, requeststatus, requesttype, locationname, notes) VALUES ( ?, ?, ?, ?, ?)";
             String query = "SELECT nextval(pg_get_serial_sequence('requests','id'))";
             String query1 = "SELECT currval(pg_get_serial_sequence('requests','id'))";
             stmt = c.prepareStatement(insert);
@@ -233,7 +233,7 @@ public class DButils {
     public static void deleteRow(String table, String cond) {
         try {
             Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
-            String query = "DELETE FROM " + table + " WHERE " + cond;
+            String query = "DELETE FROM teamb." + table + " WHERE " + cond;
             stmt.executeUpdate(query);
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'DButils.deleteRow': " + e.getMessage());
@@ -248,7 +248,7 @@ public class DButils {
      * @return an array of ints with all the ids from a certain table
      */
     public static int[] getIDlist(String table, String idColName) {
-        String countQuery = "SELECT COUNT(*) FROM " + table;
+        String countQuery = "SELECT COUNT(*) FROM teamb." + table;
         int listSize = 0;
         try {
             Statement countStmt = DBconnection.getDBconnection().getConnection().createStatement();
@@ -261,7 +261,7 @@ public class DButils {
             System.out.println("ERROR Query Failed in method 'DB.getIDlist': " + e.getMessage());
         }
 
-        String idQuery = "SELECT " + idColName + "  FROM " + table;
+        String idQuery = "SELECT " + idColName + "  FROM teamb." + table;
 
         ResultSet idRs = null;
         int[] IDs = new int[listSize];
