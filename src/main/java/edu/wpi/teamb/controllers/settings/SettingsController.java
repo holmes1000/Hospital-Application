@@ -11,10 +11,14 @@ import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class SettingsController {
     @FXML
@@ -25,6 +29,7 @@ public class SettingsController {
     @FXML private MFXButton btnEditAccount;
     @FXML private MFXButton btnEditAlerts;
     @FXML private MFXButton btnChangeServer;
+    @FXML private MFXButton btnViewCSVs;
 
     @FXML
     public void initialize() throws IOException {
@@ -43,6 +48,21 @@ public class SettingsController {
         btnEditAccount.setOnMouseClicked(event -> Navigation.navigate(Screen.EDIT_ACCOUNT));
         btnEditUsers.setOnMouseClicked(event -> Navigation.navigate(Screen.EDIT_USERS));
         btnChangeServer.setOnMouseClicked(event -> changeServer());
+        btnViewCSVs.setOnMouseClicked(event -> handleCSVs());
+    }
+
+    private void handleCSVs() {
+        Parent root;
+        try {
+            root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("edu/wpi/teamb/views/settings/ViewCSVs.fxml")));
+            Stage stage = new Stage();
+            stage.setTitle("View CSVs");
+            stage.setScene(new Scene(root, 1280, 720));
+            stage.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void changeServer() {
