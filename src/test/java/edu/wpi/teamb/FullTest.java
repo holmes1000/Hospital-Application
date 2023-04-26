@@ -157,7 +157,9 @@ public class FullTest {
         // TODO: Test listFullReuqests
         ArrayList<FlowerRequest> fr = new ArrayList<FlowerRequest>();
         ArrayList<FullFlowerRequest> ffrs = new ArrayList<FullFlowerRequest>();
-        FlowerRequest f = new FlowerRequest(190, "Lily", "Yellow", "Single Flower", "");
+        FullFlowerRequest amx = Repository.getRepository().getAllFlowerRequests().get(0);
+        FlowerRequest f = new FlowerRequest(amx.getId(), amx.getFlowerType(), amx.getEmployee(), amx.getColor(), amx.getMessage());
+        
         Request r = RequestDAOImpl.getRequest(f.getId());
         FullFlowerRequest b = new FullFlowerRequest(r, f);
         ffrs.add(b);
