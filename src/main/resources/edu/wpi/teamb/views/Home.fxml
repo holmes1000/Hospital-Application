@@ -40,6 +40,7 @@
                   <MFXButton fx:id="btnAbout" layoutX="981.0" layoutY="645.0" mnemonicParsing="false" text="About" />
                   <MFXButton fx:id="btnClear" layoutX="833.0" layoutY="645.0" mnemonicParsing="false" text="Clear" visible="false" />
                   <MFXButton fx:id="btnSecret" layoutX="774.0" layoutY="645.0" mnemonicParsing="false" text="Secret" />
+                  <MFXButton fx:id="viewUserRequestButton" layoutX="38.0" layoutY="602.0" text="View My Requests" />
                   <VBox layoutX="14.0" layoutY="90.0" prefHeight="200.0" prefWidth="443.0">
                      <children>
                         <TableView fx:id="alertsTable" prefHeight="200.0" prefWidth="200.0" />

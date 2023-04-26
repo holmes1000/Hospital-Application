@@ -53,11 +53,7 @@ public class RequestDAOImpl implements IDAO {
         switch (requestType) {
             case "Meal":
                 MealRequestDAOImpl mr = null;
-                try {
-                    mr = new MealRequestDAOImpl();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                mr = new MealRequestDAOImpl();
                 return mr.get(id);
             case "Conference":
                 ConferenceRequestDAOImpl cr = null;
@@ -73,11 +69,7 @@ public class RequestDAOImpl implements IDAO {
                 return ffr.get(id);
             case "Office":
                 OfficeRequestDAOImpl or = null;
-                try {
-                    or = new OfficeRequestDAOImpl();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                or = new OfficeRequestDAOImpl();
         }
         return null;
     }

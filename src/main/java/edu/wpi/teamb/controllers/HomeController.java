@@ -6,6 +6,7 @@ import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.ORMs.Alert;
+import edu.wpi.teamb.entities.EHome;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -33,6 +34,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 public class HomeController {
@@ -44,18 +46,22 @@ public class HomeController {
     @FXML private MFXButton btnCredits;
     @FXML private  MFXButton btnSecret;
     @FXML private MFXButton btnClear;
+    @FXML private MFXButton viewUserRequestButton;
     @FXML private TableView<Alert> alertsTable;
     private MFXButton pathfinderImgBtn = new MFXButton();
 
     Bounds bounds;
+    private EHome homeE;
 
     @FXML
     public void initialize() throws IOException {
         initNavBar();
-        initPathfinderBtn();
+//        initPathfinderBtn();
         initializeBtns();
         loadAlerts();
+        homeE = new EHome();
         bounds = homePane.getBoundsInLocal();
+
     }
 
     private void initPathfinderBtn() {
@@ -171,6 +177,31 @@ public class HomeController {
         btnAbout.setOnMouseClicked(e -> handleAbout());
         btnSecret.setOnMouseClicked(e -> secret(true));
         btnClear.setOnMouseClicked(e -> secret(false));
+        viewUserRequestButton.setOnMouseClicked(e -> handleUserRequests());
+    }
+
+    private void handleUserRequests() {
+        //implementation using FXMLLoader
+        FXMLLoader loader = null;
+        //AnchorPane
+        AnchorPane userRequestsPage = null;
+        //controller for the corresponding InfoCard.fxml
+        CurrentUserRequestsController currentUserRequestController = null;
+        try {
+            loader = new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/CurrentUserRequests.fxml"));
+            userRequestsPage = loader.load();
+            currentUserRequestController = loader.getController();
+        } catch (IOException e) {
+            System.out.println("IOException in loadRequestsIntoContainer of AllRequestsController: " + e.getMessage());
+        }
+        //open the AnchorPane in a new window
+        Stage stage = new Stage();
+        stage.setTitle("My Requests");
+        stage.setScene(new Scene(userRequestsPage));
+        stage.initStyle(StageStyle.UTILITY);
+        //set the resizable to false
+        stage.setResizable(false);
+        stage.show();
     }
 
     private void handleAbout() {
@@ -234,6 +265,4 @@ public class HomeController {
                     }
                 });
     }
-
-
 }
