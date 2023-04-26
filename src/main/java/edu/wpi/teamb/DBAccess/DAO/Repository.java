@@ -1713,6 +1713,10 @@ public class Repository {
         return dbConnection.getConnection();
     }
 
+    public int getDatabaseServer() {
+        return dbConnection.getDatabaseServer();
+    }
+
     public void switchTo(int databaseServer) {
         dbConnection.switchTo(databaseServer);
         nodeDAO.setAll();
