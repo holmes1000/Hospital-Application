@@ -1,5 +1,7 @@
 package edu.wpi.teamb.DBAccess;
 
+import org.postgresql.util.PSQLException;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 

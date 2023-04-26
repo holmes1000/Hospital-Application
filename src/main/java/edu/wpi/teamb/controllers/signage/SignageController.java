@@ -24,6 +24,7 @@ public class SignageController {
 
   @FXML
   public void initialize() throws IOException {
+      signageE = new ESignage();
       initNavBar();
       initializeFields();
       signVbox.getChildren().clear();
@@ -67,8 +68,7 @@ public class SignageController {
     }
 
   public void initializeFields() {
-      ObservableList<String> locations =
-              FXCollections.observableArrayList("Screen 3", "Screen 2");
+      ObservableList<String> locations = FXCollections.observableArrayList(signageE.getSignageGroups());
       cbLocation.setItems(locations);
   }
 

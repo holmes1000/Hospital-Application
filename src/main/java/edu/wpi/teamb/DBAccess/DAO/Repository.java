@@ -9,6 +9,7 @@ import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 
+import java.util.HashSet;
 import java.util.Map;
 
 import static java.lang.Integer.parseInt;
@@ -29,6 +30,7 @@ public class Repository {
             furnitureRequestDAO = new FurnitureRequestDAOImpl();
             officeRequestDAO = new OfficeRequestDAOImpl();
             alertDAO = new AlertDAOImpl();
+            signDAO = new SignDAOImpl();
         } catch (SQLException e) {
             System.out.println("ERROR: Repository failed to initialize");
             throw new RuntimeException(e);
@@ -56,6 +58,7 @@ public class Repository {
     private final FurnitureRequestDAOImpl furnitureRequestDAO;
     private final OfficeRequestDAOImpl officeRequestDAO;
     private final AlertDAOImpl alertDAO;
+    private final SignDAOImpl signDAO;
     private final DBconnection dbConnection;
 
     //TODO Node methods
@@ -66,7 +69,7 @@ public class Repository {
      * @param id The ID of the node
      * @return The node with the given ID
      */
-    public Node get(Object id) {
+    public Node getNode(Object id) {
         Node n = nodeDAO.get(id);
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
@@ -551,7 +554,7 @@ public class Repository {
      *
      * @return a list of all edges
      */
-    public ArrayList<Edge> getAllHelper() {
+    public ArrayList<Edge> getAllEdgesHelper() {
         ArrayList<Edge> edges = edgeDAO.getAllHelper();
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
@@ -800,9 +803,126 @@ public class Repository {
      * Updates an OfficeRequest in the database
      * @param fullOfficeRequest
      */
-    public void updateOfficeRequest(FullOfficeRequest fullOfficeRequest) { officeRequestDAO.update(fullOfficeRequest); }
+    public void updateOfficeRequest(FullOfficeRequest fullOfficeRequest) {
+        officeRequestDAO.update(fullOfficeRequest);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    //TODO Alert methods
 
 
+
+    //TODO Sign methods
+
+    public Sign get(Object id) {
+        Sign s = signDAO.get(id);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return s;
+    }
+
+    public ArrayList<Sign> getAll() {
+        ArrayList<Sign> signs = signDAO.getAll();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return signs;
+    }
+
+    public ArrayList<Sign> getAllSignsHelper() {
+        ArrayList<Sign> signs = signDAO.getAllHelper();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return signs;
+    }
+
+    public void setAllSigns() {
+        signDAO.setAll();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    public void addSign(Object object) {
+        signDAO.add(object);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    public void deleteSign(Object object) {
+        signDAO.delete(object);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    public void updateSign(Object object) {
+        signDAO.update(object);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    public void updateBlock(Object object) {
+        signDAO.updateBlock(object);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    public void insertSign(Sign s) {
+        signDAO.insertSign(s);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    public void deleteSignGroup(Sign s) {
+        signDAO.deleteSignGroup(s);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    public void deleteSpecificSign(Sign s) {
+        signDAO.deleteSpecificSign(s);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    public void updateSign(Sign s) {
+        signDAO.updateSign(s);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    public void updateSignageGroup(Sign s) {
+        signDAO.updateSignageGroup(s);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    public HashSet<String> getSignageGroupsFromDB() {
+        HashSet<String> hset = signDAO.getSignageGroupsFromDB();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return hset;
+    }
+
+    public ArrayList<String> getLocationNamesFromDB(String signBlock) {
+        ArrayList<String> names = signDAO.getLocationNamesFromDB(signBlock);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return names;
+    }
+
+    public HashSet<String> getSignageGroups() {
+        HashSet<String> hset = new HashSet<String>();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return hset;
+    }
+
+    public ArrayList<String> getLocationNames(String signBlock) {
+        ArrayList<String> names = new ArrayList<String>();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return names;
+    }
 
     //TODO DBinput methods
 
@@ -1001,8 +1121,8 @@ public class Repository {
      *                 2 (custom location), 3
      *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
-    public void importSignageFromCSV(String filename, int location) {
-        DBinput.importSignageFromCSV(filename, location);
+    public void importSignsFromCSV(String filename, int location) {
+        DBinput.importSignsFromCSV(filename, location);
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
     }
@@ -1210,8 +1330,8 @@ public class Repository {
      *                 2 (custom location), 3
      *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
-    public void exportSignageToCSV(String filename, int location) {
-        DBoutput.exportSignageToCSV(filename, location);
+    public void exportSignsToCSV(String filename, int location) {
+        DBoutput.exportSignsToCSV(filename, location);
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
     }

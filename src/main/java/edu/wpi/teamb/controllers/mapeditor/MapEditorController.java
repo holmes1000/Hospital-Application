@@ -669,8 +669,8 @@ public class MapEditorController {
 
     // Add edge to the database
     Edge edge = new Edge();
-    edge.setStartNode(Repository.getRepository().get(Integer.parseInt(c1.getId())));
-    edge.setEndNode(Repository.getRepository().get(Integer.parseInt(c2.getId())));
+    edge.setStartNode(Repository.getRepository().getNode(Integer.parseInt(c1.getId())));
+    edge.setEndNode(Repository.getRepository().getNode(Integer.parseInt(c2.getId())));
     Repository.getRepository().addEdge(edge);
   }
 
@@ -885,6 +885,8 @@ public class MapEditorController {
     fileChooser.setTitle("Open Resource File");
     fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("CSV", "*.csv"));
     File file = fileChooser.showOpenDialog(null);
+    String selectedItem = getSelectedItem();
+    String absolutePath = null;
     if (file != null) {
       System.out.println(file.getAbsolutePath());
     }
@@ -900,21 +902,36 @@ public class MapEditorController {
     String item = getSelectedItem();
     if (selectedDirectory != null) {
       switch (item) {
-        case "Moves" -> absolutePath = selectedDirectory.getAbsolutePath() + "/movetest";
-        case "Nodes" -> absolutePath = selectedDirectory.getAbsolutePath() + "/nodetest";
-        case "Edges" -> absolutePath = selectedDirectory.getAbsolutePath() + "/edgetest";
-        case "Location Names" -> absolutePath = selectedDirectory.getAbsolutePath() + "/locationnametest";
+        case "Moves" -> absolutePath = selectedDirectory.getAbsolutePath() + "/moves";
+        case "Nodes" -> absolutePath = selectedDirectory.getAbsolutePath() + "/nodes";
+        case "Edges" -> absolutePath = selectedDirectory.getAbsolutePath() + "/edges";
+        case "Location Names" -> absolutePath = selectedDirectory.getAbsolutePath() + "/locationNames";
+        case "Users" -> absolutePath = selectedDirectory.getAbsolutePath() + "/users";
+        case "Requests" -> absolutePath = selectedDirectory.getAbsolutePath() + "/requests";
+        case "Conference Requests" -> absolutePath = selectedDirectory.getAbsolutePath() + "/conferenceRequests";
+        case "Flower Requests" -> absolutePath = selectedDirectory.getAbsolutePath() + "/flowerRequests";
+        case "Furniture Requests" -> absolutePath = selectedDirectory.getAbsolutePath() + "/furnitureRequests";
+        case "Meal Requests" -> absolutePath = selectedDirectory.getAbsolutePath() + "/mealRequests";
+        case "Office Requests" -> absolutePath = selectedDirectory.getAbsolutePath() + "/officeRequests";
+        case "Alerts" -> absolutePath = selectedDirectory.getAbsolutePath() + "/alerts";
+        case "Signs" -> absolutePath = selectedDirectory.getAbsolutePath() + "/signs";
+
         default -> absolutePath = selectedDirectory.getAbsolutePath() + "/defaulttest";
       };
       switch (item) {
-        case "Moves" -> DBoutput.exportMovesToCSV(absolutePath, 2);
-        case "Nodes" -> DBoutput.exportNodesToCSV(absolutePath, 2);
-        case "Edges" -> {
-            DBoutput.exportEdgesToCSV(absolutePath, 2);
-        }
-        case "Location Names" -> {
-            DBoutput.exportLocationNamesToCSV(absolutePath, 2);
-        }
+        case "Nodes" -> Repository.getRepository().exportNodesToCSV(absolutePath, 2);
+        case "Location Names" -> DBoutput.exportLocationNamesToCSV(absolutePath, 2);
+        case "Moves" -> Repository.getRepository().exportMovesToCSV(absolutePath, 2);
+        case "Edges" -> Repository.getRepository().exportEdgesToCSV(absolutePath, 2);
+        case "Users" -> Repository.getRepository().exportUsersToCSV(absolutePath, 2);
+        case "Requests" -> Repository.getRepository().exportRequestsToCSV(absolutePath, 2);
+        case "Conference Requests" -> Repository.getRepository().exportConferenceRequestsToCSV(absolutePath, 2);
+        case "Flower Requests" -> Repository.getRepository().exportFlowerRequestsToCSV(absolutePath, 2);
+        case "Furniture Requests" -> Repository.getRepository().exportFurnitureRequestsToCSV(absolutePath, 2);
+        case "Meal Requests" -> Repository.getRepository().exportMealRequestsToCSV(absolutePath, 2);
+        case "Office Requests" -> Repository.getRepository().exportOfficeRequestsToCSV(absolutePath, 2);
+        case "Alerts" -> Repository.getRepository().exportAlertsToCSV(absolutePath, 2);
+        case "Signs" -> Repository.getRepository().exportSignsToCSV(absolutePath, 2);
         default -> new ArrayList<>();
       };
     }
@@ -1020,6 +1037,15 @@ public class MapEditorController {
     tables.add("Edges");
     tables.add("Moves");
     tables.add("Location Names");
+    tables.add("Users");
+    tables.add("Requests");
+    tables.add("Conference Requests");
+    tables.add("Flower Requests");
+    tables.add("Furniture Requests");
+    tables.add("Meal Requests");
+    tables.add("Office Requests");
+    tables.add("Alerts");
+    tables.add("Signs");
     NodeSelector.setItems(FXCollections.observableList(tables));
   }
 

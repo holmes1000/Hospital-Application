@@ -1008,7 +1008,7 @@ public class DBinput {
      *                 2 (custom location), 3
      *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
-    public static void importSignageFromCSV(String filename, int location) {
+    public static void importSignsFromCSV(String filename, int location) {
         String line = "";
         String splitBy = ",";
 
@@ -1030,12 +1030,19 @@ public class DBinput {
             }
 
             Statement tableStmt = DBconnection.getDBconnection().getConnection().createStatement();
-            String dropSignageTable = "DROP TABLE IF EXISTS signage";
+            String dropSignageTable = "DROP TABLE IF EXISTS signs";
             int dropUpdateSignage = tableStmt.executeUpdate(dropSignageTable);
 
-            String createTableSignage = "CREATE TABLE signage " +
-                    "(direction VARCHAR(255), screen INT, date date, locationname VARCHAR(255), " +
-                    "primary key (screen, date, locationname))";
+            String createTableSignage = "CREATE TABLE signs (" +
+                    """
+                        signageGroup varchar(255) NOT NULL,
+                        locationName text NOT NULL DEFAULT '',
+                        direction varchar(255) NOT NULL DEFAULT 'stop here',
+                        startDate date NOT NULL DEFAULT CURRENT_DATE,
+                        endDate date,
+                        singleBlock boolean DEFAULT true,
+                        PRIMARY KEY (signageGroup, locationName))
+                    """;
             int tableUpdateSignage = tableStmt.executeUpdate(createTableSignage);
 
             try {
