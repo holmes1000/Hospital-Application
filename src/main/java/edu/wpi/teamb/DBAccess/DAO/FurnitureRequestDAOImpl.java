@@ -1,5 +1,6 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
+import edu.wpi.teamb.DBAccess.DBconnection;
 import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.Full.FullFactory;
 import edu.wpi.teamb.DBAccess.Full.FullFurnitureRequest;
@@ -81,6 +82,8 @@ public class FurnitureRequestDAOImpl implements IDAO {
             } catch (SQLException e) {
                 System.err.println("ERROR Query Failed in method 'FurnitureRequestDAOImpl.getAllHelper': " + e.getMessage());
             }
+            DBconnection.getDBconnection().closeDBconnection();
+            DBconnection.getDBconnection().forceClose();
             return (ArrayList<FullFurnitureRequest>) furn.listFullRequests(frs);
         }
 

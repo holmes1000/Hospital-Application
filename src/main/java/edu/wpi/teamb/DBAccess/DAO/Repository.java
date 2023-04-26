@@ -4,6 +4,7 @@ import edu.wpi.teamb.DBAccess.*;
 import edu.wpi.teamb.DBAccess.DBinput;
 import edu.wpi.teamb.DBAccess.Full.*;
 import edu.wpi.teamb.DBAccess.ORMs.*;
+import edu.wpi.teamb.pathfinding.PathFinding;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -1731,6 +1732,7 @@ public class Repository {
         officeRequestDAO.setAll();
         alertDAO.setAll();
         signDAO.setAll();
+        PathFinding.ASTAR.force_init();
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
     }

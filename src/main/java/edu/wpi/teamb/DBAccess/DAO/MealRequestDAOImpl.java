@@ -1,5 +1,6 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
+import edu.wpi.teamb.DBAccess.DBconnection;
 import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.Full.FullFactory;
 import edu.wpi.teamb.DBAccess.Full.FullMealRequest;
@@ -81,6 +82,8 @@ public class MealRequestDAOImpl implements IDAO {
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'MealRequestDAOImpl.getAllHelper': " + e.getMessage());
         }
+        DBconnection.getDBconnection().closeDBconnection();
+        DBconnection.getDBconnection().forceClose();
         return (ArrayList<FullMealRequest>) mealRequest.listFullRequests(mrs);
     }
 
