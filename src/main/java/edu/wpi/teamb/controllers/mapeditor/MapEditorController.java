@@ -554,11 +554,10 @@ public class MapEditorController {
       editingNode = false;
       addNodeToMap(e.getX(), e.getY());   // get the X and Y of the cursor
       System.out.println("Added a node at " + e.getX() + ", " + e.getY());
-
-      refreshMap();
     } catch (SQLException | IOException ex) {
       throw new RuntimeException(ex);
     }
+    refreshMap();
   }
 
   private void showAddNodeMenu(Node n) throws IOException {

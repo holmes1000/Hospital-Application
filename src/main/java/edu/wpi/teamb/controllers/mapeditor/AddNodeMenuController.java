@@ -69,6 +69,7 @@ public class AddNodeMenuController {
 
     private void handleSubmitNodeDetails() {
         submitNode();
+        mapEditorController.refreshMap();
     }
 
     private void submitNode() {
@@ -104,6 +105,7 @@ public class AddNodeMenuController {
         // Close the window
         Stage stage = (Stage) btnSubmitNodeDetails.getScene().getWindow();
         stage.close();
+        mapEditorController.refreshMap();
     }
 
 
