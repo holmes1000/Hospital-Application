@@ -1715,6 +1715,19 @@ public class Repository {
 
     public void switchTo(int databaseServer) {
         dbConnection.switchTo(databaseServer);
+        nodeDAO.setAll();
+        edgeDAO.setAll();
+        locationNameDAO.setAll();
+        moveDAO.setAll();
+        userDAO.setAll();
+        requestDAO.setAll();
+        conferenceRequestDAO.setAll();
+        flowerRequestDAO.setAll();
+        mealRequestDAO.setAll();
+        furnitureRequestDAO.setAll();
+        officeRequestDAO.setAll();
+        alertDAO.setAll();
+        signDAO.setAll();
     }
 
     public ArrayList<String> getNodeTypesUniqueAlphabetical () {
