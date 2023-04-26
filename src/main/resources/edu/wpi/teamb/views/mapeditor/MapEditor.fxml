@@ -3,15 +3,14 @@
 <?import com.jfoenix.controls.JFXDrawer?>
 <?import com.jfoenix.controls.JFXHamburger?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import io.github.palexdev.materialfx.controls.MFXToggleButton?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
@@ -35,7 +34,7 @@
                     </effect>
                 </ImageView>
 
-            <MFXButton fx:id="resetFromBackupBtn" layoutX="696.0" layoutY="83.0" prefHeight="39.0" prefWidth="124.0" style="-fx-background-color: #1C4EFE;" text="Reset From Backup" textFill="#f1f1f1" />
+            <MFXButton fx:id="resetFromBackupBtn" layoutX="697.0" layoutY="109.0" prefHeight="39.0" prefWidth="124.0" style="-fx-background-color: #1C4EFE;" text="Reset From Backup" textFill="#f1f1f1" />
             <VBox fx:id="vboxAddNode" layoutX="1013.0" layoutY="406.0" prefHeight="119.0" prefWidth="131.0" style="-fx-background-color: #f1f1f1; -fx-border-color: #1C4EFE;">
 
                <children>
@@ -76,53 +75,6 @@
                   <MFXToggleButton fx:id="toggleEdges" text="Show Edges" />
                </children>
             </VBox>
-            <VBox fx:id="vboxBtns1" alignment="CENTER" layoutX="305.0" layoutY="481.0" prefHeight="214.0" prefWidth="108.0" spacing="10.0">
-               <children>
-                  <MFXButton fx:id="btnView" defaultButton="true" prefHeight="40.0" prefWidth="70.0" style="-fx-background-color: #1C4EFE;" text="View" textFill="#f1f1f1">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </MFXButton>
-                  <MFXButton fx:id="btnEdit" defaultButton="true" prefHeight="40.0" prefWidth="70.0" style="-fx-background-color: #1C4EFE;" text="Edit" textFill="#f1f1f1">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </MFXButton>
-                  <MFXButton fx:id="btnAdd" defaultButton="true" prefHeight="40.0" prefWidth="70.0" style="-fx-background-color: #1C4EFE;" text="Add" textFill="#f1f1f1">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </MFXButton>
-                  <MFXButton fx:id="btnDelete" defaultButton="true" prefHeight="40.0" prefWidth="70.0" style="-fx-background-color: #1C4EFE;" text="Delete" textFill="#f1f1f1">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </MFXButton>
-               </children>
-            </VBox>
-            <HBox layoutX="61.0" layoutY="612.0" spacing="10.0">
-               <children>
-                  <MFXButton fx:id="btnNode" defaultButton="true" prefHeight="40.0" prefWidth="70.0" style="-fx-background-color: #1C4EFE;" text="Node" textFill="#f1f1f1">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </MFXButton>
-                  <MFXButton fx:id="btnEdge" defaultButton="true" prefHeight="40.0" prefWidth="70.0" style="-fx-background-color: #1C4EFE;" text="Edge" textFill="#f1f1f1">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </MFXButton>
-                  <MFXButton fx:id="btnAlign" defaultButton="true" prefHeight="40.0" prefWidth="70.0" style="-fx-background-color: #1C4EFE;" text="Align" textFill="#f1f1f1">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </MFXButton>
-               </children>
-            </HBox>
-            <MFXTextField fx:id="tfState" editable="false" layoutX="413.0" layoutY="632.0" prefHeight="49.0" prefWidth="204.0" />
             <VBox fx:id="vboxBtns11" alignment="CENTER" layoutX="40.0" layoutY="154.0" prefHeight="214.0" prefWidth="148.0" spacing="10.0" />
                 <MFXButton fx:id="btnViewMoveMap" defaultButton="true" layoutX="911.0" layoutY="81.0" prefHeight="45.0" prefWidth="170.0" style="-fx-background-color: #f6bd38;" text="View Move Map" textFill="#f1f1f1">
                     <font>
@@ -175,6 +127,7 @@
                   <Font name="System Bold" size="12.0" />
                </font>
             </MFXButton>
+            <TextField fx:id="tfState" layoutX="64.0" layoutY="96.0" />
             </children>
         </AnchorPane>
     </center>
