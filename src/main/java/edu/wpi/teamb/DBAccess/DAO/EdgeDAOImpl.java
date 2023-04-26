@@ -101,6 +101,8 @@ public class EdgeDAOImpl implements IDAO {
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'EdgeDAOImpl.getAllHelper': " + e.getMessage());
         }
+        DBconnection.getDBconnection().closeDBconnection();
+        DBconnection.getDBconnection().forceClose();
         return edges;
     }
 

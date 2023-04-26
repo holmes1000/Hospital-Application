@@ -9,15 +9,9 @@ public class Main {
 
   public static void main(String[] args) {
 //    Repository.getRepository().importAlertsFromCSV("C:\\Users\\Ronit\\Desktop\\alerts.csv", 0);
+
     Repository.getRepository();
-//    try {
-//      DBconnection.getDBconnection().getConnection();
-//    } catch (Exception e) {
-//      System.out.println("Error: Couldn't initialize WPI-server database.");
-//      System.out.println("Switching to remote AWS server...");
-//      DBconnection.getDBconnection().switchTo(1);
-//      Repository.getRepository();
-//    }
+
 //    Repository.getRepository().switchTo(1);
 //    Repository.getRepository().exportNodesToCSV("Nodes", 3);
 //    Repository.getRepository().exportEdgesToCSV("Edges", 3);

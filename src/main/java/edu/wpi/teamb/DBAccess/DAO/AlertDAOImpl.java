@@ -1,5 +1,6 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
+import edu.wpi.teamb.DBAccess.DBconnection;
 import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.ORMs.Alert;
 import edu.wpi.teamb.DBAccess.ORMs.Edge;
@@ -47,6 +48,8 @@ public class AlertDAOImpl implements IDAO {
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'AlertDAOImpl.getAllHelper': " + e.getMessage());
         }
+        DBconnection.getDBconnection().closeDBconnection();
+        DBconnection.getDBconnection().forceClose();
         return alerts;
     }
 

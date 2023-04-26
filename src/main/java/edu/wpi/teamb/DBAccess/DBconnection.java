@@ -1,9 +1,11 @@
 package edu.wpi.teamb.DBAccess;
 
+import edu.wpi.teamb.DBAccess.DAO.Repository;
 import org.postgresql.util.PSQLException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class DBconnection {
 
@@ -42,8 +44,26 @@ public class DBconnection {
     }
 
     public Connection getConnection() {
-        connectToDB();
-        forceConnect();
+        try {
+            if (c == null || c.isClosed()) connectToDB();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.out.println("Error: Couldn't initialize WPI-server database.");
+            System.out.println("Switching to remote AWS server...");
+            setDatabaseServer(1);
+            connectToDB();
+        }
+        try {
+            if (c == null || c.isClosed()) forceConnect();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.out.println("Error: Couldn't initialize WPI-server database.");
+            System.out.println("Switching to remote AWS server...");
+            setDatabaseServer(1);
+            forceConnect();
+        }
         return c;
     }
 
@@ -63,23 +83,23 @@ public class DBconnection {
                 Class.forName("org.postgresql.Driver");
                 if (databaseServer == 0) c = DriverManager.getConnection(postgresURL, postgresUsername, postgresPassword);
                 else if (databaseServer == 1) c = DriverManager.getConnection(AWSurl, AWSusername, AWSpassword);
-                else c = DriverManager.getConnection(postgresURL, postgresUsername, postgresPassword);
             } else if (c.isClosed()) {
                 Class.forName("org.postgresql.Driver");
                 if (databaseServer == 0) c = DriverManager.getConnection(postgresURL, postgresUsername, postgresPassword);
                 else if (databaseServer == 1) c = DriverManager.getConnection(AWSurl, AWSusername, AWSpassword);
-                else c = DriverManager.getConnection(postgresURL, postgresUsername, postgresPassword);
             } else {
                 c.close();
                 Class.forName("org.postgresql.Driver");
                 if (databaseServer == 0) c = DriverManager.getConnection(postgresURL, postgresUsername, postgresPassword);
                 else if (databaseServer == 1) c = DriverManager.getConnection(AWSurl, AWSusername, AWSpassword);
-                else c = DriverManager.getConnection(postgresURL, postgresUsername, postgresPassword);
             }
-        } catch (Exception e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            System.exit(0);
+            System.out.println("Error: Couldn't initialize WPI-server database.");
+            System.out.println("Switching to remote AWS server...");
+            setDatabaseServer(1);
+            connectToDB();
         }
     }
 
@@ -96,6 +116,10 @@ public class DBconnection {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
+            System.out.println("Error: Couldn't initialize WPI-server database.");
+            System.out.println("Switching to remote AWS server...");
+            setDatabaseServer(1);
+            forceConnect();
         }
     }
 
