@@ -12,11 +12,8 @@ import java.util.*;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.Full.FullNode;
-import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.ORMs.Move;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
-import edu.wpi.teamb.navigation.Navigation;
-import edu.wpi.teamb.navigation.Screen;
 import edu.wpi.teamb.pathfinding.PathFinding;
 import edu.wpi.teamb.controllers.NavDrawerController;
 import edu.wpi.teamb.entities.EPathfinder;
@@ -44,7 +41,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Path;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import net.kurobako.gesturefx.GesturePane;
@@ -144,7 +140,7 @@ public class PathfinderController {
       algorithms.add("Breadth First Search");
       algorithms.add("Depth First Search");
       algorithms.add("Dijkstra Search");
-      algorithms.add("BStar");
+      algorithms.add("BStar (My Fault)");
 
 
       nodes.addAll(getFilteredLongnames());
@@ -664,7 +660,7 @@ public class PathfinderController {
               //Assume all images were already added to the stackPane
 
               //Add the image to the Front
-              ObservableList<String> items = FXCollections.observableArrayList(string_path);
+              ObservableList<String> items = FXCollections.observableArrayList(listSeparator(string_path));
 //              listView = new MFXListView<>();
               listView.setItems(items);
               VboxPathfinder.getChildren().addAll(listView);
@@ -703,9 +699,25 @@ public class PathfinderController {
                   moveAlert(endNode.getSelectedItem());
               }
 
-
           }
       });
+  }
+
+  public ArrayList<String> listSeparator(ArrayList<String> listOfNodes){
+      // this is a function for adding "next go to" between the non-ending parts of the list"
+      ArrayList<String> output = new ArrayList<>();
+      for (int i = 0; i < listOfNodes.size(); i++) {
+          if (i == 0) {
+              output.add("Start at " + listOfNodes.get(i));
+          }
+          else if (i == listOfNodes.size()-1) {
+              output.add("You've arrived at " + listOfNodes.get(i));
+          }
+          else {
+              output.add("Continue to " + listOfNodes.get(i));
+          }
+      }
+      return output;
   }
 
     public void clickPreviousFloor(){
