@@ -883,13 +883,15 @@ public class PathfinderController {
     menuBurger.addEventHandler(
         javafx.scene.input.MouseEvent.MOUSE_PRESSED,
         (e) -> {
-          burgerOpen.setRate(burgerOpen.getRate() * -1);
-          burgerOpen.play();
-          if (menuDrawer.isOpened()) {
-            menuDrawer.close();
-          } else {
-            menuDrawer.open();
-          }
+            burgerOpen.setRate(burgerOpen.getRate() * -1);
+            burgerOpen.play();
+            if (menuDrawer.isOpened()) {
+                menuDrawer.toFront();
+                menuDrawer.close();
+            } else {
+                menuDrawer.toFront();
+                menuDrawer.open();
+            }
         });
   }
 }
