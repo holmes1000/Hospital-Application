@@ -4,20 +4,14 @@ import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import edu.wpi.teamb.Bapp;
-import edu.wpi.teamb.DBAccess.Full.IFull;
-import edu.wpi.teamb.DBAccess.ORMs.Request;
-import edu.wpi.teamb.controllers.components.InfoCardController;
 import edu.wpi.teamb.entities.EHome;
-import edu.wpi.teamb.entities.ELogin;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Objects;
 
-import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -26,15 +20,14 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
-import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 public class HomeController {
@@ -46,8 +39,7 @@ public class HomeController {
     @FXML private MFXButton btnCredits;
     @FXML private  MFXButton btnSecret;
     @FXML private MFXButton btnClear;
-    @FXML private VBox userRequestsVBox;
-    @FXML private MFXScrollPane userRequestsScrollPane;
+    @FXML private MFXButton viewUserRequestButton;
     private MFXButton pathfinderImgBtn = new MFXButton();
     Bounds bounds;
     private EHome homeE;
@@ -59,82 +51,6 @@ public class HomeController {
         initializeBtns();
         homeE = new EHome();
         bounds = homePane.getBoundsInLocal();
-        initScrollPane();
-        loadRequestsIntoContainer();
-    }
-
-    private void initScrollPane() {
-        // Scroll pane preferences
-        userRequestsScrollPane.setFitToWidth(true);
-        userRequestsScrollPane.pannableProperty().set(true);
-        userRequestsScrollPane.hbarPolicyProperty().setValue(javafx.scene.control.ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        userRequestsScrollPane.vbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.ALWAYS);
-    }
-
-    private void loadRequestsIntoContainer() {
-        //getting the list of all requests
-        ArrayList<Request> listOfRequests = homeE.getAllRequests();
-        ArrayList<Request> currentUserRequests = new ArrayList<>();
-        //filtering the current user's requests
-        for(int i = 0; i < listOfRequests.size(); i++) {
-            if(listOfRequests.get(i).getEmployee().equals(ELogin.getLogin().getUsername())) {
-                currentUserRequests.add(listOfRequests.get(i));
-            }
-        }
-        //traversing the filtered list of requests to add them to the container
-        for (int i = 0; i < currentUserRequests.size(); i++) {
-            //implementation using FXMLLoader and InfoCardController
-            FXMLLoader loader = null;
-            //AnchorPane should be the root of the InfoCard.fxml
-            AnchorPane requestInfoCardRoot = null;
-            //controller for the corresponding InfoCard.fxml
-            InfoCardController requestInfoCardController = null;
-            try {
-                loader = new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/components/InfoCard.fxml"));
-                requestInfoCardRoot = loader.load();
-                requestInfoCardController = loader.getController();
-            } catch (IOException e) {
-                System.out.println("IOException in loadRequestsIntoContainer of AllRequestsController: " + e.getMessage());
-            }
-
-            switch (currentUserRequests.get(i).getRequestType()) {
-                case "Meal":
-                    IFull fullMealRequest = homeE.getMealRequest(currentUserRequests.get(i).getId());
-                    if(fullMealRequest == null){continue;}
-                    Objects.requireNonNull(requestInfoCardController).sendRequest(fullMealRequest);
-                    break;
-                case "Conference":
-                    IFull fullConferenceRequest = homeE.getConferenceRequest(currentUserRequests.get(i).getId());
-                    if(fullConferenceRequest == null) {continue;}
-                    Objects.requireNonNull(requestInfoCardController).sendRequest(fullConferenceRequest);
-                    break;
-                case "Flower":
-                    IFull fullFlowerRequest = homeE.getFlowerRequest(currentUserRequests.get(i).getId());
-                    if(fullFlowerRequest == null) {continue;}
-                    Objects.requireNonNull(requestInfoCardController).sendRequest(fullFlowerRequest);
-                    break;
-                case "Office":
-                    IFull fullOfficeRequest = homeE.getOfficeRequest(currentUserRequests.get(i).getId());
-                    if(fullOfficeRequest == null){continue;}
-                    Objects.requireNonNull(requestInfoCardController).sendRequest(fullOfficeRequest);
-                    break;
-                case "Furniture":
-                    IFull fullFurnitureRequest = homeE.getFurnitureRequest(currentUserRequests.get(i).getId());
-                    if(fullFurnitureRequest == null){continue;}
-                    Objects.requireNonNull(requestInfoCardController).sendRequest(fullFurnitureRequest);
-                    break;
-                default:
-                    //continue statement to skip any unrecognized types of request to avoid occurrence of empty cards
-                    continue;
-            }
-
-
-//           add the request info card to the request container VBox
-            //userRequestsVBox X -> allRequestsContainerVBox
-            userRequestsVBox.getChildren().add(requestInfoCardRoot);
-//            add a margin to the children of allRequestsContainerVBox
-            VBox.setMargin(requestInfoCardRoot, new Insets( 0, 0, 10, 0));
-        }
 
     }
 
@@ -218,6 +134,31 @@ public class HomeController {
         btnAbout.setOnMouseClicked(e -> handleAbout());
         btnSecret.setOnMouseClicked(e -> secret(true));
         btnClear.setOnMouseClicked(e -> secret(false));
+        viewUserRequestButton.setOnMouseClicked(e -> handleUserRequests());
+    }
+
+    private void handleUserRequests() {
+        //implementation using FXMLLoader
+        FXMLLoader loader = null;
+        //AnchorPane
+        AnchorPane userRequestsPage = null;
+        //controller for the corresponding InfoCard.fxml
+        CurrentUserRequestsController currentUserRequestController = null;
+        try {
+            loader = new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/CurrentUserRequests.fxml"));
+            userRequestsPage = loader.load();
+            currentUserRequestController = loader.getController();
+        } catch (IOException e) {
+            System.out.println("IOException in loadRequestsIntoContainer of AllRequestsController: " + e.getMessage());
+        }
+        //open the AnchorPane in a new window
+        Stage stage = new Stage();
+        stage.setTitle("My Requests");
+        stage.setScene(new Scene(userRequestsPage));
+        stage.initStyle(StageStyle.UTILITY);
+        //set the resizable to false
+        stage.setResizable(false);
+        stage.show();
     }
 
     private void handleAbout() {
