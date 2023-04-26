@@ -1,5 +1,6 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
+import edu.wpi.teamb.DBAccess.DBconnection;
 import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.Full.IFull;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
@@ -107,6 +108,8 @@ public class RequestDAOImpl implements IDAO {
         } catch (SQLException e) {
             System.out.println("ERROR Query Failed in method 'RequestDAOImpl.getAllHelper': " + e.getMessage());
         }
+        DBconnection.getDBconnection().closeDBconnection();
+        DBconnection.getDBconnection().forceClose();
         return rqs;
     }
 

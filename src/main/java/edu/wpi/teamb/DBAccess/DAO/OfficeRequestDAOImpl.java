@@ -1,5 +1,6 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
+import edu.wpi.teamb.DBAccess.DBconnection;
 import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.Full.FullFactory;
 import edu.wpi.teamb.DBAccess.Full.FullOfficeRequest;
@@ -77,6 +78,8 @@ public class OfficeRequestDAOImpl implements IDAO {
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'OfficeRequestDAOImpl.getAllHelper': " + e.getMessage());
         }
+        DBconnection.getDBconnection().closeDBconnection();
+        DBconnection.getDBconnection().forceClose();
         return (ArrayList<FullOfficeRequest>) or.listFullRequests(ors);
     }
 

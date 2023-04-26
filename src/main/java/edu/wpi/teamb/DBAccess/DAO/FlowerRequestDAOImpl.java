@@ -1,5 +1,6 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
+import edu.wpi.teamb.DBAccess.DBconnection;
 import edu.wpi.teamb.DBAccess.Full.FullFactory;
 import edu.wpi.teamb.DBAccess.Full.FullFlowerRequest;
 import edu.wpi.teamb.DBAccess.Full.IFull;
@@ -81,6 +82,8 @@ public class FlowerRequestDAOImpl implements IDAO {
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'FlowerRequestDAOImpl.getAllHelper': " + e.getMessage());
         }
+        DBconnection.getDBconnection().closeDBconnection();
+        DBconnection.getDBconnection().forceClose();
         return (ArrayList<FullFlowerRequest>) flower.listFullRequests(frs);
     }
 

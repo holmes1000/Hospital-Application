@@ -128,6 +128,8 @@ public class NodeDAOImpl implements IDAO {
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'NodeDAOImpl.getAllHelper': " + e.getMessage());
         }
+        DBconnection.getDBconnection().closeDBconnection();
+        DBconnection.getDBconnection().forceClose();
         return nds;
     }
 
