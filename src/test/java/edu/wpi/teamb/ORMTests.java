@@ -1,6 +1,7 @@
 package edu.wpi.teamb;
 
 import edu.wpi.teamb.DBAccess.DAO.Repository;
+import edu.wpi.teamb.DBAccess.Full.FullConferenceRequest;
 import edu.wpi.teamb.DBAccess.ORMs.*;
 import org.junit.jupiter.api.Test;
 
@@ -9,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 public class ORMTests {
     // JUnit Tests for All ORM classes
@@ -443,13 +445,28 @@ public class ORMTests {
 
     @Test
     public void testConferenceRequestCreation2() {
-        ConferenceRequest cR = ConferenceRequest.getConfRequest(257);
+        Repository.getRepository().addConferenceRequest(new String[] { "TestConf", "Pending", "BTM Conference Center",
+                "alphabet", "9999-09-09 00:00:00.0", "TestConfEvent", "TestConfReason", "-1", "1" });
+        ArrayList<FullConferenceRequest> a = Repository.getRepository().getAllConferenceRequests();
+        int id = -1;
+        FullConferenceRequest fcR= null;
+        for (FullConferenceRequest i : a) {
+            if (i.getNotes() == "alphabet") {
+                id = i.getId();
+                fcR = i;
+                break;
+            }
+
+        }
+        assertNotEquals(id, -1);
+        ConferenceRequest cR = ConferenceRequest.getConfRequest(id);
         assertNotNull(cR);
-        assertEquals(cR.getId(), 257);
-        assertEquals(cR.getEventName(), "jshdkjashdkjsahjkd");
-        assertEquals(cR.getBookingReason(), "kldsjdklasjdskajdkljdsakljsa");
-        assertEquals(cR.getDuration(), 1);
-        assertEquals(cR.getDateRequested(), Timestamp.valueOf("2023-04-04 00:00:00.0"));
+        assertEquals(cR.getId(), id);
+        assertEquals(cR.getEventName(), "TestConfEvent");
+        assertEquals(cR.getBookingReason(), "TestConfReason");
+        assertEquals(cR.getDuration(), -1);
+        assertEquals(cR.getDateRequested(), Timestamp.valueOf("9999-09-09 00:00:00.0"));
+        Repository.getRepository().deleteConferenceRequest(fcR);
 
     }
 
