@@ -20,11 +20,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -44,22 +42,28 @@ public class EditAlertsController {
     @FXML private MFXTextField textTitle;
     @FXML private MFXTextField textDescription;
 
-    @FXML private MFXComboBox<String> cbEmployees;
+    @FXML private ComboBox<String> cbEmployees;
 
     @FXML private MFXButton btnAddAlert;
     @FXML private MFXButton btnDeleteAlert;
     @FXML private MFXButton btnEditAlert;
     @FXML private MFXButton btnRefresh;
-    @FXML private VBox vboxEditUser;
-    @FXML private VBox tableVbox;
+    @FXML private Pane navPane;
     @FXML private TableView<edu.wpi.teamb.DBAccess.ORMs.Alert> tbAlerts;
     private int tableSize = 0;
+
+    @FXML private VBox vboxActivateNav;
+    @FXML private VBox vboxActivateNav1;
+    private boolean navLoaded;
 
     @FXML
     public void initialize() throws IOException {
         initButtons();
         initNavBar();
         initializeFields();
+        navLoaded = false;
+        activateNav();
+        deactivateNav();
 
     }
 
@@ -74,9 +78,10 @@ public class EditAlertsController {
         ArrayList<User> users = Repository.getRepository().getAllUsers();
         ArrayList<String> usernames = new ArrayList<>();
         for(int i = 0; i < users.size(); i++){
-            usernames.add(users.get(i).getName());
+            usernames.add(users.get(i).getUsername());
         }
         cbEmployees.getItems().addAll(usernames);
+
         alertTable();
         // Hide the edit vbox
         //vboxEditUser.setVisible(false);
@@ -141,7 +146,11 @@ public class EditAlertsController {
         newAlert.setTitle(textTitle.getText());
         newAlert.setDescription(textDescription.getText().toLowerCase());
         newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
-        newAlert.setEmployee(cbEmployees.getText());
+        if(cbEmployees.getValue() == null){
+            newAlert.setEmployee("unassigned");
+        } else {
+            newAlert.setEmployee(cbEmployees.getValue());
+        }
         Repository.getRepository().addAlert(newAlert);
         createAlert("Alert added", "Alert added successfully");
         initializeFields(); // Refresh the combo box
@@ -217,6 +226,40 @@ public class EditAlertsController {
         btnRefresh.setVisible(false);
     }
 
+
+    /**
+     * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+     * Swaps ownership of the strip to the navdraw
+     */
+    public void activateNav(){
+        vboxActivateNav.setOnMouseEntered(event -> {
+            if(!navLoaded) {
+                System.out.println("on");
+                navPane.setPickOnBounds(false);
+                navPane.setMouseTransparent(false);
+                navLoaded = true;
+                vboxActivateNav.setDisable(true);
+                vboxActivateNav1.setDisable(false);
+            }
+        });
+    }
+
+    /**
+     * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+     * Swaps ownership of the strip to the page
+     */
+    public void deactivateNav(){
+        vboxActivateNav1.setOnMouseEntered(event -> {
+            if(navLoaded){
+                System.out.println("off");
+                navPane.setMouseTransparent(true);
+                vboxActivateNav.setDisable(false);
+                navLoaded = false;
+                vboxActivateNav1.setDisable(true);
+            }
+        });
+    }
+
     /**
      * Method to convert string permission level to int
      * @param
@@ -231,6 +274,8 @@ public class EditAlertsController {
             VBox vbox = loader.load();
             NavDrawerController navDrawerController = loader.getController();
             menuDrawer.setSidePane(vbox);
+            navPane.setMouseTransparent(true);
+            navLoaded = false;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -243,8 +288,10 @@ public class EditAlertsController {
                     burgerOpen.setRate(burgerOpen.getRate() * -1);
                     burgerOpen.play();
                     if (menuDrawer.isOpened()) {
+                        menuDrawer.toFront();
                         menuDrawer.close();
                     } else {
+                        menuDrawer.toFront();
                         menuDrawer.open();
                     }
                 });

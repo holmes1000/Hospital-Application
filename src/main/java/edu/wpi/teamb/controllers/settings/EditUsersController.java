@@ -23,6 +23,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -49,11 +50,18 @@ public class EditUsersController {
     @FXML private MFXButton btnEditUser;
     @FXML private VBox vboxEditUser;
     @FXML private VBox tableVbox;
+    @FXML private Pane navPane;
     @FXML private TableView<User> tbUsers;
     private int tableSize = 0;
+    @FXML VBox vboxActivateNav;
+    @FXML VBox vboxActivateNav1;
+
+    private boolean navLoaded;
 
     @FXML
     public void initialize() throws IOException {
+        navPane.setPickOnBounds(false);
+        menuDrawer.setPickOnBounds(false);
         initNavBar();
         initializeFields();
         initButtons();
@@ -72,6 +80,9 @@ public class EditUsersController {
         cbPermissionLevel.setItems(permissionLevels);
 
         userTable();
+        navLoaded = false;
+        activateNav();
+        deactivateNav();
         // Hide the edit vbox
         //vboxEditUser.setVisible(false);
     }
@@ -262,6 +273,31 @@ public class EditUsersController {
             return "Error"; // Error
     }
 
+
+    public void activateNav(){
+        vboxActivateNav.setOnMouseEntered(event -> {
+            if(!navLoaded) {
+                System.out.println("on");
+                navPane.setPickOnBounds(false);
+                navPane.setMouseTransparent(false);
+                navLoaded = true;
+                vboxActivateNav.setDisable(true);
+                vboxActivateNav1.setDisable(false);
+            }
+        });
+    }
+
+    public void deactivateNav(){
+        vboxActivateNav1.setOnMouseEntered(event -> {
+            if(navLoaded){
+                System.out.println("off");
+                navPane.setMouseTransparent(true);
+                vboxActivateNav.setDisable(false);
+                navLoaded = false;
+                vboxActivateNav1.setDisable(true);
+            }
+        });
+    }
     public void initNavBar() {
         // https://github.com/afsalashyana/JavaFX-Tutorial-Codes/tree/master/JavaFX%20Navigation%20Drawer/src/genuinecoder
         try {
@@ -270,6 +306,8 @@ public class EditUsersController {
             VBox vbox = loader.load();
             NavDrawerController navDrawerController = loader.getController();
             menuDrawer.setSidePane(vbox);
+            navPane.setMouseTransparent(true);
+            navLoaded = false;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -282,8 +320,10 @@ public class EditUsersController {
                     burgerOpen.setRate(burgerOpen.getRate() * -1);
                     burgerOpen.play();
                     if (menuDrawer.isOpened()) {
+                        menuDrawer.toFront();
                         menuDrawer.close();
                     } else {
+                        menuDrawer.toFront();
                         menuDrawer.open();
                     }
                 });

@@ -77,18 +77,22 @@ public class AlertDAOImpl implements IDAO {
     }
 
     public void insertAlert(Alert a) {
-        String[] cols = {"title", "description"};
-        String[] values = { a.getTitle(), a.getDescription()};
+        String[] cols = { "title", "description", "created_at", "employee" };
+        String[] values = {a.getTitle(), a.getDescription(), String.valueOf(a.getCreatedAt()), a.getEmployee()};
         DButils.insertRow("alerts", cols, values);
     }
 
+    /**
+     * Deletes an alert from the database
+     * @param a the alert to delete
+     */
     public void deleteAlert(Alert a) {
         DButils.deleteRow("alerts", "id = " + a.getId() + "");
     }
 
     public void updateAlert(Alert a) {
-        String[] cols = { "title", "description" };
-        String[] values = { a.getTitle(), a.getDescription()};
+        String[] cols = { "title", "description", "created_at", "employee" };
+        String[] values = {a.getTitle(), a.getDescription(), String.valueOf(a.getCreatedAt()), a.getEmployee()};
         DButils.updateRow("alerts", cols, values, "id = " + a.getId() + "");
     }
 }

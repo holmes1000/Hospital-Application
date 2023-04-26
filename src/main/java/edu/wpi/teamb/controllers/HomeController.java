@@ -6,6 +6,7 @@ import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.ORMs.Alert;
+import edu.wpi.teamb.entities.ELogin;
 import edu.wpi.teamb.entities.EHome;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
@@ -42,6 +43,8 @@ public class HomeController {
     @FXML private JFXDrawer menuDrawer;
     @FXML private Pane navPane;
     @FXML private Pane homePane;
+    @FXML private VBox vboxActivateNav;
+    @FXML private VBox vboxActivateNav1;
     @FXML private MFXButton btnAbout;
     @FXML private MFXButton btnCredits;
     @FXML private  MFXButton btnSecret;
@@ -50,13 +53,16 @@ public class HomeController {
     @FXML private TableView<Alert> alertsTable;
     private MFXButton pathfinderImgBtn = new MFXButton();
 
+    private String username;
+
     Bounds bounds;
     private EHome homeE;
 
     @FXML
     public void initialize() throws IOException {
+        username = ELogin.getLogin().getUsername();
         initNavBar();
-//        initPathfinderBtn();
+        initPathfinderBtn();
         initializeBtns();
         loadAlerts();
         homeE = new EHome();
@@ -68,25 +74,24 @@ public class HomeController {
         pathfinderImgBtn.setOnMouseClicked(e -> onPathfinderImgClick());
         Image mapImg = Bapp.getHospitalListOfFloors().get(0);
         ImageView imageView = new ImageView(mapImg);
-        imageView.setFitHeight(400);
+        imageView.setFitHeight(200);
         imageView.setPreserveRatio(true);
-        pathfinderImgBtn.setPrefSize(400, 400);
-        pathfinderImgBtn.setLayoutX(400);
-        pathfinderImgBtn.setLayoutY(100);
+        pathfinderImgBtn.setPrefSize(200, 200);
+        pathfinderImgBtn.setLayoutX(700);
+        pathfinderImgBtn.setLayoutY(200);
         pathfinderImgBtn.setGraphic(imageView);
         homePane.getChildren().add(pathfinderImgBtn);
     }
 
     public void loadAlerts(){
         ArrayList<Alert> allAlerts = Repository.getRepository().getAllAlerts();
-
         alertsTable.setEditable(false);
         TableColumn<Alert, String> titles = new TableColumn<>("Title");
-        titles.setMinWidth(60);
+        titles.setMinWidth(100);
         titles.setCellValueFactory(new PropertyValueFactory<>("title"));
 
         TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, String> descriptions = new TableColumn<>("Description");
-        descriptions.setMinWidth(260);
+        descriptions.setMinWidth(220);
         descriptions.setCellValueFactory(new PropertyValueFactory<>("description"));
 
 
@@ -98,7 +103,9 @@ public class HomeController {
 
 
         for(Alert alert : allAlerts){
-            alertsTable.getItems().add(alert);
+            if(alert.getEmployee().equals(username) || alert.getEmployee().equals("unassigned")) {
+                alertsTable.getItems().add(alert);
+            }
         }
 
         alertsTable.getSortOrder().setAll(alertsTable.getColumns().get(2));
@@ -106,9 +113,6 @@ public class HomeController {
 
     }
 
-    public void alertTable(){
-
-    }
 
 
     Circle circle = new Circle();
@@ -230,6 +234,27 @@ public class HomeController {
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void activateNav(){
+        vboxActivateNav.setOnMouseEntered(event -> {
+//            if(!navLoaded) {
+            System.out.println("on");
+            navPane.setMouseTransparent(false);
+            navPane.setMouseTransparent(false);
+//                navLoaded = true;
+//            }
+        });
+    }
+
+    public void deactivateNav(){
+        navPane.setOnMouseClicked(event -> {
+//            if(!navLoaded) {
+                System.out.println("off");
+                navPane.setMouseTransparent(true);
+                vboxActivateNav1.setMouseTransparent(true);
+//            }
+        });
     }
 
 

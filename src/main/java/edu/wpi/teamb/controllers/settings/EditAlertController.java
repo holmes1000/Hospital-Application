@@ -10,6 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -22,7 +23,7 @@ public class EditAlertController {
 
     @FXML private MFXTextField tfTitle;
     @FXML private MFXTextField tfDescription;
-    @FXML private MFXComboBox<String> cbEmployees;
+    @FXML private ComboBox<String> cbEmployees;
     @FXML private MFXButton btnSaveEdits;
     static edu.wpi.teamb.DBAccess.ORMs.Alert currentAlert = null;
     static edu.wpi.teamb.DBAccess.ORMs.Alert staticAlert = null;
@@ -39,10 +40,10 @@ public class EditAlertController {
         ArrayList<User> users = Repository.getRepository().getAllUsers();
         ArrayList<String> usernames = new ArrayList<>();
         for(int i = 0; i < users.size(); i++){
-            usernames.add(users.get(i).getName());
+            usernames.add(users.get(i).getUsername());
         }
         cbEmployees.getItems().addAll(usernames);
-        cbEmployees.setText(currentAlert.getEmployee());
+        cbEmployees.setValue(currentAlert.getEmployee());
         Repository.getRepository().deleteAlert(currentAlert);
     }
 
@@ -54,7 +55,11 @@ public class EditAlertController {
         currentAlert.setTitle(tfTitle.getText());
         currentAlert.setDescription(tfDescription.getText());
         currentAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
-        currentAlert.setEmployee(cbEmployees.getText());
+        if(cbEmployees.getValue().equals("")){
+            currentAlert.setEmployee("unassigned");
+        } else {
+            currentAlert.setEmployee(cbEmployees.getValue());
+        }
         Repository.getRepository().addAlert(currentAlert);
 
         // Create an alert

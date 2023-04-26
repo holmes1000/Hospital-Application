@@ -25,8 +25,8 @@
                     <Image url="@../../img/bwh-background.jpg" />
                 </image>
             </ImageView>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#465777" height="667.0" layoutX="-66.0" layoutY="21.0" opacity="1" stroke="#465777" strokeType="INSIDE" width="1136.0" />
-            <Text fill="#f1f1f1" layoutX="-46.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Signage" textAlignment="CENTER">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#7089a2" height="667.0" layoutX="-66.0" layoutY="21.0" opacity="0.9" stroke="WHITE" strokeType="INSIDE" width="1136.0" />
+            <Text fill="WHITE" layoutX="-46.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Signage" textAlignment="CENTER">
                 <font>
                     <Font name="System Bold" size="36.0" />
                 </font>
