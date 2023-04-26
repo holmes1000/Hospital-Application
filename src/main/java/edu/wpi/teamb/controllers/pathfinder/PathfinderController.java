@@ -41,6 +41,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Path;
@@ -371,15 +372,20 @@ public class PathfinderController {
               // Check if nodes are neighboring before drawing the line
               if (PathFinding.ASTAR.get_node_map().get(n.getNodeID()).getNeighborIds().contains(PathFinding.ASTAR.get_node_map().get(next.getNodeID()).getNodeID())) {
                   Line line = new Line(n.getxCoord(), n.getyCoord(), next.getxCoord(), next.getyCoord());
+                  Line big_line = new Line(n.getxCoord(), n.getyCoord(), next.getxCoord(), next.getyCoord());
+                  line.setStroke(Color.web("BBE0A1"));
+                  big_line.setStroke(GREEN);
                   animateLine(line);
                   line.setStrokeWidth(4);
+                  big_line.setStrokeWidth(8);
+                  pathGroup.getChildren().add(big_line);
                   pathGroup.getChildren().add(line);
               }
           }
           for (Node n : nodes) {
 //          pathGroup.getChildren().clear();
               if (n == nodes.get(0)) {
-                  Circle circle = new Circle(n.getxCoord(), n.getyCoord(), 5, GREEN);
+                  Circle circle = new Circle(n.getxCoord(), n.getyCoord(), 5, BLUE);
                   pathGroup.getChildren().add(circle);
                   Tooltip tooltip = new Tooltip(fullNodesByID.get(n.getNodeID()).getLongName());
                   Tooltip.install(circle,tooltip);
