@@ -4,7 +4,6 @@
 <?import com.jfoenix.controls.JFXHamburger?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import javafx.scene.effect.ColorAdjust?>
-<?import javafx.scene.effect.Light.Distant?>
 <?import javafx.scene.effect.Lighting?>
 <?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.image.Image?>
@@ -39,6 +38,7 @@
                   <MFXButton fx:id="btnAbout" layoutX="981.0" layoutY="645.0" mnemonicParsing="false" text="About" />
                   <MFXButton fx:id="btnClear" layoutX="833.0" layoutY="645.0" mnemonicParsing="false" text="Clear" visible="false" />
                   <MFXButton fx:id="btnSecret" layoutX="774.0" layoutY="645.0" mnemonicParsing="false" text="Secret" />
+                  <MFXButton fx:id="viewUserRequestButton" layoutX="38.0" layoutY="602.0" text="View My Requests" />
                </children></Pane>
             <ImageView fitHeight="150.0" fitWidth="456.0" layoutX="258.0" layoutY="551.0" pickOnBounds="true" preserveRatio="true">
                <image>

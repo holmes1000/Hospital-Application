@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class OfficeRequestDAOImpl implements IDAO {
     ArrayList<FullOfficeRequest> officeRequests;
 
-    public OfficeRequestDAOImpl() throws SQLException {
+    public OfficeRequestDAOImpl() {
         officeRequests = getAllHelper();
     }
 
@@ -99,7 +99,7 @@ public class OfficeRequestDAOImpl implements IDAO {
             e.printStackTrace();
         }
         officeRequests.add(new FullOfficeRequest(id, officeReq[0], dateSubmitted, officeReq[1], officeReq[2], officeReq[3], officeReq[4], officeReq[5], Integer.valueOf(officeReq[6])));
-        RequestDAOImpl.getRequestDaoImpl().getAll().add(new Request(id, officeReq[0], dateSubmitted, officeReq[1], officeReq[2], officeReq[3], officeReq[4]));
+        RequestDAOImpl.getRequestDaoImpl().getAll().add(new Request(id, officeReq[0], dateSubmitted, officeReq[1], "Office", officeReq[2], officeReq[3]));
     }
 
     /**

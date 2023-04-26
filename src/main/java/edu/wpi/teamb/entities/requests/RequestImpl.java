@@ -73,7 +73,7 @@ public abstract class RequestImpl implements IRequest {
     this.notes = notes;
   }
 
-  public ArrayList<String> getUsernames() {
+  public ArrayList<String>  getUsernames() {
     ArrayList<String> employees = new ArrayList<>();
     ArrayList<User> users = Repository.getRepository().getAllUsers();
     for (User user : users) {
