@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.lang.Integer.parseInt;
 
@@ -38,13 +39,22 @@ public class EdgeDAOImpl implements IDAO {
         try {
             if (rs.isBeforeFirst()) { // if there is something it found
                 rs.next();
-                return new Edge(rs); // make the edge
+                for (Edge e : edges) {
+                    if (e.endpoints == endpoints) {
+                        return e;
+                    }
+                }
             } else
                 try {
                     ResultSet rs1 = DButils.getRowCond("Edges", "*", "startnode = " + endpointsArray[1] + " AND endnode = " + endpointsArray[0]);
                     if (rs1.isBeforeFirst()) { // if there is something it found
                         rs1.next();
-                        return new Edge(rs1); // make the edge
+                        endpoints = endpointsArray[1] + "_" + endpointsArray[0];
+                        for (Edge e : edges) {
+                            if (e.endpoints == endpoints) {
+                                return e;
+                            }
+                        }// make the edge
                     } else {
                         System.err.println("ERROR Query Failed in method 'EdgeDAOImpl.get': No edge found with endpoints " + endpoints);
                         return null;
@@ -56,6 +66,7 @@ public class EdgeDAOImpl implements IDAO {
             System.err.println("ERROR Query Failed in method 'EdgeDAOImpl.get': " + e.getMessage());
             return null;
         }
+        return null;
     }
 
     /**
@@ -114,7 +125,12 @@ public class EdgeDAOImpl implements IDAO {
     public void delete(Object edge) {
         Edge e = (Edge) edge;
         deleteDBEdge(0, e);
-        edges.remove(e);
+        for (int i = 0; i < edges.size(); i++) {
+            if (Objects.equals(edges.get(i).endpoints, e.endpoints)) {
+                edges.remove(i);
+            }
+        }
+//        edges.remove(edge);
     }
 
     /**
@@ -292,13 +308,13 @@ public class EdgeDAOImpl implements IDAO {
         try {
             if (rs.isBeforeFirst()) { // if there is something it found
                 rs.next();
-                return new Edge(rs); // make the edge
+                return new Edge(Integer.parseInt(endpointsArray[0]), Integer.parseInt(endpointsArray[1])); // make the edge
             } else
                 try {
                     ResultSet rs1 = DButils.getRowCond("Edges", "*", "startnode = " + endpointsArray[1] + " AND endnode = " + endpointsArray[0]);
                     if (rs1.isBeforeFirst()) { // if there is something it found
                         rs1.next();
-                        return new Edge(rs1); // make the edge
+                        return new Edge(Integer.parseInt(endpointsArray[1]), Integer.parseInt(endpointsArray[0])); // make the edge
                     } else {
                         System.err.println("ERROR: Edge not found in method 'EdgeDAOImpl.getEdge'");
                         return null;
@@ -358,6 +374,15 @@ public class EdgeDAOImpl implements IDAO {
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'EdgeDAOImpl.resetEdgesFromBackup': " + e.getMessage());
         }
+    }
+
+    public ArrayList<Edge> getEdgesByNode(Node n) {
+        ArrayList<Edge> edges = new ArrayList<>();
+        for (Edge e : edges) {
+            if (e.getStartNodeID() == n.getNodeID() || e.getEndNodeID() == n.getNodeID()) {
+                edges.add(e);
+            }
+        } return edges;
     }
 
 }
