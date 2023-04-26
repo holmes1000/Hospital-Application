@@ -3,12 +3,12 @@
 <?import com.jfoenix.controls.JFXDrawer?>
 <?import com.jfoenix.controls.JFXHamburger?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -16,44 +16,89 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #272523;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.requests.CreateNewRequestController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #7089a2;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.requests.CreateNewRequestController">
     <center>
         <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER">
             <children>
-                <StackPane layoutX="-240.0" layoutY="1.0" prefHeight="698.0" prefWidth="1253.0" />
+                <StackPane fx:id="stackPane1" layoutX="-48.0" layoutY="1.0" prefHeight="698.0" prefWidth="1063.0" />
                 <ImageView fitHeight="733.0" fitWidth="1316.0" layoutX="-172.0" layoutY="-12.0" opacity="0.5" pickOnBounds="true" preserveRatio="false">
                     <image>
                         <Image url="@../../img/bwh-background.jpg" />
                     </image>
                 </ImageView>
-                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#465777" height="47.0" layoutX="-54.0" layoutY="34.0" stroke="BLACK" strokeType="INSIDE" width="361.0" />
-                <Text fill="#f1f1f1" layoutX="-46.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create New Request" textAlignment="CENTER">
+                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#98aabc" height="47.0" layoutX="-54.0" layoutY="34.0" stroke="WHITE" strokeType="INSIDE" width="361.0" />
+                <Text fill="WHITE" layoutX="-46.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create New Request" textAlignment="CENTER">
                     <font>
                         <Font name="System Bold" size="36.0" />
                     </font>
                 </Text>
-                <MFXButton fx:id="btnAllRequests" layoutX="801.0" layoutY="90.0" onAction="#clickAllRequests" prefHeight="56.0" prefWidth="260.0" style="-fx-background-color: #1C4EFE;" text="Submitted Requests" textFill="#f1f1f1">
+                <MFXButton fx:id="btnAllRequests" layoutX="801.0" layoutY="90.0" onAction="#clickAllRequests" prefHeight="56.0" prefWidth="260.0" style="-fx-background-color: #012d5a;" text="Submitted Requests" textFill="#f1f1f1">
                     <font>
                         <Font size="18.0" />
                     </font>
                 </MFXButton>
-                <VBox layoutX="-46.0" layoutY="90.0" prefHeight="56.0" prefWidth="260.0">
-                    <children>
-                        <MFXComboBox fx:id="cbRequestType" floatingText="Request Type" onAction="#clickCbRequestType" prefHeight="56.0" prefWidth="260.0" />
-                    </children></VBox>
-                <VBox fx:id="requestVbox" layoutX="-46.0" layoutY="160.0" prefHeight="470.0" prefWidth="1107.0" />
+            <HBox layoutX="-54.0" layoutY="88.0" prefHeight="68.0" prefWidth="68.0" style="-fx-spacing: 23;">
+               <children>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#98aabc" height="68.0" stroke="WHITE" strokeType="INSIDE" width="80.0" />
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#98aabc" height="68.0" stroke="WHITE" strokeType="INSIDE" width="80.0" />
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#98aabc" height="68.0" stroke="WHITE" strokeType="INSIDE" width="80.0" />
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#98aabc" height="68.0" stroke="WHITE" strokeType="INSIDE" width="80.0" />
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#98aabc" height="68.0" stroke="WHITE" strokeType="INSIDE" width="80.0" />
+               </children>
+            </HBox>
+                <VBox layoutX="-48.0" layoutY="90.0" prefHeight="56.0" prefWidth="260.0">
+               <children>
+                  <HBox prefHeight="64.0" prefWidth="200.0" style="-fx-spacing: 40;">
+                     <children>
+                        <ImageView fx:id="icon1" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../img/breakfast.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="icon2" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../img/phone-call.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="icon3" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../img/flower.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="icon4" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../img/sofa.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="icon5" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../img/workspace.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </HBox>
+               </children></VBox>
+                <VBox fx:id="vboxActivateNav" layoutX="-170.0" prefHeight="720.0" prefWidth="70.0" />
+                <VBox fx:id="requestVbox" layoutX="-54.0" layoutY="160.0" prefHeight="470.0" prefWidth="1107.0" />
+            <MFXButton fx:id="btnMoveRequests" layoutX="801.0" layoutY="29.0" onAction="#clickMoveRequest" prefHeight="56.0" prefWidth="260.0" style="-fx-background-color: #012d5a;" text="Move Requests" textFill="#f1f1f1">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </MFXButton>
             </children>
         </AnchorPane>
     </center>
-    <left>
-        <Pane fx:id="navPane" prefHeight="720.0" prefWidth="200.0">
-            <children>
-                <JFXDrawer fx:id="menuDrawer" prefHeight="720.0" prefWidth="200.0" />
-                <JFXHamburger fx:id="menuBurger" layoutX="14.0" layoutY="14.0">
-                    <effect>
-                        <ColorAdjust brightness="1.0" />
-                    </effect></JFXHamburger>
-            </children>
-        </Pane>
-    </left>
+   <left>
+      <Pane fx:id="navPane" prefHeight="720.0" prefWidth="200.0" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER">
+         <children>
+            <JFXDrawer fx:id="menuDrawer" layoutX="5.0" prefHeight="720.0" prefWidth="200.0" style="-fx-background-color: transparent;" />
+            <JFXHamburger fx:id="menuBurger" layoutX="14.0" layoutY="14.0" style="-fx-background-color: transparent;">
+               <effect>
+                  <ColorAdjust brightness="1.0" />
+               </effect>
+            </JFXHamburger>
+            <VBox fx:id="vboxActivateNav1" layoutX="70.0" onMouseEntered="#deactivateNav" prefHeight="720.0" prefWidth="70.0" />
+         </children>
+      </Pane>
+   </left>
 </BorderPane>

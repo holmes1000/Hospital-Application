@@ -7,10 +7,12 @@ public enum Screen {
   MEAL_REQUEST("views/requests/MealRequest.fxml"),
   CONFERENCE_REQUEST("views/requests/ConferenceRequest.fxml"),
   ALL_REQUEST("views/requests/SubmittedRequests.fxml"),
+
   CREATE_NEW_REQUEST("views/requests/CreateNewRequest.fxml"),
   SETTINGS("views/settings/Settings.fxml"),
   EDIT_ACCOUNT("views/settings/EditAccount.fxml"),
   EDIT_USERS("views/settings/EditUsers.fxml"),
+  EDIT_ALERTS("views/settings/EditAlerts.fxml"),
   PATHFINDER("views/pathfinder/Pathfinder.fxml"),
   MAP_EDITOR("views/mapeditor/MapEditor.fxml"),
   MOVE_MAP("views/requests/MoveMap.fxml"),

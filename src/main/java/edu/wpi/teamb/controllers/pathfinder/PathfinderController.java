@@ -74,7 +74,12 @@ public class PathfinderController {
 
     @FXML private MFXButton previousFloor;
     @FXML private MFXButton nextFloor;
+    @FXML private Pane navPane;
 
+    @FXML private VBox vboxActivateNav;
+    @FXML private VBox vboxActivateNav1;
+
+    private boolean navLoaded;
     private String currentFloor = "1";
     private HashMap<Integer,ArrayList<Move>> move_map = new HashMap<>();
     private ArrayList<Move> upcoming_moves = new ArrayList<>();
@@ -90,6 +95,7 @@ public class PathfinderController {
     HashMap<String,ArrayList<Node>> nodes_by_floor = new HashMap<>();
   private EPathfinder EPathfinder;
 
+
     public GesturePane pane = new GesturePane();
     ArrayList<FullNode> fullNodes = new ArrayList<>();
     HashMap<String,FullNode> fullNodesByLongname = new HashMap<>();
@@ -101,10 +107,18 @@ public class PathfinderController {
   @FXML
   public void initialize() throws IOException {
       Platform.setImplicitExit(false);
+
       initNavBar();
       hoverHelp();
       initButtons();
       getMoveMap();
+      navPane.setPickOnBounds(false);
+      menuDrawer.setPickOnBounds(false);
+      navLoaded = false;
+      navPane.setMouseTransparent(true);
+      activateNav();
+      deactivateNav();
+
 
       for (Integer id : PathFinding.ASTAR.getFullNodesByID().keySet()) {
           fullNodesByID.put(id,PathFinding.ASTAR.getFullNodesByID().get(id));
@@ -450,37 +464,37 @@ public class PathfinderController {
         switch (currentFloor) {
             case "L1" -> {
                 btnL1.setStyle("-fx-background-color: #f6bd38");
-                btnL2.setStyle("-fx-background-color: #1C4EFE");
-                btn1.setStyle("-fx-background-color: #1C4EFE");
-                btn2.setStyle("-fx-background-color: #1C4EFE");
-                btn3.setStyle("-fx-background-color: #1C4EFE");
+                btnL2.setStyle("-fx-background-color: #012d5a");
+                btn1.setStyle("-fx-background-color: #012d5a");
+                btn2.setStyle("-fx-background-color: #012d5a");
+                btn3.setStyle("-fx-background-color: #012d5a");
             }
             case "L2" -> {
-                btnL1.setStyle("-fx-background-color: #1C4EFE");
+                btnL1.setStyle("-fx-background-color: #012d5a");
                 btnL2.setStyle("-fx-background-color: #f6bd38");
-                btn1.setStyle("-fx-background-color: #1C4EFE");
-                btn2.setStyle("-fx-background-color: #1C4EFE");
-                btn3.setStyle("-fx-background-color: #1C4EFE");
+                btn1.setStyle("-fx-background-color: #012d5a");
+                btn2.setStyle("-fx-background-color: #012d5a");
+                btn3.setStyle("-fx-background-color: #012d5a");
             }
             case "1" -> {
-                btnL1.setStyle("-fx-background-color: #1C4EFE");
-                btnL2.setStyle("-fx-background-color: #1C4EFE");
+                btnL1.setStyle("-fx-background-color: #012d5a");
+                btnL2.setStyle("-fx-background-color: #012d5a");
                 btn1.setStyle("-fx-background-color: #f6bd38");
-                btn2.setStyle("-fx-background-color: #1C4EFE");
-                btn3.setStyle("-fx-background-color: #1C4EFE");
+                btn2.setStyle("-fx-background-color: #012d5a");
+                btn3.setStyle("-fx-background-color: #012d5a");
             }
             case "2" -> {
-                btnL1.setStyle("-fx-background-color: #1C4EFE");
-                btnL2.setStyle("-fx-background-color: #1C4EFE");
-                btn1.setStyle("-fx-background-color: #1C4EFE");
+                btnL1.setStyle("-fx-background-color: #012d5a");
+                btnL2.setStyle("-fx-background-color: #012d5a");
+                btn1.setStyle("-fx-background-color: #012d5a");
                 btn2.setStyle("-fx-background-color: #f6bd38");
-                btn3.setStyle("-fx-background-color: #1C4EFE");
+                btn3.setStyle("-fx-background-color: #012d5a");
             }
             case "3" -> {
-                btnL1.setStyle("-fx-background-color: #1C4EFE");
-                btnL2.setStyle("-fx-background-color: #1C4EFE");
-                btn1.setStyle("-fx-background-color: #1C4EFE");
-                btn2.setStyle("-fx-background-color: #1C4EFE");
+                btnL1.setStyle("-fx-background-color: #012d5a");
+                btnL2.setStyle("-fx-background-color: #012d5a");
+                btn1.setStyle("-fx-background-color: #012d5a");
+                btn2.setStyle("-fx-background-color: #012d5a");
                 btn3.setStyle("-fx-background-color: #f6bd38");
             }
         }
@@ -817,6 +831,40 @@ public class PathfinderController {
             popOver.show(helpIcon);
         });
   }
+
+    /**
+     * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+     * Swaps ownership of the strip to the navdraw
+     */
+
+    public void activateNav(){
+        vboxActivateNav.setOnMouseEntered(event -> {
+            if(!navLoaded) {
+                System.out.println("on");
+                navPane.setPickOnBounds(false);
+                navPane.setMouseTransparent(false);
+                navLoaded = true;
+                vboxActivateNav.setDisable(true);
+                vboxActivateNav1.setDisable(false);
+            }
+        });
+    }
+
+    /**
+     * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+     * Swaps ownership of the strip to the page
+     */
+    public void deactivateNav(){
+        vboxActivateNav1.setOnMouseEntered(event -> {
+            if(navLoaded){
+                System.out.println("off");
+                navPane.setMouseTransparent(true);
+                vboxActivateNav.setDisable(false);
+                navLoaded = false;
+                vboxActivateNav1.setDisable(true);
+            }
+        });
+    }
 
   public void initNavBar() {
     //https://github.com/afsalashyana/JavaFX-Tutorial-Codes/tree/master/JavaFX%20Navigation%20Drawer/src/genuinecoder

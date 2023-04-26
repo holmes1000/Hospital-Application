@@ -37,8 +37,8 @@
       
                         <MFXListView fx:id="NodeInfo" prefHeight="70.0" prefWidth="394.0" style="-fx-border-color: black;" />
                </children></VBox>
-                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#465777" height="50.0" layoutX="14.0" layoutY="35.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
-                <Text fill="#f1f1f1" layoutX="23.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Map Editor" textAlignment="CENTER">
+                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#98aabc" height="50.0" layoutX="14.0" layoutY="35.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
+                <Text fill="WHITE" layoutX="23.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Map Editor" textAlignment="CENTER">
                     <font>
                         <Font name="System Bold" size="36.0" />
                     </font>
