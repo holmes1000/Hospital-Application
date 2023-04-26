@@ -46,19 +46,24 @@ public class FullTest {
         assertEquals(fullconferencerequest.getLocationName(), "Test Location Name");
         assertEquals(fullconferencerequest.getRequestStatus(), "Test Request Status");
 
-
         ArrayList<ConferenceRequest> mr = new ArrayList<ConferenceRequest>();
         ArrayList<FullConferenceRequest> fmrs = new ArrayList<FullConferenceRequest>();
-        ConferenceRequest fr = new ConferenceRequest(258, Timestamp.valueOf("2020-01-01 00:00:00"), "Test Event Name", "Test Booking Reason", 100);
+        ConferenceRequest fr = new ConferenceRequest(258, Timestamp.valueOf("2020-01-01 00:00:00"), "Test Event Name",
+                "Test Booking Reason", 100);
         Request r = RequestDAOImpl.getRequest(fr.getId());
         FullConferenceRequest b = new FullConferenceRequest(r, fr);
         fmrs.add(b);
         mr.add(fr);
-        assertEquals(((ArrayList<FullConferenceRequest>) fullconferencerequest.listFullRequests(mr)).get(0).getId(), fmrs.get(0).getId());
-        assertEquals(((ArrayList<FullConferenceRequest>) fullconferencerequest.listFullRequests(mr)).get(0).getRequestType(), fmrs.get(0).getRequestType());
-        assertEquals(((ArrayList<FullConferenceRequest>) fullconferencerequest.listFullRequests(mr)).get(0).getEventName(), fmrs.get(0).getEventName());
-        assertEquals(((ArrayList<FullConferenceRequest>) fullconferencerequest.listFullRequests(mr)).get(0).getBookingReason(), fmrs.get(0).getBookingReason());
-
+        assertEquals(((ArrayList<FullConferenceRequest>) fullconferencerequest.listFullRequests(mr)).get(0).getId(),
+                fmrs.get(0).getId());
+        assertEquals(
+                ((ArrayList<FullConferenceRequest>) fullconferencerequest.listFullRequests(mr)).get(0).getRequestType(),
+                fmrs.get(0).getRequestType());
+        assertEquals(
+                ((ArrayList<FullConferenceRequest>) fullconferencerequest.listFullRequests(mr)).get(0).getEventName(),
+                fmrs.get(0).getEventName());
+        assertEquals(((ArrayList<FullConferenceRequest>) fullconferencerequest.listFullRequests(mr)).get(0)
+                .getBookingReason(), fmrs.get(0).getBookingReason());
 
     }
 
@@ -157,9 +162,23 @@ public class FullTest {
         // TODO: Test listFullReuqests
         ArrayList<FlowerRequest> fr = new ArrayList<FlowerRequest>();
         ArrayList<FullFlowerRequest> ffrs = new ArrayList<FullFlowerRequest>();
-        FullFlowerRequest amx = Repository.getRepository().getAllFlowerRequests().get(0);
-        FlowerRequest f = new FlowerRequest(amx.getId(), amx.getFlowerType(), amx.getEmployee(), amx.getColor(), amx.getMessage());
-        
+        FullFlowerRequest amx;
+        boolean altered = false;
+        int id;
+        try {
+            amx = Repository.getRepository().getAllFlowerRequests().get(0);
+        } catch (IndexOutOfBoundsException e) {
+            Repository.getRepository()
+                    .addFlowerRequest(new String[] { "TestConfEmp", "Pending", "BTM Conference Center",
+                            "alphabet", "9999-09-09 00:00:00.0", "TestType", "TestColor", "TestSize", "TestMessage" });
+            amx = Repository.getRepository().getAllFlowerRequests().get(0);
+            altered=true;
+            id = amx.getId();
+            // TODO: handle exception
+        }
+        FlowerRequest f = new FlowerRequest(amx.getId(), amx.getFlowerType(), amx.getEmployee(), amx.getColor(),
+                amx.getMessage());
+
         Request r = RequestDAOImpl.getRequest(f.getId());
         FullFlowerRequest b = new FullFlowerRequest(r, f);
         ffrs.add(b);
@@ -169,6 +188,11 @@ public class FullTest {
         assertEquals(m.get(0).getFlowerType(), ffrs.get(0).getFlowerType());
         assertEquals(m.get(0).getColor(), ffrs.get(0).getColor());
         assertEquals(m.get(0).getSize(), ffrs.get(0).getSize());
+        if(altered)
+        {
+            Repository.getRepository().deleteFlowerRequest(f);
+        
+        }
 
     }
 
@@ -208,7 +232,6 @@ public class FullTest {
         FullNode.addFullNode(n);
         FullNode.deleteFullNode(n);
 
-
         FullNode.addFullNode(n);
         n.setNodeID(150000);
         n.setxCoord(10);
@@ -218,7 +241,8 @@ public class FullTest {
         n.setShortName("oni2");
         n.setLongName("onice2");
         n.setNodeType("oHall");
-        //TODO: Should update and remove the node but some issues aren't lettigng it happen
+        // TODO: Should update and remove the node but some issues aren't lettigng it
+        // happen
         FullNode.updateFullNode(n);
         FullNode.deleteFullNode(n);
 
@@ -238,7 +262,6 @@ public class FullTest {
         FFR.setModel("Test Model");
         FFR.setType("Test Type");
 
-
         assertEquals(FFR.getId(), 100);
         assertEquals(FFR.getEmployee(), "Test Employee");
         assertEquals(FFR.getRequestType(), "Furniture");
@@ -250,7 +273,6 @@ public class FullTest {
         assertEquals(FFR.getModel(), "Test Model");
         assertEquals(FFR.getType(), "Test Type");
 
-
         ArrayList<FurnitureRequest> mr = new ArrayList<FurnitureRequest>();
         ArrayList<FullFurnitureRequest> fmrs = new ArrayList<FullFurnitureRequest>();
         FurnitureRequest fr = new FurnitureRequest(258, "Furniture", "Test Model", true);
@@ -259,9 +281,12 @@ public class FullTest {
         fmrs.add(b);
         mr.add(fr);
         assertEquals(((ArrayList<FullFurnitureRequest>) FFR.listFullRequests(mr)).get(0).getId(), fmrs.get(0).getId());
-        assertEquals(((ArrayList<FullFurnitureRequest>) FFR.listFullRequests(mr)).get(0).getRequestType(), fmrs.get(0).getRequestType());
-        assertEquals(((ArrayList<FullFurnitureRequest>) FFR.listFullRequests(mr)).get(0).getModel(), fmrs.get(0).getModel());
-        assertEquals(((ArrayList<FullFurnitureRequest>) FFR.listFullRequests(mr)).get(0).getAssembly(), fmrs.get(0).getAssembly());
+        assertEquals(((ArrayList<FullFurnitureRequest>) FFR.listFullRequests(mr)).get(0).getRequestType(),
+                fmrs.get(0).getRequestType());
+        assertEquals(((ArrayList<FullFurnitureRequest>) FFR.listFullRequests(mr)).get(0).getModel(),
+                fmrs.get(0).getModel());
+        assertEquals(((ArrayList<FullFurnitureRequest>) FFR.listFullRequests(mr)).get(0).getAssembly(),
+                fmrs.get(0).getAssembly());
 
     }
 
@@ -279,7 +304,6 @@ public class FullTest {
         FOR.setNotes("Test Notes");
         FOR.setItem("Test Item");
 
-
         assertEquals(FOR.getId(), 100);
         assertEquals(FOR.getEmployee(), "Test Employee");
         assertEquals(FOR.getRequestType(), "Office");
@@ -291,8 +315,6 @@ public class FullTest {
         assertEquals(FOR.getNotes(), "Test Notes");
         assertEquals(FOR.getItem(), "Test Item");
 
-
-
         ArrayList<OfficeRequest> mr = new ArrayList<OfficeRequest>();
         ArrayList<FullOfficeRequest> fmrs = new ArrayList<FullOfficeRequest>();
         OfficeRequest fr = new OfficeRequest(258, "Office", "Test Model", 10);
@@ -301,8 +323,10 @@ public class FullTest {
         fmrs.add(b);
         mr.add(fr);
         assertEquals(((ArrayList<FullOfficeRequest>) FOR.listFullRequests(mr)).get(0).getId(), fmrs.get(0).getId());
-        assertEquals(((ArrayList<FullOfficeRequest>) FOR.listFullRequests(mr)).get(0).getRequestType(), fmrs.get(0).getRequestType());
-        assertEquals(((ArrayList<FullOfficeRequest>) FOR.listFullRequests(mr)).get(0).getNotes(), fmrs.get(0).getNotes());
+        assertEquals(((ArrayList<FullOfficeRequest>) FOR.listFullRequests(mr)).get(0).getRequestType(),
+                fmrs.get(0).getRequestType());
+        assertEquals(((ArrayList<FullOfficeRequest>) FOR.listFullRequests(mr)).get(0).getNotes(),
+                fmrs.get(0).getNotes());
         assertEquals(((ArrayList<FullOfficeRequest>) FOR.listFullRequests(mr)).get(0).getItem(), fmrs.get(0).getItem());
     }
 }
