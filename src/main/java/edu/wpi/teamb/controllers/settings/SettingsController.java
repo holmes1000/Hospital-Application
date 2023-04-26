@@ -52,11 +52,14 @@ public class SettingsController {
         } else if (server == 1){    // if server is AWS
             Repository.getRepository().switchTo(0);     // Else swap to WPI
         }
-        System.out.println("Server changed to: " + server);
+        server = Repository.getRepository().getDatabaseServer();
+        if (server == 1) System.out.println("Server changed to AWS Postgres");
+        else if (server == 0) System.out.println("Server changed to WPI Postgres");
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Server changed!");
         alert.setHeaderText(null);
-        alert.setContentText("Successfully changed server to: " + server);
+        if (server == 1) alert.setContentText("Successfully changed server to AWS Postgres");
+        else if (server == 0) alert.setContentText("Successfully changed server to WPI Postgres");
         alert.showAndWait();
     }
 
