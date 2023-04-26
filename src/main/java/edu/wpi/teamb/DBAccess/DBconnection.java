@@ -11,8 +11,8 @@ public class DBconnection {
     private final String postgresPassword = "teamb20";
 
     private final String AWSurl = "jdbc:postgresql://softengb.ctxwbmb4mcba.us-east-2.rds.amazonaws.com:5432/postgres";
-    private final String AWSusername = "teamb";
-    private final String AWSpassword = "billgates";
+    private final String AWSusername = "user_b";
+    private final String AWSpassword = "literallyBillGates222";
     private int databaseServer = 0; // 0 = postgres, 1 = AWS
 
     private static class SingletonHelper {
