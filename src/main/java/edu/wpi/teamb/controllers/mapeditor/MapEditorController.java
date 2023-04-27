@@ -549,6 +549,7 @@ public class MapEditorController {
       } catch (SQLException | IOException ex) {
         throw new RuntimeException(ex);
       }
+    stackPaneMapView.setDisable(true);
       refreshMap();
   }
 
