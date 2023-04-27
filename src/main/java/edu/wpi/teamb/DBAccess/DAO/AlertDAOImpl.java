@@ -19,17 +19,12 @@ public class AlertDAOImpl implements IDAO {
     @Override
     public Alert get(Object id) {
         int intID = (int) id;
-        ResultSet rs = DButils.getRowCond("alerts", "*", "id = " + intID);
-        try {
-            if (rs.isBeforeFirst()) { // if there is something it found
-                rs.next();
-                return new Alert(rs); // make the edge
-            } else
-                throw new SQLException("No rows found");
-        } catch (SQLException e) {
-            System.err.println("ERROR Query Failed in method 'AlertDAOImpl.get': " + e.getMessage());
-            return null;
+        for (Alert a : alerts) {
+            if (a.getId() == intID) {
+                return a;
+            }
         }
+        return null;
     }
 
     @Override

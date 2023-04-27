@@ -103,7 +103,7 @@ public class NodeDAOImpl implements IDAO {
     @Override
     public void update(Object n) {
         Node node = (Node) n;
-        String[] values = {node.getNodeID() + "", node.getxCoord() + "", node.getyCoord() + "", node.getFloor() + "", node.getBuilding()};
+        String[] values = {String.valueOf(node.getNodeID()), String.valueOf(node.getxCoord()), String.valueOf(node.getyCoord()), node.getFloor(), node.getBuilding()};
         updateRow(values);
         for (int i = 0; i < nodes.size(); i++) {
             if (nodes.get(i).getNodeID() == node.getNodeID()) {
