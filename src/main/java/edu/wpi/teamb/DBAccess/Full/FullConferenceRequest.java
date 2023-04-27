@@ -41,7 +41,8 @@ public class FullConferenceRequest implements IFull {
         this.duration = conferenceRequest.getDuration();
     }
 
-    public FullConferenceRequest(int id, String employee, Timestamp dateSubmitted, String requestStatus, String locationName, String notes, Timestamp dateRequested, String eventName, String bookingReason, int duration) {
+    public FullConferenceRequest(int id, String employee, Timestamp dateSubmitted, String requestStatus, String locationName,
+                                 String notes, Timestamp dateRequested, String eventName, String bookingReason, int duration) {
         this.id = id;
         this.employee = employee;
         this.dateSubmitted = dateSubmitted;

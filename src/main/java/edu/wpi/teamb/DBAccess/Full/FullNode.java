@@ -131,9 +131,9 @@ public class FullNode {
         Date current = Date.valueOf(LocalDate.now());
         FullNode fullNode = (FullNode) n;
         Node node = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding());
-        Repository.getRepository().deleteNode(node);
-        Repository.getRepository().deleteLocationName(new LocationName(fullNode.getLongName(), fullNode.getShortName(), fullNode.getNodeType()));
         Repository.getRepository().deleteMove(new Move(fullNode.getNodeID(), fullNode.getLongName(), current));
+        Repository.getRepository().deleteLocationName(new LocationName(fullNode.getLongName(), fullNode.getShortName(), fullNode.getNodeType()));
+        Repository.getRepository().deleteNode(node);
     }
 
     public static void updateFullNode(Object n, int nodeID, String longName) {

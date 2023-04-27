@@ -3,72 +3,112 @@ package edu.wpi.teamb.controllers.signage;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
+import edu.wpi.teamb.DBAccess.ORMs.Sign;
 import edu.wpi.teamb.controllers.NavDrawerController;
-import io.github.palexdev.materialfx.controls.MFXButton;
+import edu.wpi.teamb.controllers.components.SignageComponent1Controller;
+import edu.wpi.teamb.controllers.components.SignageComponentIndividualDirectionController;
+import edu.wpi.teamb.entities.ESignage;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
 public class SignageController {
 
   @FXML private JFXHamburger menuBurger;
   @FXML private JFXDrawer menuDrawer;
-  @FXML private MFXComboBox cbLocation;
+  @FXML private MFXComboBox<String> cbLocation;
   @FXML private VBox signVbox;
+  private ESignage signageE;
 
   @FXML
   public void initialize() throws IOException {
+      signageE = new ESignage();
       initNavBar();
       initializeFields();
+      initalizeComboBox();
       signVbox.getChildren().clear();
-      loadPage1();
+      loadPageBasedOnGroup("Shapiro 2 Screen 1 (info desk) May 23");
   }
 
-  public void clickCbLocation() {
+    private void initalizeComboBox() {
+        HashSet<String> signageGroups = signageE.getSignageGroups();
+        //convert the hashset to an arrayList
+        ArrayList<String> signageGroupsList = new ArrayList<String>();
+        for (String element : signageGroups) {
+            signageGroupsList.add(element);
+        }
+        ObservableList<String> signageGroupsObservableList = FXCollections.observableArrayList(signageGroupsList);
+        cbLocation.setItems(signageGroupsObservableList);
+    }
+
+    public void clickCbLocation() {
       signVbox.getChildren().clear();
       displaySelection();
   }
 
     public void displaySelection() {
-        String item = cbLocation.getSelectedItem().toString();
-        switch (item) {
-            case "Screen 1" -> loadPage1();
-            case "Screen 2" -> loadPage2();
-            default -> loadPage1();
-        };
+        String item = cbLocation.getSelectedItem();
+        loadPageBasedOnGroup(item);
     }
 
-  public void loadPage1() {
-      try {
-          FXMLLoader loader =
-                  new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/components/SignageComponent1.fxml"));
-          Pane pane = loader.load();
-          signVbox.getChildren().addAll(pane);
-      } catch (IOException e) {
-          e.printStackTrace();
+  public void loadPageBasedOnGroup(String group) {
+      ArrayList<Sign> allSigns = signageE.getAllSigns();
+      ArrayList<Sign> groupSigns = new ArrayList<>();
+      for (Sign sign : allSigns) {
+          if (sign.getSignageGroup().equals(group)) {
+              groupSigns.add(sign);
+          }
       }
+      int index = 0;
+      for (Sign s : groupSigns) {
+          try {
+              FXMLLoader loader =
+                      new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/components/SignageComponentIndividualDirection.fxml"));
+              AnchorPane pane = loader.load();
+              //get the controller that was loaded by the loader
+              SignageComponentIndividualDirectionController controller = loader.getController();
+              //set the location of the sign
+              controller.setSignageLocationText(s.getLocationName());
+              //set the direction of the sign
+              if(s.getDirection().equals("stop here") && index== 0){
+                  index++;
+                  Label label = new Label();
+                  label.setText("Stop Here");
+                  label.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+                  signVbox.getChildren().add(0, label);
+              }
+              controller.setSignageDirectionIcons(s.getDirection());
+              signVbox.getChildren().addAll(pane);
+          } catch (IOException e) {
+              e.printStackTrace();
+          }
+      }
+      signVbox.setSpacing(5);
   }
 
-    public void loadPage2() {
-        try {
-            FXMLLoader loader =
-                    new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/components/SignageComponent2.fxml"));
-            Pane pane = loader.load();
-            signVbox.getChildren().addAll(pane);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    public void loadPage2() {
+//        try {
+//            FXMLLoader loader =
+//                    new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/components/SignageComponent2.fxml"));
+//            Pane pane = loader.load();
+//            signVbox.getChildren().addAll(pane);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
   public void initializeFields() {
-      ObservableList<String> locations =
-              FXCollections.observableArrayList("Screen 1", "Screen 2");
+      ObservableList<String> locations = FXCollections.observableArrayList(signageE.getSignageGroups());
       cbLocation.setItems(locations);
   }
 

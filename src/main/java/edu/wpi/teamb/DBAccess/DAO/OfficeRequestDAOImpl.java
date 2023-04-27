@@ -1,5 +1,6 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
+import edu.wpi.teamb.DBAccess.DBconnection;
 import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.Full.FullFactory;
 import edu.wpi.teamb.DBAccess.Full.FullOfficeRequest;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 public class OfficeRequestDAOImpl implements IDAO {
     ArrayList<FullOfficeRequest> officeRequests;
 
-    public OfficeRequestDAOImpl() throws SQLException {
+    public OfficeRequestDAOImpl() {
         officeRequests = getAllHelper();
     }
 
@@ -77,6 +78,8 @@ public class OfficeRequestDAOImpl implements IDAO {
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'OfficeRequestDAOImpl.getAllHelper': " + e.getMessage());
         }
+        DBconnection.getDBconnection().closeDBconnection();
+        DBconnection.getDBconnection().forceClose();
         return (ArrayList<FullOfficeRequest>) or.listFullRequests(ors);
     }
 
@@ -99,7 +102,7 @@ public class OfficeRequestDAOImpl implements IDAO {
             e.printStackTrace();
         }
         officeRequests.add(new FullOfficeRequest(id, officeReq[0], dateSubmitted, officeReq[1], officeReq[2], officeReq[3], officeReq[4], officeReq[5], Integer.valueOf(officeReq[6])));
-        RequestDAOImpl.getRequestDaoImpl().getAll().add(new Request(id, officeReq[0], dateSubmitted, officeReq[1], officeReq[2], officeReq[3], officeReq[4]));
+        RequestDAOImpl.getRequestDaoImpl().getAll().add(new Request(id, officeReq[0], dateSubmitted, officeReq[1], "Office", officeReq[2], officeReq[3]));
     }
 
     /**

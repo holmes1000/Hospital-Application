@@ -9,16 +9,18 @@
 <!--    -->
 <!--</AnchorPane>-->
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #465777;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.CreditsPageController">
+<?import javafx.scene.shape.Rectangle?>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #7089a2;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.CreditsPageController">
     <children>
-        <Text fill="#f1f1f1" layoutX="30.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Credits" textAlignment="CENTER">
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#012d5a" height="50.0" layoutX="-162.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1347.0" />
+        <Text fill="WHITE" layoutX="-21.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Credits" textAlignment="CENTER" wrappingWidth="1164.103515625">
             <font>
                 <Font name="System Bold" size="36.0" />
             </font>
         </Text>
         <VBox layoutX="27.0" layoutY="96.0" prefHeight="138.0" prefWidth="125.0">
             <children>
-                <Text fill="#f1f1f1" strokeType="OUTSIDE" strokeWidth="0.0" text="Images" textAlignment="CENTER" wrappingWidth="119.0">
+                <Text fill="#ffffff" strokeType="OUTSIDE" strokeWidth="0.0" text="Images" textAlignment="CENTER" wrappingWidth="119.0">
                     <font>
                         <Font size="20.0" />
                     </font>
@@ -26,44 +28,44 @@
                 <Separator prefWidth="200.0" />
                 <VBox prefHeight="475.0" prefWidth="379.0">
                     <children>
-                        <Label fx:id="groundFloor" prefHeight="39.0" prefWidth="122.0" text="       Ground Floor" textAlignment="CENTER" textFill="#f1f1f1" />
-                        <Label fx:id="LL1" alignment="CENTER" prefHeight="17.0" prefWidth="128.0" text="Lower Level 1" textAlignment="CENTER" textFill="#f1f1f1" />
-                        <Label fx:id="LL2" alignment="CENTER" prefHeight="17.0" prefWidth="130.0" text="Lower Level 2" textFill="#f1f1f1" />
-                        <Label fx:id="firstFloor" alignment="CENTER" prefHeight="17.0" prefWidth="125.0" text="First Floor" textFill="#f1f1f1" />
-                        <Label fx:id="secondFloor" alignment="CENTER" prefHeight="17.0" prefWidth="127.0" text="Second Floor" textFill="#f1f1f1" />
-                        <Label fx:id="thirdFloor" alignment="CENTER" prefHeight="17.0" prefWidth="128.0" text="Third Floor" textFill="#f1f1f1" />
-                        <Label fx:id="breakfast" alignment="CENTER" prefHeight="17.0" prefWidth="127.0" text="Breakfast" textFill="#f1f1f1" />
-                        <Label fx:id="BWH_Background" alignment="CENTER" prefHeight="17.0" prefWidth="131.0" text="BWH Background" textFill="#f1f1f1" />
-                        <Label fx:id="BWH_Logo" alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="165.0" text="BWH Logo" textAlignment="CENTER" textFill="#f1f1f1" />
-                        <Label fx:id="BWH_Logo_2" alignment="CENTER" prefHeight="17.0" prefWidth="126.0" text="BWH Logo 2" textFill="#f1f1f1" />
+                        <Label fx:id="groundFloor" prefHeight="39.0" prefWidth="122.0" text="       Ground Floor" textAlignment="CENTER" textFill="#ffffff" />
+                        <Label fx:id="LL1" alignment="CENTER" prefHeight="17.0" prefWidth="128.0" text="Lower Level 1" textAlignment="CENTER" textFill="#ffffff" />
+                        <Label fx:id="LL2" alignment="CENTER" prefHeight="17.0" prefWidth="130.0" text="Lower Level 2" textFill="#ffffff" />
+                        <Label fx:id="firstFloor" alignment="CENTER" prefHeight="17.0" prefWidth="125.0" text="First Floor" textFill="#ffffff" />
+                        <Label fx:id="secondFloor" alignment="CENTER" prefHeight="17.0" prefWidth="127.0" text="Second Floor" textFill="#ffffff" />
+                        <Label fx:id="thirdFloor" alignment="CENTER" prefHeight="17.0" prefWidth="128.0" text="Third Floor" textFill="#ffffff" />
+                        <Label fx:id="breakfast" alignment="CENTER" prefHeight="17.0" prefWidth="127.0" text="Breakfast" textFill="#ffffff" />
+                        <Label fx:id="BWH_Background" alignment="CENTER" prefHeight="17.0" prefWidth="131.0" text="BWH Background" textFill="#ffffff" />
+                        <Label fx:id="BWH_Logo" alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="165.0" text="BWH Logo" textAlignment="CENTER" textFill="#ffffff" />
+                        <Label fx:id="BWH_Logo_2" alignment="CENTER" prefHeight="17.0" prefWidth="126.0" text="BWH Logo 2" textFill="#ffffff" />
                     </children>
                 </VBox>
             </children>
         </VBox>
         <VBox layoutX="26.0" layoutY="319.0" prefHeight="285.0" prefWidth="125.0">
             <children>
-                <Text fill="#f1f1f1" strokeType="OUTSIDE" strokeWidth="0.0" text="Icons" textAlignment="CENTER" wrappingWidth="127.083984375">
+                <Text fill="#ffffff" strokeType="OUTSIDE" strokeWidth="0.0" text="Icons" textAlignment="CENTER" wrappingWidth="127.083984375">
                     <font>
                         <Font size="20.0" />
                     </font></Text>
                 <Separator prefWidth="200.0" />
                 <VBox prefHeight="200.0" prefWidth="100.0">
                     <children>
-                        <Label fx:id="Cog_Wheel" alignment="CENTER" prefHeight="17.0" prefWidth="130.0" text="Cog Wheel" textFill="#f1f1f1" />
-                        <Label fx:id="directions" alignment="CENTER" prefHeight="17.0" prefWidth="131.0" text="Directions" textFill="#f1f1f1" />
-                        <Label fx:id="flower" alignment="CENTER" prefHeight="17.0" prefWidth="131.0" text="Flower" textFill="#f1f1f1" />
-                        <Label fx:id="helpIcon" alignment="CENTER" prefHeight="17.0" prefWidth="130.0" text="Help Icon" textFill="#f1f1f1" />
-                        <Label fx:id="Home" alignment="CENTER" prefHeight="17.0" prefWidth="130.0" text="Home" textFill="#f1f1f1" />
-                        <Label fx:id="LogOut" alignment="CENTER" prefHeight="17.0" prefWidth="128.0" text="Logout" textFill="#f1f1f1" />
-                        <Label fx:id="map" alignment="CENTER" prefHeight="17.0" prefWidth="131.0" text="Map Icon" textFill="#f1f1f1" />
-                        <Label fx:id="mealTimes" alignment="CENTER" prefHeight="17.0" prefWidth="133.0" text="Meal Times" textFill="#f1f1f1" />
-                        <Label fx:id="phoneCall" alignment="CENTER" prefHeight="17.0" prefWidth="128.0" text="Phone Call" textFill="#f1f1f1" />
-                        <Label fx:id="reject" alignment="CENTER" prefHeight="17.0" prefWidth="130.0" text="Reject Icon" textFill="#f1f1f1" />
-                        <Label fx:id="reply" alignment="CENTER" prefHeight="17.0" prefWidth="133.0" text="Reply Icon" textFill="#f1f1f1" />
-                        <Label fx:id="send" alignment="CENTER" prefHeight="17.0" prefWidth="129.0" text="Send Icon" textFill="#f1f1f1" />
-                        <Label fx:id="sofa" alignment="CENTER" prefHeight="17.0" prefWidth="130.0" text="Sofa" textFill="#f1f1f1" />
-                        <Label fx:id="street" alignment="CENTER" prefHeight="17.0" prefWidth="131.0" text="Street Sign" textFill="#f1f1f1" />
-                        <Label fx:id="workspace" alignment="CENTER" prefHeight="17.0" prefWidth="132.0" text="Workspace" textFill="#f1f1f1" />
+                        <Label fx:id="Cog_Wheel" alignment="CENTER" prefHeight="17.0" prefWidth="130.0" text="Cog Wheel" textFill="#ffffff" />
+                        <Label fx:id="directions" alignment="CENTER" prefHeight="17.0" prefWidth="131.0" text="Directions" textFill="#ffffff" />
+                        <Label fx:id="flower" alignment="CENTER" prefHeight="17.0" prefWidth="131.0" text="Flower" textFill="#ffffff" />
+                        <Label fx:id="helpIcon" alignment="CENTER" prefHeight="17.0" prefWidth="130.0" text="Help Icon" textFill="#ffffff" />
+                        <Label fx:id="Home" alignment="CENTER" prefHeight="17.0" prefWidth="130.0" text="Home" textFill="#ffffff" />
+                        <Label fx:id="LogOut" alignment="CENTER" prefHeight="17.0" prefWidth="128.0" text="Logout" textFill="#ffffff" />
+                        <Label fx:id="map" alignment="CENTER" prefHeight="17.0" prefWidth="131.0" text="Map Icon" textFill="#ffffff" />
+                        <Label fx:id="mealTimes" alignment="CENTER" prefHeight="17.0" prefWidth="133.0" text="Meal Times" textFill="#ffffff" />
+                        <Label fx:id="phoneCall" alignment="CENTER" prefHeight="17.0" prefWidth="128.0" text="Phone Call" textFill="#ffffff" />
+                        <Label fx:id="reject" alignment="CENTER" prefHeight="17.0" prefWidth="130.0" text="Reject Icon" textFill="#ffffff" />
+                        <Label fx:id="reply" alignment="CENTER" prefHeight="17.0" prefWidth="133.0" text="Reply Icon" textFill="#ffffff" />
+                        <Label fx:id="send" alignment="CENTER" prefHeight="17.0" prefWidth="129.0" text="Send Icon" textFill="#ffffff" />
+                        <Label fx:id="sofa" alignment="CENTER" prefHeight="17.0" prefWidth="130.0" text="Sofa" textFill="#ffffff" />
+                        <Label fx:id="street" alignment="CENTER" prefHeight="17.0" prefWidth="131.0" text="Street Sign" textFill="#ffffff" />
+                        <Label fx:id="workspace" alignment="CENTER" prefHeight="17.0" prefWidth="132.0" text="Workspace" textFill="#ffffff" />
                     </children>
                 </VBox>
             </children>
@@ -71,7 +73,7 @@
         <Pane layoutX="218.0" layoutY="14.0" prefHeight="364.0" prefWidth="368.0" />
         <MFXButton fx:id="btnClose" layoutX="1163.0" layoutY="646.0" mnemonicParsing="false" text="Close" />
         <ImageView fx:id="popup" fitHeight="617.0" fitWidth="828.0" layoutX="266.0" layoutY="55.0" pickOnBounds="true" preserveRatio="true" />
-        <Text fill="#f1f1f1" layoutY="655.0" strokeType="OUTSIDE" strokeWidth="0.0" text="All Icon Images source from: https://www.flaticon.com/" textAlignment="CENTER" wrappingWidth="179.279296875">
+        <Text fill="#ffffff" layoutY="655.0" strokeType="OUTSIDE" strokeWidth="0.0" text="All Icon Images source from: https://www.flaticon.com/" textAlignment="CENTER" wrappingWidth="179.279296875">
             <font>
                 <Font name="System Bold" size="12.0" />
             </font>

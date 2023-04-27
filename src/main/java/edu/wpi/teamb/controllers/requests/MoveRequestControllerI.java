@@ -42,7 +42,6 @@ public class MoveRequestControllerI implements IRequestController{
     @FXML private MFXButton btnRemoveMove;
     @FXML private MFXButton btnEditRequest;
     @FXML private MFXRadioButton radPastMove;
-    @FXML private MFXButton btnViewMoveMap;
 
     private EMoveRequest EMoveRequest;
     private int tableSize = 0;
@@ -81,7 +80,6 @@ public class MoveRequestControllerI implements IRequestController{
         helpIcon.setOnMouseClicked(e -> handleHelp());
         btnRemoveMove.setOnMouseClicked(e -> handleRemoveMove());
         btnEditRequest.setOnMouseClicked(e -> handleEditRequest());
-        btnViewMoveMap.setOnMouseClicked(e -> Navigation.navigate(Screen.MOVE_MAP));
     }
 
     @Override

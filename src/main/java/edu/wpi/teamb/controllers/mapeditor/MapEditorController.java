@@ -11,6 +11,8 @@ import edu.wpi.teamb.DBAccess.ORMs.Edge;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 import edu.wpi.teamb.entities.EMapEditor;
+import edu.wpi.teamb.navigation.Navigation;
+import edu.wpi.teamb.navigation.Screen;
 import edu.wpi.teamb.pathfinding.PathFinding;
 import io.github.palexdev.materialfx.controls.*;
 import javafx.application.Platform;
@@ -24,12 +26,14 @@ import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
@@ -38,9 +42,11 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.kurobako.gesturefx.GesturePane;
 import org.controlsfx.control.PopOver;
+import org.w3c.dom.NodeList;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.ResponseCache;
 import java.sql.Array;
 import java.sql.SQLException;
 import java.util.*;
@@ -55,12 +61,6 @@ public class MapEditorController {
   private JFXDrawer menuDrawer;
   @FXML
   private ImageView helpIcon;
-  @FXML
-  private MFXComboBox<String> NodeSelector;
-  @FXML
-  private MFXListView NodeInfo;
-  @FXML
-  private VBox VboxNodes;
   @FXML
   private ImageView imageViewPathfinder;
   @FXML
@@ -79,18 +79,7 @@ public class MapEditorController {
   private MFXButton btn3;
 
   @FXML
-  private MFXButton btnNode;
-  @FXML
-  private MFXButton btnEdge;
-  @FXML
-  private MFXButton btnAlign;
-  @FXML
-  private MFXTextField tfState;
-
-  @FXML
-  private MFXButton uploadBtn;
-  @FXML
-  private MFXButton exportBtn;
+  private TextField tfState;
   @FXML
   private MFXToggleButton toggleNodes;
   @FXML
@@ -98,9 +87,8 @@ public class MapEditorController {
   @FXML
   private MFXToggleButton toggleEdges;
   @FXML
-  private FileChooser fileChooser;
-  @FXML
   private MFXButton resetFromBackupBtn;
+  @FXML private MFXButton btnViewMoveMap;
 
   //Objects that get superimposed
 
@@ -127,32 +115,41 @@ public class MapEditorController {
   private Pane menuPane;
   private boolean editingNode = false; // Used for the submitting details button
 
+  // New Buttons
   @FXML
-  private MFXButton btnAdd;
+  private MFXButton btnAddNode;
   @FXML
-  private MFXButton btnEdit;
+  private MFXButton btnAddEdge;
   @FXML
-  private MFXButton btnDelete;
+  private MFXButton btnDeleteNode;
   @FXML
-  private MFXButton btnView;
+  private MFXButton btnDeleteEdge;
+  @FXML
+  private MFXButton btnAlignNodes;
+  @FXML
+  private MFXButton btnEditNode;
+  @FXML
+  private MFXButton btnAddMove;
+  @FXML
+  private MFXButton btnViewing;
+
+  // New States
+  MapEditorState addNodeState = new AddNodeState();
+  MapEditorState editNodeState = new EditNodeState();
+  MapEditorState deleteNodeState = new DeleteNodeState();
+  MapEditorState addEdgeState = new AddEdgeState();
+  MapEditorState deleteEdgeState = new DeleteEdgeState();
+  MapEditorState addMoveState = new AddMoveState();
+  MapEditorState viewingState = new ViewState();
 
   // Create the states
   MapEditorContext mapEditorContext = new MapEditorContext();
-  MapEditorState editState = new EditState();
-  MapEditorState deleteState = new DeleteState();
-  MapEditorState addState = new AddState();
-  MapEditorState viewState = new ViewState();
-  private boolean handlingNodes = false;
-  private boolean handlingEdges = false;
   private Set<Circle> selectedNodes = new HashSet<>();
 
   private Set<Circle> nodesToAlign = new HashSet<>();
-  boolean canAlignNodes = false;
 
   private double m = 0;
   private double c = 0;
-  int fullNodeX;
-  int fullNodeY;
   Circle c1;
   Circle c2;
 
@@ -164,7 +161,7 @@ public class MapEditorController {
   public void initialize() throws IOException, SQLException {
     initNavBar();
     hoverHelp();
-    initializeFields();
+//    initializeFields();
     initButtons();
     initStateBtn();
     PathFinding.ASTAR.init_pathfinder();
@@ -210,61 +207,58 @@ public class MapEditorController {
 
   private void handleNodes() {
     System.out.println("Handling nodes");
-    btnNode.setStyle("-fx-background-color: #f6bd38");
-    btnEdge.setStyle("-fx-background-color: #1C4EFE");
-    btnAlign.setStyle("-fx-background-color: #1C4EFE");
-    handlingNodes = true;
-    handlingEdges = false;
     determineState();
   }
 
   private void handleEdges() {
     System.out.println("Handling edges");
-    btnEdge.setStyle("-fx-background-color: #f6bd38");
-    btnNode.setStyle("-fx-background-color: #1C4EFE");
-    btnAlign.setStyle("-fx-background-color: #1C4EFE");
-    handlingEdges = true;
-    handlingNodes = false;
     determineState();
   }
 
+  /**
+   * Handles the alignment of nodes
+   */
   private void alignNodes() {
-    for (Circle c : nodesToAlign) {
-      Node n = Repository.getRepository().getNode(Integer.parseInt(c.getId()));
-      n.setyCoord(startAndEndPoints(n.getxCoord()));
-      Repository.getRepository().updateNode(n);
+    if (mapEditorContext.getState() == viewingState) {
+      // Iterate through the selected nodes
+      edgeGroup.getChildren().clear();
+      for (Circle c : nodesToAlign) {
+        Node n = Repository.getRepository().getNode(Integer.parseInt(c.getId())); // get the node
+        n.setyCoord(startAndEndPoints(n.getxCoord()));  // Set the y coordinate
+        Repository.getRepository().updateNode(n); // Update the node
+      }
+      nodesToAlign.clear(); // Clear the selected nodes list
+      System.out.println("Aligning all selected nodes");
+      refreshMap();
     }
-    nodesToAlign.clear();
-    System.out.println("Aligning all selected nodes");
   }
 
+
+  /**
+   * Determines the state we are in and changes the text field accordingly
+   */
   private void determineState() {
-    if (mapEditorContext.getState() == addState && handlingEdges) {
+    if (mapEditorContext.getState() == addEdgeState) {
       System.out.println("Adding edge");
       tfState.setText("Adding Edge");
-      handleAddNode();  // Disable the ability to click and add nodes
-    } else if (mapEditorContext.getState() == addState && handlingNodes) {
+    } else if (mapEditorContext.getState() == addNodeState) {
       System.out.println("Adding Node");
       tfState.setText("Adding Node");
-      handleAddNode();
-    } else if (mapEditorContext.getState() == deleteState && handlingEdges) {
+    } else if (mapEditorContext.getState() == deleteEdgeState) {
       System.out.println("Deleting edge");
       tfState.setText("Delete Edge");
-    } else if (mapEditorContext.getState() == deleteState && handlingNodes) {
+    } else if (mapEditorContext.getState() == deleteNodeState) {
       System.out.println("Deleting node");
       tfState.setText("Deleting Node");
-    } else if (mapEditorContext.getState() == editState && handlingEdges) {
-      System.out.println("Editing edge");
-      tfState.setText("Editing Edge");
-    } else if (mapEditorContext.getState() == editState && handlingNodes) {
+    } else if (mapEditorContext.getState() == editNodeState) {
       System.out.println("Editing node");
       tfState.setText("Editing Node");
-    } else if (mapEditorContext.getState() == editState && !handlingNodes && !handlingEdges) {
+    }else if (mapEditorContext.getState() == addMoveState) {
+        System.out.println("Adding Move");
+        tfState.setText("Adding Move");
+    } else if (mapEditorContext.getState() == viewingState) {
       System.out.println("Selecting nodes");
       tfState.setText("Selecting Nodes");
-    } else if (mapEditorContext.getState() == viewState) {
-      System.out.println("Viewing State");
-      tfState.setText("Viewing State");
     }
   }
 
@@ -275,7 +269,7 @@ public class MapEditorController {
    * @param floor
    * @throws SQLException
    */
-  public void draw(String floor) throws SQLException {
+  public void draw(String floor) {
     System.out.println("Clearing the children");
     this.nodeGroup.getChildren().clear();
     this.nameGroup.getChildren().clear();
@@ -284,17 +278,20 @@ public class MapEditorController {
     for (Node n : nodeList) {
       if (n.getFloor().equals(floor)) {
         drawNode(n);
+        drawEdge(n);
+        drawName(n);
       }
     }
     System.out.println("Drawing the edges, names, and nodes for floor " + floor);
     nodeGroup.toFront();
   }
 
-  //Draws edges for a single node, taking in a node
-  //From node it grabs the neighbors from the repository and then creates the 1-3 lines required
+  /**
+   * Draws the edges on the map
+   *
+   * @param n Node to draw edges for
+   */
   public void drawEdge(Node n) {
-//      edgeGroup.getChildren().clear();
-
     //Gets the full node of the current node, as well as the neighbors of this node
     ArrayList<Integer> neighbors = PathFinding.ASTAR.get_node_map().get(n.getNodeID()).getNeighborIds(); // TODO this breaks reset from backup
     if (neighbors != null) {
@@ -310,7 +307,7 @@ public class MapEditorController {
           Line line = new Line(n.getxCoord(), n.getyCoord(), neighborNode.getxCoord(), neighborNode.getyCoord());
           line.setStrokeWidth(4);
           line.setId(neighborNode.getNodeID() + "_" + n.getNodeID());
-          line.setOnMouseClicked(event -> handleEdgeClick(event, line));
+          line.setOnMouseClicked(event -> handleDeleteEdge(event, line));
           edgeGroup.getChildren().add(line);
 
         }
@@ -318,43 +315,6 @@ public class MapEditorController {
     }
     edgeGroup.toFront();
     nodeGroup.toFront();
-  }
-
-  //Toggles the ability to see location names
-  //Takes in current ability to see them in relation to the bar
-  //When on it adds the ability to generate them in the node drawing method
-  //When off it replaces text with "bruh" and removed ability to see them by adding delay.
-  public void handleToggleLocationNames() {
-    if (toggleLocationNames.isSelected()) {
-      nameGroup.setVisible(true);
-      System.out.println("Location names on");
-    } else {
-      nameGroup.setVisible(false);
-      System.out.println("Location names off");
-      toggleLocationNames.setSelected(false);
-    }
-  }
-
-  public void handleToggleNodes() {
-    if (toggleNodes.isSelected()) {
-      nodeGroup.setVisible(true);
-      System.out.println("Nodes on");
-    } else {
-      nodeGroup.setVisible(false);
-      System.out.println("Nodes off");
-      toggleNodes.setSelected(false);
-    }
-  }
-
-  public void handleToggleEdges() {
-    if (toggleEdges.isSelected()) {
-      edgeGroup.setVisible(true);
-      System.out.println("Edges on");
-    } else {
-      edgeGroup.setVisible(false);
-      System.out.println("Edges off");
-      toggleEdges.setSelected(false);
-    }
   }
 
   /**
@@ -366,20 +326,33 @@ public class MapEditorController {
     // Create the circle
     Circle c = new Circle(n.getxCoord(), n.getyCoord(), 5, RED);
     c.setId(String.valueOf(n.getNodeID())); // Set the circle's ID to the node's ID
+    // change the color of a circle when hovered
+    c.setOnMouseEntered(event -> {
+      c.setFill(Color.GREEN);
+      c.setRadius(10);
+    });
+    c.setOnMouseExited(event -> {
+      c.setFill(Color.RED);
+      c.setRadius(5);
+    });
     c.setOnMouseClicked(event -> {
       try {
         selectedNodes.add(c); // Used for creating edges
         nodesToAlign.add(c); // Used for aligning nodes
         checkSelectedNodes(); // Check if two circles are selected to create an edge
         checkNodesToAlign(); // Check if at least two circles are selected to align
-        this.handleNodeClick(event, n);
+
+        // Set node click event handlers
+        if (mapEditorContext.getState() == editNodeState)
+          handleEditNode(n);
+        if (mapEditorContext.getState() == deleteNodeState)
+          handleDeleteNode(event, n);
         System.out.println("Node " + n.getNodeID() + " clicked");
       } catch (SQLException | IOException e) {
         throw new RuntimeException(e);
       }
     }); // Set the handler for clicking on a node
-    drawEdge(n);
-    drawName(c, n);
+
 
     // Add the circle to the nodeGroup
     floorList.add(n);
@@ -387,12 +360,16 @@ public class MapEditorController {
     nodeGroup.toFront();
   }
 
+
+  /**
+   * Checks if at least 2 nodes are selected to align
+   */
   private void checkNodesToAlign() {
     List<Integer> xCoords = new ArrayList<>();
     List<Integer> yCoords = new ArrayList<>();
 
     // Populate the list
-    if (nodesToAlign.size() >= 2 && canAlignNodes) {
+    if (nodesToAlign.size() > 2) {
       for (Circle c : nodesToAlign) {
         xCoords.add((int) c.getCenterX());
         yCoords.add((int) c.getCenterY());
@@ -402,16 +379,22 @@ public class MapEditorController {
     }
 
     // Assign new Y coordinates
-    if (mapEditorContext.getState() == editState && !handlingNodes && !handlingEdges && canAlignNodes) {
+    if (mapEditorContext.getState() == viewingState) {
       calcBestFit(xCoords, yCoords);  // Calculate the best fit
-      alignNodes(); // Align the nodes
     }
   }
 
   private int startAndEndPoints(int x) {
-    return (int) (m*x+c);
+    return (int) (m * x + c);
   }
 
+
+  /**
+   * Function to calculate the best fit line
+   *
+   * @param x
+   * @param y
+   */
   private void calcBestFit(List<Integer> x, List<Integer> y) {
     int n = x.size();
     double sum_x = 0, sum_y = 0,
@@ -432,28 +415,27 @@ public class MapEditorController {
    * Method to check if two nodes are selected and if so, add an edge between them (in the add edge state)
    */
   private void checkSelectedNodes() {
-    if (selectedNodes.size() == 2)
-    {
+    if (selectedNodes.size() == 2) {
       Iterator<Circle> iterator = selectedNodes.iterator();
       c1 = iterator.next();
       c2 = iterator.next();
       System.out.println(c1.toString());
       System.out.println(c2.toString());
       selectedNodes.clear();
-      if (c1 != null && c2 != null && handlingEdges && mapEditorContext.getState() == addState)
-      {
-        handleAddEdge(c1, c2);
-      }
+      handleAddEdge(c1, c2);
     }
   }
 
-  void drawName(Circle c, Node n) {
+  /**
+   * Draws the location names on the map
+   */
+  void drawName(Node n) {
     for (FullNode fn : fullNodesList) {
       if (!Objects.equals(fn.getNodeType(), "HALL")) {
         if (fn.getNodeID() == n.getNodeID()) {
           Text name = new Text(fn.getShortName());
-          name.setX(c.getCenterX() + 5);
-          name.setY(c.getCenterY() + 5);
+          name.setX(n.getxCoord() + 5);
+          name.setY(n.getyCoord() + 5);
           nameGroup.getChildren().add(name);
         }
       }
@@ -484,6 +466,9 @@ public class MapEditorController {
     //tfNodeId.setText(String.valueOf(maxID + 5)); // Set the nodeID text field to the maxID + 5
   }
 
+  /**
+   * Gets the maximum ID of the list of nodes
+   */
   public int getMaxID() {  // Get the max ID of the list of nodes
     int maxID = 0;
     for (Node n : nodeList) {
@@ -501,85 +486,44 @@ public class MapEditorController {
     // Clear the map
     nodeGroup.getChildren().clear();
     edgeGroup.getChildren().clear();
+    nameGroup.getChildren().clear();
     // Redraw the map
-    try {
-      if (mapEditorContext.getState() != editState) {
+//    try {
+//      if (mapEditorContext.getState() != editState) {
         PathFinding.ASTAR.force_init();
-      }
+//      }
+      nodeList = Repository.getRepository().getAllNodes();
+      fullNodesList = Repository.getRepository().getAllFullNodes();
       draw(currentFloor);
       System.out.println("Refreshing map for floor " + currentFloor + "...");
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
+//    } catch (SQLException e) {
+//      e.printStackTrace();
+//    }
   }
-
-  private void handleEdgeClick(MouseEvent e, Line line) {
-    if (mapEditorContext.getState() == deleteState) {
-      handleDeleteEdge(e, line);
-    }
-    PathFinding.ASTAR.force_init();
-  }
-
-  /**
-   * Handles the node click event (creates a context menu)
-   *
-   * @param e
-   * @param n
-   */
-  private void handleNodeClick(MouseEvent e, Node n) throws SQLException, IOException {
-    if (mapEditorContext.getState() == deleteState) {
-      handleDeleteNode(e, n);
-    } else if (mapEditorContext.getState() == editState && handlingNodes) {
-      handleEditNode(n);
-    } else if (mapEditorContext.getState() == editState && handlingEdges) {
-      handleAddEdge(c1, c2);
-    }
-    else if (mapEditorContext.getState() == editState && canAlignNodes) {
-      alignNodes();
-    }
-  }
-
 
   private void handleAddNode() {
-    if (mapEditorContext.getState() == addState && handlingNodes) {
-      stackPaneMapView.addEventHandler(MouseEvent.MOUSE_CLICKED, this::tapToAddNode);
-      System.out.println("Added tapToAddNode event handler");
-    } else {
-      stackPaneMapView.setDisable(false);
-      System.out.println("Removed tapToAddNode event handler");
-    }
+    stackPaneMapView.addEventHandler(MouseEvent.MOUSE_CLICKED, this::tapToAddNode);
+    System.out.println("Added tapToAddNode event handler");
   }
 
   private void tapToAddNode(MouseEvent e) {
-    // Method to allow for double click to add a new node
-    try {
-      Node n = new Node();
-      n.setxCoord((int) e.getX());
-      n.setyCoord((int) e.getY());
-      setFullNodeX((int) e.getX());
-      setFullNodeY((int) e.getY());
-      n.setFloor(currentFloor);
-      AddNodeMenuController.setCurrentFloor(currentFloor);
-      n.setNodeID(getMaxID() + 5);
-      showAddNodeMenu(n);
-      editingNode = false;
-
-      addNodeToMap(e.getX(), e.getY());   // get the X and Y of the cursor
-      System.out.println("Added a node at " + e.getX() + ", " + e.getY());
+      // Method to allow for double click to add a new node
+      try {
+        Node n = new Node();
+        n.setxCoord((int) e.getX());
+        n.setyCoord((int) e.getY());
+        n.setFloor(currentFloor);
+        AddNodeMenuController.setCurrentFloor(currentFloor);
+        n.setNodeID(getMaxID() + 5);
+        showAddNodeMenu(n);
+        editingNode = false;
+        addNodeToMap(e.getX(), e.getY());   // get the X and Y of the cursor
+        System.out.println("Added a node at " + e.getX() + ", " + e.getY());
+      } catch (SQLException | IOException ex) {
+        throw new RuntimeException(ex);
+      }
       refreshMap();
-    } catch (SQLException | IOException ex) {
-      throw new RuntimeException(ex);
-    }
   }
-
-  private void setFullNodeX(int x) {
-    fullNodeX = x;
-  }
-
-  private void setFullNodeY(int y) {
-    fullNodeY = y;
-  }
-
 
   private void showAddNodeMenu(Node n) throws IOException {
     Parent root;
@@ -632,23 +576,18 @@ public class MapEditorController {
   }
 
   private void handleDeleteEdge(MouseEvent e, Line l) {
-    // Delete the edge from the database
-    Repository.getRepository().deleteEdge(Repository.getRepository().getEdge(l.getId()));
+    if (mapEditorContext.getState() == deleteEdgeState) {
+      // Delete the edge from the database
+      Edge edge = Repository.getRepository().getEdge(l.getId());
+      Repository.getRepository().deleteEdge(edge);
 
-    // Remove the edge from the map
-    edgeGroup.getChildren().remove(l);
+      ArrayList<Edge> edges = Repository.getRepository().getAllEdges();
 
-    System.out.println("Edge: " + l.getId() + " deleted");
-    refreshMap();
-  }
+      // Remove the edge from the map
+      edgeGroup.getChildren().remove(l);
 
-  private void handleEditEdge() {
-    if (mapEditorContext.getState() == editState && handlingEdges) {
-      //stackPaneMapView.addEventHandler(MouseEvent.MOUSE_CLICKED, this::tapToEditEdge);
-      System.out.println("Added tapToEditEdge event handler");
-    } else {
-      //stackPaneMapView.removeEventHandler(MouseEvent.MOUSE_CLICKED, this::tapToEditEdge);
-      System.out.println("Removed tapToEditEdge event handler");
+      refreshMap();
+      System.out.println("Edge: " + l.getId() + " deleted");
     }
   }
 
@@ -659,19 +598,23 @@ public class MapEditorController {
    * @param c2
    */
   private void handleAddEdge(Circle c1, Circle c2) {
+    if (c1 != null && c2 != null && mapEditorContext.getState() == addEdgeState) {
+      // Generate the line between the two nodes
+      Line line = new Line(c1.getCenterX(), c1.getCenterY(), c2.getCenterX(), c2.getCenterY());
+      line.setStrokeWidth(4);
+      line.setId(c1.getId() + "_" + c2.getId());
+      edgeGroup.getChildren().add(line);
+      System.out.println("Added Edge with ID = " + line.getId());
 
-    // Generate the line between the two nodes
-    Line line = new Line(c1.getCenterX(), c1.getCenterY(), c2.getCenterX(), c2.getCenterY());
-    line.setStrokeWidth(4);
-    line.setId(c1.getId() + "_" + c2.getId());
-    edgeGroup.getChildren().add(line);
-    System.out.println("Added Edge with ID = " + line.getId());
-
-    // Add edge to the database
-    Edge edge = new Edge();
-    edge.setStartNode(Repository.getRepository().get(Integer.parseInt(c1.getId())));
-    edge.setEndNode(Repository.getRepository().get(Integer.parseInt(c2.getId())));
-    Repository.getRepository().addEdge(edge);
+      // Add edge to the database
+      Edge edge = new Edge();
+      edge.setStartNodeID(Integer.parseInt(c1.getId()));
+      edge.setEndNodeID(Integer.parseInt(c2.getId()));
+      Repository.getRepository().addEdge(edge);
+//    ArrayList<Edge> edges = Repository.getRepository().getAllEdges();
+//    edges.size();
+      refreshMap();
+    }
   }
 
   /**
@@ -680,41 +623,41 @@ public class MapEditorController {
    * @throws SQLException
    */
   private void handleEditNode(Node n) throws SQLException, IOException {
-    editingNode = true;
-    // Get the node ID from the circle's ID
-    int nodeID = n.getNodeID();
+      editingNode = true;
+      // Get the node ID from the circle's ID
+      int nodeID = n.getNodeID();
 
-    // Allow click and drag of the Circle
-    for (javafx.scene.Node c: nodeGroup.getChildren()) {
-      if (c.getId().equals(String.valueOf(nodeID))) {
-        //makeDraggable((Circle) nodeGroup.getChildren().get(i));
-        makeDraggable((Circle) c);
-        boolEditingNode = true;
-        System.out.println("Node: " + nodeID + " is draggable");
-      }
-      if (boolEditingNode) {
-        stackPaneMapView.setOnMouseClicked(event -> {
-          if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
-            try {
-              // Update the node's location
-              System.out.println("Node: " + nodeID + " edited");
-              //newNode.setxCoord((int) (event.getX()));
-              //newNode.setyCoord((int) (event.getY()));
-              //System.out.println("Location: " + newNode.getxCoord() + ", " + newNode.getyCoord());
-              //showEditNodeMenu(newNode);
-              n.setxCoord((int) (event.getX()));
-              n.setyCoord((int) (event.getY()));
-              System.out.println("Location: " + n.getxCoord() + ", " + n.getyCoord());
-              showEditNodeMenu(n);
-            } catch (IOException ex) {
-              throw new RuntimeException(ex);
+      // Allow click and drag of the Circle
+      for (javafx.scene.Node c : nodeGroup.getChildren()) {
+        if (c.getId().equals(String.valueOf(nodeID))) {
+          //makeDraggable((Circle) nodeGroup.getChildren().get(i));
+          makeDraggable((Circle) c);
+          boolEditingNode = true;
+          System.out.println("Node: " + nodeID + " is draggable");
+        }
+        if (boolEditingNode) {
+          stackPaneMapView.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+              try {
+                // Update the node's location
+                System.out.println("Node: " + nodeID + " edited");
+                //newNode.setxCoord((int) (event.getX()));
+                //newNode.setyCoord((int) (event.getY()));
+                //System.out.println("Location: " + newNode.getxCoord() + ", " + newNode.getyCoord());
+                //showEditNodeMenu(newNode);
+                n.setxCoord((int) (event.getX()));
+                n.setyCoord((int) (event.getY()));
+                System.out.println("Location: " + n.getxCoord() + ", " + n.getyCoord());
+                showEditNodeMenu(n);
+              } catch (IOException ex) {
+                throw new RuntimeException(ex);
+              }
+              pane.gestureEnabledProperty().set(true);
+              boolEditingNode = false;
             }
-            pane.gestureEnabledProperty().set(true);
-            boolEditingNode = false;
-          }
-        });
+          });
+        }
       }
-    }
     //refreshMap();
   }
 
@@ -728,8 +671,9 @@ public class MapEditorController {
   }
 
   /**
-   *  Allow the user to drag the node
-   *  //https://stackoverflow.com/questions/17312734/how-to-make-a-draggable-node-in-javafx-2-0
+   * Allow the user to drag the node
+   * //https://stackoverflow.com/questions/17312734/how-to-make-a-draggable-node-in-javafx-2-0
+   *
    * @param node
    */
   private void makeDraggable(Circle node) {
@@ -768,158 +712,169 @@ public class MapEditorController {
 
   public void initButtons() {
     clickFloorBtn();
-    uploadBtn.setOnMouseClicked(event->{handleUploadBtn();});
-    exportBtn.setOnMouseClicked(event->{handleExportBtn();});
-    resetFromBackupBtn.setOnMouseClicked(event->{handleResetFromBackupBtn();});
+    resetFromBackupBtn.setOnMouseClicked(event -> {
+      handleResetFromBackupBtn();
+    });
+
+    btnViewMoveMap.setOnMouseClicked(e -> Navigation.navigate(Screen.MOVE_MAP));
 
     // initialize the toggles
     toggleEdges.setSelected(true);
     toggleNodes.setSelected(true);
     toggleLocationNames.setSelected(true);
-    toggleLocationNames.setOnMouseClicked(event->{handleToggleLocationNames();});
-    toggleEdges.setOnMouseClicked(event->{handleToggleEdges();});
-    toggleNodes.setOnMouseClicked(event->{handleToggleNodes();});
+    toggleLocationNames.setOnMouseClicked(event -> {
+      handleToggleLocationNames();
+    });
+    toggleEdges.setOnMouseClicked(event -> {
+      handleToggleEdges();
+    });
+    toggleNodes.setOnMouseClicked(event -> {
+      handleToggleNodes();
+    });
 
-    btnNode.setOnMouseClicked(event -> handleNodes());
-    btnEdge.setOnMouseClicked(event -> handleEdges());
-    btnAlign.setOnMouseClicked(event -> canAlignNodes = true);
+    // Init new buttons
+    btnAddMove.setOnMouseClicked(event -> handleAddMove());
+    btnAlignNodes.setOnMouseClicked(event -> alignNodes());
+    //btnViewing.setOnMouseClicked(event -> handleViewMoveMap());
+  }
+
+  private void handleAddMove() {
+  }
+
+  /**
+   * Toggles the ability to see location names on the maps
+   */
+  public void handleToggleLocationNames() {
+    if (toggleLocationNames.isSelected()) {
+      nameGroup.setVisible(true);
+      System.out.println("Location names on");
+    } else {
+      nameGroup.setVisible(false);
+      System.out.println("Location names off");
+      toggleLocationNames.setSelected(false);
+    }
+  }
+
+  /**
+   * Toggles the ability to see nodes on the maps
+   */
+  public void handleToggleNodes() {
+    if (toggleNodes.isSelected()) {
+      nodeGroup.setVisible(true);
+      System.out.println("Nodes on");
+    } else {
+      nodeGroup.setVisible(false);
+      System.out.println("Nodes off");
+      toggleNodes.setSelected(false);
+    }
+  }
+
+  /**
+   * Toggles the ability to see edges on the maps
+   */
+  public void handleToggleEdges() {
+    if (toggleEdges.isSelected()) {
+      edgeGroup.setVisible(true);
+      System.out.println("Edges on");
+    } else {
+      edgeGroup.setVisible(false);
+      System.out.println("Edges off");
+      toggleEdges.setSelected(false);
+    }
   }
 
   public void clickFloorBtn() {
-    btnL1.setOnMouseClicked(event->{
+    btnL1.setOnMouseClicked(event -> {
       imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(0));
       currentFloor = "L1";
       changeButtonColor(currentFloor);
       floorList = Repository.getRepository().getNodesByFloor("L1");
-      try {
         edgeGroup.getChildren().clear();
         nodeGroup.getChildren().clear();
-        draw( "L1");
-      } catch (SQLException e) {
-        throw new RuntimeException(e);
-      }
+        draw("L1");
     });
-    btnL2.setOnMouseClicked(event->{
+    btnL2.setOnMouseClicked(event -> {
       imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(1));
       currentFloor = "L2";
       changeButtonColor(currentFloor);
       floorList = Repository.getRepository().getNodesByFloor("L2");
 
-      try {
         edgeGroup.getChildren().clear();
         nodeGroup.getChildren().clear();
-        draw( "L2");
-      } catch (SQLException e) {
-        throw new RuntimeException(e);
-      }
+        draw("L2");
     });
-    btn1.setOnMouseClicked(event->{
+    btn1.setOnMouseClicked(event -> {
       currentFloor = "1";
       imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(3));
       changeButtonColor(currentFloor);
       floorList = Repository.getRepository().getNodesByFloor("1");
-      try {
         edgeGroup.getChildren().clear();
         nodeGroup.getChildren().clear();
-        draw( "1");
-      } catch (SQLException e) {
-        throw new RuntimeException(e);
-      }
+        draw("1");
     });
-    btn2.setOnMouseClicked(event->{
+    btn2.setOnMouseClicked(event -> {
       currentFloor = "2";
       imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(4));
       changeButtonColor(currentFloor);
       floorList = Repository.getRepository().getNodesByFloor("2");
-      try {
         edgeGroup.getChildren().clear();
         nodeGroup.getChildren().clear();
-        draw( "2");
-      } catch (SQLException e) {
-        throw new RuntimeException(e);
-      }
+        draw("2");
     });
-    btn3.setOnMouseClicked(event->{
+    btn3.setOnMouseClicked(event -> {
       currentFloor = "3";
       imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(5));
       changeButtonColor(currentFloor);
       floorList = Repository.getRepository().getNodesByFloor("3");
-      try {
         edgeGroup.getChildren().clear();
         nodeGroup.getChildren().clear();
-        draw( "3");
-      } catch (SQLException e) {
-        throw new RuntimeException(e);
-      }
+        draw("3");
     });
   }
 
   public void initStateBtn() {
-    btnView.setOnMouseClicked(event->{
-      mapEditorContext.setState(viewState);
+    // Init New State Buttons
+    btnAddEdge.setOnMouseClicked(event -> {
+      mapEditorContext.setState(addEdgeState);
       mapEditorContext.getState().printStatus();
-      changeStateButtonColor("View");
-    } );
-    btnEdit.setOnMouseClicked(event->{
-      mapEditorContext.setState(editState);
+      changeStateButtonColor("Add Edge State");
+    });
+    btnAddNode.setOnMouseClicked(event -> {
+      mapEditorContext.setState(addNodeState);
       mapEditorContext.getState().printStatus();
-      changeStateButtonColor("Edit");
-    } );
-    btnAdd.setOnMouseClicked(event->{
-      mapEditorContext.setState(addState);
+      handleAddNode();
+      changeStateButtonColor("Add Node State");
+    });
+    btnDeleteEdge.setOnMouseClicked(event -> {
+      mapEditorContext.setState(deleteEdgeState);
       mapEditorContext.getState().printStatus();
-      changeStateButtonColor("Add");
-    } );
-    btnDelete.setOnMouseClicked(event->{
-      mapEditorContext.setState(deleteState);
+      changeStateButtonColor("Delete Edge State");
+    });
+    btnDeleteNode.setOnMouseClicked(event -> {
+      mapEditorContext.setState(deleteNodeState);
       mapEditorContext.getState().printStatus();
-      changeStateButtonColor("Delete");
-    } );
+      changeStateButtonColor("Delete Node State");
+    });
+    btnEditNode.setOnMouseClicked(event -> {
+      mapEditorContext.setState(editNodeState);
+      mapEditorContext.getState().printStatus();
+      changeStateButtonColor("Edit Node State");
+    });
+    btnAddMove.setOnMouseClicked(event -> {
+      mapEditorContext.setState(addMoveState);
+      mapEditorContext.getState().printStatus();
+      changeStateButtonColor("Add Move State");
+    });
+    btnAlignNodes.setOnMouseClicked(event -> {
+      alignNodes();
+    });
+    btnViewing.setOnMouseClicked(event -> {
+      mapEditorContext.setState(viewingState);
+      mapEditorContext.getState().printStatus();
+      changeStateButtonColor("Viewing State");
+    });
   }
 
-  /**
-   * Handles the click event for the upload button
-   */
-  public void handleUploadBtn() {
-    fileChooser = new FileChooser();
-    fileChooser.setTitle("Open Resource File");
-    fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("CSV", "*.csv"));
-    File file = fileChooser.showOpenDialog(null);
-    if (file != null) {
-      System.out.println(file.getAbsolutePath());
-    }
-  }
-
-  /**
-   * Handles the click event for the export button
-   */
-  public void handleExportBtn() {
-    DirectoryChooser directoryChooser = new DirectoryChooser();
-    File selectedDirectory = directoryChooser.showDialog(null);
-    String absolutePath = null;
-    String item = getSelectedItem();
-    if (selectedDirectory != null) {
-      switch (item) {
-        case "Moves" -> absolutePath = selectedDirectory.getAbsolutePath() + "/movetest";
-        case "Nodes" -> absolutePath = selectedDirectory.getAbsolutePath() + "/nodetest";
-        case "Edges" -> absolutePath = selectedDirectory.getAbsolutePath() + "/edgetest";
-        case "Location Names" -> absolutePath = selectedDirectory.getAbsolutePath() + "/locationnametest";
-        default -> absolutePath = selectedDirectory.getAbsolutePath() + "/defaulttest";
-      };
-      switch (item) {
-        case "Moves" -> DBoutput.exportMovesToCSV(absolutePath, 2);
-        case "Nodes" -> DBoutput.exportNodesToCSV(absolutePath, 2);
-        case "Edges" -> {
-            DBoutput.exportEdgesToCSV(absolutePath, 2);
-        }
-        case "Location Names" -> {
-            DBoutput.exportLocationNamesToCSV(absolutePath, 2);
-        }
-        default -> new ArrayList<>();
-      };
-    }
-    System.out.println("here"); // 1 means success, 0 means failure
-  }
 
   /**
    * Changes the color of the buttons to indicate which floor is currently being viewed
@@ -967,29 +922,69 @@ public class MapEditorController {
 
   private void changeStateButtonColor(String state) {
     switch (state) {
-      case "View"-> {
-        btnView.setStyle("-fx-background-color: #f6bd38");
-        btnEdit.setStyle("-fx-background-color: #1C4EFE");
-        btnDelete.setStyle("-fx-background-color: #1C4EFE");
-        btnAdd.setStyle("-fx-background-color: #1C4EFE");
+      // New Buttons
+      case "Add Node State" -> {
+        btnAddNode.setStyle("-fx-background-color: #f6bd38");
+        btnAddEdge.setStyle("-fx-background-color: #1C4EFE");
+        btnAddMove.setStyle("-fx-background-color: #1C4EFE");
+        btnDeleteNode.setStyle("-fx-background-color: #1C4EFE");
+        btnDeleteEdge.setStyle("-fx-background-color: #1C4EFE");
+        btnEditNode.setStyle("-fx-background-color: #1C4EFE");
+        btnViewing.setStyle("-fx-background-color: #1C4EFE");
       }
-      case "Add" -> {
-        btnAdd.setStyle("-fx-background-color: #f6bd38");
-        btnEdit.setStyle("-fx-background-color: #1C4EFE");
-        btnDelete.setStyle("-fx-background-color: #1C4EFE");
-        btnView.setStyle("-fx-background-color: #1C4EFE");
+      case "Add Edge State" -> {
+        btnAddEdge.setStyle("-fx-background-color: #f6bd38");
+        btnAddNode.setStyle("-fx-background-color: #1C4EFE");
+        btnAddMove.setStyle("-fx-background-color: #1C4EFE");
+        btnDeleteNode.setStyle("-fx-background-color: #1C4EFE");
+        btnDeleteEdge.setStyle("-fx-background-color: #1C4EFE");
+        btnEditNode.setStyle("-fx-background-color: #1C4EFE");
+        btnViewing.setStyle("-fx-background-color: #1C4EFE");
       }
-      case "Edit" -> {
-        btnEdit.setStyle("-fx-background-color: #f6bd38");
-        btnAdd.setStyle("-fx-background-color: #1C4EFE");
-        btnDelete.setStyle("-fx-background-color: #1C4EFE");
-        btnView.setStyle("-fx-background-color: #1C4EFE");
+      case "Add Move State" -> {
+        btnAddMove.setStyle("-fx-background-color: #f6bd38");
+        btnAddEdge.setStyle("-fx-background-color: #1C4EFE");
+        btnAddNode.setStyle("-fx-background-color: #1C4EFE");
+        btnDeleteNode.setStyle("-fx-background-color: #1C4EFE");
+        btnDeleteEdge.setStyle("-fx-background-color: #1C4EFE");
+        btnEditNode.setStyle("-fx-background-color: #1C4EFE");
+        btnViewing.setStyle("-fx-background-color: #1C4EFE");
       }
-      case "Delete" -> {
-        btnDelete.setStyle("-fx-background-color: #f6bd38");
-        btnEdit.setStyle("-fx-background-color: #1C4EFE");
-        btnAdd.setStyle("-fx-background-color: #1C4EFE");
-        btnView.setStyle("-fx-background-color: #1C4EFE");
+      case "Delete Node State" -> {
+        btnDeleteNode.setStyle("-fx-background-color: #f6bd38");
+        btnAddEdge.setStyle("-fx-background-color: #1C4EFE");
+        btnAddMove.setStyle("-fx-background-color: #1C4EFE");
+        btnAddNode.setStyle("-fx-background-color: #1C4EFE");
+        btnDeleteEdge.setStyle("-fx-background-color: #1C4EFE");
+        btnEditNode.setStyle("-fx-background-color: #1C4EFE");
+        btnViewing.setStyle("-fx-background-color: #1C4EFE");
+      }
+      case "Delete Edge State" -> {
+        btnDeleteEdge.setStyle("-fx-background-color: #f6bd38");
+        btnAddEdge.setStyle("-fx-background-color: #1C4EFE");
+        btnAddMove.setStyle("-fx-background-color: #1C4EFE");
+        btnDeleteNode.setStyle("-fx-background-color: #1C4EFE");
+        btnAddNode.setStyle("-fx-background-color: #1C4EFE");
+        btnEditNode.setStyle("-fx-background-color: #1C4EFE");
+        btnViewing.setStyle("-fx-background-color: #1C4EFE");
+      }
+      case "Edit Node State" -> {
+        btnEditNode.setStyle("-fx-background-color: #f6bd38");
+        btnAddEdge.setStyle("-fx-background-color: #1C4EFE");
+        btnAddMove.setStyle("-fx-background-color: #1C4EFE");
+        btnDeleteNode.setStyle("-fx-background-color: #1C4EFE");
+        btnDeleteEdge.setStyle("-fx-background-color: #1C4EFE");
+        btnAddNode.setStyle("-fx-background-color: #1C4EFE");
+        btnViewing.setStyle("-fx-background-color: #1C4EFE");
+      }
+      case "Viewing State" -> {
+        btnViewing.setStyle("-fx-background-color: #f6bd38");
+        btnAddEdge.setStyle("-fx-background-color: #1C4EFE");
+        btnAddMove.setStyle("-fx-background-color: #1C4EFE");
+        btnDeleteNode.setStyle("-fx-background-color: #1C4EFE");
+        btnDeleteEdge.setStyle("-fx-background-color: #1C4EFE");
+        btnEditNode.setStyle("-fx-background-color: #1C4EFE");
+        btnAddNode.setStyle("-fx-background-color: #1C4EFE");
       }
     }
   }
@@ -1014,38 +1009,9 @@ public class MapEditorController {
     helpIcon.setOnMouseExited(event -> {});
   }
 
-  private void initializeFields() {
-    ArrayList<String> tables = new ArrayList<String>();
-    tables.add("Nodes");
-    tables.add("Edges");
-    tables.add("Moves");
-    tables.add("Location Names");
-    NodeSelector.setItems(FXCollections.observableList(tables));
-  }
 
-  public void clickNodeSelector() {
-    displaySelection();
-  }
 
-  public void displaySelection() {
-    String item = getSelectedItem();
-    ArrayList<?> itemsList = switch (item) {
-      case "Moves" -> editor.getMoveList();
-      case "Nodes" -> editor.getNodeList();
-      case "Edges" -> editor.getEdgeList();
-      case "Location Names" -> editor.getLocationNameList();
-      default -> new ArrayList<>();
-    };
 
-    ObservableList<?> items = FXCollections.observableList(itemsList);
-    NodeInfo.setItems(items);
-    VboxNodes.getChildren().clear();
-    VboxNodes.getChildren().addAll(NodeInfo);
-  }
-
-  public String getSelectedItem() {
-    return NodeSelector.getSelectedItem();
-  }
 
   public void initNavBar() {
     // https://github.com/afsalashyana/JavaFX-Tutorial-Codes/tree/master/JavaFX%20Navigation%20Drawer/src/genuinecoder

@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -22,7 +23,14 @@
     <center>
         <AnchorPane prefHeight="720.0" prefWidth="1159.0" BorderPane.alignment="CENTER">
             <children>
-                <Text fill="#f1f1f1" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Requests Handling Page:" textAlignment="CENTER">
+            <ImageView fitHeight="733.0" fitWidth="1316.0" layoutX="-172.0" layoutY="-12.0" opacity="0.5" pickOnBounds="true" preserveRatio="false">
+               <image>
+                  <Image url="@../../img/bwh-background.jpg" />
+               </image>
+            </ImageView>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#7089a2" height="667.0" layoutX="-66.0" layoutY="21.0" stroke="WHITE" strokeType="INSIDE" width="1136.0" />
+                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#012d5a" height="50.0" layoutX="-162.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1347.0" />
+                <Text fill="WHITE" layoutX="-21.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Request Handling" textAlignment="CENTER" wrappingWidth="1164.103515625">
                     <font>
                         <Font name="System Bold" size="36.0" />
                     </font>
@@ -93,6 +101,7 @@
                   <MFXComboBox fx:id="cbFilterOptions" prefHeight="40.0" prefWidth="227.0" promptText="Select An Option" />
                </children>
             </HBox>
+            <VBox fx:id="vboxActivateNav" layoutX="-200.0" prefHeight="720.0" prefWidth="70.0" />
 <!--            <MFXButton fx:id="btnSubmit" defaultButton="true" layoutX="564.0" layoutY="633.0" onAction="#clickSubmitEdits" prefHeight="46.0" prefWidth="174.0" style="-fx-background-color: #1C4EFE;" text="Submit" textFill="#f1f1f1">-->
 <!--               <font>-->
 <!--                  <Font name="System Bold" size="18.0" />-->
@@ -102,13 +111,14 @@
         </AnchorPane>
     </center>
     <left>
-        <Pane fx:id="navPane" prefHeight="720.0" prefWidth="200.0">
+        <Pane fx:id="navPane" prefHeight="720.0" prefWidth="200.0" style="-fx-background-color: transparent;">
             <children>
-                <JFXDrawer fx:id="menuDrawer" prefHeight="720.0" prefWidth="200.0" />
-                <JFXHamburger fx:id="menuBurger" layoutX="14.0" layoutY="14.0">
+                <JFXDrawer fx:id="menuDrawer" prefHeight="720.0" prefWidth="200.0" style="-fx-background-color: transparent;" />
+                <JFXHamburger fx:id="menuBurger" layoutX="14.0" layoutY="14.0" style="-fx-background-color: transparent;">
                     <effect>
                         <ColorAdjust brightness="1.0" />
                     </effect></JFXHamburger>
+            <VBox fx:id="vboxActivateNav1" layoutX="70.0" onMouseEntered="#deactivateNav" prefHeight="720.0" prefWidth="70.0" />
             </children>
         </Pane>
     </left>

@@ -4,12 +4,17 @@ import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import edu.wpi.teamb.Bapp;
+import edu.wpi.teamb.DBAccess.DAO.Repository;
+import edu.wpi.teamb.DBAccess.ORMs.Alert;
+import edu.wpi.teamb.entities.ELogin;
+import edu.wpi.teamb.entities.EHome;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
 
-import java.awt.*;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Objects;
 
 import javafx.animation.Animation;
@@ -22,13 +27,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 public class HomeController {
@@ -36,33 +43,76 @@ public class HomeController {
     @FXML private JFXDrawer menuDrawer;
     @FXML private Pane navPane;
     @FXML private Pane homePane;
+    @FXML private VBox vboxActivateNav;
+    @FXML private VBox vboxActivateNav1;
     @FXML private MFXButton btnAbout;
     @FXML private MFXButton btnCredits;
     @FXML private  MFXButton btnSecret;
     @FXML private MFXButton btnClear;
+    @FXML private MFXButton viewUserRequestButton;
+    @FXML private TableView<Alert> alertsTable;
     private MFXButton pathfinderImgBtn = new MFXButton();
+
+    private String username;
+
     Bounds bounds;
+    private EHome homeE;
 
     @FXML
     public void initialize() throws IOException {
+        username = ELogin.getLogin().getUsername();
         initNavBar();
         initPathfinderBtn();
         initializeBtns();
+        loadAlerts();
+        homeE = new EHome();
         bounds = homePane.getBoundsInLocal();
+
     }
 
     private void initPathfinderBtn() {
         pathfinderImgBtn.setOnMouseClicked(e -> onPathfinderImgClick());
         Image mapImg = Bapp.getHospitalListOfFloors().get(0);
         ImageView imageView = new ImageView(mapImg);
-        imageView.setFitHeight(400);
+        imageView.setFitHeight(200);
         imageView.setPreserveRatio(true);
-        pathfinderImgBtn.setPrefSize(400, 400);
-        pathfinderImgBtn.setLayoutX(400);
-        pathfinderImgBtn.setLayoutY(100);
+        pathfinderImgBtn.setPrefSize(200, 200);
+        pathfinderImgBtn.setLayoutX(700);
+        pathfinderImgBtn.setLayoutY(200);
         pathfinderImgBtn.setGraphic(imageView);
         homePane.getChildren().add(pathfinderImgBtn);
     }
+
+    public void loadAlerts(){
+        ArrayList<Alert> allAlerts = Repository.getRepository().getAllAlerts();
+        alertsTable.setEditable(false);
+        TableColumn<Alert, String> titles = new TableColumn<>("Title");
+        titles.setMinWidth(100);
+        titles.setCellValueFactory(new PropertyValueFactory<>("title"));
+
+        TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, String> descriptions = new TableColumn<>("Description");
+        descriptions.setMinWidth(220);
+        descriptions.setCellValueFactory(new PropertyValueFactory<>("description"));
+
+
+        TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, Timestamp> time = new TableColumn<>("Created at");
+        time.setCellValueFactory((new PropertyValueFactory<>("createdAt")));
+        alertsTable.getColumns().addAll(titles, descriptions, time);
+        time.setSortType(TableColumn.SortType.DESCENDING);
+        alertsTable.getSortOrder().setAll(time);
+
+
+        for(Alert alert : allAlerts){
+            if(alert.getEmployee().equals(username) || alert.getEmployee().equals("unassigned")) {
+                alertsTable.getItems().add(alert);
+            }
+        }
+
+        alertsTable.getSortOrder().setAll(alertsTable.getColumns().get(2));
+        time.setVisible(false);
+
+    }
+
 
 
     Circle circle = new Circle();
@@ -131,6 +181,31 @@ public class HomeController {
         btnAbout.setOnMouseClicked(e -> handleAbout());
         btnSecret.setOnMouseClicked(e -> secret(true));
         btnClear.setOnMouseClicked(e -> secret(false));
+        viewUserRequestButton.setOnMouseClicked(e -> handleUserRequests());
+    }
+
+    private void handleUserRequests() {
+        //implementation using FXMLLoader
+        FXMLLoader loader = null;
+        //AnchorPane
+        AnchorPane userRequestsPage = null;
+        //controller for the corresponding InfoCard.fxml
+        CurrentUserRequestsController currentUserRequestController = null;
+        try {
+            loader = new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/CurrentUserRequests.fxml"));
+            userRequestsPage = loader.load();
+            currentUserRequestController = loader.getController();
+        } catch (IOException e) {
+            System.out.println("IOException in loadRequestsIntoContainer of AllRequestsController: " + e.getMessage());
+        }
+        //open the AnchorPane in a new window
+        Stage stage = new Stage();
+        stage.setTitle("My Requests");
+        stage.setScene(new Scene(userRequestsPage));
+        stage.initStyle(StageStyle.UTILITY);
+        //set the resizable to false
+        stage.setResizable(false);
+        stage.show();
     }
 
     private void handleAbout() {
@@ -159,6 +234,27 @@ public class HomeController {
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void activateNav(){
+        vboxActivateNav.setOnMouseEntered(event -> {
+//            if(!navLoaded) {
+            System.out.println("on");
+            navPane.setMouseTransparent(false);
+            navPane.setMouseTransparent(false);
+//                navLoaded = true;
+//            }
+        });
+    }
+
+    public void deactivateNav(){
+        navPane.setOnMouseClicked(event -> {
+//            if(!navLoaded) {
+                System.out.println("off");
+                navPane.setMouseTransparent(true);
+                vboxActivateNav1.setMouseTransparent(true);
+//            }
+        });
     }
 
 
@@ -194,6 +290,4 @@ public class HomeController {
                     }
                 });
     }
-
-
 }
