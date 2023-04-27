@@ -5,12 +5,14 @@
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXToggleButton?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
@@ -24,8 +26,8 @@
             <children>
                       <GesturePane fx:id="pane" prefHeight="720.0" prefWidth="1350.0">
                       </GesturePane>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#7089A2" height="113.0" layoutX="-113.0" layoutY="47.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1419.0" />
-                <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="1105.0" layoutY="80.0" onMouseEntered="#hoverHelp" onMouseExited="#hoverHelp" pickOnBounds="true" preserveRatio="true">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#7089A2" height="91.0" layoutX="-113.0" layoutY="47.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1419.0" />
+                <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="1105.0" layoutY="69.0" onMouseEntered="#hoverHelp" onMouseExited="#hoverHelp" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@../../img/helpicon.png" />
                     </image>
@@ -33,8 +35,6 @@
                         <ColorAdjust brightness="1.0" />
                     </effect>
                 </ImageView>
-
-            <MFXButton fx:id="resetFromBackupBtn" layoutX="697.0" layoutY="109.0" prefHeight="39.0" prefWidth="124.0" style="-fx-background-color: #1C4EFE;" text="Reset From Backup" textFill="#f1f1f1" />
             <VBox fx:id="vboxAddNode" layoutX="1013.0" layoutY="406.0" prefHeight="119.0" prefWidth="131.0" style="-fx-background-color: #f1f1f1; -fx-border-color: #1C4EFE;">
 
                <children>
@@ -76,58 +76,59 @@
                </children>
             </VBox>
             <VBox fx:id="vboxBtns11" alignment="CENTER" layoutX="40.0" layoutY="154.0" prefHeight="214.0" prefWidth="148.0" spacing="10.0" />
-                <MFXButton fx:id="btnViewMoveMap" defaultButton="true" layoutX="911.0" layoutY="81.0" prefHeight="45.0" prefWidth="170.0" style="-fx-background-color: #f6bd38;" text="View Move Map" textFill="#f1f1f1">
+                <MFXButton fx:id="btnViewMoveMap" defaultButton="true" layoutX="983.0" layoutY="199.0" prefHeight="45.0" prefWidth="162.0" style="-fx-background-color: #f6bd38;" text="View Move Map" textFill="#f1f1f1">
                     <font>
                         <Font name="System Bold" size="18.0" />
                     </font>
                 </MFXButton>
                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#012d5a" height="50.0" layoutX="-162.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1471.0" />
-                <Text fill="WHITE" layoutX="-28.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Map Editor" textAlignment="CENTER" wrappingWidth="1354.103515625">
+                <Text fill="WHITE" layoutX="-75.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Map Editor" textAlignment="CENTER" wrappingWidth="1354.103515625">
                     <font>
                         <Font name="System Bold" size="36.0" />
                     </font>
                 </Text>
-            <MFXButton fx:id="btnViewing" defaultButton="true" layoutX="277.0" layoutY="84.0" prefHeight="40.0" prefWidth="90.0" style="-fx-background-color: #1C4EFE;" text="View" textFill="#f1f1f1">
+            <MFXButton fx:id="btnAlignNodes" defaultButton="true" layoutX="1046.0" layoutY="261.0" prefHeight="40.0" prefWidth="91.0" style="-fx-background-color: #1C4EFE;" text="Align Nodes" textFill="#f1f1f1">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
             </MFXButton>
-            <MFXButton fx:id="btnAddEdge" defaultButton="true" layoutX="381.0" layoutY="57.0" prefHeight="40.0" prefWidth="91.0" style="-fx-background-color: #1C4EFE;" text="Add Edge" textFill="#f1f1f1">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </MFXButton>
-            <MFXButton fx:id="btnDeleteEdge" defaultButton="true" layoutX="381.0" layoutY="108.0" prefHeight="40.0" prefWidth="91.0" style="-fx-background-color: #1C4EFE;" text="Delete Edge" textFill="#f1f1f1">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </MFXButton>
-            <MFXButton fx:id="btnAddMove" defaultButton="true" layoutX="590.0" layoutY="108.0" prefHeight="40.0" prefWidth="91.0" style="-fx-background-color: #1C4EFE;" text="Add Move" textFill="#f1f1f1">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </MFXButton>
-            <MFXButton fx:id="btnAlignNodes" defaultButton="true" layoutX="590.0" layoutY="60.0" prefHeight="40.0" prefWidth="91.0" style="-fx-background-color: #1C4EFE;" text="Align Nodes" textFill="#f1f1f1">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </MFXButton>
-            <MFXButton fx:id="btnAddNode" defaultButton="true" layoutX="486.0" layoutY="52.0" prefHeight="30.0" prefWidth="88.0" style="-fx-background-color: #1C4EFE;" text="Add Node" textFill="#f1f1f1">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </MFXButton>
-            <MFXButton fx:id="btnDeleteNode" defaultButton="true" layoutX="486.0" layoutY="123.0" prefHeight="30.0" prefWidth="90.0" style="-fx-background-color: #1C4EFE;" text="Delete Node" textFill="#f1f1f1">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </MFXButton>
-            <MFXButton fx:id="btnEditNode" defaultButton="true" layoutX="486.0" layoutY="87.0" prefHeight="30.0" prefWidth="89.0" style="-fx-background-color: #1C4EFE;" text="Edit Node" textFill="#f1f1f1">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </MFXButton>
-            <TextField fx:id="tfState" layoutX="64.0" layoutY="96.0" />
+            <HBox layoutX="204.0" layoutY="56.0" spacing="32.0">
+               <children>
+                  <MenuButton fx:id="btnMenuNode" mnemonicParsing="false" style="-fx-background-color: #7089A2; -fx-border-color: #f1f1f1;" text="Node" textAlignment="CENTER">
+                    <items>
+                      <MenuItem fx:id="itemAddNode" mnemonicParsing="false" text="Add Node" />
+                      <MenuItem fx:id="itemDeleteNode" mnemonicParsing="false" text="Delete Node" />
+                        <MenuItem fx:id="itemEditNode" mnemonicParsing="false" text="Edit Node" />
+                    </items>
+                  </MenuButton>
+                  <MenuButton fx:id="btnMenuEdge" mnemonicParsing="false" style="-fx-background-color: #7089A2; -fx-border-color: #f1f1f1;" text="Edge" textAlignment="CENTER">
+                     <items>
+                        <MenuItem fx:id="itemAddEdge" mnemonicParsing="false" text="Add Edge" />
+                        <MenuItem fx:id="itemDeleteEdge" mnemonicParsing="false" text="Delete Edge" />
+                     </items>
+                  </MenuButton>
+                  <MenuButton fx:id="btnMenuTools" mnemonicParsing="false" style="-fx-background-color: #7089A2; -fx-border-color: #f1f1f1;" text="Tools" textAlignment="CENTER">
+                     <items>
+                        <MenuItem fx:id="itemAlign" mnemonicParsing="false" text="Align Nodes" />
+                        <MenuItem fx:id="itemSetDefault" mnemonicParsing="false" text="Set Default Position" />
+                     </items>
+                  </MenuButton>
+                   <MenuButton fx:id="btnMenuMove" mnemonicParsing="false" style="-fx-background-color: #7089A2; -fx-border-color: #f1f1f1;" text="Move" textAlignment="CENTER">
+                     <items>
+                        <MenuItem fx:id="itemAddMove" mnemonicParsing="false" text="Add Move" />
+                        <MenuItem fx:id="itemViewMoves" mnemonicParsing="false" text="View Moves" />
+                        <MenuItem fx:id="itemDeleteMove" mnemonicParsing="false" text="Delete Move" />
+                     </items>
+                  </MenuButton>
+                   <MenuButton fx:id="btnMenuBackup" mnemonicParsing="false" style="-fx-background-color: #7089A2; -fx-border-color: #f1f1f1;" text="Backup" textAlignment="CENTER">
+                       <items>
+                           <MenuItem fx:id="itemSaveToBackup" mnemonicParsing="false" text="Save to Backup" />
+                           <MenuItem fx:id="itemResetFromBackup" mnemonicParsing="false" text="Reset From Backup" />
+                       </items>
+                   </MenuButton>
+               </children>
+            </HBox>
+            <Text fx:id="tfState" fill="RED" layoutX="983.0" layoutY="176.0" strokeType="OUTSIDE" strokeWidth="0.0" />
             </children>
         </AnchorPane>
     </center>
