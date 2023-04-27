@@ -26,7 +26,10 @@ import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -45,6 +48,7 @@ import org.controlsfx.control.PopOver;
 import org.w3c.dom.NodeList;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.ResponseCache;
 import java.sql.Array;
@@ -77,17 +81,12 @@ public class MapEditorController {
   private MFXButton btn2;
   @FXML
   private MFXButton btn3;
-
-  @FXML
-  private TextField tfState;
   @FXML
   private MFXToggleButton toggleNodes;
   @FXML
   private MFXToggleButton toggleLocationNames;
   @FXML
   private MFXToggleButton toggleEdges;
-  @FXML
-  private MFXButton resetFromBackupBtn;
   @FXML private MFXButton btnViewMoveMap;
 
   //Objects that get superimposed
@@ -114,24 +113,10 @@ public class MapEditorController {
   public boolean boolSubmittedDetails = false;
   private Pane menuPane;
   private boolean editingNode = false; // Used for the submitting details button
-
-  // New Buttons
   @FXML
-  private MFXButton btnAddNode;
-  @FXML
-  private MFXButton btnAddEdge;
-  @FXML
-  private MFXButton btnDeleteNode;
-  @FXML
-  private MFXButton btnDeleteEdge;
+  Text tfState;
   @FXML
   private MFXButton btnAlignNodes;
-  @FXML
-  private MFXButton btnEditNode;
-  @FXML
-  private MFXButton btnAddMove;
-  @FXML
-  private MFXButton btnViewing;
 
   // New States
   MapEditorState addNodeState = new AddNodeState();
@@ -140,7 +125,7 @@ public class MapEditorController {
   MapEditorState addEdgeState = new AddEdgeState();
   MapEditorState deleteEdgeState = new DeleteEdgeState();
   MapEditorState addMoveState = new AddMoveState();
-  MapEditorState viewingState = new ViewState();
+  MapEditorState alignNodesState = new AlignNodesState();
 
   // Create the states
   MapEditorContext mapEditorContext = new MapEditorContext();
@@ -152,6 +137,30 @@ public class MapEditorController {
   private double c = 0;
   Circle c1;
   Circle c2;
+
+  // New menu buttons
+  @FXML
+  private MenuButton btnMenuNode;
+  @FXML private MenuItem itemAddNode;
+    @FXML private MenuItem itemEditNode;
+    @FXML private MenuItem itemDeleteNode;
+  @FXML
+  private MenuButton btnMenuEdge;
+    @FXML private MenuItem itemAddEdge;
+        @FXML private MenuItem itemDeleteEdge;
+  @FXML
+  private MenuButton btnMenuMove;
+    @FXML private MenuItem itemAddMove;
+    @FXML private MenuItem itemDeleteMove;
+  @FXML private MenuItem itemViewMoves;
+  @FXML
+  private MenuButton btnMenuTools;
+    @FXML private MenuItem itemAlign;
+    @FXML private MenuItem itemSetDefault;
+
+  @FXML private MenuButton btnMenuBackup;
+    @FXML private MenuItem itemResetFromBackup;
+  @FXML private MenuItem itemSaveToBackup;
 
   public MapEditorController() throws SQLException {
     this.editor = new EMapEditor();
@@ -202,6 +211,22 @@ public class MapEditorController {
     changeButtonColor(currentFloor);
     Platform.runLater(() -> this.pane.centreOn(new Point2D(2190, 910)));
 
+
+
+    FileInputStream input = new FileInputStream("src/main/resources/edu/wpi/teamb/img/breakfast.png");
+    Image image = new Image(input);
+    ImageView imageView1 = new ImageView(image);
+    ImageView imageView2 = new ImageView(image);
+    ImageView imageView3 = new ImageView(image);
+    ImageView imageView4 = new ImageView(image);
+    ImageView imageView5 = new ImageView(image);
+    btnMenuNode.setGraphic(imageView1);
+    btnMenuEdge.setGraphic(imageView2);
+    btnMenuBackup.setGraphic(imageView3);
+    btnMenuMove.setGraphic(imageView4);
+    btnMenuTools.setGraphic(imageView5);
+    btnAlignNodes.setVisible(false);
+
     System.out.println("MapEditorController initialized");
   }
 
@@ -219,7 +244,7 @@ public class MapEditorController {
    * Handles the alignment of nodes
    */
   private void alignNodes() {
-    if (mapEditorContext.getState() == viewingState) {
+    if (mapEditorContext.getState() == alignNodesState) {
       // Iterate through the selected nodes
       edgeGroup.getChildren().clear();
       for (Circle c : nodesToAlign) {
@@ -230,6 +255,7 @@ public class MapEditorController {
       nodesToAlign.clear(); // Clear the selected nodes list
       System.out.println("Aligning all selected nodes");
       refreshMap();
+      btnAlignNodes.setVisible(false);
     }
   }
 
@@ -256,7 +282,7 @@ public class MapEditorController {
     }else if (mapEditorContext.getState() == addMoveState) {
         System.out.println("Adding Move");
         tfState.setText("Adding Move");
-    } else if (mapEditorContext.getState() == viewingState) {
+    } else if (mapEditorContext.getState() == alignNodesState) {
       System.out.println("Selecting nodes");
       tfState.setText("Selecting Nodes");
     }
@@ -376,10 +402,11 @@ public class MapEditorController {
         System.out.println(c);
       }
       System.out.println(nodesToAlign.size());
+      btnAlignNodes.setVisible(true);
     }
 
     // Assign new Y coordinates
-    if (mapEditorContext.getState() == viewingState) {
+    if (mapEditorContext.getState() == alignNodesState) {
       calcBestFit(xCoords, yCoords);  // Calculate the best fit
     }
   }
@@ -522,6 +549,7 @@ public class MapEditorController {
       } catch (SQLException | IOException ex) {
         throw new RuntimeException(ex);
       }
+    stackPaneMapView.setDisable(true);
       refreshMap();
   }
 
@@ -712,7 +740,7 @@ public class MapEditorController {
 
   public void initButtons() {
     clickFloorBtn();
-    resetFromBackupBtn.setOnMouseClicked(event -> {
+    itemResetFromBackup.setOnAction(event -> {
       handleResetFromBackupBtn();
     });
 
@@ -733,9 +761,7 @@ public class MapEditorController {
     });
 
     // Init new buttons
-    btnAddMove.setOnMouseClicked(event -> handleAddMove());
     btnAlignNodes.setOnMouseClicked(event -> alignNodes());
-    //btnViewing.setOnMouseClicked(event -> handleViewMoveMap());
   }
 
   private void handleAddMove() {
@@ -834,43 +860,34 @@ public class MapEditorController {
 
   public void initStateBtn() {
     // Init New State Buttons
-    btnAddEdge.setOnMouseClicked(event -> {
+    itemAddEdge.setOnAction(event -> {
       mapEditorContext.setState(addEdgeState);
       mapEditorContext.getState().printStatus();
-      changeStateButtonColor("Add Edge State");
     });
-    btnAddNode.setOnMouseClicked(event -> {
+    itemAddNode.setOnAction(event -> {
       mapEditorContext.setState(addNodeState);
       mapEditorContext.getState().printStatus();
-      changeStateButtonColor("Add Node State");
+      handleAddNode();
     });
-    btnDeleteEdge.setOnMouseClicked(event -> {
+    itemDeleteEdge.setOnAction(event -> {
       mapEditorContext.setState(deleteEdgeState);
       mapEditorContext.getState().printStatus();
-      changeStateButtonColor("Delete Edge State");
     });
-    btnDeleteNode.setOnMouseClicked(event -> {
+    itemDeleteNode.setOnAction(event -> {
       mapEditorContext.setState(deleteNodeState);
       mapEditorContext.getState().printStatus();
-      changeStateButtonColor("Delete Node State");
     });
-    btnEditNode.setOnMouseClicked(event -> {
+    itemEditNode.setOnAction(event -> {
       mapEditorContext.setState(editNodeState);
       mapEditorContext.getState().printStatus();
-      changeStateButtonColor("Edit Node State");
     });
-    btnAddMove.setOnMouseClicked(event -> {
+    itemAddMove.setOnAction(event -> {
       mapEditorContext.setState(addMoveState);
       mapEditorContext.getState().printStatus();
-      changeStateButtonColor("Add Move State");
     });
-    btnAlignNodes.setOnMouseClicked(event -> {
-      alignNodes();
-    });
-    btnViewing.setOnMouseClicked(event -> {
-      mapEditorContext.setState(viewingState);
+    itemAlign.setOnAction(event -> {
+      mapEditorContext.setState(alignNodesState);
       mapEditorContext.getState().printStatus();
-      changeStateButtonColor("Viewing State");
     });
   }
 
@@ -918,76 +935,6 @@ public class MapEditorController {
       }
     }
   }
-
-  private void changeStateButtonColor(String state) {
-    switch (state) {
-      // New Buttons
-      case "Add Node State" -> {
-        btnAddNode.setStyle("-fx-background-color: #f6bd38");
-        btnAddEdge.setStyle("-fx-background-color: #1C4EFE");
-        btnAddMove.setStyle("-fx-background-color: #1C4EFE");
-        btnDeleteNode.setStyle("-fx-background-color: #1C4EFE");
-        btnDeleteEdge.setStyle("-fx-background-color: #1C4EFE");
-        btnEditNode.setStyle("-fx-background-color: #1C4EFE");
-        btnViewing.setStyle("-fx-background-color: #1C4EFE");
-      }
-      case "Add Edge State" -> {
-        btnAddEdge.setStyle("-fx-background-color: #f6bd38");
-        btnAddNode.setStyle("-fx-background-color: #1C4EFE");
-        btnAddMove.setStyle("-fx-background-color: #1C4EFE");
-        btnDeleteNode.setStyle("-fx-background-color: #1C4EFE");
-        btnDeleteEdge.setStyle("-fx-background-color: #1C4EFE");
-        btnEditNode.setStyle("-fx-background-color: #1C4EFE");
-        btnViewing.setStyle("-fx-background-color: #1C4EFE");
-      }
-      case "Add Move State" -> {
-        btnAddMove.setStyle("-fx-background-color: #f6bd38");
-        btnAddEdge.setStyle("-fx-background-color: #1C4EFE");
-        btnAddNode.setStyle("-fx-background-color: #1C4EFE");
-        btnDeleteNode.setStyle("-fx-background-color: #1C4EFE");
-        btnDeleteEdge.setStyle("-fx-background-color: #1C4EFE");
-        btnEditNode.setStyle("-fx-background-color: #1C4EFE");
-        btnViewing.setStyle("-fx-background-color: #1C4EFE");
-      }
-      case "Delete Node State" -> {
-        btnDeleteNode.setStyle("-fx-background-color: #f6bd38");
-        btnAddEdge.setStyle("-fx-background-color: #1C4EFE");
-        btnAddMove.setStyle("-fx-background-color: #1C4EFE");
-        btnAddNode.setStyle("-fx-background-color: #1C4EFE");
-        btnDeleteEdge.setStyle("-fx-background-color: #1C4EFE");
-        btnEditNode.setStyle("-fx-background-color: #1C4EFE");
-        btnViewing.setStyle("-fx-background-color: #1C4EFE");
-      }
-      case "Delete Edge State" -> {
-        btnDeleteEdge.setStyle("-fx-background-color: #f6bd38");
-        btnAddEdge.setStyle("-fx-background-color: #1C4EFE");
-        btnAddMove.setStyle("-fx-background-color: #1C4EFE");
-        btnDeleteNode.setStyle("-fx-background-color: #1C4EFE");
-        btnAddNode.setStyle("-fx-background-color: #1C4EFE");
-        btnEditNode.setStyle("-fx-background-color: #1C4EFE");
-        btnViewing.setStyle("-fx-background-color: #1C4EFE");
-      }
-      case "Edit Node State" -> {
-        btnEditNode.setStyle("-fx-background-color: #f6bd38");
-        btnAddEdge.setStyle("-fx-background-color: #1C4EFE");
-        btnAddMove.setStyle("-fx-background-color: #1C4EFE");
-        btnDeleteNode.setStyle("-fx-background-color: #1C4EFE");
-        btnDeleteEdge.setStyle("-fx-background-color: #1C4EFE");
-        btnAddNode.setStyle("-fx-background-color: #1C4EFE");
-        btnViewing.setStyle("-fx-background-color: #1C4EFE");
-      }
-      case "Viewing State" -> {
-        btnViewing.setStyle("-fx-background-color: #f6bd38");
-        btnAddEdge.setStyle("-fx-background-color: #1C4EFE");
-        btnAddMove.setStyle("-fx-background-color: #1C4EFE");
-        btnDeleteNode.setStyle("-fx-background-color: #1C4EFE");
-        btnDeleteEdge.setStyle("-fx-background-color: #1C4EFE");
-        btnEditNode.setStyle("-fx-background-color: #1C4EFE");
-        btnAddNode.setStyle("-fx-background-color: #1C4EFE");
-      }
-    }
-  }
-
 
   @FXML
   public void hoverHelp() {
