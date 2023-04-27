@@ -24,17 +24,11 @@ public class LocationNameDAOImpl implements IDAO {
      */
     public LocationName get(Object id) {
         String name = (String) id;
-        ResultSet rs = DButils.getRowCond("LocationNames", "*", "longname = " + name);
-        try {
-        if (rs.isBeforeFirst()) { // if there is something it found
-            rs.next();
-            return new LocationName(rs); // make the locationName
-        } else
-            throw new SQLException("No rows found");
-        } catch (SQLException e) {
-            System.err.println("ERROR Query Failed in method 'LocationNameDAOImpl.get': " + e.getMessage());
-            return null;
-        }
+        for (LocationName ln : locationNames) {
+            if (ln.getLongName().equals(name)) {
+                return ln;
+            }
+        } return null;
     }
 
     /**
