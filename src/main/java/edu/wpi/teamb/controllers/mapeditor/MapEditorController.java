@@ -842,7 +842,6 @@ public class MapEditorController {
     btnAddNode.setOnMouseClicked(event -> {
       mapEditorContext.setState(addNodeState);
       mapEditorContext.getState().printStatus();
-      handleAddNode();
       changeStateButtonColor("Add Node State");
     });
     btnDeleteEdge.setOnMouseClicked(event -> {
