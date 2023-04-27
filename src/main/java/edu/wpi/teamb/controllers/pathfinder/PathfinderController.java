@@ -14,6 +14,9 @@ import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.Full.FullNode;
 import edu.wpi.teamb.DBAccess.ORMs.Move;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
+import edu.wpi.teamb.entities.ELogin;
+import edu.wpi.teamb.navigation.Navigation;
+import edu.wpi.teamb.navigation.Screen;
 import edu.wpi.teamb.pathfinding.PathFinding;
 import edu.wpi.teamb.controllers.NavDrawerController;
 import edu.wpi.teamb.entities.EPathfinder;
@@ -56,7 +59,7 @@ public class PathfinderController {
 
   @FXML private MFXFilterComboBox<String> startNode;
   @FXML private MFXFilterComboBox<String> endNode;
-
+@FXML private MFXButton btnEditMap;
 
   @FXML private MFXComboBox<String> algorithmDropdown;
   @FXML private MFXListView<String> listView = new MFXListView<>();
@@ -104,8 +107,14 @@ public class PathfinderController {
     Group pathGroup;
     Group nameGroup;
     Pane locationCanvas;
+    ELogin.PermissionLevel adminTest;
+
   @FXML
   public void initialize() throws IOException {
+      adminTest = ELogin.getLogin().getPermissionLevel();
+      if (adminTest != ELogin.PermissionLevel.ADMIN) {
+          btnEditMap.setVisible(false);
+      }
       Platform.setImplicitExit(false);
 
       initNavBar();
@@ -512,6 +521,7 @@ public class PathfinderController {
         nextFloor.setVisible(false);
         toggleShowNames.setSelected(true);
         toggleShowNames.setOnMouseClicked(event->{handleToggleShowNames();});
+        btnEditMap.setOnMouseClicked(event -> Navigation.navigate(Screen.MAP_EDITOR));
     }
 
    public void handleToggleShowNames() {
