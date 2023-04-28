@@ -45,7 +45,7 @@ public class FurnitureRequestControllerI implements IRequestController{
     private MFXTextField txtFldNotes;
 
     @FXML
-    private MFXComboBox<String> cbEmployeesToAssign;
+    private MFXFilterComboBox<String> cbEmployeesToAssign;
 
     @FXML private MFXFilterComboBox<String> cbLongName;
 
