@@ -26,18 +26,19 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 
 
 public class ConferenceRequestControllerI implements IRequestController{
 
-    @FXML private MFXComboBox<Integer> reservationHour;
-    @FXML private MFXComboBox<String> reservationMinute;
-    @FXML private MFXComboBox<String> reservationAmPm;
+    @FXML private MFXFilterComboBox<Integer> reservationHour;
+    @FXML private MFXFilterComboBox<String> reservationMinute;
+    @FXML private MFXFilterComboBox<String> reservationAmPm;
     @FXML private MFXDatePicker datePicker;
     @FXML private MFXFilterComboBox<String> cbEmployeesToAssign;
     @FXML private MFXTextField eventNameTextField;
     @FXML private MFXTextField bookingReasonTextField;
-    @FXML private MFXComboBox<Integer> cbDuration;
+    @FXML private MFXFilterComboBox<Integer> cbDuration;
     @FXML private MFXFilterComboBox<String> cbLongName;
     @FXML private MFXTextField tfNotes;
     @FXML private MFXButton resetBtn;
@@ -70,13 +71,15 @@ public class ConferenceRequestControllerI implements IRequestController{
         //Initialize the list of locations to direct request to via dropdown
         ObservableList<String> longNames = FXCollections.observableArrayList();
         longNames.addAll(Repository.getRepository().getLongNameByType("CONF"));
+        Collections.sort(longNames);
         cbLongName.setItems(longNames);
 
         //Dropdown for employee selection
         ObservableList<String> employees =
                 FXCollections.observableArrayList();
-        employees.add("Unassigned");
         employees.addAll(EConferenceRequest.getUsernames());
+        Collections.sort(employees);
+        employees.add(0, "Unassigned");
         cbEmployeesToAssign.setItems(employees);
 
         //Dropdown for duration selection
@@ -163,18 +166,17 @@ public class ConferenceRequestControllerI implements IRequestController{
 
     @Override
     public void handleReset() {
-        datePicker.setValue(null);
+        datePicker.clear();
         reservationHour.setValue(12);
         reservationMinute.setValue("00");
-        reservationAmPm.setValue("AM");
-        datePicker.setValue(null);
-        cbDuration.setValue(null);
-        eventNameTextField.setText("");
-        bookingReasonTextField.setText("");
-        tfNotes.setText("");
-        cbEmployeesToAssign.setText("Employees Available");
+        reservationAmPm.setValue("PM");
+        datePicker.clear();
+        cbDuration.clear();
+        eventNameTextField.clear();
+        bookingReasonTextField.clear();
+        tfNotes.clear();
+        cbEmployeesToAssign.clear();
         cbLongName.clear();
-        cbLongName.replaceSelection("All Room Names: ");
     }
 
     @Override

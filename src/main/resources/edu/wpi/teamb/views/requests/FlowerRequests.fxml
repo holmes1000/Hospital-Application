@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.scene.Cursor?>
@@ -40,22 +40,22 @@
                   <ColorAdjust brightness="1.0" />
                </effect>
             </ImageView>
-            <MFXComboBox fx:id="cbAvailableFlowers" floatingText="Flower type" layoutX="20.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
+            <MFXFilterComboBox fx:id="cbAvailableFlowers" floatingText="Flower type" layoutX="20.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
-            </MFXComboBox>
-            <MFXComboBox fx:id="cdAvailableColor" floatingText="Color" layoutX="280.0" layoutY="117.0" prefHeight="40.0" prefWidth="205.0">
+            </MFXFilterComboBox>
+            <MFXFilterComboBox fx:id="cdAvailableColor" floatingText="Color" layoutX="280.0" layoutY="117.0" prefHeight="40.0" prefWidth="205.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
-            </MFXComboBox>
-            <MFXComboBox fx:id="cdAvailableType" floatingText="Buschell type" layoutX="20.0" layoutY="187.0" prefHeight="40.0" prefWidth="218.0">
+            </MFXFilterComboBox>
+            <MFXFilterComboBox fx:id="cdAvailableType" floatingText="Quantity" layoutX="20.0" layoutY="187.0" prefHeight="40.0" prefWidth="218.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
-            </MFXComboBox>
-            <MFXTextField fx:id="txtFldMessage" floatingText="Message Text" layoutX="20.0" layoutY="397.0" prefHeight="26.0" prefWidth="428.0" textLimit="80" />
+            </MFXFilterComboBox>
+            <MFXTextField fx:id="txtFldMessage" floatingText="Add a Message" layoutX="20.0" layoutY="397.0" prefHeight="26.0" prefWidth="428.0" textLimit="80" />
             <MFXFilterComboBox fx:id="cbEmployeesToAssign" floatingText="Employee" layoutX="841.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />

@@ -7,7 +7,7 @@ import edu.wpi.teamb.DBAccess.ORMs.Move;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 import edu.wpi.teamb.pathfinding.PathFinding;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -29,7 +29,7 @@ public class EditNodeMenuController {
     @FXML
     MFXButton btnSubmitNodeDetails;
     @FXML
-    MFXComboBox<String> cbNodeType;
+    MFXFilterComboBox<String> cbNodeType;
     @FXML
     MFXTextField tfXCoord;
     @FXML

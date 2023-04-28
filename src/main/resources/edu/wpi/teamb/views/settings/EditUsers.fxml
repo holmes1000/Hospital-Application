@@ -3,7 +3,7 @@
 <?import com.jfoenix.controls.JFXDrawer?>
 <?import com.jfoenix.controls.JFXHamburger?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.TableView?>
@@ -75,14 +75,14 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </MFXTextField>
-                  <MFXComboBox fx:id="cbPermissionLevel" floatingText="Permission Level" prefHeight="50.0" prefWidth="361.0">
+                  <MFXFilterComboBox fx:id="cbPermissionLevel" floatingText="Permission Level" prefHeight="50.0" prefWidth="361.0">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
                      <VBox.margin>
                         <Insets bottom="10.0" />
                      </VBox.margin>
-                  </MFXComboBox>
+                  </MFXFilterComboBox>
                </children>
                <opaqueInsets>
                   <Insets />

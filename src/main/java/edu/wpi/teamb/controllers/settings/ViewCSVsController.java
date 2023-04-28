@@ -10,7 +10,7 @@ import edu.wpi.teamb.entities.EMapEditor;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXListView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ViewCSVsController {
 
@@ -40,7 +41,7 @@ public class ViewCSVsController {
     private FileChooser fileChooser;
 
     @FXML
-    private MFXComboBox<String> NodeSelector;
+    private MFXFilterComboBox<String> NodeSelector;
     @FXML
     private MFXListView NodeInfo;
     @FXML

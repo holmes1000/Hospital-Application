@@ -2,7 +2,7 @@
 
 <?import com.jfoenix.controls.JFXDrawer?>
 <?import com.jfoenix.controls.JFXHamburger?>
-<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -68,7 +68,7 @@
                      </font>
                   </Label>
                   <Separator orientation="VERTICAL" prefHeight="200.0" />
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="35.0" prefWidth="166.0" text="Employee Assigned " textFill="WHITE">
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="35.0" prefWidth="166.0" text="Employee" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
@@ -97,12 +97,12 @@
                         <Insets right="-5.0" top="7.0" />
                      </HBox.margin>
                   </Label>
-                  <MFXComboBox fx:id="cbFilterCategory" prefHeight="40.0" prefWidth="214.0" promptText="Select Filter Category" />
-                  <MFXComboBox fx:id="cbFilterOptions" prefHeight="40.0" prefWidth="227.0" promptText="Select An Option" />
+                  <MFXFilterComboBox fx:id="cbFilterCategory" prefHeight="40.0" prefWidth="214.0" promptText="Select Filter Category" />
+                  <MFXFilterComboBox fx:id="cbFilterOptions" prefHeight="40.0" prefWidth="227.0" promptText="Select An Option" />
                </children>
             </HBox>
             <VBox fx:id="vboxActivateNav" layoutX="-150.0" prefHeight="720.0" prefWidth="70.0" />
-<!--            <MFXButton fx:id="btnSubmit" defaultButton="true" layoutX="564.0" layoutY="633.0" onAction="#clickSubmitEdits" prefHeight="46.0" prefWidth="174.0" style="-fx-background-color: #1C4EFE;" text="Submit" textFill="#f1f1f1">-->
+<!--            <MFXButton fx:id="btnSubmit" defaultButton="true" layoutX="564.0" layoutY="633.0" onAction="#clickSubmitEdits" prefHeight="46.0" prefWidth="174.0" style="-fx-background-color: #012d5a;" text="Submit" textFill="#f1f1f1">-->
 <!--               <font>-->
 <!--                  <Font name="System Bold" size="18.0" />-->
 <!--               </font>-->

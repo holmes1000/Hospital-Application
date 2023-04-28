@@ -9,7 +9,7 @@ import edu.wpi.teamb.entities.requests.IRequest;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.collections.FXCollections;
@@ -23,6 +23,7 @@ import org.controlsfx.control.PopOver;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Collections;
 
 public class OfficeRequestControllerI implements IRequestController{
 
@@ -30,8 +31,8 @@ public class OfficeRequestControllerI implements IRequestController{
     private MFXButton btnSubmit;
     @FXML private MFXButton btnReset;
     @FXML private ImageView helpIcon;
-    @FXML private MFXComboBox<String> cbSupplyItems;
-    @FXML private MFXComboBox<String> cbSupplyType;
+    @FXML private MFXFilterComboBox<String> cbSupplyItems;
+    @FXML private MFXFilterComboBox<String> cbSupplyType;
     @FXML private MFXTextField tbSupplyQuantities;
     @FXML private MFXTextField txtFldNotes;
     @FXML private MFXFilterComboBox<String> cbEmployeesToAssign;
@@ -60,19 +61,23 @@ public class OfficeRequestControllerI implements IRequestController{
     public void initializeFields() throws SQLException {
         ObservableList<String> longNames = FXCollections.observableArrayList();
         longNames.addAll(Repository.getRepository().getPracticalLongNames());
+        Collections.sort(longNames);
         cbLongName.setItems(longNames);
 
         //DROPDOWN INITIALIZATION
         ObservableList<String> employees = FXCollections.observableArrayList(EOfficeRequest.getUsernames());
-        employees.add("Unassigned");
+        Collections.sort(employees);
+        employees.add(0, "Unassigned");
         cbEmployeesToAssign.setItems(employees);
 
         //DROPDOWN INITIALIZATION
         ObservableList<String> supplies = FXCollections.observableArrayList("Pencils", "Pens", "Paper", "Stapler", "Staples", "Tape", "Scissors", "Glue", "Markers", "Highlighters", "Post-It Notes", "Paper Clips", "Binder Clips", "Folders", "Envelopes", "Printer Paper");
+        Collections.sort(supplies);
         cbSupplyItems.setItems(supplies);
 
         //DROPDOWN INITIALIZATION
         ObservableList<String> supplyType = FXCollections.observableArrayList("Office Supplies", "Cleaning Supplies");
+        Collections.sort(supplyType);
         cbSupplyType.setItems(supplyType);
     }
 
@@ -113,16 +118,11 @@ public class OfficeRequestControllerI implements IRequestController{
     @Override
     public void handleReset() {
         cbEmployeesToAssign.clear();
-        cbEmployeesToAssign.replaceSelection("Employees Available");
         cbSupplyItems.clear();
-        cbSupplyItems.replaceSelection("Available Supplies:");
         cbSupplyType.clear();
-        cbSupplyType.replaceSelection("Supply Type:");
         tbSupplyQuantities.clear();
-        tbSupplyQuantities.replaceSelection("Quantity:");
         txtFldNotes.clear();
         cbLongName.clear();
-        cbLongName.replaceSelection("All Room Names:");
     }
 
     @Override

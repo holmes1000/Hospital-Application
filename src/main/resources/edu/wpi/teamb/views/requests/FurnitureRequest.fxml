@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.scene.Cursor?>
@@ -40,21 +40,21 @@
                   <ColorAdjust brightness="1.0" />
                </effect>
             </ImageView>
-            <MFXComboBox fx:id="cbAvailableFurniture" floatingText="Furniture Type" layoutX="20.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
+            <MFXFilterComboBox fx:id="cbAvailableFurniture" floatingText="Furniture Type" layoutX="20.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
-            </MFXComboBox>
-            <MFXComboBox fx:id="cdAvailableModels" floatingText="Style" layoutX="276.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
+            </MFXFilterComboBox>
+            <MFXFilterComboBox fx:id="cdAvailableModels" floatingText="Style" layoutX="276.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
-            </MFXComboBox>
-            <MFXComboBox fx:id="cdAssembly" floatingText="Assembly?" layoutX="532.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
+            </MFXFilterComboBox>
+            <MFXFilterComboBox fx:id="cdAssembly" floatingText="Assembly?" layoutX="532.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
-            </MFXComboBox>
+            </MFXFilterComboBox>
             <MFXFilterComboBox fx:id="cbEmployeesToAssign" floatingText="Employee" layoutX="841.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />

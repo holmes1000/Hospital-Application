@@ -199,7 +199,7 @@ public class FullConferenceRequest implements IFull {
 
     @Override
     public Image setRequestTypeIconImageView() {
-        return new Image("/edu/wpi/teamb/img/phone-call.png");
+        return new Image("/edu/wpi/teamb/img/meeting.png");
     }
 
 }

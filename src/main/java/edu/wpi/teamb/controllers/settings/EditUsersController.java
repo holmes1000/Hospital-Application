@@ -10,7 +10,7 @@ import edu.wpi.teamb.controllers.NavDrawerController;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,6 +32,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 
 public class EditUsersController {
@@ -39,7 +40,7 @@ public class EditUsersController {
     private JFXHamburger menuBurger;
     @FXML private JFXDrawer menuDrawer;
 
-    @FXML private MFXComboBox<String> cbPermissionLevel;
+    @FXML private MFXFilterComboBox<String> cbPermissionLevel;
     @FXML private MFXTextField textPassword;
     @FXML private MFXTextField textUsername;
     @FXML private MFXTextField textEmail;
@@ -86,6 +87,9 @@ public class EditUsersController {
         deactivateNav();
         // Hide the edit vbox
         //vboxEditUser.setVisible(false);
+
+        Collections.sort(permissionLevels);
+        Collections.sort(usernames);
     }
 
     public void initButtons() {
@@ -134,19 +138,29 @@ public class EditUsersController {
         newUser.setUsername(textUsername.getText().toLowerCase());
         newUser.setPassword(textPassword.getText());
         newUser.setEmail(textEmail.getText().toLowerCase());
-        newUser.setPermissionLevel(permissionLevelToInt(cbPermissionLevel.getValue()));
+        if (cbPermissionLevel.getValue() != null)
+            newUser.setPermissionLevel(permissionLevelToInt(cbPermissionLevel.getValue()));
         if (usernameDoesNotExist(newUser) && emailDoesNotExist(newUser)) {
-            Repository.getRepository().addUser(newUser);
-            createAlert("User added", "User added successfully");
+            if (!nullInputs(newUser)) {
+                Repository.getRepository().addUser(newUser);
+                createAlert("User added", "User added successfully");
+            }
+            else {
+                createAlert("Empty fields", "Please enter all fields");
+            }
         }
         else if (!emailDoesNotExist(newUser)) {
             createAlert("Email already exists", "Please enter a different email");
         }
-        else
+        else if (!usernameDoesNotExist(newUser))
         {
             createAlert("Username already exists", "Please enter a different username");
         }
         initializeFields(); // Refresh the combo box
+    }
+
+    private boolean nullInputs(User user) {
+        return user.getName().equals("") || user.getUsername().equals("") || user.getPassword().equals("") || user.getEmail().equals("");
     }
 
 
@@ -219,18 +233,23 @@ public class EditUsersController {
         tbUsers.getColumns().clear();
         // add User attributes to the table (Name, Username, Password, Email, Permission Level)
         TableColumn<User, String> names = new TableColumn<>("Name");
+        names.setStyle("-fx-alignment: CENTER;");
         names.setCellValueFactory(new PropertyValueFactory<User, String>("name"));
 
         TableColumn<User, String> usernames = new TableColumn<>("Username");
+        usernames.setStyle("-fx-alignment: CENTER;");
         usernames.setCellValueFactory(new PropertyValueFactory<User, String>("username"));
 
         TableColumn<User, String> passwords = new TableColumn<>("Password");
+        passwords.setStyle("-fx-alignment: CENTER;");
         passwords.setCellValueFactory(new PropertyValueFactory<User, String>("password"));
 
         TableColumn<User, String> emails = new TableColumn<>("Email");
+        emails.setStyle("-fx-alignment: CENTER;");
         emails.setCellValueFactory(new PropertyValueFactory<User, String>("email"));
 
         TableColumn<User, Integer> permissions = new TableColumn<>("Permission Level");
+        permissions.setStyle("-fx-alignment: CENTER;");
         permissions.setCellValueFactory(new PropertyValueFactory<User, Integer>("permissionLevel"));
 
         tbUsers.getColumns().addAll(names, usernames, passwords, emails, permissions);

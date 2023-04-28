@@ -5,7 +5,7 @@ import edu.wpi.teamb.DBAccess.ORMs.User;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,6 +14,8 @@ import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 
 public class EditUserController {
 
@@ -21,7 +23,7 @@ public class EditUserController {
     @FXML private MFXTextField tfUsername;
     @FXML private MFXTextField tfName;
     @FXML private MFXTextField tfEmail;
-    @FXML private MFXComboBox<String> cbPermissionLevel;
+    @FXML private MFXFilterComboBox<String> cbPermissionLevel;
     @FXML private MFXButton btnSaveEdits;
     static User currentUser = null;
     @FXML
@@ -37,14 +39,17 @@ public class EditUserController {
         tfUsername.setEditable(false); // cannot change username
         tfPassword.setText(currentUser.getPassword());
         tfEmail.setText(currentUser.getEmail());
-        cbPermissionLevel.setValue(permissionLevelToString(currentUser.getPermissionLevel()));
-
         // Init combo box
         ObservableList<String> permissionLevels = FXCollections.observableArrayList();
-        // Initialize the permission level combo boxes
+
         permissionLevels.add("ADMIN");
         permissionLevels.add("EMPLOYEE");
         cbPermissionLevel.setItems(permissionLevels);
+        cbPermissionLevel.selectItem(permissionLevelToString(currentUser.getPermissionLevel()));
+
+        // Sort the combo boxes
+        Collections.sort(permissionLevels);
+
     }
 
     public void initButtons() {

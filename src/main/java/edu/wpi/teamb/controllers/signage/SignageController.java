@@ -11,9 +11,10 @@ import edu.wpi.teamb.entities.ESignage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 
-import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -26,7 +27,7 @@ public class SignageController {
 
   @FXML private JFXHamburger menuBurger;
   @FXML private JFXDrawer menuDrawer;
-  @FXML private MFXComboBox<String> cbLocation;
+  @FXML private MFXFilterComboBox<String> cbLocation;
   @FXML private VBox signVbox;
   private ESignage signageE;
 
@@ -48,6 +49,7 @@ public class SignageController {
             signageGroupsList.add(element);
         }
         ObservableList<String> signageGroupsObservableList = FXCollections.observableArrayList(signageGroupsList);
+        Collections.sort(signageGroupsList);
         cbLocation.setItems(signageGroupsObservableList);
     }
 

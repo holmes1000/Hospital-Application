@@ -27,7 +27,7 @@
                     </image>
                 </ImageView>
                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#012d5a" height="50.0" layoutX="-162.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1347.0" />
-                <Text fill="WHITE" layoutX="-21.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create New Request" textAlignment="CENTER" wrappingWidth="1164.103515625">
+                <Text fill="WHITE" layoutX="-80.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create New Request" textAlignment="CENTER" wrappingWidth="1164.103515625">
                     <font>
                         <Font name="System Bold" size="36.0" />
                     </font>
@@ -57,7 +57,7 @@
                         </ImageView>
                         <ImageView fx:id="icon2" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../img/phone-call.png" />
+                              <Image url="@../../img/meeting.png" />
                            </image>
                         </ImageView>
                         <ImageView fx:id="icon3" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
