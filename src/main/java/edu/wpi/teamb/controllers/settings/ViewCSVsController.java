@@ -3,6 +3,8 @@ package edu.wpi.teamb.controllers.settings;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.DBoutput;
 import edu.wpi.teamb.entities.EMapEditor;
+import edu.wpi.teamb.navigation.Navigation;
+import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXListView;
@@ -34,6 +36,7 @@ public class ViewCSVsController {
     private MFXListView NodeInfo;
     @FXML
     private VBox VboxNodes;
+    @FXML private MFXButton btnBack;
 
     public ViewCSVsController() throws SQLException {
         this.editor = new EMapEditor();
@@ -169,5 +172,6 @@ public class ViewCSVsController {
         exportBtn.setOnMouseClicked(event -> {
             handleExportBtn();
         });
+        btnBack.setOnMouseClicked(event -> Navigation.navigate(Screen.SETTINGS));
     }
 }

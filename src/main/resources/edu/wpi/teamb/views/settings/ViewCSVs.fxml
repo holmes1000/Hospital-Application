@@ -17,6 +17,11 @@
             <Font name="System Bold" size="36.0" />
          </font>
       </Text>
+      <MFXButton fx:id="btnBack" defaultButton="true" layoutX="14.0" layoutY="606.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Back" textFill="#f1f1f1">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </MFXButton>
       <VBox fx:id="VboxNodes" layoutX="468.0" layoutY="123.0" prefHeight="534.0" prefWidth="394.0">
          <children>
             <MFXListView fx:id="NodeInfo" prefHeight="537.0" prefWidth="394.0" style="-fx-border-color: black;" />
