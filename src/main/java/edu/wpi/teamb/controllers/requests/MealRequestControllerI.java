@@ -23,6 +23,7 @@ import org.controlsfx.control.PopOver;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Collections;
 
 public class MealRequestControllerI implements IRequestController{
 
@@ -60,31 +61,37 @@ public class MealRequestControllerI implements IRequestController{
         // DROPDOWN INITIALIZATION
         ObservableList<String> longNames = FXCollections.observableArrayList();
         longNames.addAll(Repository.getRepository().getPracticalLongNames());
+        Collections.sort(longNames);
         cbLongName.setItems(longNames);
 
         ObservableList<String> locations =
                 FXCollections.observableArrayList(Repository.getRepository().getLongNameByType("RETL"));
+        Collections.sort(locations);
         cbOrderLocation.setItems(locations);
 
         // DROPDOWN INITIALIZATION
         ObservableList<String> employees =
                 FXCollections.observableArrayList();
-        employees.add("Unassigned");
         employees.addAll(EMealRequest.getUsernames());
+        Collections.sort(employees);
+        employees.add(0, "Unassigned");
         cbEmployeesToAssign.setItems(employees);
 
 
         // DROPDOWN INITIALIZATION
         ObservableList<String> meals = FXCollections.observableArrayList("Pizza", "Pasta", "Soup");
+        Collections.sort(meals);
         cbAvailableMeals.setItems(meals);
 
         // DROPDOWN INITIALIZATION
         ObservableList<String> drinks =
                 FXCollections.observableArrayList("Water", "Coca-Cola", "Ginger-Ale");
+        Collections.sort(drinks);
         cbAvailableDrinks.setItems(drinks);
 
         // DROPDOWN INITIALIZATION
         ObservableList<String> snacks = FXCollections.observableArrayList("Chips", "Apple");
+        Collections.sort(snacks);
         cbAvailableSnacks.setItems(snacks);
     }
 

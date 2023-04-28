@@ -23,6 +23,7 @@ import org.controlsfx.control.PopOver;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Collections;
 
 public class OfficeRequestControllerI implements IRequestController{
 
@@ -60,19 +61,23 @@ public class OfficeRequestControllerI implements IRequestController{
     public void initializeFields() throws SQLException {
         ObservableList<String> longNames = FXCollections.observableArrayList();
         longNames.addAll(Repository.getRepository().getPracticalLongNames());
+        Collections.sort(longNames);
         cbLongName.setItems(longNames);
 
         //DROPDOWN INITIALIZATION
         ObservableList<String> employees = FXCollections.observableArrayList(EOfficeRequest.getUsernames());
-        employees.add("Unassigned");
+        Collections.sort(employees);
+        employees.add(0, "Unassigned");
         cbEmployeesToAssign.setItems(employees);
 
         //DROPDOWN INITIALIZATION
         ObservableList<String> supplies = FXCollections.observableArrayList("Pencils", "Pens", "Paper", "Stapler", "Staples", "Tape", "Scissors", "Glue", "Markers", "Highlighters", "Post-It Notes", "Paper Clips", "Binder Clips", "Folders", "Envelopes", "Printer Paper");
+        Collections.sort(supplies);
         cbSupplyItems.setItems(supplies);
 
         //DROPDOWN INITIALIZATION
         ObservableList<String> supplyType = FXCollections.observableArrayList("Office Supplies", "Cleaning Supplies");
+        Collections.sort(supplyType);
         cbSupplyType.setItems(supplyType);
     }
 

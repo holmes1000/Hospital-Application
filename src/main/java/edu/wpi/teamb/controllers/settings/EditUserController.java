@@ -14,6 +14,8 @@ import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 
 public class EditUserController {
 
@@ -39,10 +41,14 @@ public class EditUserController {
         tfEmail.setText(currentUser.getEmail());
         // Init combo box
         ObservableList<String> permissionLevels = FXCollections.observableArrayList();
+
         permissionLevels.add("ADMIN");
         permissionLevels.add("EMPLOYEE");
         cbPermissionLevel.setItems(permissionLevels);
         cbPermissionLevel.selectItem(permissionLevelToString(currentUser.getPermissionLevel()));
+
+        // Sort the combo boxes
+        Collections.sort(permissionLevels);
 
     }
 

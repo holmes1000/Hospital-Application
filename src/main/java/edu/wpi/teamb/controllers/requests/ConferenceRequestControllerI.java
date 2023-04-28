@@ -26,6 +26,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 
 
 public class ConferenceRequestControllerI implements IRequestController{
@@ -70,13 +71,15 @@ public class ConferenceRequestControllerI implements IRequestController{
         //Initialize the list of locations to direct request to via dropdown
         ObservableList<String> longNames = FXCollections.observableArrayList();
         longNames.addAll(Repository.getRepository().getLongNameByType("CONF"));
+        Collections.sort(longNames);
         cbLongName.setItems(longNames);
 
         //Dropdown for employee selection
         ObservableList<String> employees =
                 FXCollections.observableArrayList();
-        employees.add("Unassigned");
         employees.addAll(EConferenceRequest.getUsernames());
+        Collections.sort(employees);
+        employees.add(0, "Unassigned");
         cbEmployeesToAssign.setItems(employees);
 
         //Dropdown for duration selection

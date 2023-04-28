@@ -22,6 +22,7 @@ import org.controlsfx.control.PopOver;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Collections;
 
 public class FlowerRequestControllerI implements IRequestController {
 
@@ -60,27 +61,32 @@ public class FlowerRequestControllerI implements IRequestController {
         //Initialize the list of locations to direct request to via dropdown
         ObservableList<String> longNames = FXCollections.observableArrayList();
         longNames.addAll(Repository.getRepository().getPracticalLongNames());
+        Collections.sort(longNames);
         cbLongName.setItems(longNames);
 
         //Set types of flowers
         ObservableList<String> flowers = FXCollections.observableArrayList("Rose", "Tulip", "Daisy", "Lily", "Sunflower");
+        Collections.sort(flowers);
         cbAvailableFlowers.setItems(flowers);
 
         //Set colors of flowers
         ObservableList<String> colors = FXCollections.observableArrayList("Red", "Orange", "Yellow", "Green", "Blue", "Purple", "Pink", "White", "Black", "Brown");
+        Collections.sort(colors);
         cdAvailableColor.setItems(colors);
 
 
         //Set delivery types
         ObservableList<String> deliveryType = FXCollections.observableArrayList("Bouquet", "Single Flower", "Vase");
+        Collections.sort(deliveryType);
         cdAvailableType.setItems(deliveryType);
         //todo: fix locations
 
         //Set list of employees
         ObservableList<String> employees =
                 FXCollections.observableArrayList();
-        employees.add("Unassigned");
         employees.addAll(EFlowerRequest.getUsernames());
+        Collections.sort(employees);
+        employees.add(0, "Unassigned");
         cbEmployeesToAssign.setItems(employees);
     }
 

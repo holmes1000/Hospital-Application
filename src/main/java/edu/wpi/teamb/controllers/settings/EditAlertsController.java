@@ -33,6 +33,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 
 public class EditAlertsController {
@@ -73,15 +74,12 @@ public class EditAlertsController {
 
     public void initializeFields() {
         ArrayList<edu.wpi.teamb.DBAccess.ORMs.Alert> listOfAlerts = Repository.getRepository().getAllAlerts();
-//        ObservableList<String> usernames = FXCollections.observableArrayList();
-//        ObservableList<String> permissionLevels = FXCollections.observableArrayList();
-
-
         ArrayList<User> users = Repository.getRepository().getAllUsers();
         ArrayList<String> usernames = new ArrayList<>();
         for(int i = 0; i < users.size(); i++){
             usernames.add(users.get(i).getUsername());
         }
+        Collections.sort(usernames);
         cbEmployees.getItems().addAll(usernames);
 
         alertTable();

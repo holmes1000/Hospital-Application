@@ -32,6 +32,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 
 public class EditUsersController {
@@ -86,6 +87,9 @@ public class EditUsersController {
         deactivateNav();
         // Hide the edit vbox
         //vboxEditUser.setVisible(false);
+
+        Collections.sort(permissionLevels);
+        Collections.sort(usernames);
     }
 
     public void initButtons() {
