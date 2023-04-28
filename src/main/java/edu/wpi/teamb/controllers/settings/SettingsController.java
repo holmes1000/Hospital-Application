@@ -87,6 +87,8 @@ public class SettingsController {
         else if (server == 0) alert.setContentText("Successfully changed server to WPI Postgres");
         alert.showAndWait();
     }
+
+
     /**
      * Utilizes a gate to swap between handling the navdrawer and the rest of the page
      * Swaps ownership of the strip to the navdraw
@@ -95,6 +97,7 @@ public class SettingsController {
     public void activateNav(){
         vboxActivateNav.setOnMouseEntered(event -> {
             if(!navLoaded) {
+                System.out.println("on");
                 navPane.setMouseTransparent(false);
                 navLoaded = true;
                 vboxActivateNav.setDisable(true);
@@ -110,6 +113,7 @@ public class SettingsController {
     public void deactivateNav(){
         vboxActivateNav1.setOnMouseEntered(event -> {
             if(navLoaded){
+                System.out.println("off");
                 navPane.setMouseTransparent(true);
                 vboxActivateNav.setDisable(false);
                 navLoaded = false;

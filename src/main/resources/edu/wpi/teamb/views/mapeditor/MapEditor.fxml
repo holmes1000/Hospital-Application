@@ -146,6 +146,7 @@
                   <Insets bottom="25.0" left="22.0" right="32.0" top="25.0" />
                </padding></HBox>
             <Text fx:id="tfState" fill="RED" layoutX="983.0" layoutY="176.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+            <VBox fx:id="vboxActivateNav" layoutX="-70.0" onMouseEntered="#activateNav" prefHeight="720.0" prefWidth="70.0" />
             </children>
         </AnchorPane>
     </center>
@@ -158,6 +159,7 @@
                         <ColorAdjust brightness="1.0" />
                     </effect>
             </JFXHamburger>
+            <VBox fx:id="vboxActivateNav1" layoutX="70.0" onMouseEntered="#deactivateNav" prefHeight="720.0" prefWidth="20.0" />
             </children>
         </Pane>
     </left>
