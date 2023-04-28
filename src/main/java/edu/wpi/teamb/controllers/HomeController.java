@@ -6,6 +6,7 @@ import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.ORMs.Alert;
+import edu.wpi.teamb.DBAccess.ORMs.User;
 import edu.wpi.teamb.entities.ELogin;
 import edu.wpi.teamb.entities.EHome;
 import edu.wpi.teamb.navigation.Navigation;
@@ -33,7 +34,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
@@ -51,6 +57,7 @@ public class HomeController {
     @FXML private MFXButton btnClear;
     @FXML private MFXButton viewUserRequestButton;
     @FXML private TableView<Alert> alertsTable;
+    @FXML private VBox vboxWelcomeBack;
     private MFXButton pathfinderImgBtn = new MFXButton();
     private boolean navLoaded;
 
@@ -62,6 +69,8 @@ public class HomeController {
     @FXML
     public void initialize() throws IOException {
         username = ELogin.getLogin().getUsername();
+
+        initName();
         initNavBar();
         initPathfinderBtn();
         initializeBtns();
@@ -71,6 +80,18 @@ public class HomeController {
 
 
         initializeNavGates();
+    }
+
+    private void initName(){
+        User grabUser = Repository.getRepository().getUser(username);
+        String user = grabUser.getName();
+        Text welcomeBack = new Text();
+        welcomeBack.setFill(Color.WHITE);
+        welcomeBack.setFont(Font.font("System", FontWeight.BOLD, 36));
+        welcomeBack.setText("Welcome " + user);
+        welcomeBack.toFront();
+        vboxWelcomeBack.getChildren().clear();
+        vboxWelcomeBack.getChildren().add(welcomeBack);
     }
 
     private void initPathfinderBtn() {
