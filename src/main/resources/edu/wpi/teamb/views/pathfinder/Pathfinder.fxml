@@ -3,7 +3,6 @@
 <?import com.jfoenix.controls.JFXDrawer?>
 <?import com.jfoenix.controls.JFXHamburger?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
 <?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXListView?>
@@ -32,23 +31,37 @@
                         <Font name="System Bold" size="18.0" />
                     </font>
                 </MFXButton>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="28.0" layoutX="21.0" layoutY="428.0" stroke="BLACK" strokeType="INSIDE" width="106.0" />
-            <Text fontSmoothingType="LCD" layoutX="28.0" layoutY="449.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Directions" textAlignment="CENTER" wrappingWidth="85.8603515625">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </Text>
+            <Pane fx:id="directionPane" layoutX="23.0" layoutY="428.0" prefHeight="254.0" prefWidth="234.0">
+               <children>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="28.0" stroke="BLACK" strokeType="INSIDE" width="106.0" />
+                  <Text fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="Directions" textAlignment="CENTER" wrappingWidth="85.8603515625" x="10.0" y="21.0">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Text>
+                  <VBox fx:id="VboxPathfinder" layoutY="28.0" prefHeight="226.0" prefWidth="233.0">
+                     <children>
+                        <MFXListView fx:id="listView" prefHeight="238.0" prefWidth="254.0" style="-fx-border-color: #012d5a;" />
+                     </children>
+                  </VBox>
+                  <MFXButton fx:id="previousFloor" layoutX="109.0" prefHeight="28.0" prefWidth="60.0" text="Previous Floor">
+                     <font>
+                        <Font size="7.0" />
+                     </font>
+                  </MFXButton>
+                  <MFXButton fx:id="nextFloor" layoutX="172.0" prefHeight="28.0" prefWidth="60.0" text="Next Floor">
+                     <font>
+                        <Font size="7.0" />
+                     </font>
+                  </MFXButton>
+               </children>
+            </Pane>
                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#012d5a" height="50.0" layoutX="-162.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1539.0" />
                 <Text fill="WHITE" layoutX="-21.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pathfinder" textAlignment="CENTER" wrappingWidth="1164.103515625">
                     <font>
                         <Font name="System Bold" size="36.0" />
                     </font>
                 </Text>
-            <VBox fx:id="VboxPathfinder" layoutX="23.0" layoutY="456.0" prefHeight="226.0" prefWidth="233.0">
-               <children>
-                  <MFXListView fx:id="listView" prefHeight="238.0" prefWidth="254.0" style="-fx-border-color: #012d5a;" />
-               </children>
-            </VBox>
                 <VBox layoutX="1065.0" layoutY="443.0" prefHeight="119.0" prefWidth="131.0" style="-fx-background-color: #f1f1f1; -fx-border-color: #012d5a;">
                     <children>
                         <VBox fx:id="vboxBtns" alignment="CENTER" prefHeight="192.0" prefWidth="134.0" spacing="10.0">
@@ -99,16 +112,6 @@
                 </ImageView>
             <MFXFilterComboBox fx:id="algorithmDropdown" floatingText="Algorithm" layoutX="998.0" layoutY="259.0" prefHeight="40.0" prefWidth="199.0" />
             <MFXDatePicker fx:id="datePicker" layoutX="998.0" layoutY="319.0" />
-            <MFXButton fx:id="previousFloor" layoutX="130.0" layoutY="430.0" prefHeight="25.0" prefWidth="63.0" text="Previous Floor">
-               <font>
-                  <Font size="7.0" />
-               </font>
-            </MFXButton>
-            <MFXButton fx:id="nextFloor" layoutX="192.0" layoutY="430.0" prefHeight="25.0" prefWidth="64.0" text="Next Floor">
-               <font>
-                  <Font size="7.0" />
-               </font>
-            </MFXButton>
             <VBox fx:id="vboxActivateNav" layoutX="-50.0" layoutY="10.0" prefHeight="720.0" prefWidth="60.0" />
             <MFXButton fx:id="btnEditMap" defaultButton="true" layoutX="997.0" layoutY="60.0" prefHeight="46.0" prefWidth="110.0" style="-fx-background-color: #012d5a;" text="Edit Map" textFill="#f1f1f1">
                <font>
