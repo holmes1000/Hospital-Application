@@ -14,6 +14,7 @@ import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.Full.FullNode;
 import edu.wpi.teamb.DBAccess.ORMs.Move;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
+import edu.wpi.teamb.entities.DefaultStart;
 import edu.wpi.teamb.entities.ELogin;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
@@ -128,6 +129,8 @@ public class PathfinderController {
       navPane.setMouseTransparent(true);
       activateNav();
       deactivateNav();
+      DefaultStart.getInstance().setDefault_start("Neuroscience Waiting Room");
+      defaultStart = DefaultStart.getInstance().getDefault_start();
 
 
       for (Integer id : PathFinding.ASTAR.getFullNodesByID().keySet()) {
@@ -174,6 +177,7 @@ public class PathfinderController {
       startNode.getSearchText();
       endNode.getSearchText();
       handleDate();
+      startNode.getSelectionModel().selectItem(defaultStart); // not sure about this
       changeButtonColor(currentFloor);
       algorithmDropdown.selectFirst();
 
