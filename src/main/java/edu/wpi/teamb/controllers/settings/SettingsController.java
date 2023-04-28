@@ -53,21 +53,7 @@ public class SettingsController {
         btnEditAccount.setOnMouseClicked(event -> Navigation.navigate(Screen.EDIT_ACCOUNT));
         btnEditUsers.setOnMouseClicked(event -> Navigation.navigate(Screen.EDIT_USERS));
         btnChangeServer.setOnMouseClicked(event -> changeServer());
-        btnViewCSVs.setOnMouseClicked(event -> handleCSVs());
-    }
-
-    private void handleCSVs() {
-        Parent root;
-        try {
-            root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("edu/wpi/teamb/views/settings/ViewCSVs.fxml")));
-            Stage stage = new Stage();
-            stage.setTitle("View CSVs");
-            stage.setScene(new Scene(root, 1280, 720));
-            stage.show();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+        btnViewCSVs.setOnMouseClicked(event -> Navigation.navigate(Screen.VIEW_CSVS));
     }
 
     private void changeServer() {
