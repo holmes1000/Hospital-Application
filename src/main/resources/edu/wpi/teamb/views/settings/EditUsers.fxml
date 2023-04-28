@@ -4,6 +4,7 @@
 <?import com.jfoenix.controls.JFXHamburger?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXPasswordField?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.TableView?>
@@ -51,7 +52,7 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </MFXTextField>
-                  <MFXTextField fx:id="textUsername" floatingText="Username" prefHeight="50.0" prefWidth="362.0" promptText="Username">
+                  <MFXTextField fx:id="textUsername" floatingText="Username" prefHeight="50.0" prefWidth="362.0">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
@@ -59,14 +60,11 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </MFXTextField>
-                  <MFXTextField fx:id="textPassword" floatingText="Password" prefHeight="50.0" prefWidth="362.0" promptText="At least 8 characters">
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
+                  <MFXPasswordField fx:id="textPassword" floatingText="Password" prefHeight="50.0" prefWidth="362.0">
                      <VBox.margin>
                         <Insets bottom="10.0" />
                      </VBox.margin>
-                  </MFXTextField>
+                  </MFXPasswordField>
                   <MFXTextField fx:id="textEmail" floatingText="Email" prefHeight="50.0" prefWidth="362.0" promptText="jdoe@bwh.org">
                      <opaqueInsets>
                         <Insets />
@@ -119,6 +117,11 @@
                     </children>
                 </VBox>
             <VBox fx:id="vboxActivateNav" layoutX="-170.0" prefHeight="720.0" prefWidth="70.0" />
+            <MFXButton fx:id="btnReset" layoutX="268.0" layoutY="479.0" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #012d5a; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Reset" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </MFXButton>
             </children>
         </AnchorPane>
     </center>

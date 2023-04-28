@@ -50,6 +50,7 @@ public class EditAlertsController {
     @FXML private MFXButton btnDeleteAlert;
     @FXML private MFXButton btnEditAlert;
     @FXML private MFXButton btnRefresh;
+    @FXML private MFXButton btnReset;
     @FXML private Pane navPane;
     @FXML private MFXButton btnBack;
     @FXML private TableView<edu.wpi.teamb.DBAccess.ORMs.Alert> tbAlerts;
@@ -104,6 +105,13 @@ public class EditAlertsController {
         btnEditAlert.setDisable(true);
         btnDeleteAlert.setDisable(true);
         btnBack.setOnMouseClicked(event -> Navigation.navigate(Screen.SETTINGS));
+        btnReset.setOnMouseClicked(event -> handleReset());
+    }
+
+    private void handleReset() {
+        textTitle.clear();
+        textDescription.clear();
+        cbEmployees.clear();
     }
 
     private void handleDeleteAlert() {

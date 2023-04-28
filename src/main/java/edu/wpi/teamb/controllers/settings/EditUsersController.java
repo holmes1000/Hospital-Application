@@ -11,6 +11,7 @@ import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
+import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -41,7 +42,7 @@ public class EditUsersController {
     @FXML private JFXDrawer menuDrawer;
 
     @FXML private MFXFilterComboBox<String> cbPermissionLevel;
-    @FXML private MFXTextField textPassword;
+    @FXML private MFXPasswordField textPassword;
     @FXML private MFXTextField textUsername;
     @FXML private MFXTextField textEmail;
     @FXML private MFXTextField textName;
@@ -50,6 +51,7 @@ public class EditUsersController {
     @FXML private MFXButton btnDeleteUser;
     @FXML private MFXButton btnEditUser;
     @FXML private MFXButton btnBack;
+    @FXML private MFXButton btnReset;
     @FXML private VBox vboxEditUser;
     @FXML private VBox tableVbox;
     @FXML private Pane navPane;
@@ -105,6 +107,7 @@ public class EditUsersController {
         btnEditUser.setDisable(true);
         btnDeleteUser.setDisable(true);
         btnBack.setOnMouseClicked(event -> Navigation.navigate(Screen.SETTINGS));
+        btnReset.setOnMouseClicked(event -> handleReset());
     }
 
     private void handleDeleteUser() {
@@ -194,15 +197,12 @@ public class EditUsersController {
         return true;
     }
 
-    private void handleSaveEdits() {
-        User user = new User();
-//        user.setUsername(textUsernameEdit.getText());
-//        user.setPassword(textPasswordEdit.getText());
-//        user.setPosition(textPositionEdit.getText());
-//        if (cbPermissionLevel != null)
-//            user.setPermissionLevel(getPermissionLevel(cbPermissionLevelEdit.getValue()));
-        Repository.getRepository().updateUser(user);
-        initializeFields(); // Refresh the combo box
+    private void handleReset() {
+        textName.clear();
+        textUsername.clear();
+        textPassword.clear();
+        textEmail.clear();
+        cbPermissionLevel.clear();
     }
 
     private void createAlert(String title, String context) {
@@ -240,10 +240,6 @@ public class EditUsersController {
         usernames.setStyle("-fx-alignment: CENTER;");
         usernames.setCellValueFactory(new PropertyValueFactory<User, String>("username"));
 
-        TableColumn<User, String> passwords = new TableColumn<>("Password");
-        passwords.setStyle("-fx-alignment: CENTER;");
-        passwords.setCellValueFactory(new PropertyValueFactory<User, String>("password"));
-
         TableColumn<User, String> emails = new TableColumn<>("Email");
         emails.setStyle("-fx-alignment: CENTER;");
         emails.setCellValueFactory(new PropertyValueFactory<User, String>("email"));
@@ -252,7 +248,7 @@ public class EditUsersController {
         permissions.setStyle("-fx-alignment: CENTER;");
         permissions.setCellValueFactory(new PropertyValueFactory<User, Integer>("permissionLevel"));
 
-        tbUsers.getColumns().addAll(names, usernames, passwords, emails, permissions);
+        tbUsers.getColumns().addAll(names, usernames, emails, permissions);
         updateTable();
     }
 

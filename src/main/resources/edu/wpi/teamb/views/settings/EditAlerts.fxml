@@ -60,11 +60,6 @@
                      </VBox.margin>
                   </MFXTextField>
                   <MFXFilterComboBox fx:id="cbEmployees" floatingText="Employee" prefHeight="50.0" prefWidth="362.0" style="-fx-background-radius: 5; -fx-background-color: #ffffff;" />
-                      <MFXButton fx:id="btnAddAlert" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #012d5a; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Add" textFill="WHITE">
-                          <font>
-                              <Font name="System Bold" size="12.0" />
-                          </font>
-                      </MFXButton>
                </children>
                <opaqueInsets>
                   <Insets />
@@ -101,6 +96,16 @@
                </font>
             </MFXButton>
             <VBox fx:id="vboxActivateNav" layoutX="-150.0" prefHeight="720.0" prefWidth="70.0" />
+            <MFXButton fx:id="btnReset" layoutX="268.0" layoutY="395.0" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #012d5a; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Reset" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </MFXButton>
+                <MFXButton fx:id="btnAddAlert" layoutX="25.0" layoutY="395.0" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #012d5a; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Add" textFill="WHITE">
+                    <font>
+                        <Font name="System Bold" size="12.0" />
+                    </font>
+                </MFXButton>
             </children>
         </AnchorPane>
     </center>
