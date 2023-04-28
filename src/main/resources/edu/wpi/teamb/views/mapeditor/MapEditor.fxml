@@ -92,7 +92,7 @@
                   <Font name="System Bold" size="12.0" />
                </font>
             </MFXButton>
-            <HBox layoutX="-25.0" layoutY="35.0" spacing="35.0">
+            <HBox layoutX="-25.0" layoutY="32.0" spacing="30.0">
                <children>
                   <MenuButton fx:id="btnMenuNode" mnemonicParsing="false" style="-fx-background-color: #7089A2;" text="Node" textAlignment="CENTER" textFill="WHITE">
                     <items>
@@ -101,7 +101,7 @@
                         <MenuItem fx:id="itemEditNode" mnemonicParsing="false" text="Edit Node" />
                     </items>
                      <font>
-                        <Font size="14.0" />
+                        <Font size="18.0" />
                      </font>
                   </MenuButton>
                   <MenuButton fx:id="btnMenuEdge" mnemonicParsing="false" style="-fx-background-color: #7089A2;" text="Edge" textAlignment="CENTER" textFill="WHITE">
@@ -110,7 +110,7 @@
                         <MenuItem fx:id="itemDeleteEdge" mnemonicParsing="false" text="Delete Edge" />
                      </items>
                      <font>
-                        <Font size="14.0" />
+                        <Font size="18.0" />
                      </font>
                   </MenuButton>
                    <MenuButton fx:id="btnMenuMove" mnemonicParsing="false" style="-fx-background-color: #7089A2;" text="Move" textAlignment="CENTER" textFill="WHITE">
@@ -120,7 +120,7 @@
                         <MenuItem fx:id="itemDeleteMove" mnemonicParsing="false" text="Delete Move" />
                      </items>
                      <font>
-                        <Font size="14.0" />
+                        <Font size="18.0" />
                      </font>
                   </MenuButton>
                   <MenuButton fx:id="btnMenuTools" mnemonicParsing="false" style="-fx-background-color: #7089A2;" text="Tools" textAlignment="CENTER" textFill="WHITE">
@@ -129,7 +129,7 @@
                         <MenuItem fx:id="itemSetDefault" mnemonicParsing="false" text="Set Default Position" />
                      </items>
                      <font>
-                        <Font size="14.0" />
+                        <Font size="18.0" />
                      </font>
                   </MenuButton>
                    <MenuButton fx:id="btnMenuBackup" mnemonicParsing="false" style="-fx-background-color: #7089A2;" text="Backup" textAlignment="CENTER" textFill="WHITE">
@@ -138,12 +138,12 @@
                            <MenuItem fx:id="itemResetFromBackup" mnemonicParsing="false" text="Reset From Backup" />
                        </items>
                      <font>
-                        <Font size="14.0" />
+                        <Font size="18.0" />
                      </font>
                    </MenuButton>
                </children>
                <padding>
-                  <Insets bottom="25.0" left="25.0" right="35.0" top="25.0" />
+                  <Insets bottom="25.0" left="22.0" right="32.0" top="25.0" />
                </padding></HBox>
             <Text fx:id="tfState" fill="RED" layoutX="983.0" layoutY="176.0" strokeType="OUTSIDE" strokeWidth="0.0" />
             </children>
