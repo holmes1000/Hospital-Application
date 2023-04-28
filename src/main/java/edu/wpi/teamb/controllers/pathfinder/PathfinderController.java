@@ -57,6 +57,7 @@ public class PathfinderController {
   @FXML private JFXDrawer menuDrawer;
   @FXML private ImageView helpIcon;
   @FXML private MFXButton btnFindPath;
+  @FXML private  Pane directionPane;
 
   @FXML private MFXFilterComboBox<String> startNode;
   @FXML private MFXFilterComboBox<String> endNode;
@@ -127,6 +128,7 @@ public class PathfinderController {
       menuDrawer.setPickOnBounds(false);
       navLoaded = false;
       navPane.setMouseTransparent(true);
+      directionPane.setVisible(false);
       activateNav();
       deactivateNav();
       if (defaultStart.equals("")) {DefaultStart.getInstance().setDefault_start("15 Lobby Entrance Floor 2");}
@@ -682,6 +684,7 @@ public class PathfinderController {
 
                       String floor = PathFinding.ASTAR.get_node_map().get(start).getFloor();
                       switchFloor(floor);
+                      directionPane.setVisible(true);
                   }
                   else {
                       System.out.println("no path");
