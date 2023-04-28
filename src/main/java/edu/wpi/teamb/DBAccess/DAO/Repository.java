@@ -1639,6 +1639,13 @@ public class Repository {
         return nodes;
     }
 
+    public ArrayList<FullNode> getFullNodesByFloor(String floor) {
+        ArrayList<FullNode> nodes = nodeDAO.getFullNodesFromFloor(floor);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return nodes;
+    }
+
     public void addFurnitureRequest(String[] fr) {
         furnitureRequestDAO.add(fr);
         dbConnection.closeDBconnection();
@@ -1756,8 +1763,8 @@ public class Repository {
         dbConnection.forceClose();
     }
 
-    public void updateFullNode(Object n, int nodeID, String longName) {
-        FullNode.updateFullNode(n, nodeID, longName);
+    public void updateFullNode(Object n) {
+        FullNode.updateFullNode(n);
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
     }
