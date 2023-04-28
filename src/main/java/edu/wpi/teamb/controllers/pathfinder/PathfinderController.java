@@ -850,8 +850,6 @@ public class PathfinderController {
     public void activateNav(){
         vboxActivateNav.setOnMouseEntered(event -> {
             if(!navLoaded) {
-                System.out.println("on");
-                navPane.setPickOnBounds(false);
                 navPane.setMouseTransparent(false);
                 navLoaded = true;
                 vboxActivateNav.setDisable(true);
@@ -867,7 +865,6 @@ public class PathfinderController {
     public void deactivateNav(){
         vboxActivateNav1.setOnMouseEntered(event -> {
             if(navLoaded){
-                System.out.println("off");
                 navPane.setMouseTransparent(true);
                 vboxActivateNav.setDisable(false);
                 navLoaded = false;
@@ -896,10 +893,11 @@ public class PathfinderController {
             burgerOpen.setRate(burgerOpen.getRate() * -1);
             burgerOpen.play();
             if (menuDrawer.isOpened()) {
-                menuDrawer.toFront();
                 menuDrawer.close();
+                vboxActivateNav1.toFront();
             } else {
                 menuDrawer.toFront();
+                menuBurger.toFront();
                 menuDrawer.open();
             }
         });

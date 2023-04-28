@@ -273,12 +273,14 @@ public class EditUsersController {
             return "Error"; // Error
     }
 
+    /**
+     * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+     * Swaps ownership of the strip to the navdraw
+     */
 
     public void activateNav(){
         vboxActivateNav.setOnMouseEntered(event -> {
             if(!navLoaded) {
-                System.out.println("on");
-                navPane.setPickOnBounds(false);
                 navPane.setMouseTransparent(false);
                 navLoaded = true;
                 vboxActivateNav.setDisable(true);
@@ -287,10 +289,13 @@ public class EditUsersController {
         });
     }
 
+    /**
+     * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+     * Swaps ownership of the strip to the page
+     */
     public void deactivateNav(){
         vboxActivateNav1.setOnMouseEntered(event -> {
             if(navLoaded){
-                System.out.println("off");
                 navPane.setMouseTransparent(true);
                 vboxActivateNav.setDisable(false);
                 navLoaded = false;
@@ -320,10 +325,11 @@ public class EditUsersController {
                     burgerOpen.setRate(burgerOpen.getRate() * -1);
                     burgerOpen.play();
                     if (menuDrawer.isOpened()) {
-                        menuDrawer.toFront();
                         menuDrawer.close();
+                        vboxActivateNav1.toFront();
                     } else {
                         menuDrawer.toFront();
+                        menuBurger.toFront();
                         menuDrawer.open();
                     }
                 });

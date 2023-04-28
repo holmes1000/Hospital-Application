@@ -17,6 +17,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -34,6 +35,11 @@ public class EditAccountController {
     @FXML private MFXButton btnSaveEdits;
     ELogin eLogin = ELogin.getLogin();
     private final User currentUser = Repository.getRepository().getUser(eLogin.getUsername());
+
+    @FXML private Pane navPane;
+    @FXML private VBox vboxActivateNav;
+    @FXML private VBox vboxActivateNav1;
+    private boolean navLoaded;
 
     @FXML
     public void initialize() throws IOException {
@@ -74,6 +80,41 @@ public class EditAccountController {
         Navigation.navigate(Screen.HOME);
     }
 
+    /**
+     * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+     * Swaps ownership of the strip to the navdraw
+     */
+
+    public void activateNav(){
+        vboxActivateNav.setOnMouseEntered(event -> {
+            if(!navLoaded) {
+                navPane.setMouseTransparent(false);
+                navLoaded = true;
+                vboxActivateNav.setDisable(true);
+                vboxActivateNav1.setDisable(false);
+            }
+        });
+    }
+
+    /**
+     * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+     * Swaps ownership of the strip to the page
+     */
+    public void deactivateNav(){
+        vboxActivateNav1.setOnMouseEntered(event -> {
+            if(navLoaded){
+                navPane.setMouseTransparent(true);
+                vboxActivateNav.setDisable(false);
+                navLoaded = false;
+                vboxActivateNav1.setDisable(true);
+            }
+        });
+    }
+
+    /**
+     * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+     * Swaps ownership of the strip to the navdraw
+     */
     public void initNavBar() {
         // https://github.com/afsalashyana/JavaFX-Tutorial-Codes/tree/master/JavaFX%20Navigation%20Drawer/src/genuinecoder
         try {
@@ -95,7 +136,10 @@ public class EditAccountController {
                     burgerOpen.play();
                     if (menuDrawer.isOpened()) {
                         menuDrawer.close();
+                        vboxActivateNav1.toFront();
                     } else {
+                        menuDrawer.toFront();
+                        menuBurger.toFront();
                         menuDrawer.open();
                     }
                 });

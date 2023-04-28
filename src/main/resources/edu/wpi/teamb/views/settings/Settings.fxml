@@ -62,6 +62,7 @@
                     <Font name="System Bold" size="36.0" />
                 </font>
             </Text>
+         <VBox fx:id="vboxActivateNav" layoutX="-170.0" prefHeight="720.0" prefWidth="70.0" />
         </AnchorPane>
     </center>
     <left>
@@ -72,6 +73,7 @@
                     <effect>
                         <ColorAdjust brightness="1.0" />
                     </effect></JFXHamburger>
+            <VBox fx:id="vboxActivateNav1" layoutX="70.0" onMouseEntered="#deactivateNav" prefHeight="720.0" prefWidth="20.0" />
             </children>
         </Pane>
     </left>

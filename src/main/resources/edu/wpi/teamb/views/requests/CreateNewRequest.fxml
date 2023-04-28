@@ -98,7 +98,7 @@
                   <ColorAdjust brightness="1.0" />
                </effect>
             </JFXHamburger>
-            <VBox fx:id="vboxActivateNav1" layoutX="70.0" onMouseEntered="#deactivateNav" prefHeight="720.0" prefWidth="70.0" />
+            <VBox fx:id="vboxActivateNav1" layoutX="70.0" onMouseEntered="#deactivateNav" prefHeight="720.0" prefWidth="20.0" />
          </children>
       </Pane>
    </left>

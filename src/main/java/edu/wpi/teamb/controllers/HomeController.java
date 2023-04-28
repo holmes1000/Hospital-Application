@@ -52,6 +52,7 @@ public class HomeController {
     @FXML private MFXButton viewUserRequestButton;
     @FXML private TableView<Alert> alertsTable;
     private MFXButton pathfinderImgBtn = new MFXButton();
+    private boolean navLoaded;
 
     private String username;
 
@@ -238,22 +239,27 @@ public class HomeController {
 
     public void activateNav(){
         vboxActivateNav.setOnMouseEntered(event -> {
-//            if(!navLoaded) {
-            System.out.println("on");
-            navPane.setMouseTransparent(false);
-            navPane.setMouseTransparent(false);
-//                navLoaded = true;
-//            }
+            if(!navLoaded) {
+                navPane.setMouseTransparent(false);
+                navLoaded = true;
+                vboxActivateNav.setDisable(true);
+                vboxActivateNav1.setDisable(false);
+            }
         });
     }
 
+    /**
+     * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+     * Swaps ownership of the strip to the page
+     */
     public void deactivateNav(){
-        navPane.setOnMouseClicked(event -> {
-//            if(!navLoaded) {
-                System.out.println("off");
+        vboxActivateNav1.setOnMouseEntered(event -> {
+            if(navLoaded){
                 navPane.setMouseTransparent(true);
-                vboxActivateNav1.setMouseTransparent(true);
-//            }
+                vboxActivateNav.setDisable(false);
+                navLoaded = false;
+                vboxActivateNav1.setDisable(true);
+            }
         });
     }
 
@@ -285,7 +291,10 @@ public class HomeController {
                     burgerOpen.play();
                     if (menuDrawer.isOpened()) {
                         menuDrawer.close();
+                        vboxActivateNav1.toFront();
                     } else {
+                        menuDrawer.toFront();
+                        menuBurger.toFront();
                         menuDrawer.open();
                     }
                 });

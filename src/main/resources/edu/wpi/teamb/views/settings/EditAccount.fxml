@@ -78,6 +78,7 @@
                         <Insets />
                     </opaqueInsets>
                 </VBox>
+            <VBox fx:id="vboxActivateNav" layoutX="-170.0" prefHeight="720.0" prefWidth="70.0" />
             </children>
         </AnchorPane>
     </center>
@@ -89,6 +90,7 @@
                     <effect>
                         <ColorAdjust brightness="1.0" />
                     </effect></JFXHamburger>
+            <VBox fx:id="vboxActivateNav1" layoutX="70.0" onMouseEntered="#deactivateNav" prefHeight="720.0" prefWidth="20.0" />
             </children>
         </Pane>
     </left>

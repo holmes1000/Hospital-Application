@@ -38,16 +38,6 @@ public class CreateNewRequestController {
     @FXML private ImageView icon3;
     @FXML private ImageView icon4;
     @FXML private ImageView icon5;
-    @FXML
-    private Rectangle back1;
-    @FXML
-    private Rectangle back2;
-    @FXML
-    private Rectangle back3;
-    @FXML
-    private Rectangle back4;
-    @FXML
-    private Rectangle back5;
 
     ELogin.PermissionLevel adminTest;
     private NavDrawerController navDrawerController;
@@ -71,7 +61,6 @@ public class CreateNewRequestController {
     }
 
     public void initIcons() {
-        back1 = new Rectangle();
         icon1.setOnMouseClicked(event->{
             loadPage1();}
         );
@@ -231,8 +220,6 @@ public class CreateNewRequestController {
     public void activateNav(){
         vboxActivateNav.setOnMouseEntered(event -> {
             if(!navLoaded) {
-                System.out.println("on");
-                navPane.setPickOnBounds(false);
                 navPane.setMouseTransparent(false);
                 navLoaded = true;
                 vboxActivateNav.setDisable(true);
@@ -248,7 +235,6 @@ public class CreateNewRequestController {
     public void deactivateNav(){
         vboxActivateNav1.setOnMouseEntered(event -> {
             if(navLoaded){
-                System.out.println("off");
                 navPane.setMouseTransparent(true);
                 vboxActivateNav.setDisable(false);
                 navLoaded = false;
@@ -279,13 +265,13 @@ public class CreateNewRequestController {
                     burgerOpen.setRate(burgerOpen.getRate() * -1);
                     burgerOpen.play();
                     if (menuDrawer.isOpened()) {
-                        menuDrawer.toFront();
                         menuDrawer.close();
+                        vboxActivateNav1.toFront();
                     } else {
                         menuDrawer.toFront();
+                        menuBurger.toFront();
                         menuDrawer.open();
                     }
-//                    }
                 });
     }
 }
