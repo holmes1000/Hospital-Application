@@ -138,19 +138,29 @@ public class EditUsersController {
         newUser.setUsername(textUsername.getText().toLowerCase());
         newUser.setPassword(textPassword.getText());
         newUser.setEmail(textEmail.getText().toLowerCase());
-        newUser.setPermissionLevel(permissionLevelToInt(cbPermissionLevel.getValue()));
+        if (cbPermissionLevel.getValue() != null)
+            newUser.setPermissionLevel(permissionLevelToInt(cbPermissionLevel.getValue()));
         if (usernameDoesNotExist(newUser) && emailDoesNotExist(newUser)) {
-            Repository.getRepository().addUser(newUser);
-            createAlert("User added", "User added successfully");
+            if (!nullInputs(newUser)) {
+                Repository.getRepository().addUser(newUser);
+                createAlert("User added", "User added successfully");
+            }
+            else {
+                createAlert("Empty fields", "Please enter all fields");
+            }
         }
         else if (!emailDoesNotExist(newUser)) {
             createAlert("Email already exists", "Please enter a different email");
         }
-        else
+        else if (!usernameDoesNotExist(newUser))
         {
             createAlert("Username already exists", "Please enter a different username");
         }
         initializeFields(); // Refresh the combo box
+    }
+
+    private boolean nullInputs(User user) {
+        return user.getName().equals("") || user.getUsername().equals("") || user.getPassword().equals("") || user.getEmail().equals("");
     }
 
 
