@@ -33,6 +33,7 @@ public class EditAccountController {
     @FXML private MFXTextField tfName;
     @FXML private MFXTextField tfEmail;
     @FXML private MFXButton btnSaveEdits;
+    @FXML private MFXButton btnBack;
     ELogin eLogin = ELogin.getLogin();
     private final User currentUser = Repository.getRepository().getUser(eLogin.getUsername());
 
@@ -59,6 +60,7 @@ public class EditAccountController {
 
     public void initButtons() {
         btnSaveEdits.setOnMouseClicked(event -> handleSaveEdits());
+        btnBack.setOnMouseClicked(event -> Navigation.navigate(Screen.SETTINGS));
     }
 
     private void handleSaveEdits() {

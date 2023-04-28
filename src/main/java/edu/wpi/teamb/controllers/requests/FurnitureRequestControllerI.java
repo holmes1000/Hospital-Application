@@ -30,8 +30,6 @@ public class FurnitureRequestControllerI implements IRequestController{
     @FXML
     private MFXButton btnSubmit;
     @FXML
-    private MFXButton btnCancel;
-    @FXML
     private MFXButton btnReset;
     @FXML
     private ImageView helpIcon;
@@ -68,7 +66,6 @@ public class FurnitureRequestControllerI implements IRequestController{
     public void initBtns() {
         btnSubmit.setOnAction(e -> handleSubmit());
         btnReset.setOnAction(e -> handleReset());
-        btnCancel.setOnAction(e -> handleCancel());
         helpIcon.setOnMouseClicked(e -> handleHelp());
     }
 
@@ -220,6 +217,5 @@ public class FurnitureRequestControllerI implements IRequestController{
 
         //set the reset and cancel buttons to not be visible
         btnReset.setVisible(false);
-        btnCancel.setVisible(false);
     }
 }

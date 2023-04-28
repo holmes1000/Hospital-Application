@@ -93,7 +93,7 @@
             </MFXButton>
             <HBox layoutX="-25.0" layoutY="32.0" spacing="30.0">
                <children>
-                  <MenuButton fx:id="btnMenuNode" mnemonicParsing="false" style="-fx-background-color: #7089A2;" text="Node" textAlignment="CENTER" textFill="WHITE">
+                  <MenuButton fx:id="btnMenuNode" mnemonicParsing="false" style="-fx-background-color: #7089A2; -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Node" textAlignment="CENTER" textFill="WHITE">
                     <items>
                       <MenuItem fx:id="itemAddNode" mnemonicParsing="false" text="Add Node" />
                       <MenuItem fx:id="itemDeleteNode" mnemonicParsing="false" text="Delete Node" />
@@ -103,7 +103,7 @@
                         <Font size="18.0" />
                      </font>
                   </MenuButton>
-                  <MenuButton fx:id="btnMenuEdge" mnemonicParsing="false" style="-fx-background-color: #7089A2;" text="Edge" textAlignment="CENTER" textFill="WHITE">
+                  <MenuButton fx:id="btnMenuEdge" mnemonicParsing="false" style="-fx-background-color: #7089A2; -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Edge" textAlignment="CENTER" textFill="WHITE">
                      <items>
                         <MenuItem fx:id="itemAddEdge" mnemonicParsing="false" text="Add Edge" />
                         <MenuItem fx:id="itemDeleteEdge" mnemonicParsing="false" text="Delete Edge" />
@@ -112,7 +112,7 @@
                         <Font size="18.0" />
                      </font>
                   </MenuButton>
-                   <MenuButton fx:id="btnMenuMove" mnemonicParsing="false" style="-fx-background-color: #7089A2;" text="Move" textAlignment="CENTER" textFill="WHITE">
+                   <MenuButton fx:id="btnMenuMove" mnemonicParsing="false" style="-fx-background-color: #7089A2; -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Move" textAlignment="CENTER" textFill="WHITE">
                      <items>
                         <MenuItem fx:id="itemAddMove" mnemonicParsing="false" text="Add Move" />
                         <MenuItem fx:id="itemViewMoves" mnemonicParsing="false" text="View Moves" />
@@ -122,7 +122,7 @@
                         <Font size="18.0" />
                      </font>
                   </MenuButton>
-                  <MenuButton fx:id="btnMenuTools" mnemonicParsing="false" style="-fx-background-color: #7089A2;" text="Tools" textAlignment="CENTER" textFill="WHITE">
+                  <MenuButton fx:id="btnMenuTools" mnemonicParsing="false" style="-fx-background-color: #7089A2; -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Tools" textAlignment="CENTER" textFill="WHITE">
                      <items>
                         <MenuItem fx:id="itemAlign" mnemonicParsing="false" text="Align Nodes" />
                         <MenuItem fx:id="itemSetDefault" mnemonicParsing="false" text="Set Default Position" />
@@ -131,7 +131,7 @@
                         <Font size="18.0" />
                      </font>
                   </MenuButton>
-                   <MenuButton fx:id="btnMenuBackup" mnemonicParsing="false" style="-fx-background-color: #7089A2;" text="Backup" textAlignment="CENTER" textFill="WHITE">
+                   <MenuButton fx:id="btnMenuBackup" mnemonicParsing="false" style="-fx-background-color: #7089A2; -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Backup" textAlignment="CENTER" textFill="WHITE">
                        <items>
                            <MenuItem fx:id="itemSaveToBackup" mnemonicParsing="false" text="Save to Backup" />
                            <MenuItem fx:id="itemResetFromBackup" mnemonicParsing="false" text="Reset From Backup" />

@@ -48,6 +48,7 @@ public class EditUsersController {
     @FXML private MFXButton btnAddUser;
     @FXML private MFXButton btnDeleteUser;
     @FXML private MFXButton btnEditUser;
+    @FXML private MFXButton btnBack;
     @FXML private VBox vboxEditUser;
     @FXML private VBox tableVbox;
     @FXML private Pane navPane;
@@ -99,6 +100,7 @@ public class EditUsersController {
         btnDeleteUser.setOnMouseClicked(event -> handleDeleteUser());
         btnEditUser.setDisable(true);
         btnDeleteUser.setDisable(true);
+        btnBack.setOnMouseClicked(event -> Navigation.navigate(Screen.SETTINGS));
     }
 
     private void handleDeleteUser() {

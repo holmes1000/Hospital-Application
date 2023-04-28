@@ -36,6 +36,11 @@
                         <Font name="System Bold" size="36.0" />
                     </font>
                 </Text>
+                <MFXButton fx:id="btnBack" defaultButton="true" layoutX="14.0" layoutY="606.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Back" textFill="#f1f1f1">
+                    <font>
+                        <Font name="System Bold" size="18.0" />
+                    </font>
+                </MFXButton>
             <VBox layoutX="25.0" layoutY="154.0" style="-fx-spacing: 20;">
                <children>
                   <MFXTextField fx:id="textTitle" floatingText="Title" prefHeight="50.0" prefWidth="362.0">
@@ -54,7 +59,7 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </MFXTextField>
-                  <MFXFilterComboBox fx:id="cbEmployees" floatingText="Assigned Employee" prefHeight="50.0" prefWidth="362.0" style="-fx-background-radius: 5; -fx-background-color: #ffffff;" />
+                  <MFXFilterComboBox fx:id="cbEmployees" floatingText="Employee Assigned" prefHeight="50.0" prefWidth="362.0" style="-fx-background-radius: 5; -fx-background-color: #ffffff;" />
                       <MFXButton fx:id="btnAddAlert" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #012d5a; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Add" textFill="WHITE">
                           <font>
                               <Font name="System Bold" size="12.0" />

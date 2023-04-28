@@ -31,11 +31,6 @@
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor></MFXComboBox>
-            <MFXButton fx:id="btnCancel" defaultButton="true" layoutX="170.0" layoutY="481.0" prefHeight="45.0" prefWidth="170.0" style="-fx-background-color: #012d5a;" text="Cancel" textFill="#f1f1f1">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </MFXButton>
             <MFXButton fx:id="btnReset" defaultButton="true" layoutX="20.0" layoutY="481.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Reset" textFill="#f1f1f1">
                <font>
                   <Font name="System Bold" size="18.0" />

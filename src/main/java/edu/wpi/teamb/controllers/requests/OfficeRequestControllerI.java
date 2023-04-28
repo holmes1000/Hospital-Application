@@ -28,7 +28,6 @@ public class OfficeRequestControllerI implements IRequestController{
 
     @FXML
     private MFXButton btnSubmit;
-    @FXML private MFXButton btnCancel;
     @FXML private MFXButton btnReset;
     @FXML private ImageView helpIcon;
     @FXML private MFXComboBox<String> cbSupplyItems;
@@ -54,7 +53,6 @@ public class OfficeRequestControllerI implements IRequestController{
     public void initBtns() {
         btnSubmit.setOnAction(e -> handleSubmit());
         btnReset.setOnAction(e -> handleReset());
-        btnCancel.setOnAction(e -> handleCancel());
         helpIcon.setOnMouseClicked(e -> handleHelp());
     }
 
@@ -74,7 +72,7 @@ public class OfficeRequestControllerI implements IRequestController{
         cbSupplyItems.setItems(supplies);
 
         //DROPDOWN INITIALIZATION
-        ObservableList<String> supplyType = FXCollections.observableArrayList("Office Supplies", "Cleaning Supplies", "Other");
+        ObservableList<String> supplyType = FXCollections.observableArrayList("Office Supplies", "Cleaning Supplies");
         cbSupplyType.setItems(supplyType);
     }
 
@@ -196,7 +194,6 @@ public class OfficeRequestControllerI implements IRequestController{
         });
 
         //set the cancel and reset button to not be visible
-        btnCancel.setVisible(false);
         btnReset.setVisible(false);
     }
 }
