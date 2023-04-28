@@ -14,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -38,6 +39,11 @@ public class CreateNewRequestController {
     @FXML private ImageView icon3;
     @FXML private ImageView icon4;
     @FXML private ImageView icon5;
+    @FXML private VBox back1;
+    @FXML private VBox back2;
+    @FXML private VBox back3;
+    @FXML private VBox back4;
+    @FXML private VBox back5;
 
     ELogin.PermissionLevel adminTest;
     private NavDrawerController navDrawerController;
@@ -57,60 +63,73 @@ public class CreateNewRequestController {
         }
         requestVbox.getChildren().clear();
         loadPage2();
+        toggleBtns("icon2");
         navPane.setMouseTransparent(true);
         initializeNavGates();
     }
 
     public void initIcons() {
         icon1.setOnMouseClicked(event->{
+            toggleBtns("icon1");
             loadPage1();}
         );
         icon2.setOnMouseClicked(event->{
+            toggleBtns("icon2");
             loadPage2();}
         );
         icon3.setOnMouseClicked(event->{
+            toggleBtns("icon3");
             loadPage3();}
         );
         icon4.setOnMouseClicked(event->{
+            toggleBtns("icon4");
             loadPage6();}
         );
         icon5.setOnMouseClicked(event->{
+            toggleBtns("icon5");
             loadPage5();
         });
     }
 
-//    public void toggleBtns(String btn){
-//        switch(btn){
-//            case "icon1":
-//
-//
-//
-//                case "icon2":
-//                icon1.setDisable(false);
-//                icon2.setDisable(true);
-//                icon3.setDisable(false);
-//                icon4.setDisable(false);
-//                icon5.setDisable(false);
-//            case "icon3":
-//                icon1.setDisable(false);
-//                icon2.setDisable(false);
-//                icon3.setDisable(true);
-//                icon4.setDisable(false);
-//                icon5.setDisable(false);
-//            case "icon4":
-//                icon1.setDisable(false);
-//                icon2.setDisable(false);
-//                icon3.setDisable(false);
-//                icon4.setDisable(true);
-//                icon5.setDisable(false);
-//            case "icon5":
-//                icon1.setDisable(false);
-//                icon2.setDisable(false);
-//                icon3.setDisable(false);
-//                icon4.setDisable(false);
-//                icon5.setDisable(true);
-//        }
-//    }
+    public void toggleBtns(String btn){
+        switch(btn){
+            case "icon1" -> {
+                back1.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back2.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+                back3.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+                back4.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+                back5.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+            }
+            case "icon2" -> {
+                back1.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+                back2.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back3.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+                back4.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+                back5.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+            }
+            case "icon3" -> {
+                back1.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+                back2.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+                back3.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back4.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+                back5.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+            }
+            case "icon4" -> {
+                back1.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+                back2.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+                back3.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+                back4.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back5.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+                }
+            case "icon5" -> {
+                back1.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+                back2.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+                back3.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+                back4.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+                back5.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+            }
+        }
+    }
 
     @FXML
     public void clickAllRequests() {
