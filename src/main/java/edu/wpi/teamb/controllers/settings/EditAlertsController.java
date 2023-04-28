@@ -10,6 +10,7 @@ import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -42,7 +43,7 @@ public class EditAlertsController {
     @FXML private MFXTextField textTitle;
     @FXML private MFXTextField textDescription;
 
-    @FXML private ComboBox<String> cbEmployees;
+    @FXML private MFXFilterComboBox<String> cbEmployees;
 
     @FXML private MFXButton btnAddAlert;
     @FXML private MFXButton btnDeleteAlert;

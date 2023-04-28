@@ -34,7 +34,7 @@ public class FlowerRequestControllerI implements IRequestController {
     @FXML private MFXComboBox<String> cdAvailableType;
     @FXML private MFXTextField txtFldNotes;
     @FXML private MFXTextField txtFldMessage;
-    @FXML private MFXComboBox<String> cbEmployeesToAssign;
+    @FXML private MFXFilterComboBox<String> cbEmployeesToAssign;
     @FXML private MFXFilterComboBox<String> cbLongName;
 
     private final EFlowerRequest EFlowerRequest;

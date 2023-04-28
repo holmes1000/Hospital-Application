@@ -35,7 +35,7 @@ public class OfficeRequestControllerI implements IRequestController{
     @FXML private MFXComboBox<String> cbSupplyType;
     @FXML private MFXTextField tbSupplyQuantities;
     @FXML private MFXTextField txtFldNotes;
-    @FXML private MFXComboBox<String> cbEmployeesToAssign;
+    @FXML private MFXFilterComboBox<String> cbEmployeesToAssign;
     @FXML private MFXFilterComboBox<String> cbLongName;
 
     private final EOfficeRequest EOfficeRequest;

@@ -38,7 +38,7 @@
                 </Text>
             <VBox layoutX="25.0" layoutY="154.0">
                <children>
-                  <MFXTextField fx:id="textName" floatingText="Name" prefHeight="50.0" prefWidth="362.0">
+                  <MFXTextField fx:id="textName" floatingText="Name" prefHeight="50.0" prefWidth="362.0" promptText="Jane Doe">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
@@ -46,7 +46,7 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </MFXTextField>
-                  <MFXTextField fx:id="textUsername" floatingText="Username" prefHeight="50.0" prefWidth="362.0">
+                  <MFXTextField fx:id="textUsername" floatingText="Username" prefHeight="50.0" prefWidth="362.0" promptText="Username">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
@@ -54,7 +54,7 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </MFXTextField>
-                  <MFXTextField fx:id="textPassword" floatingText="Password" prefHeight="50.0" prefWidth="362.0">
+                  <MFXTextField fx:id="textPassword" floatingText="Password" prefHeight="50.0" prefWidth="362.0" promptText="At least 8 characters">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
@@ -62,7 +62,7 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </MFXTextField>
-                  <MFXTextField fx:id="textEmail" floatingText="Email" prefHeight="50.0" prefWidth="362.0">
+                  <MFXTextField fx:id="textEmail" floatingText="Email" prefHeight="50.0" prefWidth="362.0" promptText="jdoe@bwh.org">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
