@@ -59,9 +59,7 @@ public class SubmittedRequestsController {
         hoverHelp();
         initComboBoxChangeListeners();
         loadRequestsIntoContainer();
-        navPane.setMouseTransparent(true);
-        activateNav();
-        deactivateNav();
+        initializeNavGates();
     }
 
     private void initScrollPane() {
@@ -243,14 +241,25 @@ public class SubmittedRequestsController {
     }
 
     /**
+     * For some reason there are occasions when the nav-bar gates for toggling its handling does not start correctly
+     * This fixes this issue
+     */
+    public void initializeNavGates(){
+        activateNav();
+        deactivateNav();
+        navPane.setMouseTransparent(true);
+        vboxActivateNav.setDisable(false);
+        navLoaded = false;
+        vboxActivateNav1.setDisable(true);
+    }
+
+    /**
      * Utilizes a gate to swap between handling the navdrawer and the rest of the page
      * Swaps ownership of the strip to the navdraw
      */
     public void activateNav(){
         vboxActivateNav.setOnMouseEntered(event -> {
             if(!navLoaded) {
-                System.out.println("on");
-                navPane.setPickOnBounds(false);
                 navPane.setMouseTransparent(false);
                 navLoaded = true;
                 vboxActivateNav.setDisable(true);
@@ -267,7 +276,6 @@ public class SubmittedRequestsController {
     public void deactivateNav(){
         vboxActivateNav1.setOnMouseEntered(event -> {
             if(navLoaded){
-                System.out.println("off");
                 navPane.setMouseTransparent(true);
                 vboxActivateNav.setDisable(false);
                 navLoaded = false;
@@ -297,10 +305,11 @@ public class SubmittedRequestsController {
                     burgerOpen.setRate(burgerOpen.getRate() * -1);
                     burgerOpen.play();
                     if (menuDrawer.isOpened()) {
-                        menuDrawer.toFront();
                         menuDrawer.close();
+                        vboxActivateNav1.toFront();
                     } else {
                         menuDrawer.toFront();
+                        menuBurger.toFront();
                         menuDrawer.open();
                     }
                 });

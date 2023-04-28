@@ -36,7 +36,6 @@
                   <Font name="System Bold" size="36.0" />
                </font>
             </Text>
-            <VBox fx:id="vboxActivateNav" layoutX="-170.0" onMouseEntered="#activateNav" prefHeight="720.0" prefWidth="70.0" />
             <Pane fx:id="homePane" prefHeight="691.0" prefWidth="1067.0">
                <children>
                   <MFXButton fx:id="btnCredits" layoutX="915.0" layoutY="633.0" mnemonicParsing="false" text="Credits" />
@@ -44,7 +43,6 @@
                   <MFXButton fx:id="btnClear" layoutX="833.0" layoutY="645.0" mnemonicParsing="false" text="Clear" visible="false" />
                   <MFXButton fx:id="btnSecret" layoutX="830.0" layoutY="633.0" mnemonicParsing="false" text="Secret" />
                   <MFXButton fx:id="viewUserRequestButton" layoutX="843.0" layoutY="107.0" prefHeight="50.0" prefWidth="200.0" text="View My Requests" />
-                  <VBox fx:id="vboxActivateNav1" layoutX="-52.0" layoutY="10.0" onMouseClicked="#deactivateNav" prefHeight="720.0" prefWidth="1162.0" visible="false" />
                   <JFXDrawersStack layoutX="14.0" layoutY="230.0" prefHeight="63.0" prefWidth="85.0" />
                   <TableView fx:id="alertsTable" layoutX="22.0" layoutY="318.0" prefHeight="328.0" prefWidth="340.0" />
                </children></Pane>
@@ -62,6 +60,7 @@
                   </Lighting>
                </effect>
             </ImageView>
+            <VBox fx:id="vboxActivateNav" layoutX="-150.0" onMouseEntered="#activateNav" prefHeight="720.0" prefWidth="70.0" />
          </children>
       </AnchorPane>
    </center>
@@ -73,6 +72,7 @@
                <effect>
                   <ColorAdjust brightness="1.0" />
                </effect></JFXHamburger>
+            <VBox fx:id="vboxActivateNav1" layoutX="70.0" onMouseEntered="#deactivateNav" prefHeight="720.0" prefWidth="20.0" />
          </children>
       </Pane>
    </left>

@@ -52,6 +52,7 @@ public class HomeController {
     @FXML private MFXButton viewUserRequestButton;
     @FXML private TableView<Alert> alertsTable;
     private MFXButton pathfinderImgBtn = new MFXButton();
+    private boolean navLoaded;
 
     private String username;
 
@@ -68,6 +69,8 @@ public class HomeController {
         homeE = new EHome();
         bounds = homePane.getBoundsInLocal();
 
+
+        initializeNavGates();
     }
 
     private void initPathfinderBtn() {
@@ -239,21 +242,41 @@ public class HomeController {
     public void activateNav(){
         vboxActivateNav.setOnMouseEntered(event -> {
 //            if(!navLoaded) {
-            System.out.println("on");
-            navPane.setMouseTransparent(false);
-            navPane.setMouseTransparent(false);
-//                navLoaded = true;
+                System.out.println("on");
+                navPane.setMouseTransparent(false);
+                navLoaded = true;
+                vboxActivateNav.setDisable(true);
+                vboxActivateNav1.setDisable(false);
 //            }
         });
     }
 
+    /**
+     * For some reason there are occasions when the nav-bar gates for toggling its handling does not start correctly
+     * This fixes this issue
+     */
+    public void initializeNavGates(){
+        activateNav();
+        deactivateNav();
+        navPane.setMouseTransparent(true);
+        vboxActivateNav.setDisable(false);
+        navLoaded = false;
+        vboxActivateNav1.setDisable(true);
+    }
+
+    /**
+     * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+     * Swaps ownership of the strip to the page
+     */
     public void deactivateNav(){
-        navPane.setOnMouseClicked(event -> {
-//            if(!navLoaded) {
+        vboxActivateNav1.setOnMouseEntered(event -> {
+            if(navLoaded){
                 System.out.println("off");
                 navPane.setMouseTransparent(true);
-                vboxActivateNav1.setMouseTransparent(true);
-//            }
+                vboxActivateNav.setDisable(false);
+                navLoaded = false;
+                vboxActivateNav1.setDisable(true);
+            }
         });
     }
 
@@ -285,7 +308,10 @@ public class HomeController {
                     burgerOpen.play();
                     if (menuDrawer.isOpened()) {
                         menuDrawer.close();
+                        vboxActivateNav1.toFront();
                     } else {
+                        menuDrawer.toFront();
+                        menuBurger.toFront();
                         menuDrawer.open();
                     }
                 });

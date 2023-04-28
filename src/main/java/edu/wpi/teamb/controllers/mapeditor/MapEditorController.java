@@ -90,6 +90,12 @@ public class MapEditorController {
   @FXML
   private MFXButton btnViewMoveMap;
 
+  //Objects for updating nav bar
+  @FXML private Pane navPane;
+  @FXML private VBox vboxActivateNav;
+  @FXML private VBox vboxActivateNav1;
+  private boolean navLoaded;
+
   //Objects that get superimposed
 
   public GesturePane pane = new GesturePane();
@@ -252,6 +258,9 @@ public class MapEditorController {
     btnAlignNodes.setVisible(false);
 
     System.out.println("MapEditorController initialized");
+
+
+    initializeNavGates();
   }
 
   private void handleNodes() {
@@ -982,7 +991,55 @@ public class MapEditorController {
     });
   }
 
+  /**
+   * For some reason there are occasions when the nav-bar gates for toggling its handling does not start correctly
+   * This fixes this issue
+   */
+  public void initializeNavGates(){
+    activateNav();
+    deactivateNav();
+    navPane.setMouseTransparent(true);
+    vboxActivateNav.setDisable(false);
+    navLoaded = false;
+    vboxActivateNav1.setDisable(true);
+  }
 
+
+  /**
+   * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+   * Swaps ownership of the strip to the navdraw
+   */
+
+  public void activateNav(){
+    vboxActivateNav.setOnMouseEntered(event -> {
+      if(!navLoaded) {
+        navPane.setMouseTransparent(false);
+        navLoaded = true;
+        vboxActivateNav.setDisable(true);
+        vboxActivateNav1.setDisable(false);
+      }
+    });
+  }
+
+  /**
+   * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+   * Swaps ownership of the strip to the page
+   */
+  public void deactivateNav(){
+    vboxActivateNav1.setOnMouseEntered(event -> {
+      if(navLoaded){
+        navPane.setMouseTransparent(true);
+        vboxActivateNav.setDisable(false);
+        navLoaded = false;
+        vboxActivateNav1.setDisable(true);
+      }
+    });
+  }
+
+  /**
+   * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+   * Swaps ownership of the strip to the navdraw
+   */
   public void initNavBar() {
     // https://github.com/afsalashyana/JavaFX-Tutorial-Codes/tree/master/JavaFX%20Navigation%20Drawer/src/genuinecoder
     try {
@@ -1003,7 +1060,10 @@ public class MapEditorController {
               burgerOpen.play();
               if (menuDrawer.isOpened()) {
                 menuDrawer.close();
+                vboxActivateNav1.toFront();
               } else {
+                menuDrawer.toFront();
+                menuBurger.toFront();
                 menuDrawer.open();
               }
             });
