@@ -1,5 +1,6 @@
 package edu.wpi.teamb.DBAccess.ORMs;
 
+import edu.wpi.teamb.DBAccess.DAO.NodeDAOImpl;
 import edu.wpi.teamb.DBAccess.DButils;
 
 import java.sql.ResultSet;
@@ -12,7 +13,6 @@ public class Edge {
     private Node startNode;
     private int endNodeID;
     private Node endNode;
-
     public String endpoints = startNodeID + "_" + endNodeID;
 
     /**
@@ -34,7 +34,9 @@ public class Edge {
     public Edge(int startNode, int endNode) {
         this.startNodeID = startNode;
         this.endNodeID = endNode;
-        endpoints = startNodeID + "_" + endNodeID;
+        this.endpoints = startNode + "_" + endNode;
+        //this.startNode = NodeDAOImpl.getNode(startNode);
+        //this.endNode = NodeDAOImpl.getNode(endNode);
     }
 
     /**
@@ -44,9 +46,11 @@ public class Edge {
      */
     public Edge(ResultSet rs) {
         try {
-            this.startNodeID = rs.getInt("startNode");
-            this.endNodeID = rs.getInt("endNode");
+            this.startNodeID = rs.getInt("startnode");
+            this.endNodeID = rs.getInt("endnode");
             this.endpoints = startNodeID + "_" + endNodeID;
+            //this.startNode = NodeDAOImpl.getNode(startNodeID);
+            //this.endNode = NodeDAOImpl.getNode(endNodeID);
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed: " + e.getMessage());
         }
@@ -121,5 +125,25 @@ public class Edge {
     @Override
     public String toString() {
         return "StartNodeID: " + endpoints + " EndNodeID: " + endNodeID;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof Edge))
+            return false;
+        Edge e = (Edge) o;
+        return e.getStartNodeID() == this.getStartNodeID() && e.getEndNodeID() == this.getEndNodeID();
+    }
+
+    public void setStartNodeID(int startNodeID) {
+        this.startNodeID = startNodeID;
+        this.endpoints = startNodeID + "_" + this.endNodeID;
+    }
+
+    public void setEndNodeID(int endNodeID) {
+        this.endNodeID = endNodeID;
+        this.endpoints = this.startNodeID + "_" + endNodeID;
     }
 }

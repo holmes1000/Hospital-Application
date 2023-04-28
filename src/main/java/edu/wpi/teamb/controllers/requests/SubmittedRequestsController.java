@@ -26,6 +26,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
@@ -35,23 +36,30 @@ public class SubmittedRequestsController {
     @FXML private JFXHamburger menuBurger;
     @FXML private JFXDrawer menuDrawer;
     @FXML private VBox allRequestsContainerVBox;
+    @FXML private Pane navPane;
+    @FXML VBox vboxActivateNav;
+    @FXML VBox vboxActivateNav1;
     @FXML private ScrollPane allRequestsScrollPane;
     @FXML private MFXComboBox<String> cbFilterCategory;
     @FXML private MFXComboBox<String> cbFilterOptions;
 
     //entity object of class that contains all the methods to get the requests
     private EAllRequests allRequestsE;
+    private boolean navLoaded;
     //regular class fields below
 
 
     @FXML
     public void initialize() throws IOException, SQLException {
         initNavBar();
+        navPane.setPickOnBounds(false);
+        menuDrawer.setPickOnBounds(false);
         allRequestsE = new EAllRequests();
         initScrollPane();
         hoverHelp();
         initComboBoxChangeListeners();
         loadRequestsIntoContainer();
+        initializeNavGates();
     }
 
     private void initScrollPane() {
@@ -232,6 +240,49 @@ public class SubmittedRequestsController {
         helpIcon.setOnMouseExited(event -> {});
     }
 
+    /**
+     * For some reason there are occasions when the nav-bar gates for toggling its handling does not start correctly
+     * This fixes this issue
+     */
+    public void initializeNavGates(){
+        activateNav();
+        deactivateNav();
+        navPane.setMouseTransparent(true);
+        vboxActivateNav.setDisable(false);
+        navLoaded = false;
+        vboxActivateNav1.setDisable(true);
+    }
+
+    /**
+     * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+     * Swaps ownership of the strip to the navdraw
+     */
+    public void activateNav(){
+        vboxActivateNav.setOnMouseEntered(event -> {
+            if(!navLoaded) {
+                navPane.setMouseTransparent(false);
+                navLoaded = true;
+                vboxActivateNav.setDisable(true);
+                vboxActivateNav1.setDisable(false);
+            }
+        });
+    }
+
+    /**
+     * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+     * Swaps ownership of the strip to the page
+     */
+
+    public void deactivateNav(){
+        vboxActivateNav1.setOnMouseEntered(event -> {
+            if(navLoaded){
+                navPane.setMouseTransparent(true);
+                vboxActivateNav.setDisable(false);
+                navLoaded = false;
+                vboxActivateNav1.setDisable(true);
+            }
+        });
+    }
     public void initNavBar() {
         // https://github.com/afsalashyana/JavaFX-Tutorial-Codes/tree/master/JavaFX%20Navigation%20Drawer/src/genuinecoder
         try {
@@ -240,6 +291,8 @@ public class SubmittedRequestsController {
             VBox vbox = loader.load();
             NavDrawerController navDrawerController = loader.getController();
             menuDrawer.setSidePane(vbox);
+            navPane.setMouseTransparent(true);
+            navLoaded = false;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -253,7 +306,10 @@ public class SubmittedRequestsController {
                     burgerOpen.play();
                     if (menuDrawer.isOpened()) {
                         menuDrawer.close();
+                        vboxActivateNav1.toFront();
                     } else {
+                        menuDrawer.toFront();
+                        menuBurger.toFront();
                         menuDrawer.open();
                     }
                 });

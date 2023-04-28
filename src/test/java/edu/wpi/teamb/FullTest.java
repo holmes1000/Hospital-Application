@@ -1,0 +1,323 @@
+package edu.wpi.teamb;
+
+import edu.wpi.teamb.DBAccess.DAO.Repository;
+import edu.wpi.teamb.DBAccess.DAO.RequestDAOImpl;
+import edu.wpi.teamb.DBAccess.Full.FullConferenceRequest;
+import edu.wpi.teamb.DBAccess.Full.FullFlowerRequest;
+import edu.wpi.teamb.DBAccess.Full.FullMealRequest;
+import edu.wpi.teamb.DBAccess.Full.FullNode;
+import edu.wpi.teamb.DBAccess.Full.*;
+import edu.wpi.teamb.DBAccess.ORMs.*;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+
+public class FullTest {
+
+        @Test
+        public void testFullConferenceRequest() {
+
+                FullConferenceRequest fullconferencerequest = new FullConferenceRequest();
+                fullconferencerequest.setId(100);
+                fullconferencerequest.setDateRequested(Timestamp.valueOf("2020-01-01 00:00:00"));
+                fullconferencerequest.setBookingReason("Test Booking Reason");
+                fullconferencerequest.setEmployee("Test Employee");
+                fullconferencerequest.setDuration(100);
+                fullconferencerequest.setRequestType("Conference");
+                fullconferencerequest.setDateSubmitted(Timestamp.valueOf("2022-01-01 00:10:40"));
+                fullconferencerequest.setNotes("Test Notes");
+                fullconferencerequest.setEventName("Test Event Name");
+                fullconferencerequest.setLocationName("Test Location Name");
+                fullconferencerequest.setRequestStatus("Test Request Status");
+
+                assertEquals(fullconferencerequest.getId(), 100);
+                assertEquals(fullconferencerequest.getDateRequested(), Timestamp.valueOf("2020-01-01 00:00:00"));
+                assertEquals(fullconferencerequest.getBookingReason(), "Test Booking Reason");
+                assertEquals(fullconferencerequest.getEmployee(), "Test Employee");
+                assertEquals(fullconferencerequest.getDuration(), 100);
+                assertEquals(fullconferencerequest.getRequestType(), "Conference");
+                assertEquals(fullconferencerequest.getDateSubmitted(), Timestamp.valueOf("2022-01-01 00:10:40"));
+                assertEquals(fullconferencerequest.getNotes(), "Test Notes");
+                assertEquals(fullconferencerequest.getEventName(), "Test Event Name");
+                assertEquals(fullconferencerequest.getLocationName(), "Test Location Name");
+                assertEquals(fullconferencerequest.getRequestStatus(), "Test Request Status");
+
+                ArrayList<ConferenceRequest> mr = new ArrayList<ConferenceRequest>();
+                ArrayList<FullConferenceRequest> fmrs = new ArrayList<FullConferenceRequest>();
+                ConferenceRequest fr = new ConferenceRequest(258, Timestamp.valueOf("2020-01-01 00:00:00"),
+                                "Test Event Name",
+                                "Test Booking Reason", 100);
+                Request r = RequestDAOImpl.getRequest(fr.getId());
+                FullConferenceRequest b = new FullConferenceRequest(r, fr);
+                fmrs.add(b);
+                mr.add(fr);
+                ArrayList<FullConferenceRequest> mmm = (ArrayList<FullConferenceRequest>) fullconferencerequest
+                                .listFullRequests(mr);
+                assertEquals((mmm).get(0).getId(), fmrs.get(0).getId());
+                assertEquals(mmm.get(0).getRequestType(), fmrs.get(0).getRequestType());
+                assertEquals(mmm.get(0).getEventName(), fmrs.get(0).getEventName());
+                assertEquals(mmm.get(0).getBookingReason(), fmrs.get(0).getBookingReason());
+
+        }
+
+        @Test
+        public void testFullMealRequest() {
+
+                FullMealRequest fmr = new FullMealRequest();
+                assertNotNull(fmr);
+                // test innital values
+                assertEquals(fmr.getOrderFrom(), "");
+                assertEquals(fmr.getFood(), "");
+                assertEquals(fmr.getDrink(), "");
+                assertEquals(fmr.getSnack(), "");
+
+                // setters
+                fmr.setId(100);
+                fmr.setEmployee("Test Employee");
+
+                fmr.setRequestType("Meal");
+                fmr.setDateSubmitted(Timestamp.valueOf("2022-01-01 00:10:40"));
+                fmr.setNotes("Test Notes");
+                fmr.setLocationName("Test Location Name");
+                fmr.setRequestStatus("Test Request Status");
+                fmr.setRequestType();
+
+                fmr.setDrink("blood");
+                fmr.setFood("beans");
+                fmr.setSnack("shoelaces");
+                fmr.setOrderFrom("Your mom");
+
+                // tests
+                assertEquals(fmr.getId(), 100);
+                assertEquals(fmr.getEmployee(), "Test Employee");
+                assertEquals(fmr.getRequestType(), "Meal");
+                assertEquals(fmr.getDateSubmitted(), Timestamp.valueOf("2022-01-01 00:10:40"));
+                assertEquals(fmr.getNotes(), "Test Notes");
+                assertEquals(fmr.getLocationName(), "Test Location Name");
+                assertEquals(fmr.getRequestStatus(), "Test Request Status");
+                assertEquals(fmr.getRequestType(), "Meal");
+
+                assertEquals(fmr.getDrink(), "blood");
+                assertEquals(fmr.getFood(), "beans");
+                assertEquals(fmr.getSnack(), "shoelaces");
+                assertEquals(fmr.getOrderFrom(), "Your mom");
+
+                ArrayList<MealRequest> mr = new ArrayList<MealRequest>();
+                ArrayList<FullMealRequest> fmrs = new ArrayList<FullMealRequest>();
+                MealRequest fr = new MealRequest(258, "Cafe", "Pizza", "Coca-cola", "Apple");
+                Request r = RequestDAOImpl.getRequest(fr.getId());
+                FullMealRequest b = new FullMealRequest(r, fr);
+                fmrs.add(b);
+                mr.add(fr);
+                ArrayList<FullMealRequest> mmm = (ArrayList<FullMealRequest>) fmr.listFullRequests(mr);
+                assertEquals(mmm.get(0).getId(), fmrs.get(0).getId());
+                assertEquals(mmm.get(0).getDrink(), fmrs.get(0).getDrink());
+                assertEquals(mmm.get(0).getFood(), fmrs.get(0).getFood());
+                assertEquals(mmm.get(0).getSnack(), fmrs.get(0).getSnack());
+
+        }
+
+        @Test
+        void testFullFlowerRequest() {
+                FullFlowerRequest ffr = new FullFlowerRequest();
+                assertNotNull(ffr);
+                // test innital values
+                assertNull(ffr.getFlowerType());
+                assertNull(ffr.getColor());
+                assertNull(ffr.getSize());
+
+                // setters
+                ffr.setId(100);
+                ffr.setEmployee("Test Employee");
+                ffr.setDateSubmitted(Timestamp.valueOf("2022-01-01 00:10:40"));
+                ffr.setNotes("Test Notes");
+                ffr.setLocationName("Test Location Name");
+                ffr.setRequestStatus("Test Request Status");
+                ffr.setRequestType();
+
+                ffr.setFlowerType("blood");
+                ffr.setColor("beans");
+                ffr.setSize("shoelaces");
+
+                // tests
+                assertEquals(ffr.getId(), 100);
+                assertEquals(ffr.getEmployee(), "Test Employee");
+                assertEquals(ffr.getDateSubmitted(), Timestamp.valueOf("2022-01-01 00:10:40"));
+                assertEquals(ffr.getNotes(), "Test Notes");
+                assertEquals(ffr.getLocationName(), "Test Location Name");
+                assertEquals(ffr.getRequestStatus(), "Test Request Status");
+                assertEquals(ffr.getRequestType(), "Flower");
+
+                assertEquals(ffr.getFlowerType(), "blood");
+                assertEquals(ffr.getColor(), "beans");
+                assertEquals(ffr.getSize(), "shoelaces");
+
+                ArrayList<FlowerRequest> fr = new ArrayList<FlowerRequest>();
+                ArrayList<FullFlowerRequest> ffrs = new ArrayList<FullFlowerRequest>();
+                FullFlowerRequest amx;
+                boolean altered = false;
+                try {
+                        amx = Repository.getRepository().getAllFlowerRequests().get(0);
+                } catch (IndexOutOfBoundsException e) {
+                        Repository.getRepository()
+                                        .addFlowerRequest(new String[] { "TestConfEmp", "Pending",
+                                                        "BTM Conference Center",
+                                                        "alphabet", "9999-09-09 00:00:00.0", "TestType", "TestColor",
+                                                        "TestSize", "TestMessage" });
+                        amx = Repository.getRepository().getAllFlowerRequests().get(0);
+                        altered = true;
+                }
+                FlowerRequest f = new FlowerRequest(amx.getId(), amx.getFlowerType(), amx.getEmployee(), amx.getColor(),
+                                amx.getMessage());
+
+                Request r = RequestDAOImpl.getRequest(f.getId());
+                FullFlowerRequest b = new FullFlowerRequest(r, f);
+                ffrs.add(b);
+                fr.add(f);
+                ArrayList<FullFlowerRequest> m = (ArrayList<FullFlowerRequest>) ffr.listFullRequests(fr);
+                assertEquals(m.get(0).getId(), ffrs.get(0).getId());
+                assertEquals(m.get(0).getFlowerType(), ffrs.get(0).getFlowerType());
+                assertEquals(m.get(0).getColor(), ffrs.get(0).getColor());
+                assertEquals(m.get(0).getSize(), ffrs.get(0).getSize());
+                if (altered) {
+                        Repository.getRepository().deleteFlowerRequest(f);
+
+                }
+
+        }
+
+//        @Test
+//        public void testFullNode() {
+//                FullNode n = new FullNode(0, 0, 0, "", "", "", "", "");
+//                assertNotNull(n);
+//                assertEquals(n.getNodeID(), 0);
+//                assertEquals(n.getxCoord(), 0);
+//                assertEquals(n.getyCoord(), 0);
+//                assertEquals(n.getFloor(), "");
+//                assertEquals(n.getBuilding(), "");
+//                assertEquals(n.getShortName(), "");
+//                assertEquals(n.getLongName(), "");
+//                assertEquals(n.getNodeType(), "");
+//
+//                // Setters
+//                n.setNodeID(150000);
+//                n.setxCoord(10);
+//                n.setyCoord(10);
+//                n.setFloor("2");
+//                n.setBuilding("nice");
+//                n.setShortName("ni2");
+//                n.setLongName("nice2");
+//                n.setNodeType("Hall");
+//
+//                // tests
+//                assertEquals(n.getNodeID(), 150000);
+//                assertEquals(n.getxCoord(), 10);
+//                assertEquals(n.getyCoord(), 10);
+//                assertEquals(n.getFloor(), "2");
+//                assertEquals(n.getBuilding(), "nice");
+//                assertEquals(n.getShortName(), "ni2");
+//                assertEquals(n.getLongName(), "nice2");
+//                assertEquals(n.getNodeType(), "Hall");
+//
+//                FullNode.addFullNode(n);
+//                FullNode.deleteFullNode(n);
+//
+//                FullNode.addFullNode(n);
+//                n.setNodeID(150000);
+//                n.setxCoord(10);
+//                n.setyCoord(100);
+//                n.setFloor("L");
+//                n.setBuilding("onice");
+//                n.setShortName("oni2");
+//                n.setLongName("onice2");
+//                n.setNodeType("oHall");
+//                // TODO: Should update and remove the node but some issues aren't lettigng it
+//                // happen
+//                FullNode.updateFullNode(n, 150000, "onice2");
+//                FullNode.deleteFullNode(n);
+//
+//        }
+
+        @Test
+        public void testFullFurnitureRequest() {
+                FullFurnitureRequest FFR = new FullFurnitureRequest();
+                FFR.setId(100);
+                FFR.setEmployee("Test Employee");
+                FFR.setRequestType();
+                FFR.setDateSubmitted(Timestamp.valueOf("2022-01-01 00:10:40"));
+                FFR.setNotes("Test Notes");
+                FFR.setLocationName("Test Location Name");
+                FFR.setRequestStatus("Test Request Status");
+                FFR.setAssembly(true);
+                FFR.setModel("Test Model");
+                FFR.setType("Test Type");
+
+                assertEquals(FFR.getId(), 100);
+                assertEquals(FFR.getEmployee(), "Test Employee");
+                assertEquals(FFR.getRequestType(), "Furniture");
+                assertEquals(FFR.getDateSubmitted(), Timestamp.valueOf("2022-01-01 00:10:40"));
+                assertEquals(FFR.getNotes(), "Test Notes");
+                assertEquals(FFR.getLocationName(), "Test Location Name");
+                assertEquals(FFR.getRequestStatus(), "Test Request Status");
+                assertEquals(FFR.getAssembly(), true);
+                assertEquals(FFR.getModel(), "Test Model");
+                assertEquals(FFR.getType(), "Test Type");
+
+                ArrayList<FurnitureRequest> mr = new ArrayList<FurnitureRequest>();
+                ArrayList<FullFurnitureRequest> fmrs = new ArrayList<FullFurnitureRequest>();
+                FurnitureRequest fr = new FurnitureRequest(258, "Furniture", "Test Model", true);
+                Request r = RequestDAOImpl.getRequest(fr.getId());
+                FullFurnitureRequest b = new FullFurnitureRequest(r, fr);
+                fmrs.add(b);
+                mr.add(fr);
+                ArrayList<FullFurnitureRequest> mmm;
+                mmm = ((ArrayList<FullFurnitureRequest>) FFR.listFullRequests(mr));
+                assertEquals(mmm.get(0).getId(), fmrs.get(0).getId());
+                assertEquals(mmm.get(0).getRequestType(), fmrs.get(0).getRequestType());
+                assertEquals(mmm.get(0).getModel(), fmrs.get(0).getModel());
+                assertEquals(mmm.get(0).getAssembly(), fmrs.get(0).getAssembly());
+
+        }
+
+        @Test
+        public void testFullOfficeRequest() {
+                FullOfficeRequest FOR = new FullOfficeRequest();
+                FOR.setId(100);
+                FOR.setEmployee("Test Employee");
+                FOR.setRequestType();
+                FOR.setDateSubmitted(Timestamp.valueOf("2022-01-01 00:10:40"));
+                FOR.setNotes("Test Notes");
+                FOR.setLocationName("Test Location Name");
+                FOR.setRequestStatus("Test Request Status");
+                FOR.setType("Test Type");
+                FOR.setNotes("Test Notes");
+                FOR.setItem("Test Item");
+
+                assertEquals(FOR.getId(), 100);
+                assertEquals(FOR.getEmployee(), "Test Employee");
+                assertEquals(FOR.getRequestType(), "Office");
+                assertEquals(FOR.getDateSubmitted(), Timestamp.valueOf("2022-01-01 00:10:40"));
+                assertEquals(FOR.getNotes(), "Test Notes");
+                assertEquals(FOR.getLocationName(), "Test Location Name");
+                assertEquals(FOR.getRequestStatus(), "Test Request Status");
+                assertEquals(FOR.getType(), "Test Type");
+                assertEquals(FOR.getNotes(), "Test Notes");
+                assertEquals(FOR.getItem(), "Test Item");
+
+                ArrayList<OfficeRequest> mr = new ArrayList<OfficeRequest>();
+                ArrayList<FullOfficeRequest> fmrs = new ArrayList<FullOfficeRequest>();
+                OfficeRequest fr = new OfficeRequest(258, "Office", "Test Model", 10);
+                Request r = RequestDAOImpl.getRequest(fr.getId());
+                FullOfficeRequest b = new FullOfficeRequest(r, fr);
+                fmrs.add(b);
+                mr.add(fr);
+                ArrayList<FullOfficeRequest> mmm = (ArrayList<FullOfficeRequest>) FOR.listFullRequests(mr);
+                assertEquals(mmm.get(0).getId(), fmrs.get(0).getId());
+                assertEquals(mmm.get(0).getRequestType(), fmrs.get(0).getRequestType());
+                assertEquals(mmm.get(0).getNotes(), fmrs.get(0).getNotes());
+                assertEquals(mmm.get(0).getItem(), fmrs.get(0).getItem());
+        }
+}

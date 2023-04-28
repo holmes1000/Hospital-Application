@@ -1,5 +1,6 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
+import edu.wpi.teamb.DBAccess.DBconnection;
 import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 
@@ -23,17 +24,11 @@ public class LocationNameDAOImpl implements IDAO {
      */
     public LocationName get(Object id) {
         String name = (String) id;
-        ResultSet rs = DButils.getRowCond("LocationNames", "*", "longname = " + name);
-        try {
-        if (rs.isBeforeFirst()) { // if there is something it found
-            rs.next();
-            return new LocationName(rs); // make the locationName
-        } else
-            throw new SQLException("No rows found");
-        } catch (SQLException e) {
-            System.err.println("ERROR Query Failed in method 'LocationNameDAOImpl.get': " + e.getMessage());
-            return null;
-        }
+        for (LocationName ln : locationNames) {
+            if (ln.getLongName().equals(name)) {
+                return ln;
+            }
+        } return null;
     }
 
     /**
@@ -68,6 +63,8 @@ public class LocationNameDAOImpl implements IDAO {
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'LocationNameDAOImpl.getAllHelper': " + e.getMessage());
         }
+        DBconnection.getDBconnection().closeDBconnection();
+        DBconnection.getDBconnection().forceClose();
         return lns;
     }
 
@@ -93,7 +90,7 @@ public class LocationNameDAOImpl implements IDAO {
     @Override
     public void delete(Object l) {
         LocationName location = (LocationName) l;
-        DButils.deleteRow("LocationNames", "longName = " + location.getLongName());
+        DButils.deleteRow("LocationNames", "longName = " + "'" + location.getLongName() + "'");
         locationNames.remove(location);
     }
 
@@ -107,9 +104,21 @@ public class LocationNameDAOImpl implements IDAO {
         LocationName location = (LocationName) l;
         String[] cols = {"longName", "shortName", "nodeType"};
         String[] vals = {location.getLongName(), location.getShortName(), location.getNodeType()};
-        DButils.updateRow("LocationNames", cols, vals, "longName = " + location.getLongName());
+        DButils.updateRow("LocationNames", cols, vals, "longName = '" + location.getLongName() + "'");
         for (int i = 0; i < locationNames.size(); i++) {
             if (locationNames.get(i).getLongName().equals(location.getLongName())) {
+                locationNames.set(i, location);
+            }
+        }
+    }
+
+    public void updateExisting(Object l, String oldName) {
+        LocationName location = (LocationName) l;
+        String[] cols = {"longName", "shortName", "nodeType"};
+        String[] vals = {location.getLongName(), location.getShortName(), location.getNodeType()};
+        DButils.updateRow("LocationNames", cols, vals, "longName like '" + oldName + "'");
+        for (int i = 0; i < locationNames.size(); i++) {
+            if (locationNames.get(i).getLongName().equals(oldName)) {
                 locationNames.set(i, location);
             }
         }

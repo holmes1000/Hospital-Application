@@ -1,5 +1,6 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
+import edu.wpi.teamb.DBAccess.DBconnection;
 import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.ORMs.Move;
 
@@ -24,19 +25,12 @@ public class MoveDAOImpl implements IDAO {
      */
     @Override
     public Move get(Object id) {
-        ResultSet rs = DButils.getRowCond("Moves", "*", "nodeID = " + id + "");
-        try {
-            if (rs.isBeforeFirst()) {
-                rs.next();
-                return new Move(rs);
-            } else
-                throw new SQLException("No rows found");
-        } catch (SQLException e) {
-            // handle error
-
-            System.err.println("ERROR Query Failed: " + e.getMessage());
-            return null;
-        }
+        int idInt = (Integer) id;
+        for (Move m : moves) {
+            if (m.getNodeID() == idInt) {
+                return m;
+            }
+        } return null;
     }
 
     /**
@@ -71,6 +65,8 @@ public class MoveDAOImpl implements IDAO {
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'MoveDAOImpl.getAllHelper': " + e.getMessage());
         }
+        DBconnection.getDBconnection().closeDBconnection();
+        DBconnection.getDBconnection().forceClose();
         return mvs;
     }
 

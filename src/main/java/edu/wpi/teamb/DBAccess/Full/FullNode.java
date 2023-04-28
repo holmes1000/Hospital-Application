@@ -131,9 +131,9 @@ public class FullNode {
         Date current = Date.valueOf(LocalDate.now());
         FullNode fullNode = (FullNode) n;
         Node node = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding());
-        Repository.getRepository().deleteNode(node);
-        Repository.getRepository().deleteLocationName(new LocationName(fullNode.getLongName(), fullNode.getShortName(), fullNode.getNodeType()));
         Repository.getRepository().deleteMove(new Move(fullNode.getNodeID(), fullNode.getLongName(), current));
+        Repository.getRepository().deleteLocationName(new LocationName(fullNode.getLongName(), fullNode.getShortName(), fullNode.getNodeType()));
+        Repository.getRepository().deleteNode(node);
     }
 
     public static void updateFullNode(Object n) {
@@ -141,7 +141,7 @@ public class FullNode {
         Node node = new Node(fn.getNodeID(), fn.getxCoord(), fn.getyCoord(), fn.getFloor(), fn.getBuilding());
         Repository.getRepository().updateNode(node);
         LocationName ln = new LocationName(fn.getLongName(), fn.getShortName(), fn.getNodeType());
-        Repository.getRepository().updateLocationName(ln);
+        Repository.getRepository().updateExistingLocationName(ln, fn.getLongName());
         Move m = new Move(fn.getNodeID(), fn.getLongName(), Date.valueOf("2023-04-18"));
         Repository.getRepository().updateMove(m);
     }

@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.lang.Integer.parseInt;
 
@@ -37,17 +38,17 @@ public class EdgeDAOImpl implements IDAO {
     public Edge get(Object id) {
         String endpoints = (String) id;
         String[] endpointsArray = endpoints.split("_");
-        ResultSet rs = DButils.getRowCond("Edges", "*", "startnode = " + endpointsArray[0] + " AND endnode = " + endpointsArray[1]);
-        try {
-            if (rs.isBeforeFirst()) { // if there is something it found
-                rs.next();
-                return new Edge(rs); // make the edge
-            } else
-                throw new SQLException("No rows found");
-        } catch (SQLException e) {
-            System.err.println("ERROR Query Failed in method 'EdgeDAOImpl.get': " + e.getMessage());
-            return null;
+       for (Edge e : edges) {
+            if (e.getStartNodeID() == parseInt(endpointsArray[0]) && e.getEndNodeID() == parseInt(endpointsArray[1])) {
+                return e;
+            }
         }
+       for (Edge e : edges) {
+            if (e.getStartNodeID() == parseInt(endpointsArray[1]) && e.getEndNodeID() == parseInt(endpointsArray[0])) {
+                return e;
+            }
+        }
+        return null;
     }
 
     /**
@@ -82,6 +83,8 @@ public class EdgeDAOImpl implements IDAO {
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'EdgeDAOImpl.getAllHelper': " + e.getMessage());
         }
+        DBconnection.getDBconnection().closeDBconnection();
+        DBconnection.getDBconnection().forceClose();
         return edges;
     }
 
@@ -106,7 +109,12 @@ public class EdgeDAOImpl implements IDAO {
     public void delete(Object edge) {
         Edge e = (Edge) edge;
         deleteDBEdge(0, e);
-        edges.remove(e);
+        for (int i = 0; i < edges.size(); i++) {
+            if (Objects.equals(edges.get(i).endpoints, e.endpoints)) {
+                edges.remove(i);
+            }
+        }
+//        edges.remove(edge);
     }
 
     /**
@@ -197,7 +205,7 @@ public class EdgeDAOImpl implements IDAO {
      */
     public void insertEdge(int startNode, int endNode) {
         String[] cols = { "startnode", "endnode" };
-        String[] values = { "'" + startNode + "'", "'" + endNode + "'" };
+        String[] values = {String.valueOf(startNode), String.valueOf(endNode)};
         DButils.insertRow("edges", cols, values);
     }
 
@@ -267,7 +275,7 @@ public class EdgeDAOImpl implements IDAO {
     public void deleteDBEdge(int confirm, Edge e) {
         String[] endpointsA = e.endpoints.split("_");
         if (confirm == 0) {
-            DButils.deleteRow("edges", "startnode = " + endpointsA[0] + "AND endnode = " + endpointsA[1]);
+            DButils.deleteRow("edges", "startnode = " + endpointsA[0] + " AND endnode = " + endpointsA[1]);
         } else {
             System.out.println("Delete not confirmed");
         }
@@ -285,9 +293,20 @@ public class EdgeDAOImpl implements IDAO {
         try {
             if (rs.isBeforeFirst()) { // if there is something it found
                 rs.next();
-                return new Edge(rs); // make the edge
+                return new Edge(Integer.parseInt(endpointsArray[0]), Integer.parseInt(endpointsArray[1])); // make the edge
             } else
-                throw new SQLException("No rows found");
+                try {
+                    ResultSet rs1 = DButils.getRowCond("Edges", "*", "startnode = " + endpointsArray[1] + " AND endnode = " + endpointsArray[0]);
+                    if (rs1.isBeforeFirst()) { // if there is something it found
+                        rs1.next();
+                        return new Edge(Integer.parseInt(endpointsArray[1]), Integer.parseInt(endpointsArray[0])); // make the edge
+                    } else {
+                        System.err.println("ERROR: Edge not found in method 'EdgeDAOImpl.getEdge'");
+                        return null;
+                    }
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'EdgeDAOImpl.getEdge': " + e.getMessage());
             return null;
@@ -326,7 +345,7 @@ public class EdgeDAOImpl implements IDAO {
                 """
                 CREATE TABLE edges(startNode INT, endNode INT, primary key (startNode, endNode));
                 
-                INSERT INTO edges SELECT * FROM edgeBackup;
+                INSERT INTO edges SELECT * FROM edgebackup;
                 """;
 
         Statement recreateStatement = null;
@@ -340,6 +359,15 @@ public class EdgeDAOImpl implements IDAO {
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'EdgeDAOImpl.resetEdgesFromBackup': " + e.getMessage());
         }
+    }
+
+    public ArrayList<Edge> getEdgesByNode(Node n) {
+        ArrayList<Edge> edges = new ArrayList<>();
+        for (Edge e : edges) {
+            if (e.getStartNodeID() == n.getNodeID() || e.getEndNodeID() == n.getNodeID()) {
+                edges.add(e);
+            }
+        } return edges;
     }
 
 }

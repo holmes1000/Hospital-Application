@@ -563,15 +563,16 @@ public class DBoutput {
                 default -> throw new IllegalStateException("Unexpected value: " + location);
             };
 
-            bw.write("id,item,quantity,type");
+            bw.write("id,item,quantity,type,employee");
 
             while (allRS.next()) {
                 int id = allRS.getInt("id");
                 String title = allRS.getString("title");
                 String description = allRS.getString("description");
                 Date created_at = allRS.getDate("created_at");
+                String employee = allRS.getString("employee");
 
-                String line = String.format("%d,%s,%s,%s", id, title, description, created_at.toString());
+                String line = String.format("%d,%s,%s,%s,%s", id, title, description, created_at.toString(), employee);
 
                 bw.newLine();
                 bw.write(line);
@@ -595,9 +596,9 @@ public class DBoutput {
      *                 2 (custom location), 3
      *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
-    public static void exportSignageToCSV(String filename, int location) {
+    public static void exportSignsToCSV(String filename, int location) {
         try {
-            String allQuery = "SELECT * FROM signage";
+            String allQuery = "SELECT * FROM signs";
             Statement allStmt = DBconnection.getDBconnection().getConnection().createStatement();
             ResultSet allRS = allStmt.executeQuery(allQuery);
 
@@ -610,15 +611,18 @@ public class DBoutput {
                 default -> throw new IllegalStateException("Unexpected value: " + location);
             };
 
-            bw.write("direction,screen,date,locationname");
+            bw.write("signageGroup,locationName,direction,startDate,endDate,singleBlock");
 
             while (allRS.next()) {
-                String direction = allRS.getString("id");
-                int screen = allRS.getInt("screen");
-                Date date = allRS.getDate("date");
-                String locationname = allRS.getString("locationname");
+                String signageGroup = allRS.getString("signageGroup");
+                String locationName = allRS.getString("locationName");
+                String direction = allRS.getString("direction");
+                Date startDate = allRS.getDate("startDate");
+                Date endDate = allRS.getDate("endDate");
+                String singleBlock = allRS.getString("singleBlock");
 
-                String line = String.format("%s,%d,%s,%s", direction, screen, date.toString(), locationname);
+
+                String line = String.format("%s,%s,%s,%s,%s,%s", signageGroup, locationName, direction, startDate.toString(), endDate.toString(), singleBlock);
 
                 bw.newLine();
                 bw.write(line);
@@ -626,9 +630,9 @@ public class DBoutput {
             allStmt.close();
             bw.close();
         } catch (IOException e) {
-            System.err.println("ERROR: Could not write to file " + filename + " in method 'exportSignageToCSV'");
+            System.err.println("ERROR: Could not write to file " + filename + " in method 'exportSignsToCSV'");
         } catch (SQLException e) {
-            System.err.println("ERROR: SQL query failed in method 'exportSignageToCSV'");
+            System.err.println("ERROR: SQL query failed in method 'exportSignsToCSV'");
         }
     }
 }

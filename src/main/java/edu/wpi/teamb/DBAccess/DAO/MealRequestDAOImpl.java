@@ -1,5 +1,6 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
+import edu.wpi.teamb.DBAccess.DBconnection;
 import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.Full.FullFactory;
 import edu.wpi.teamb.DBAccess.Full.FullMealRequest;
@@ -19,7 +20,7 @@ public class MealRequestDAOImpl implements IDAO {
 
     ArrayList<FullMealRequest> mealRequests;
 
-    public MealRequestDAOImpl() throws SQLException {
+    public MealRequestDAOImpl() {
         mealRequests = getAllHelper();
     }
 
@@ -32,19 +33,11 @@ public class MealRequestDAOImpl implements IDAO {
     @Override
     public FullMealRequest get(Object id) {
         int idInt = (Integer) id;
-        MealRequest mr = null;
-        Request r = null;
-        try {
-            ResultSet rs = DButils.getRowCond("mealrequests", "*", "id = " + idInt);
-            rs.next();
-            mr = new MealRequest(rs);
-            ResultSet rs1 = RequestDAOImpl.getDBRowID(idInt);
-            rs1.next();
-            r = new Request(rs1);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return new FullMealRequest(r, mr);
+        for (FullMealRequest mr : mealRequests) {
+            if (mr.getId() == idInt) {
+                return mr;
+            }
+        } return null;
     }
 
     /**
@@ -81,6 +74,8 @@ public class MealRequestDAOImpl implements IDAO {
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'MealRequestDAOImpl.getAllHelper': " + e.getMessage());
         }
+        DBconnection.getDBconnection().closeDBconnection();
+        DBconnection.getDBconnection().forceClose();
         return (ArrayList<FullMealRequest>) mealRequest.listFullRequests(mrs);
     }
 
@@ -102,8 +97,9 @@ public class MealRequestDAOImpl implements IDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        mealRequests.add(new FullMealRequest(id, mealReq[0], dateSubmitted, mealReq[1], mealReq[2], mealReq[3], mealReq[4], mealReq[5], mealReq[6], mealReq[7]));
-        RequestDAOImpl.getRequestDaoImpl().getAll().add(new Request(id, mealReq[0], dateSubmitted, mealReq[1], "Meal", mealReq[2], mealReq[3]));
+        FullMealRequest fmr = new FullMealRequest(id, mealReq[0], dateSubmitted, mealReq[1], mealReq[2], mealReq[3], mealReq[4], mealReq[5], mealReq[6], mealReq[7]);
+        mealRequests.add(fmr);
+        RequestDAOImpl.getRequestDaoImpl().getAll().add(new Request(fmr));
     }
 
     /**
@@ -117,7 +113,7 @@ public class MealRequestDAOImpl implements IDAO {
         DButils.deleteRow("mealrequests", "id =" + fmr.getId() + "");
         DButils.deleteRow("requests", "id =" + fmr.getId() + "");
         mealRequests.remove(fmr);
-        Request r = new Request(fmr.getId(), fmr.getEmployee(), fmr.getDateSubmitted(), fmr.getRequestStatus(), fmr.getRequestType(), fmr.getLocationName(), fmr.getNotes());
+        Request r = new Request(fmr);
         RequestDAOImpl.getRequestDaoImpl().getAll().remove(r);
     }
 
@@ -143,7 +139,7 @@ public class MealRequestDAOImpl implements IDAO {
                 mealRequests.set(i, fmr);
             }
         }
-        Request r = new Request(fmr.getId(), fmr.getEmployee(), fmr.getDateSubmitted(), fmr.getRequestStatus(), fmr.getRequestType(), fmr.getLocationName(), fmr.getNotes());
+        Request r = new Request(fmr);
         RequestDAOImpl.getRequestDaoImpl().update(r);
     }
     //Insert into Database Methods

@@ -29,15 +29,16 @@
                         <Image url="@../../img/bwh-background.jpg" />
                     </image>
                 </ImageView>
-                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#465777" height="667.0" layoutX="-66.0" layoutY="21.0" stroke="#465777" strokeType="INSIDE" width="1136.0" />
-                <Text fill="#f1f1f1" layoutX="-46.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit Users" textAlignment="CENTER">
+                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#7089a2" height="586.0" layoutX="-23.0" layoutY="84.0" stroke="#ffffff00" strokeType="INSIDE" width="1100.0" />
+                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#012d5a" height="50.0" layoutX="-162.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1347.0" />
+                <Text fill="WHITE" layoutX="-21.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit Users" textAlignment="CENTER" wrappingWidth="1164.103515625">
                     <font>
                         <Font name="System Bold" size="36.0" />
                     </font>
                 </Text>
             <VBox layoutX="25.0" layoutY="154.0">
                <children>
-                  <MFXTextField fx:id="textName" floatingText="Name" prefHeight="50.0" prefWidth="362.0">
+                  <MFXTextField fx:id="textName" floatingText="Name" prefHeight="50.0" prefWidth="362.0" promptText="Jane Doe">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
@@ -45,7 +46,7 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </MFXTextField>
-                  <MFXTextField fx:id="textUsername" floatingText="Username" prefHeight="50.0" prefWidth="362.0">
+                  <MFXTextField fx:id="textUsername" floatingText="Username" prefHeight="50.0" prefWidth="362.0" promptText="Username">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
@@ -53,7 +54,7 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </MFXTextField>
-                  <MFXTextField fx:id="textPassword" floatingText="Password" prefHeight="50.0" prefWidth="362.0">
+                  <MFXTextField fx:id="textPassword" floatingText="Password" prefHeight="50.0" prefWidth="362.0" promptText="At least 8 characters">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
@@ -61,7 +62,7 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </MFXTextField>
-                  <MFXTextField fx:id="textEmail" floatingText="Email" prefHeight="50.0" prefWidth="362.0">
+                  <MFXTextField fx:id="textEmail" floatingText="Email" prefHeight="50.0" prefWidth="362.0" promptText="jdoe@bwh.org">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
@@ -82,22 +83,22 @@
                   <Insets />
                </opaqueInsets>
             </VBox>
-            <Text fill="#f1f1f1" layoutX="502.0" layoutY="127.0" strokeType="OUTSIDE" strokeWidth="0.0" text="User Table">
+            <Text fill="WHITE" layoutX="502.0" layoutY="127.0" strokeType="OUTSIDE" strokeWidth="0.0" text="User Table">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Text>
-            <Text fill="#f1f1f1" layoutX="25.0" layoutY="128.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add a New User">
+            <Text fill="WHITE" layoutX="25.0" layoutY="128.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add a New User">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Text>
-                <MFXButton fx:id="btnEditUser" layoutX="855.0" layoutY="612.0" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #1C4EFE; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Edit" textFill="WHITE">
+                <MFXButton fx:id="btnEditUser" layoutX="855.0" layoutY="612.0" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: f6bd38; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Edit" textFill="WHITE">
                     <font>
                         <Font name="System Bold" size="12.0" />
                     </font>
                 </MFXButton>
-                <MFXButton fx:id="btnAddUser" layoutX="25.0" layoutY="479.0" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #1C4EFE; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Add" textFill="WHITE">
+                <MFXButton fx:id="btnAddUser" layoutX="25.0" layoutY="479.0" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #012d5a; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Add" textFill="WHITE">
                     <font>
                         <Font name="System Bold" size="12.0" />
                     </font>
@@ -112,17 +113,19 @@
                         <TableView fx:id="tbUsers" layoutX="613.0" layoutY="117.0" onMouseClicked="#tbItemSelected" prefHeight="460.0" prefWidth="369.0" />
                     </children>
                 </VBox>
+            <VBox fx:id="vboxActivateNav" layoutX="-170.0" prefHeight="720.0" prefWidth="70.0" />
             </children>
         </AnchorPane>
     </center>
     <left>
-        <Pane fx:id="navPane" prefHeight="720.0" prefWidth="200.0">
+        <Pane fx:id="navPane" prefHeight="720.0" prefWidth="200.0" style="-fx-background-color: transparent;">
             <children>
-                <JFXDrawer fx:id="menuDrawer" prefHeight="720.0" prefWidth="200.0" />
-                <JFXHamburger fx:id="menuBurger" layoutX="14.0" layoutY="14.0">
+                <JFXDrawer fx:id="menuDrawer" prefHeight="720.0" prefWidth="200.0" style="-fx-background-color: transparent;" />
+                <JFXHamburger fx:id="menuBurger" layoutX="14.0" layoutY="14.0" style="-fx-background-color: transparent;">
                     <effect>
                         <ColorAdjust brightness="1.0" />
                     </effect></JFXHamburger>
+            <VBox fx:id="vboxActivateNav1" layoutX="70.0" onMouseEntered="#deactivateNav" prefHeight="720.0" prefWidth="70.0" />
             </children>
         </Pane>
     </left>

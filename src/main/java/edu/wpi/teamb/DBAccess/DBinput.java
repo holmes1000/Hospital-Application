@@ -960,7 +960,7 @@ public class DBinput {
 
             String createTableAlerts = "CREATE TABLE alerts " +
                     "(id INT generated always as identity primary key, title TEXT, description TEXT, " +
-                    "created_at TIMESTAMP)";
+                    "created_at TIMESTAMP, employee VARCHAR(255))";
             int tableUpdateAlerts = tableStmt.executeUpdate(createTableAlerts);
 
             try {
@@ -968,7 +968,7 @@ public class DBinput {
                     String[] requestValues = line.split(splitBy);
                     if (!(requestValues[0].equals("id"))) {
                         // System.out.println(edgeValues[0]);
-                        String rowQuery = "INSERT INTO alerts (id, title, description, created_at) VALUES ("
+                        String rowQuery = "INSERT INTO alerts (id, title, description, created_at, employee) VALUES ("
                                 + "DEFAULT"
                                 + ","
                                 + "'"
@@ -981,6 +981,10 @@ public class DBinput {
                                 + ","
                                 + "'"
                                 + requestValues[3]
+                                + "'"
+                                + ","
+                                + "'"
+                                + requestValues[4]
                                 + "'"
                                 + ");";
                         Statement rowStmt = DBconnection.getDBconnection().getConnection().createStatement();
@@ -1008,7 +1012,7 @@ public class DBinput {
      *                 2 (custom location), 3
      *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
      */
-    public static void importSignageFromCSV(String filename, int location) {
+    public static void importSignsFromCSV(String filename, int location) {
         String line = "";
         String splitBy = ",";
 
@@ -1030,20 +1034,27 @@ public class DBinput {
             }
 
             Statement tableStmt = DBconnection.getDBconnection().getConnection().createStatement();
-            String dropSignageTable = "DROP TABLE IF EXISTS signage";
+            String dropSignageTable = "DROP TABLE IF EXISTS signs";
             int dropUpdateSignage = tableStmt.executeUpdate(dropSignageTable);
 
-            String createTableSignage = "CREATE TABLE signage " +
-                    "(direction VARCHAR(255), screen INT, date date, locationname VARCHAR(255), " +
-                    "primary key (screen, date, locationname))";
+            String createTableSignage = "CREATE TABLE signs (" +
+                    """
+                        signageGroup varchar(255) NOT NULL,
+                        locationName text NOT NULL DEFAULT '',
+                        direction varchar(255) NOT NULL DEFAULT 'stop here',
+                        startDate date NOT NULL DEFAULT CURRENT_DATE,
+                        endDate date,
+                        singleBlock boolean DEFAULT true,
+                        PRIMARY KEY (signageGroup, locationName, startDate))
+                    """;
             int tableUpdateSignage = tableStmt.executeUpdate(createTableSignage);
 
             try {
                 while (((line = br.readLine()) != null)) {
                     String[] requestValues = line.split(splitBy);
-                    if (!(requestValues[0].equals("direction"))) {
+                    if (!(requestValues[0].equals("signageGroup"))) {
                         // System.out.println(edgeValues[0]);
-                        String rowQuery = "INSERT INTO signage (direction, screen, date, locationname) VALUES ("
+                        String rowQuery = "INSERT INTO signs (signagegroup, locationname, direction, startdate, enddate, singleblock) VALUES ("
                                 + "'"
                                 + requestValues[0]
                                 + "'"

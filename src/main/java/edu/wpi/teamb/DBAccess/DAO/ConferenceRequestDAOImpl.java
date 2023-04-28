@@ -1,11 +1,10 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
+import edu.wpi.teamb.DBAccess.DBconnection;
 import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.Full.FullConferenceRequest;
 import edu.wpi.teamb.DBAccess.Full.FullFactory;
-import edu.wpi.teamb.DBAccess.Full.FullFurnitureRequest;
 import edu.wpi.teamb.DBAccess.Full.IFull;
-import edu.wpi.teamb.DBAccess.DButils;
 import edu.wpi.teamb.DBAccess.ORMs.ConferenceRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
@@ -33,20 +32,11 @@ public class ConferenceRequestDAOImpl implements IDAO {
     @Override
     public FullConferenceRequest get(Object id) {
         int idInt = (Integer) id;
-        ConferenceRequest cr = null;
-        Request r = null;
-        try {
-            ResultSet rs = DButils.getRowCond("conferencerequests", "*", "id = " + idInt);
-            rs.next();
-            cr = new ConferenceRequest(rs);
-            ResultSet rs1 = RequestDAOImpl.getDBRowID(idInt);
-            rs1.next();
-            r = new Request(rs1);
-        } catch (SQLException e) {
-            System.err.println("ERROR Query Failed in method 'ConferenceRequestDAOImpl.get': " + e.getMessage());
-            return null;
-        }
-        return new FullConferenceRequest(r, cr);
+        for (FullConferenceRequest cr : conferenceRequests) {
+            if (cr.getId() == idInt) {
+                return cr;
+            }
+        } return null;
     }
 
     /**
@@ -75,7 +65,6 @@ public class ConferenceRequestDAOImpl implements IDAO {
         FullFactory ff = new FullFactory();
         IFull conf = ff.getFullRequest("Conference");
         ArrayList<ConferenceRequest> crs = new ArrayList<ConferenceRequest>();
-
         try {
             ResultSet rs = getDBRowAllRequests();
             while (rs.next()) {
@@ -85,6 +74,8 @@ public class ConferenceRequestDAOImpl implements IDAO {
         } catch (SQLException e) {
         System.err.println("ERROR Query Failed in method 'ConferenceRequestDAOImpl.getAllHelper': " + e.getMessage());
         }
+        DBconnection.getDBconnection().closeDBconnection();
+        DBconnection.getDBconnection().forceClose();
         return (ArrayList<FullConferenceRequest>) conf.listFullRequests(crs);
     }
 
@@ -125,7 +116,8 @@ public class ConferenceRequestDAOImpl implements IDAO {
         DButils.deleteRow("conferencerequests", "id =" + fcr.getId() + "");
         DButils.deleteRow("requests", "id =" + fcr.getId() + "");
         conferenceRequests.remove(fcr);
-        Request req = new Request(fcr.getId(), fcr.getEmployee(), fcr.getDateSubmitted(), fcr.getRequestStatus(), fcr.getRequestType(), fcr.getLocationName(), fcr.getNotes());
+        Request req = new Request(fcr);
+        //Request req = new Request(fcr.getId(), fcr.getEmployee(), fcr.getDateSubmitted(), fcr.getRequestStatus(), fcr.getRequestType(), fcr.getLocationName(), fcr.getNotes());
         RequestDAOImpl.getRequestDaoImpl().getAll().remove(req);
     }
 
@@ -149,7 +141,8 @@ public class ConferenceRequestDAOImpl implements IDAO {
                 conferenceRequests.set(i, fcr);
             }
         }
-        Request req = new Request(fcr.getId(), fcr.getEmployee(), fcr.getDateSubmitted(), fcr.getRequestStatus(), fcr.getRequestType(), fcr.getLocationName(), fcr.getNotes());
+        Request req = new Request(fcr);
+        //Request req = new Request(fcr.getId(), fcr.getEmployee(), fcr.getDateSubmitted(), fcr.getRequestStatus(), fcr.getRequestType(), fcr.getLocationName(), fcr.getNotes());
         RequestDAOImpl.getRequestDaoImpl().update(req);
     }
 

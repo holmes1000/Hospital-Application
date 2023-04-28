@@ -372,6 +372,13 @@ public class InfoCardController {
     statusLabel.setText(status);
   }
 
+  public void enterViewCurrentUserRequestsMode() {
+      //hide the edit button
+    editButton.setVisible(false);
+    //hide the delete button
+    deleteButton.setVisible(false);
+  }
+
 
 
 }

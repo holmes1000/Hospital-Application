@@ -1,0 +1,31 @@
+Test Conference Request
+1. Instances with the same info
+2. Instances with the same hashcode
+3. getEmployee()
+4. getRequestStatus()
+5. getBookingReason()
+6. getEventName()
+7. getDateRequested()
+8. getDateSubmitted()
+9. getFloor()
+10. getRoomNumber()
+11. getRequestType()
+12. getAvailableRooms()
+13. all conference request setters
+
+
+Test Meal Request
+1. Instances with the same info
+2. Instances with the same hashcode
+3. getEmployee()
+4. getDrink()
+5. getRequestStatus()
+6. getSnack()
+7. getMealModification()
+8. getFood()
+9. getOrderFrom()
+10. getDateSubmitted()
+11. getFloor()
+12. getRoomNumber()
+13. getRequestType()
+14. all meal request setters

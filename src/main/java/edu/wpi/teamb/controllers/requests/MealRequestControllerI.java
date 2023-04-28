@@ -35,7 +35,7 @@ public class MealRequestControllerI implements IRequestController{
     @FXML private MFXComboBox<String> cbAvailableSnacks;
     @FXML private MFXTextField txtFldNotes;
     @FXML private MFXComboBox<String> cbOrderLocation;
-    @FXML private MFXComboBox<String> cbEmployeesToAssign;
+    @FXML private MFXFilterComboBox<String> cbEmployeesToAssign;
     @FXML private MFXFilterComboBox<String> cbLongName;
     private EMealRequest EMealRequest;
 

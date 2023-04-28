@@ -13,26 +13,26 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="1107.0" style="-fx-background-color: #465777;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.requests.FlowerRequestControllerI">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="1107.0" style="-fx-background-color: #7089a2;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.requests.FlowerRequestControllerI">
    <left>
       <AnchorPane prefHeight="720.0" prefWidth="1159.0" BorderPane.alignment="CENTER">
          <children>
-            <Text fill="#f1f1f1" layoutX="20.0" layoutY="64.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Flower Request" textAlignment="CENTER">
+            <Text fill="#ffffff" layoutX="20.0" layoutY="64.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Flower Request" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="36.0" />
                </font>
             </Text>
-            <MFXButton fx:id="btnSubmit" defaultButton="true" layoutX="955.0" layoutY="481.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #1C4EFE;" text="Submit" textFill="#f1f1f1">
+            <MFXButton fx:id="btnSubmit" defaultButton="true" layoutX="955.0" layoutY="481.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Submit" textFill="#f1f1f1">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </MFXButton>
-            <MFXButton fx:id="btnCancel" defaultButton="true" layoutX="170.0" layoutY="481.0" prefHeight="45.0" prefWidth="170.0" style="-fx-background-color: #1C4EFE;" text="Cancel" textFill="#f1f1f1">
+            <MFXButton fx:id="btnCancel" defaultButton="true" layoutX="170.0" layoutY="481.0" prefHeight="45.0" prefWidth="170.0" style="-fx-background-color: #012d5a;" text="Cancel" textFill="#f1f1f1">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </MFXButton>
-            <MFXButton fx:id="btnReset" defaultButton="true" layoutX="20.0" layoutY="481.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #1C4EFE;" text="Reset" textFill="#f1f1f1">
+            <MFXButton fx:id="btnReset" defaultButton="true" layoutX="20.0" layoutY="481.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Reset" textFill="#f1f1f1">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
@@ -61,11 +61,11 @@
                </cursor>
             </MFXComboBox>
             <MFXTextField fx:id="txtFldMessage" floatingText="Message Text" layoutX="20.0" layoutY="397.0" prefHeight="26.0" prefWidth="428.0" textLimit="80" />
-            <MFXComboBox fx:id="cbEmployeesToAssign" floatingText="Employee" layoutX="841.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
+            <MFXFilterComboBox fx:id="cbEmployeesToAssign" floatingText="Employee" layoutX="841.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
-            </MFXComboBox>
+            </MFXFilterComboBox>
             <MFXTextField fx:id="txtFldNotes" floatingText="Special Instructions" layoutX="502.0" layoutY="397.0" prefHeight="34.0" prefWidth="428.0" textLimit="80" />
             <MFXFilterComboBox fx:id="cbLongName" floatingText="Room Name" layoutX="20.0" layoutY="337.0" prefHeight="24.0" prefWidth="410.0" />
             <Text fill="RED" layoutX="968.0" layoutY="477.0" strokeType="OUTSIDE" strokeWidth="0.0" text="All fields required*">
