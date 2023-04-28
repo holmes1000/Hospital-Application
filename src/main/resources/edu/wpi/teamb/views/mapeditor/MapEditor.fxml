@@ -26,8 +26,8 @@
             <children>
                       <GesturePane fx:id="pane" prefHeight="720.0" prefWidth="1350.0">
                       </GesturePane>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#7089A2" height="92.0" layoutX="-113.0" layoutY="47.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1419.0" />
-                <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="1105.0" layoutY="67.0" onMouseEntered="#hoverHelp" onMouseExited="#hoverHelp" pickOnBounds="true" preserveRatio="true">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#7089A2" height="60.0" layoutX="-113.0" layoutY="47.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1419.0" />
+                <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="1105.0" layoutY="54.0" onMouseEntered="#hoverHelp" onMouseExited="#hoverHelp" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@../../img/helpicon.png" />
                     </image>
@@ -81,7 +81,7 @@
                     </font>
                 </MFXButton>
                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#012d5a" height="50.0" layoutX="-162.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1471.0" />
-                <Text fill="WHITE" layoutX="-75.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Map Editor" textAlignment="CENTER" wrappingWidth="1354.103515625">
+                <Text fill="WHITE" layoutX="-81.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Map Editor" textAlignment="CENTER" wrappingWidth="1354.103515625">
                     <font>
                         <Font name="System Bold" size="36.0" />
                     </font>
@@ -91,7 +91,7 @@
                   <Font name="System Bold" size="12.0" />
                </font>
             </MFXButton>
-            <HBox layoutX="-25.0" layoutY="32.0" spacing="30.0">
+            <HBox layoutX="180.0" layoutY="30.0" spacing="30.0">
                <children>
                   <MenuButton fx:id="btnMenuNode" mnemonicParsing="false" style="-fx-background-color: #7089A2; -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Node" textAlignment="CENTER" textFill="WHITE">
                     <items>
