@@ -107,6 +107,7 @@ public class PathfinderController {
     Group pathGroup;
     Group nameGroup;
     Pane locationCanvas;
+    private String defaultStart = "";
     ELogin.PermissionLevel adminTest;
 
   @FXML
