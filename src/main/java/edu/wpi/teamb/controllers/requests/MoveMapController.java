@@ -222,7 +222,7 @@ public class MoveMapController {
     public void hoverHelp() {
         helpIcon.setOnMouseClicked(
                 event -> {
-                    final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/PathfindingHelpPopOver.fxml"));
+                    final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/MoveMapHelpPopOver.fxml"));
                     PopOver popOver = new PopOver();
                     popOver.setDetachable(true);
                     popOver.setArrowLocation(PopOver.ArrowLocation.TOP_RIGHT);
