@@ -15,6 +15,7 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -63,13 +64,16 @@ public class HomeController {
 
     private String username;
 
+
+    private String timeMessage = "";
+
     Bounds bounds;
     private EHome homeE;
 
     @FXML
     public void initialize() throws IOException {
         username = ELogin.getLogin().getUsername();
-
+        handleDateTime();
         initName();
         initNavBar();
         initPathfinderBtn();
@@ -88,10 +92,35 @@ public class HomeController {
         Text welcomeBack = new Text();
         welcomeBack.setFill(Color.WHITE);
         welcomeBack.setFont(Font.font("System", FontWeight.BOLD, 36));
-        welcomeBack.setText("Welcome " + user);
+        welcomeBack.setText("Welcome " + user + ", the time is: " + timeMessage);
         welcomeBack.toFront();
         vboxWelcomeBack.getChildren().clear();
         vboxWelcomeBack.getChildren().add(welcomeBack);
+    }
+
+    private void handleDateTime(){
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), new EventHandler<ActionEvent>() {
+            LocalDateTime now = LocalDateTime.now();
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                now = LocalDateTime.now();
+                String am_pm = "";
+                Integer hour_int = now.getHour();
+                if (hour_int > 11) {am_pm = "PM";}
+                else {am_pm = "AM";}
+                hour_int %= 12;
+                String hour = Integer.toString(hour_int);
+
+                String minute = Integer.toString(now.getMinute());
+                String second = Integer.toString(now.getSecond());
+                timeMessage = hour + ":" + minute + "." + second + " " + am_pm;
+                initName();
+            }
+
+        }));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
+
     }
 
     private void initPathfinderBtn() {
