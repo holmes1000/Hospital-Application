@@ -59,9 +59,7 @@ public class SubmittedRequestsController {
         hoverHelp();
         initComboBoxChangeListeners();
         loadRequestsIntoContainer();
-        navPane.setMouseTransparent(true);
-        activateNav();
-        deactivateNav();
+        initializeNavGates();
     }
 
     private void initScrollPane() {
@@ -240,6 +238,19 @@ public class SubmittedRequestsController {
                     Tooltip.install(helpIcon, helpTip);
                 });
         helpIcon.setOnMouseExited(event -> {});
+    }
+
+    /**
+     * For some reason there are occasions when the nav-bar gates for toggling its handling does not start correctly
+     * This fixes this issue
+     */
+    public void initializeNavGates(){
+        activateNav();
+        deactivateNav();
+        navPane.setMouseTransparent(true);
+        vboxActivateNav.setDisable(false);
+        navLoaded = false;
+        vboxActivateNav1.setDisable(true);
     }
 
     /**

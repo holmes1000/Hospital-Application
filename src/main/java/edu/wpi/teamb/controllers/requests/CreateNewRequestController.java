@@ -58,6 +58,7 @@ public class CreateNewRequestController {
         requestVbox.getChildren().clear();
         loadPage2();
         navPane.setMouseTransparent(true);
+        initializeNavGates();
     }
 
     public void initIcons() {
@@ -210,6 +211,19 @@ public class CreateNewRequestController {
         navLoaded = false;
         activateNav();
         deactivateNav();
+    }
+
+    /**
+     * For some reason there are occasions when the nav-bar gates for toggling its handling does not start correctly
+     * This fixes this issue
+     */
+    public void initializeNavGates(){
+        activateNav();
+        deactivateNav();
+        navPane.setMouseTransparent(true);
+        vboxActivateNav.setDisable(false);
+        navLoaded = false;
+        vboxActivateNav1.setDisable(true);
     }
 
     /**

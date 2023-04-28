@@ -69,12 +69,8 @@ public class HomeController {
         homeE = new EHome();
         bounds = homePane.getBoundsInLocal();
 
-        //Quick fix for not initializing a page from the navbar for some reason
-        navPane.setMouseTransparent(true);
-        vboxActivateNav.setDisable(false);
-        navLoaded = false;
-        vboxActivateNav1.setDisable(true);
 
+        initializeNavGates();
     }
 
     private void initPathfinderBtn() {
@@ -245,13 +241,27 @@ public class HomeController {
 
     public void activateNav(){
         vboxActivateNav.setOnMouseEntered(event -> {
-            if(!navLoaded) {
+//            if(!navLoaded) {
+                System.out.println("on");
                 navPane.setMouseTransparent(false);
                 navLoaded = true;
                 vboxActivateNav.setDisable(true);
                 vboxActivateNav1.setDisable(false);
-            }
+//            }
         });
+    }
+
+    /**
+     * For some reason there are occasions when the nav-bar gates for toggling its handling does not start correctly
+     * This fixes this issue
+     */
+    public void initializeNavGates(){
+        activateNav();
+        deactivateNav();
+        navPane.setMouseTransparent(true);
+        vboxActivateNav.setDisable(false);
+        navLoaded = false;
+        vboxActivateNav1.setDisable(true);
     }
 
     /**
@@ -261,6 +271,7 @@ public class HomeController {
     public void deactivateNav(){
         vboxActivateNav1.setOnMouseEntered(event -> {
             if(navLoaded){
+                System.out.println("off");
                 navPane.setMouseTransparent(true);
                 vboxActivateNav.setDisable(false);
                 navLoaded = false;

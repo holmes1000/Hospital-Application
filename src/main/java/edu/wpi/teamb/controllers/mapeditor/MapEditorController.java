@@ -260,11 +260,7 @@ public class MapEditorController {
     System.out.println("MapEditorController initialized");
 
 
-    //Quick fix for an error that happens when you initialize a page from a non-nav bar location
-    navPane.setMouseTransparent(true);
-    vboxActivateNav.setDisable(false);
-    navLoaded = false;
-    vboxActivateNav1.setDisable(true);
+    initializeNavGates();
   }
 
   private void handleNodes() {
@@ -994,6 +990,20 @@ public class MapEditorController {
     helpIcon.setOnMouseExited(event -> {
     });
   }
+
+  /**
+   * For some reason there are occasions when the nav-bar gates for toggling its handling does not start correctly
+   * This fixes this issue
+   */
+  public void initializeNavGates(){
+    activateNav();
+    deactivateNav();
+    navPane.setMouseTransparent(true);
+    vboxActivateNav.setDisable(false);
+    navLoaded = false;
+    vboxActivateNav1.setDisable(true);
+  }
+
 
   /**
    * Utilizes a gate to swap between handling the navdrawer and the rest of the page
