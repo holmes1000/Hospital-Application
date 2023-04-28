@@ -38,12 +38,11 @@
                </textFill>
             </MFXPasswordField>
             <MFXTextField fx:id="textUsername" alignment="TOP_LEFT" layoutX="113.0" layoutY="243.0" prefHeight="50.0" prefWidth="460.0" style="-fx-background-color: #ffffff; -fx-prompt-text-fill: #f1f1f1; -fx-text-fill: black;" text="admin" />
-            <Text id="header" fill="#f1f1f1" layoutX="300.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login">
+            <Text id="header" fill="#f1f1f1" layoutX="300.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Log In">
                <font>
                   <Font size="36.0" />
                </font>
             </Text>
-            <MFXRadioButton fx:id="radioRememberMe" layoutX="116.0" layoutY="409.0" style="-fx-text-fill: #f1f1f1;" text="Remember me" textFill="#f1f1f1" />
             <Text id="label" fill="#f1f1f1" layoutX="113.0" layoutY="229.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
                <font>
                   <Font size="18.0" />
@@ -56,11 +55,6 @@
             </Text>
             <Text fx:id="errorMsg" fill="RED" layoutX="112.0" layoutY="204.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" />
             <MFXButton fx:id="btnForgotPassword" layoutX="454.0" layoutY="405.0" onAction="#clickForgotPassword" prefHeight="26.0" prefWidth="120.0" rippleColor="WHITE" style="-fx-background-color: #465777;" text="Forgot password?" textFill="WHITE" />
-            <MFXButton fx:id="btnExit" layoutX="537.0" layoutY="672.0" onAction="#clickExit" prefHeight="25.0" prefWidth="61.0" style="-fx-background-color: #465777;" text="Exit" textFill="#f1f1f1">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </MFXButton>
          </children>
       </AnchorPane>
    </center>

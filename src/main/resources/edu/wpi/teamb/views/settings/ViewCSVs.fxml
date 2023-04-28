@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXListView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
@@ -40,13 +40,13 @@
                <MFXListView fx:id="NodeInfo" prefHeight="537.0" prefWidth="394.0" style="-fx-border-color: black;" />
             </children>
          </VBox>
-         <MFXComboBox fx:id="NodeSelector" alignment="TOP_CENTER" floatMode="DISABLED" layoutX="178.0" layoutY="125.0" onAction="#clickNodeSelector" prefHeight="24.0" prefWidth="138.0" style="-fx-border-color: #1C4EFE;" text="CSV Type">
+         <MFXFilterComboBox fx:id="NodeSelector" alignment="TOP_CENTER" floatMode="DISABLED" layoutX="178.0" layoutY="125.0" onAction="#clickNodeSelector" prefHeight="24.0" prefWidth="138.0" style="-fx-border-color: #012d5a;" text="CSV Type">
             <font>
                <Font name="System Bold" size="18.0" />
             </font>
-         </MFXComboBox>
-         <MFXButton fx:id="uploadBtn" layoutX="893.0" layoutY="117.0" style="-fx-background-color: #1C4EFE;" text="Upload" textFill="#f1f1f1" />
-         <MFXButton fx:id="exportBtn" layoutX="895.0" layoutY="152.0" style="-fx-background-color: #1C4EFE;" text="Export" textFill="#f1f1f1" />
+         </MFXFilterComboBox>
+         <MFXButton fx:id="uploadBtn" layoutX="893.0" layoutY="117.0" style="-fx-background-color: #012d5a;" text="Upload" textFill="#f1f1f1" />
+         <MFXButton fx:id="exportBtn" layoutX="895.0" layoutY="152.0" style="-fx-background-color: #012d5a;" text="Export" textFill="#f1f1f1" />
          <MFXButton fx:id="btnBack" defaultButton="true" layoutX="14.0" layoutY="606.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Back" textFill="#f1f1f1">
             <font>
                <Font name="System Bold" size="18.0" />

@@ -43,7 +43,7 @@
                         <ColorAdjust brightness="1.0" />
                     </effect>
                 </ImageView>
-                <VBox fx:id="vboxAddNode" layoutX="944.0" layoutY="458.0" prefHeight="119.0" prefWidth="131.0" style="-fx-background-color: #f1f1f1; -fx-border-color: #1C4EFE;">
+                <VBox fx:id="vboxAddNode" layoutX="944.0" layoutY="458.0" prefHeight="119.0" prefWidth="131.0" style="-fx-background-color: #f1f1f1; -fx-border-color: #012d5a;">
 
                     <children>
                         <VBox fx:id="vboxBtns" alignment="CENTER" spacing="10.0">

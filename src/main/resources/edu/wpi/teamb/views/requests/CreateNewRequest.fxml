@@ -57,7 +57,7 @@
                         </ImageView>
                         <ImageView fx:id="icon2" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../img/phone-call.png" />
+                              <Image url="@../../img/meeting.png" />
                            </image>
                         </ImageView>
                         <ImageView fx:id="icon3" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">

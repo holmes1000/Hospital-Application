@@ -10,7 +10,7 @@ import edu.wpi.teamb.controllers.NavDrawerController;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -39,7 +39,7 @@ public class EditUsersController {
     private JFXHamburger menuBurger;
     @FXML private JFXDrawer menuDrawer;
 
-    @FXML private MFXComboBox<String> cbPermissionLevel;
+    @FXML private MFXFilterComboBox<String> cbPermissionLevel;
     @FXML private MFXTextField textPassword;
     @FXML private MFXTextField textUsername;
     @FXML private MFXTextField textEmail;
@@ -219,18 +219,23 @@ public class EditUsersController {
         tbUsers.getColumns().clear();
         // add User attributes to the table (Name, Username, Password, Email, Permission Level)
         TableColumn<User, String> names = new TableColumn<>("Name");
+        names.setStyle("-fx-alignment: CENTER;");
         names.setCellValueFactory(new PropertyValueFactory<User, String>("name"));
 
         TableColumn<User, String> usernames = new TableColumn<>("Username");
+        usernames.setStyle("-fx-alignment: CENTER;");
         usernames.setCellValueFactory(new PropertyValueFactory<User, String>("username"));
 
         TableColumn<User, String> passwords = new TableColumn<>("Password");
+        passwords.setStyle("-fx-alignment: CENTER;");
         passwords.setCellValueFactory(new PropertyValueFactory<User, String>("password"));
 
         TableColumn<User, String> emails = new TableColumn<>("Email");
+        emails.setStyle("-fx-alignment: CENTER;");
         emails.setCellValueFactory(new PropertyValueFactory<User, String>("email"));
 
         TableColumn<User, Integer> permissions = new TableColumn<>("Permission Level");
+        permissions.setStyle("-fx-alignment: CENTER;");
         permissions.setCellValueFactory(new PropertyValueFactory<User, Integer>("permissionLevel"));
 
         tbUsers.getColumns().addAll(names, usernames, passwords, emails, permissions);

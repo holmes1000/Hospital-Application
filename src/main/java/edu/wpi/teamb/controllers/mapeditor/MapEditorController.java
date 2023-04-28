@@ -935,37 +935,37 @@ public class MapEditorController {
     switch (currentFloor) {
       case "L1" -> {
         btnL1.setStyle("-fx-background-color: #f6bd38");
-        btnL2.setStyle("-fx-background-color: #1C4EFE");
-        btn1.setStyle("-fx-background-color: #1C4EFE");
-        btn2.setStyle("-fx-background-color: #1C4EFE");
-        btn3.setStyle("-fx-background-color: #1C4EFE");
+        btnL2.setStyle("-fx-background-color: #012d5a");
+        btn1.setStyle("-fx-background-color: #012d5a");
+        btn2.setStyle("-fx-background-color: #012d5a");
+        btn3.setStyle("-fx-background-color: #012d5a");
       }
       case "L2" -> {
-        btnL1.setStyle("-fx-background-color: #1C4EFE");
+        btnL1.setStyle("-fx-background-color: #012d5a");
         btnL2.setStyle("-fx-background-color: #f6bd38");
-        btn1.setStyle("-fx-background-color: #1C4EFE");
-        btn2.setStyle("-fx-background-color: #1C4EFE");
-        btn3.setStyle("-fx-background-color: #1C4EFE");
+        btn1.setStyle("-fx-background-color: #012d5a");
+        btn2.setStyle("-fx-background-color: #012d5a");
+        btn3.setStyle("-fx-background-color: #012d5a");
       }
       case "1" -> {
-        btnL1.setStyle("-fx-background-color: #1C4EFE");
-        btnL2.setStyle("-fx-background-color: #1C4EFE");
+        btnL1.setStyle("-fx-background-color: #012d5a");
+        btnL2.setStyle("-fx-background-color: #012d5a");
         btn1.setStyle("-fx-background-color: #f6bd38");
-        btn2.setStyle("-fx-background-color: #1C4EFE");
-        btn3.setStyle("-fx-background-color: #1C4EFE");
+        btn2.setStyle("-fx-background-color: #012d5a");
+        btn3.setStyle("-fx-background-color: #012d5a");
       }
       case "2" -> {
-        btnL1.setStyle("-fx-background-color: #1C4EFE");
-        btnL2.setStyle("-fx-background-color: #1C4EFE");
-        btn1.setStyle("-fx-background-color: #1C4EFE");
+        btnL1.setStyle("-fx-background-color: #012d5a");
+        btnL2.setStyle("-fx-background-color: #012d5a");
+        btn1.setStyle("-fx-background-color: #012d5a");
         btn2.setStyle("-fx-background-color: #f6bd38");
-        btn3.setStyle("-fx-background-color: #1C4EFE");
+        btn3.setStyle("-fx-background-color: #012d5a");
       }
       case "3" -> {
-        btnL1.setStyle("-fx-background-color: #1C4EFE");
-        btnL2.setStyle("-fx-background-color: #1C4EFE");
-        btn1.setStyle("-fx-background-color: #1C4EFE");
-        btn2.setStyle("-fx-background-color: #1C4EFE");
+        btnL1.setStyle("-fx-background-color: #012d5a");
+        btnL2.setStyle("-fx-background-color: #012d5a");
+        btn1.setStyle("-fx-background-color: #012d5a");
+        btn2.setStyle("-fx-background-color: #012d5a");
         btn3.setStyle("-fx-background-color: #f6bd38");
       }
     }

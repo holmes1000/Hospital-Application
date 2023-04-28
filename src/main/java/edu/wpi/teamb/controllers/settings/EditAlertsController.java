@@ -9,7 +9,7 @@ import edu.wpi.teamb.controllers.NavDrawerController;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.beans.value.ObservableValue;
@@ -111,7 +111,6 @@ public class EditAlertsController {
     private void handleDeleteAlert() {
         edu.wpi.teamb.DBAccess.ORMs.Alert alert = tbAlerts.getSelectionModel().getSelectedItem();
         Repository.getRepository().deleteAlert(alert); // Delete the user
-        //tbUsers.refresh(); // Refresh the table
         updateTable();
         createAlert("Alert Deleted", "Alert Deleted Successfully");
     }
@@ -173,22 +172,26 @@ public class EditAlertsController {
         tbAlerts.setEditable(false);
         TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, String> titles = new TableColumn<>("Title");
         titles.setMinWidth(60);
+        titles.setStyle("-fx-alignment: CENTER;");
 //        titles.setMaxWidth(60);
         titles.setCellValueFactory(new PropertyValueFactory<edu.wpi.teamb.DBAccess.ORMs.Alert, String>("title"));
 
         TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, String> descriptions = new TableColumn<>("Description");
         descriptions.setMinWidth(260);
+        descriptions.setStyle("-fx-alignment: CENTER;");
 //        descriptions.setMaxWidth(260);
         descriptions.setCellValueFactory(new PropertyValueFactory<edu.wpi.teamb.DBAccess.ORMs.Alert, String>("description"));
 
 
         TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, Timestamp> time = new TableColumn<>("Created at");
+        time.setStyle("-fx-alignment: CENTER;");
         time.setCellValueFactory((new PropertyValueFactory<edu.wpi.teamb.DBAccess.ORMs.Alert, Timestamp>("createdAt")));
 
         TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, String> employees = new TableColumn<>("Assigned employee");
         employees.setCellValueFactory((new PropertyValueFactory<edu.wpi.teamb.DBAccess.ORMs.Alert, String>("employee")));
         time.setMinWidth(150);
 //        time.setMaxWidth(150);
+        employees.setStyle("-fx-alignment: CENTER;");
         employees.setMinWidth(150);
 //        ObservableList<edu.wpi.teamb.DBAccess.ORMs.Alert> data = FXCollections.observableArrayList();
 

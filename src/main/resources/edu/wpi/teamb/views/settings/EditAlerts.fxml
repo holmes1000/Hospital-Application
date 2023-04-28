@@ -95,7 +95,7 @@
                         <TableView fx:id="tbAlerts" layoutX="613.0" layoutY="117.0" onMouseClicked="#tbItemSelected" prefHeight="460.0" prefWidth="369.0" />
                     </children>
                 </VBox>
-            <MFXButton fx:id="btnRefresh" layoutX="907.0" layoutY="92.0" prefHeight="33.0" prefWidth="66.0" rippleAnimateShadow="true" style="-fx-background-color: #1C4EFE; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Refresh" textFill="WHITE" visible="false">
+            <MFXButton fx:id="btnRefresh" layoutX="907.0" layoutY="92.0" prefHeight="33.0" prefWidth="66.0" rippleAnimateShadow="true" style="-fx-background-color: #012d5a; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Refresh" textFill="WHITE" visible="false">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>

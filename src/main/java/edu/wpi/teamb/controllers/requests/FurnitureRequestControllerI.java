@@ -9,7 +9,7 @@ import edu.wpi.teamb.entities.requests.IRequest;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.collections.FXCollections;
@@ -34,11 +34,11 @@ public class FurnitureRequestControllerI implements IRequestController{
     @FXML
     private ImageView helpIcon;
     @FXML
-    private MFXComboBox<String> cbAvailableFurniture;
+    private MFXFilterComboBox<String> cbAvailableFurniture;
     @FXML
-    private MFXComboBox<String> cdAvailableModels;
+    private MFXFilterComboBox<String> cdAvailableModels;
     @FXML
-    private MFXComboBox<String> cdAssembly;
+    private MFXFilterComboBox<String> cdAssembly;
     @FXML
     private MFXTextField txtFldNotes;
 
@@ -127,13 +127,12 @@ public class FurnitureRequestControllerI implements IRequestController{
 
     @Override
     public void handleReset() {
-        cbAvailableFurniture.getSelectionModel().clearSelection();
-        cdAvailableModels.getSelectionModel().clearSelection();
-        cdAssembly.getSelectionModel().clearSelection();
+        cbAvailableFurniture.clear();
+        cdAvailableModels.clear();
+        cdAssembly.clear();
         txtFldNotes.clear();
-        cbEmployeesToAssign.getSelectionModel().clearSelection();
+        cbEmployeesToAssign.clear();
         cbLongName.clear();
-        cbLongName.replaceSelection("All Room Names: ");
     }
 
     @Override

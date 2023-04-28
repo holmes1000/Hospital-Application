@@ -19,7 +19,7 @@ import java.util.Comparator;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -39,8 +39,8 @@ public class SubmittedRequestsController {
     @FXML VBox vboxActivateNav;
     @FXML VBox vboxActivateNav1;
     @FXML private ScrollPane allRequestsScrollPane;
-    @FXML private MFXComboBox<String> cbFilterCategory;
-    @FXML private MFXComboBox<String> cbFilterOptions;
+    @FXML private MFXFilterComboBox<String> cbFilterCategory;
+    @FXML private MFXFilterComboBox<String> cbFilterOptions;
 
     //entity object of class that contains all the methods to get the requests
     private EAllRequests allRequestsE;

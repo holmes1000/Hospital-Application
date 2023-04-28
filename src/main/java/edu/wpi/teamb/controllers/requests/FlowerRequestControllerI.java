@@ -9,7 +9,7 @@ import edu.wpi.teamb.entities.requests.IRequest;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.collections.FXCollections;
@@ -28,9 +28,9 @@ public class FlowerRequestControllerI implements IRequestController {
     @FXML private MFXButton btnSubmit;
     @FXML private MFXButton btnReset;
     @FXML private ImageView helpIcon;
-    @FXML private MFXComboBox<String> cbAvailableFlowers;
-    @FXML private MFXComboBox<String> cdAvailableColor;
-    @FXML private MFXComboBox<String> cdAvailableType;
+    @FXML private MFXFilterComboBox<String> cbAvailableFlowers;
+    @FXML private MFXFilterComboBox<String> cdAvailableColor;
+    @FXML private MFXFilterComboBox<String> cdAvailableType;
     @FXML private MFXTextField txtFldNotes;
     @FXML private MFXTextField txtFldMessage;
     @FXML private MFXFilterComboBox<String> cbEmployeesToAssign;
@@ -123,14 +123,13 @@ public class FlowerRequestControllerI implements IRequestController {
 
     @Override
     public void handleReset() {
-        cbAvailableFlowers.getSelectionModel().clearSelection();
-        cdAvailableColor.getSelectionModel().clearSelection();
-        cdAvailableType.getSelectionModel().clearSelection();
+        cbAvailableFlowers.clear();
+        cdAvailableColor.clear();
+        cdAvailableType.clear();
         txtFldMessage.clear();
         txtFldNotes.clear();
-        cbEmployeesToAssign.getSelectionModel().clearSelection();
+        cbEmployeesToAssign.clear();
         cbLongName.clear();
-        cbLongName.replaceSelection("All Room Names: ");
     }
 
     @Override

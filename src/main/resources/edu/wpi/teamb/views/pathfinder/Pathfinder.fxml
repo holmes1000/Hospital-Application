@@ -3,7 +3,7 @@
 <?import com.jfoenix.controls.JFXDrawer?>
 <?import com.jfoenix.controls.JFXHamburger?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
 <?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXListView?>
@@ -97,7 +97,7 @@
                         <ColorAdjust brightness="1.0" />
                     </effect>
                 </ImageView>
-            <MFXComboBox fx:id="algorithmDropdown" floatingText="Algorithm" layoutX="998.0" layoutY="259.0" prefHeight="40.0" prefWidth="199.0" />
+            <MFXFilterComboBox fx:id="algorithmDropdown" floatingText="Algorithm" layoutX="998.0" layoutY="259.0" prefHeight="40.0" prefWidth="199.0" />
             <MFXDatePicker fx:id="datePicker" layoutX="998.0" layoutY="319.0" />
             <MFXButton fx:id="previousFloor" layoutX="130.0" layoutY="430.0" prefHeight="25.0" prefWidth="63.0" text="Previous Floor">
                <font>
