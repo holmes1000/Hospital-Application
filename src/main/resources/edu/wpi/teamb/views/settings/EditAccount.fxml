@@ -68,7 +68,7 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </MFXTextField>
-                        <MFXButton fx:id="btnSaveEdits" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #012d5a; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Save Edits" textFill="WHITE">
+                        <MFXButton fx:id="btnSaveEdits" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #012d5a; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Save" textFill="WHITE">
                             <font>
                                 <Font name="System Bold" size="12.0" />
                             </font>
@@ -78,6 +78,7 @@
                         <Insets />
                     </opaqueInsets>
                 </VBox>
+            <VBox fx:id="vboxActivateNav" layoutX="-150.0" prefHeight="720.0" prefWidth="70.0" />
             </children>
         </AnchorPane>
     </center>
@@ -89,6 +90,7 @@
                     <effect>
                         <ColorAdjust brightness="1.0" />
                     </effect></JFXHamburger>
+            <VBox fx:id="vboxActivateNav1" layoutX="70.0" onMouseEntered="#deactivateNav" prefHeight="720.0" prefWidth="20.0" />
             </children>
         </Pane>
     </left>

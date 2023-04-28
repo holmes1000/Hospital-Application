@@ -38,11 +38,6 @@ public class NavDrawerController {
   }
 
   @FXML
-  void clickMapEditor() {
-    btnMapEditor.setOnMouseClicked(event -> Navigation.navigate(Screen.MAP_EDITOR));
-  }
-
-  @FXML
   void clickPathfinder() {
     btnPathfinder.setOnMouseClicked(event -> Navigation.navigate(Screen.PATHFINDER));
   }

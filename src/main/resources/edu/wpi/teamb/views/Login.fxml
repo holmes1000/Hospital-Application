@@ -27,7 +27,7 @@
    <center>
       <AnchorPane prefHeight="706.0" prefWidth="637.0" BorderPane.alignment="CENTER">
          <children>
-               <MFXButton id="button" fx:id="btnLogin" layoutX="114.0" layoutY="468.0" onAction="#clickLogin" prefHeight="50.0" prefWidth="460.0" style="-fx-background-color: #f6bd38;" text="Login">
+               <MFXButton id="button" fx:id="btnLogin" layoutX="114.0" layoutY="468.0" onAction="#clickLogin" prefHeight="50.0" prefWidth="460.0" style="-fx-background-color: #f6bd38;" text="Log In">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>

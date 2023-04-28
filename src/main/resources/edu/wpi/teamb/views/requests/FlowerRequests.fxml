@@ -27,14 +27,9 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </MFXButton>
-            <MFXButton fx:id="btnCancel" defaultButton="true" layoutX="170.0" layoutY="481.0" prefHeight="45.0" prefWidth="170.0" style="-fx-background-color: #012d5a;" text="Cancel" textFill="#f1f1f1">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </MFXButton>
             <MFXButton fx:id="btnReset" defaultButton="true" layoutX="20.0" layoutY="481.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Reset" textFill="#f1f1f1">
                <font>
-                  <Font name="System Bold" size="12.0" />
+                  <Font name="System Bold" size="18.0" />
                </font>
             </MFXButton>
             <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="1028.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
@@ -61,11 +56,11 @@
                </cursor>
             </MFXComboBox>
             <MFXTextField fx:id="txtFldMessage" floatingText="Message Text" layoutX="20.0" layoutY="397.0" prefHeight="26.0" prefWidth="428.0" textLimit="80" />
-            <MFXComboBox fx:id="cbEmployeesToAssign" floatingText="Employee" layoutX="841.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
+            <MFXFilterComboBox fx:id="cbEmployeesToAssign" floatingText="Employee" layoutX="841.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
-            </MFXComboBox>
+            </MFXFilterComboBox>
             <MFXTextField fx:id="txtFldNotes" floatingText="Special Instructions" layoutX="502.0" layoutY="397.0" prefHeight="34.0" prefWidth="428.0" textLimit="80" />
             <MFXFilterComboBox fx:id="cbLongName" floatingText="Room Name" layoutX="20.0" layoutY="337.0" prefHeight="24.0" prefWidth="410.0" />
             <Text fill="RED" layoutX="968.0" layoutY="477.0" strokeType="OUTSIDE" strokeWidth="0.0" text="All fields required*">

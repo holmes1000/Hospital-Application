@@ -103,7 +103,7 @@ public class NodeDAOImpl implements IDAO {
     @Override
     public void update(Object n) {
         Node node = (Node) n;
-        String[] values = {node.getNodeID() + "", node.getxCoord() + "", node.getyCoord() + "", node.getFloor() + "", node.getBuilding()};
+        String[] values = {String.valueOf(node.getNodeID()), String.valueOf(node.getxCoord()), String.valueOf(node.getyCoord()), node.getFloor(), node.getBuilding()};
         updateRow(values);
         for (int i = 0; i < nodes.size(); i++) {
             if (nodes.get(i).getNodeID() == node.getNodeID()) {
@@ -210,6 +210,24 @@ public class NodeDAOImpl implements IDAO {
             }
             try {
                 nds.add(new Node(rs));
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return nds;
+    }
+
+    public ArrayList<FullNode> getFullNodesFromFloor(String floor) {
+        ResultSet rs = joinFullNodesCond("floor = '" + floor + "'");
+        ArrayList<FullNode> nds = new ArrayList<FullNode>();
+        while (true) {
+            try {
+                if (!rs.next()) break;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                nds.add(new FullNode(rs));
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -533,6 +551,19 @@ public class NodeDAOImpl implements IDAO {
         try{
             Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
             String query = "SELECT * FROM nodes, moves, locationnames WHERE nodes.nodeid = moves.nodeid AND moves.longname = locationnames.longname";
+            ResultSet rs = stmt.executeQuery(query);
+            return rs;
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'NodeDAOImpl.joinFullNode's: " + e.getMessage());
+            return null;
+        }
+    }
+
+
+    public ResultSet joinFullNodesCond(String cond) {
+        try{
+            Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
+            String query = "SELECT * FROM nodes, moves, locationnames WHERE nodes.nodeid = moves.nodeid AND moves.longname = locationnames.longname AND " + cond;
             ResultSet rs = stmt.executeQuery(query);
             return rs;
         } catch (SQLException e) {

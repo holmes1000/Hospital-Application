@@ -63,20 +63,6 @@
                 </ImageView>
             </graphic>
         </JFXButton>
-        <JFXButton fx:id="btnMapEditor" alignment="TOP_LEFT" onAction="#clickMapEditor" prefHeight="59.0" prefWidth="200.0" style="-fx-background-color: #012d5a; -fx-content-display: right; -fx-opacity: 60;" text="Map Editor" textAlignment="CENTER" textFill="#f6bd38">
-            <font>
-                <Font name="System Bold" size="18.0" />
-            </font>
-            <graphic>
-                <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" translateX="35.0">
-                    <image>
-                        <Image url="@../../img/map.png" />
-                    </image>
-                    <effect>
-                        <ColorAdjust brightness="1.0" />
-                    </effect>
-                </ImageView>
-            </graphic></JFXButton>
         <JFXButton fx:id="btnSignage" alignment="TOP_LEFT" onAction="#clickSignage" prefHeight="59.0" prefWidth="200.0" style="-fx-background-color: #012d5a; -fx-content-display: right; -fx-opacity: 60;" text="Signage" textAlignment="CENTER" textFill="#f6bd38">
             <font>
                 <Font name="System Bold" size="18.0" />

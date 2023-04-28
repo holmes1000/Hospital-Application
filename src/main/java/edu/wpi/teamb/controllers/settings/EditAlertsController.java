@@ -10,6 +10,7 @@ import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -42,7 +43,7 @@ public class EditAlertsController {
     @FXML private MFXTextField textTitle;
     @FXML private MFXTextField textDescription;
 
-    @FXML private ComboBox<String> cbEmployees;
+    @FXML private MFXFilterComboBox<String> cbEmployees;
 
     @FXML private MFXButton btnAddAlert;
     @FXML private MFXButton btnDeleteAlert;
@@ -227,15 +228,15 @@ public class EditAlertsController {
     }
 
 
+
     /**
      * Utilizes a gate to swap between handling the navdrawer and the rest of the page
      * Swaps ownership of the strip to the navdraw
      */
+
     public void activateNav(){
         vboxActivateNav.setOnMouseEntered(event -> {
             if(!navLoaded) {
-                System.out.println("on");
-                navPane.setPickOnBounds(false);
                 navPane.setMouseTransparent(false);
                 navLoaded = true;
                 vboxActivateNav.setDisable(true);
@@ -251,7 +252,6 @@ public class EditAlertsController {
     public void deactivateNav(){
         vboxActivateNav1.setOnMouseEntered(event -> {
             if(navLoaded){
-                System.out.println("off");
                 navPane.setMouseTransparent(true);
                 vboxActivateNav.setDisable(false);
                 navLoaded = false;
@@ -288,10 +288,11 @@ public class EditAlertsController {
                     burgerOpen.setRate(burgerOpen.getRate() * -1);
                     burgerOpen.play();
                     if (menuDrawer.isOpened()) {
-                        menuDrawer.toFront();
                         menuDrawer.close();
+                        vboxActivateNav1.toFront();
                     } else {
                         menuDrawer.toFront();
+                        menuBurger.toFront();
                         menuDrawer.open();
                     }
                 });

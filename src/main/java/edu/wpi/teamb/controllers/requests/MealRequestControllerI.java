@@ -27,7 +27,6 @@ import java.sql.Timestamp;
 public class MealRequestControllerI implements IRequestController{
 
     @FXML private MFXButton btnSubmit;
-    @FXML private MFXButton btnCancel;
     @FXML private MFXButton btnReset;
     @FXML private ImageView helpIcon;
     @FXML private MFXComboBox<String> cbAvailableMeals;
@@ -35,7 +34,7 @@ public class MealRequestControllerI implements IRequestController{
     @FXML private MFXComboBox<String> cbAvailableSnacks;
     @FXML private MFXTextField txtFldNotes;
     @FXML private MFXComboBox<String> cbOrderLocation;
-    @FXML private MFXComboBox<String> cbEmployeesToAssign;
+    @FXML private MFXFilterComboBox<String> cbEmployeesToAssign;
     @FXML private MFXFilterComboBox<String> cbLongName;
     private EMealRequest EMealRequest;
 
@@ -53,7 +52,6 @@ public class MealRequestControllerI implements IRequestController{
     public void initBtns() {
         btnSubmit.setOnAction(e -> handleSubmit());
         btnReset.setOnAction(e -> handleReset());
-        btnCancel.setOnAction(e -> handleCancel());
         helpIcon.setOnMouseClicked(e -> handleHelp());
     }
 
@@ -219,6 +217,5 @@ public class MealRequestControllerI implements IRequestController{
 
         //make the reset and cancel buttons not visible
         btnReset.setVisible(false);
-        btnCancel.setVisible(false);
     }
 }
