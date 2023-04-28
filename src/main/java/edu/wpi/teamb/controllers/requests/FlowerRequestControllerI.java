@@ -26,7 +26,6 @@ import java.sql.SQLException;
 public class FlowerRequestControllerI implements IRequestController {
 
     @FXML private MFXButton btnSubmit;
-    @FXML private MFXButton btnCancel;
     @FXML private MFXButton btnReset;
     @FXML private ImageView helpIcon;
     @FXML private MFXComboBox<String> cbAvailableFlowers;
@@ -53,7 +52,6 @@ public class FlowerRequestControllerI implements IRequestController {
     public void initBtns() {
         btnSubmit.setOnAction(e -> handleSubmit());
         btnReset.setOnAction(e -> handleReset());
-        btnCancel.setOnAction(e -> handleCancel());
         helpIcon.setOnMouseClicked(e -> handleHelp());
     }
 
@@ -69,12 +67,12 @@ public class FlowerRequestControllerI implements IRequestController {
         cbAvailableFlowers.setItems(flowers);
 
         //Set colors of flowers
-        ObservableList<String> colors = FXCollections.observableArrayList("Red", "Orange", "Yellow", "Green", "Blue", "Purple", "Pink", "White", "Black", "Brown", "Other");
+        ObservableList<String> colors = FXCollections.observableArrayList("Red", "Orange", "Yellow", "Green", "Blue", "Purple", "Pink", "White", "Black", "Brown");
         cdAvailableColor.setItems(colors);
 
 
         //Set delivery types
-        ObservableList<String> deliveryType = FXCollections.observableArrayList("Bouquet", "Single Flower", "Vase", "Other");
+        ObservableList<String> deliveryType = FXCollections.observableArrayList("Bouquet", "Single Flower", "Vase");
         cdAvailableType.setItems(deliveryType);
         //todo: fix locations
 
@@ -204,6 +202,5 @@ public class FlowerRequestControllerI implements IRequestController {
         });
         //set the reset and cancel buttons to not be visible
         btnReset.setVisible(false);
-        btnCancel.setVisible(false);
     }
 }

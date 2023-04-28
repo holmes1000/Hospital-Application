@@ -31,7 +31,6 @@ import java.util.ArrayList;
 public class MoveRequestControllerI implements IRequestController{
 
     @FXML private MFXButton btnSubmit;
-    @FXML private MFXButton btnCancel;
     @FXML private MFXButton btnReset;
     @FXML private ImageView helpIcon;
     @FXML private VBox tableVbox;
@@ -76,7 +75,6 @@ public class MoveRequestControllerI implements IRequestController{
     public void initBtns() {
         btnSubmit.setOnAction(e -> handleSubmit());
         btnReset.setOnAction(e -> handleReset());
-        btnCancel.setOnAction(e -> handleCancel());
         helpIcon.setOnMouseClicked(e -> handleHelp());
         btnRemoveMove.setOnMouseClicked(e -> handleRemoveMove());
         btnEditRequest.setOnMouseClicked(e -> handleEditRequest());

@@ -41,7 +41,6 @@ public class ConferenceRequestControllerI implements IRequestController{
     @FXML private MFXFilterComboBox<String> cbLongName;
     @FXML private MFXTextField tfNotes;
     @FXML private MFXButton resetBtn;
-    @FXML private MFXButton cancelBtn;
     @FXML private MFXButton btnSubmit;
     @FXML private ImageView helpIcon;
 
@@ -63,7 +62,6 @@ public class ConferenceRequestControllerI implements IRequestController{
     public void initBtns() {
         btnSubmit.setOnAction(e -> handleSubmit());
         resetBtn.setOnAction(e -> handleReset());
-        cancelBtn.setOnAction(e -> handleCancel());
         helpIcon.setOnMouseClicked(e -> handleHelp());
     }
 
@@ -84,7 +82,7 @@ public class ConferenceRequestControllerI implements IRequestController{
         //Dropdown for duration selection
         ObservableList<Integer> duration =
                 FXCollections.observableArrayList();
-        duration.addAll(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        duration.addAll(10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
         cbDuration.setItems(duration);
 
         // Dropdown for reservationHour
@@ -280,7 +278,6 @@ public class ConferenceRequestControllerI implements IRequestController{
         });
 
         //set the cancel and reset buttons to not be visible
-        cancelBtn.setVisible(false);
         resetBtn.setVisible(false);
     }
 }

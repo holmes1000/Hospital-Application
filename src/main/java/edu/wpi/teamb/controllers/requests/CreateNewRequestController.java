@@ -200,7 +200,7 @@ public class CreateNewRequestController {
     public void initializeFields() {
 
         ObservableList<String> locations = FXCollections.observableArrayList("Meal Delivery", "Conference Room",
-                "Flower Delivery", "Furniture Delivery", "Office Supplies", "Other");
+                "Flower Delivery", "Furniture Delivery", "Office Supplies");
         // TODO: only add thise if the user is an admin
         if (adminTest == ELogin.PermissionLevel.ADMIN) {
             ObservableList<String> AdminOnly = FXCollections.observableArrayList("Move");

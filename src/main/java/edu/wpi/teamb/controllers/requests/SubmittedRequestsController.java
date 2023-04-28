@@ -31,7 +31,6 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 public class SubmittedRequestsController {
-    @FXML private MFXButton btnCancel;
     @FXML private ImageView helpIcon;
     @FXML private JFXHamburger menuBurger;
     @FXML private JFXDrawer menuDrawer;
