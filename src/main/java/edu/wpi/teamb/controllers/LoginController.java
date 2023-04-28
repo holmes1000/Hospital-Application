@@ -24,7 +24,6 @@ public class LoginController {
   @FXML private MFXButton btnLogin;
   @FXML private MFXButton btnForgotPassword;
   @FXML private MFXButton btnCreateAccount;
-  @FXML private MFXRadioButton radioRememberMe;
   @FXML private MFXTextField textUsername;
   @FXML private MFXTextField textPassword;
   @FXML private Text errorMsg;
@@ -79,10 +78,5 @@ public class LoginController {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
-  }
-
-  @FXML
-  public void clickExit() {
-    System.exit(0);
   }
 }

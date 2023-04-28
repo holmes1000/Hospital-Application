@@ -9,7 +9,7 @@ import edu.wpi.teamb.entities.requests.IRequest;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.collections.FXCollections;
@@ -30,8 +30,8 @@ public class OfficeRequestControllerI implements IRequestController{
     private MFXButton btnSubmit;
     @FXML private MFXButton btnReset;
     @FXML private ImageView helpIcon;
-    @FXML private MFXComboBox<String> cbSupplyItems;
-    @FXML private MFXComboBox<String> cbSupplyType;
+    @FXML private MFXFilterComboBox<String> cbSupplyItems;
+    @FXML private MFXFilterComboBox<String> cbSupplyType;
     @FXML private MFXTextField tbSupplyQuantities;
     @FXML private MFXTextField txtFldNotes;
     @FXML private MFXFilterComboBox<String> cbEmployeesToAssign;
@@ -113,16 +113,11 @@ public class OfficeRequestControllerI implements IRequestController{
     @Override
     public void handleReset() {
         cbEmployeesToAssign.clear();
-        cbEmployeesToAssign.replaceSelection("Employees Available");
         cbSupplyItems.clear();
-        cbSupplyItems.replaceSelection("Available Supplies:");
         cbSupplyType.clear();
-        cbSupplyType.replaceSelection("Supply Type:");
         tbSupplyQuantities.clear();
-        tbSupplyQuantities.replaceSelection("Quantity:");
         txtFldNotes.clear();
         cbLongName.clear();
-        cbLongName.replaceSelection("All Room Names:");
     }
 
     @Override

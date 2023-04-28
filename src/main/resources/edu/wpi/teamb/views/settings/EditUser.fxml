@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.Pane?>
@@ -44,14 +44,14 @@
                                 <Insets bottom="10.0" />
                             </VBox.margin>
                         </MFXTextField>
-            <MFXComboBox fx:id="cbPermissionLevel" floatingText="Permission Level" prefHeight="50.0" prefWidth="361.0">
+            <MFXFilterComboBox fx:id="cbPermissionLevel" floatingText="Permission Level" prefHeight="50.0" prefWidth="361.0">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
                <VBox.margin>
                   <Insets bottom="10.0" />
                </VBox.margin>
-            </MFXComboBox>
+            </MFXFilterComboBox>
                         <MFXButton fx:id="btnSaveEdits" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #012d5a; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Save" textFill="WHITE">
                             <font>
                                 <Font name="System Bold" size="12.0" />

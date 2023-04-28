@@ -91,14 +91,17 @@ public class HomeController {
         alertsTable.setEditable(false);
         TableColumn<Alert, String> titles = new TableColumn<>("Title");
         titles.setMinWidth(100);
+        titles.setStyle("-fx-alignment: CENTER;");
         titles.setCellValueFactory(new PropertyValueFactory<>("title"));
 
         TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, String> descriptions = new TableColumn<>("Description");
+        descriptions.setStyle("-fx-alignment: CENTER;");
         descriptions.setMinWidth(220);
         descriptions.setCellValueFactory(new PropertyValueFactory<>("description"));
 
 
         TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, Timestamp> time = new TableColumn<>("Created at");
+        time.setStyle("-fx-alignment: CENTER;");
         time.setCellValueFactory((new PropertyValueFactory<>("createdAt")));
         alertsTable.getColumns().addAll(titles, descriptions, time);
         time.setSortType(TableColumn.SortType.DESCENDING);

@@ -18,6 +18,7 @@ public enum Screen {
   MOVE_MAP("views/requests/MoveMap.fxml"),
   EXIT("views/Root.fxml"),
   SIGNAGE("views/signage/Signage.fxml"),
+  VIEW_CSVS("views/settings/ViewCSVs.fxml"),
   MOVE("views/requests/MoveRequest.fxml");
 
   private final String filename;

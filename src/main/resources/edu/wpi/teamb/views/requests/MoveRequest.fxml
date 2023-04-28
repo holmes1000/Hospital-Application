@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXRadioButton?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.DatePicker?>
@@ -42,27 +42,27 @@
                   <ColorAdjust brightness="1.0" />
                </effect>
             </ImageView>
-            <MFXComboBox fx:id="cdRoomToMove" floatMode="DISABLED" layoutX="219.0" layoutY="123.0" prefHeight="40.0" prefWidth="238.0">
+            <MFXFilterComboBox fx:id="cdRoomToMove" floatMode="DISABLED" layoutX="219.0" layoutY="123.0" prefHeight="40.0" prefWidth="238.0">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
-            </MFXComboBox>
+            </MFXFilterComboBox>
             <Text fill="#f1f1f1" layoutX="219.0" layoutY="116.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Room To Move:" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Text>
-            <MFXComboBox fx:id="cdWheretoMove" floatMode="DISABLED" layoutX="219.0" layoutY="218.0" prefHeight="40.0" prefWidth="241.0">
+            <MFXFilterComboBox fx:id="cdWheretoMove" floatMode="DISABLED" layoutX="219.0" layoutY="218.0" prefHeight="40.0" prefWidth="241.0">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
-            </MFXComboBox>
+            </MFXFilterComboBox>
             <Text fill="#f1f1f1" layoutX="526.0" layoutY="115.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pending Move Requests">
                <font>
                   <Font name="System Bold" size="18.0" />

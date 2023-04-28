@@ -9,7 +9,7 @@ import edu.wpi.teamb.entities.requests.IRequest;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.collections.FXCollections;
@@ -29,11 +29,11 @@ public class MealRequestControllerI implements IRequestController{
     @FXML private MFXButton btnSubmit;
     @FXML private MFXButton btnReset;
     @FXML private ImageView helpIcon;
-    @FXML private MFXComboBox<String> cbAvailableMeals;
-    @FXML private MFXComboBox<String> cbAvailableDrinks;
-    @FXML private MFXComboBox<String> cbAvailableSnacks;
+    @FXML private MFXFilterComboBox<String> cbAvailableMeals;
+    @FXML private MFXFilterComboBox<String> cbAvailableDrinks;
+    @FXML private MFXFilterComboBox<String> cbAvailableSnacks;
     @FXML private MFXTextField txtFldNotes;
-    @FXML private MFXComboBox<String> cbOrderLocation;
+    @FXML private MFXFilterComboBox<String> cbOrderLocation;
     @FXML private MFXFilterComboBox<String> cbEmployeesToAssign;
     @FXML private MFXFilterComboBox<String> cbLongName;
     private EMealRequest EMealRequest;
@@ -130,17 +130,11 @@ public class MealRequestControllerI implements IRequestController{
     public void handleReset() {
         //Reset the combo-boxes
         cbOrderLocation.clear();
-        cbOrderLocation.replaceSelection("Order Location");
         cbEmployeesToAssign.clear();
-        cbEmployeesToAssign.replaceSelection("Employees Available");
         cbAvailableMeals.clear();
-        cbAvailableMeals.replaceSelection("Available Meals:");
         cbAvailableDrinks.clear();
-        cbAvailableDrinks.replaceSelection("Available Drinks:");
         cbAvailableSnacks.clear();
-        cbAvailableSnacks.replaceSelection("Available Snacks:");
         cbLongName.clear();
-        cbLongName.replaceSelection("All Room Names: ");
         //Reset text fields
         txtFldNotes.clear();
     }

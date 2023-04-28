@@ -34,6 +34,11 @@
                         <Font name="System Bold" size="36.0" />
                     </font>
                 </Text>
+                <MFXButton fx:id="btnBack" defaultButton="true" layoutX="14.0" layoutY="606.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Back" textFill="#f1f1f1">
+                    <font>
+                        <Font name="System Bold" size="18.0" />
+                    </font>
+                </MFXButton>
                 <VBox fx:id="vboxEditUser" layoutX="387.0" layoutY="177.0" prefHeight="401.0" prefWidth="376.0">
                     <children>
                   <MFXTextField fx:id="tfName" floatingText="Name" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="362.0">

@@ -61,7 +61,7 @@ public class PathfinderController {
   @FXML private MFXFilterComboBox<String> endNode;
 @FXML private MFXButton btnEditMap;
 
-  @FXML private MFXComboBox<String> algorithmDropdown;
+  @FXML private MFXFilterComboBox<String> algorithmDropdown;
   @FXML private MFXListView<String> listView = new MFXListView<>();
   @FXML private VBox VboxPathfinder;
   @FXML private StackPane stackPaneMapView;
