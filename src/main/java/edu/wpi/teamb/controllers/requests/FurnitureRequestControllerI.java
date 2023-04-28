@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 
 public class FurnitureRequestControllerI implements IRequestController{
 
@@ -55,9 +56,6 @@ public class FurnitureRequestControllerI implements IRequestController{
 
     @FXML
     public void initialize() throws IOException, SQLException {
-        ObservableList<String> longNames = FXCollections.observableArrayList();
-        longNames.addAll(Repository.getRepository().getPracticalLongNames());
-        cbLongName.setItems(longNames);
         initializeFields();
         initBtns();
     }
@@ -71,23 +69,32 @@ public class FurnitureRequestControllerI implements IRequestController{
 
     @Override
     public void initializeFields() throws SQLException {
+        ObservableList<String> longNames = FXCollections.observableArrayList();
+        longNames.addAll(Repository.getRepository().getPracticalLongNames());
+        Collections.sort(longNames);
+        cbLongName.setItems(longNames);
+
         //Set list of furniture
         ObservableList<String> furniture = FXCollections.observableArrayList("Chair", "Couch", "Table", "Desk", "Bed");
+        Collections.sort(furniture);
         cbAvailableFurniture.setItems(furniture);
 
         //Set list of models
         ObservableList<String> models = FXCollections.observableArrayList("Huge", "Big", "Medium", "Small", "Tiny");
+        Collections.sort(models);
         cdAvailableModels.setItems(models);
 
         //Set list of assembly options
         ObservableList<String> assembly = FXCollections.observableArrayList("No", "Yes");
+        Collections.sort(assembly);
         cdAssembly.setItems(assembly);
 
         //Set list of employees
         ObservableList<String> employees =
                 FXCollections.observableArrayList();
-        employees.add("Unassigned");
         employees.addAll(EFurnitureRequest.getUsernames());
+        Collections.sort(employees);
+        employees.add(0, "Unassigned");
         cbEmployeesToAssign.setItems(employees);
     }
 

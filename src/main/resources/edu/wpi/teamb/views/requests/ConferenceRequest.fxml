@@ -57,7 +57,7 @@
                 </ImageView>
                 <MFXTextField fx:id="eventNameTextField" floatingText="Event Name" layoutX="20.0" layoutY="267.0" prefHeight="40.0" prefWidth="366.0" />
                 <MFXTextField fx:id="bookingReasonTextField" floatingText="Reason for Booking" layoutX="20.0" layoutY="337.0" prefHeight="40.0" prefWidth="698.0" />
-            <MFXFilterComboBox fx:id="cbEmployeesToAssign" floatingText="Employee Assigned" layoutX="841.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
+            <MFXFilterComboBox fx:id="cbEmployeesToAssign" floatingText="Employee" layoutX="841.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>

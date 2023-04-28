@@ -29,7 +29,7 @@
                                 <Insets bottom="10.0" />
                             </VBox.margin>
                         </MFXTextField>
-            <MFXFilterComboBox fx:id="cbEmployees" prefHeight="50.0" prefWidth="362.0" promptText="Employee Assigned" style="-fx-background-radius: 5; -fx-background-color: ffffff;" />
+            <MFXFilterComboBox fx:id="cbEmployees" prefHeight="50.0" prefWidth="362.0" promptText="Employee" style="-fx-background-radius: 5; -fx-background-color: ffffff;" />
                         <MFXButton fx:id="btnSaveEdits" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #012d5a; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Save" textFill="WHITE">
                             <font>
                                 <Font name="System Bold" size="12.0" />
