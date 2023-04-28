@@ -75,9 +75,9 @@
                   <MFXToggleButton fx:id="toggleEdges" text="Show Edges" />
                </children>
             </VBox>
-                <MFXButton fx:id="btnViewMoveMap" defaultButton="true" layoutX="983.0" layoutY="199.0" prefHeight="45.0" prefWidth="162.0" style="-fx-background-color: #f6bd38;" text="View Move Map" textFill="#f1f1f1">
+                <MFXButton fx:id="btnViewMoveMap" defaultButton="true" layoutX="926.0" layoutY="58.0" prefHeight="40.0" prefWidth="134.0" style="-fx-background-color: #012d5a;" text="View Move Map" textFill="#f1f1f1">
                     <font>
-                        <Font name="System Bold" size="18.0" />
+                        <Font size="14.0" />
                     </font>
                 </MFXButton>
                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#012d5a" height="50.0" layoutX="-162.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1471.0" />
@@ -86,7 +86,7 @@
                         <Font name="System Bold" size="36.0" />
                     </font>
                 </Text>
-            <MFXButton fx:id="btnAlignNodes" defaultButton="true" layoutX="1046.0" layoutY="261.0" prefHeight="40.0" prefWidth="91.0" style="-fx-background-color: #012d5a;" text="Align Nodes" textFill="#f1f1f1">
+            <MFXButton fx:id="btnAlignNodes" defaultButton="true" layoutX="825.0" layoutY="58.0" prefHeight="40.0" prefWidth="91.0" style="-fx-background-color: #012d5a;" text="Align Nodes" textFill="#f1f1f1">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
