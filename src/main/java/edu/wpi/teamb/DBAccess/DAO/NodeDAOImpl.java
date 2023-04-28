@@ -217,6 +217,24 @@ public class NodeDAOImpl implements IDAO {
         return nds;
     }
 
+    public ArrayList<FullNode> getFullNodesFromFloor(String floor) {
+        ResultSet rs = joinFullNodesCond("floor = '" + floor + "'");
+        ArrayList<FullNode> nds = new ArrayList<FullNode>();
+        while (true) {
+            try {
+                if (!rs.next()) break;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                nds.add(new FullNode(rs));
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return nds;
+    }
+
     /**
      * Gets a ResultSet of rows from the Nodes table that match the given building
      *
@@ -533,6 +551,19 @@ public class NodeDAOImpl implements IDAO {
         try{
             Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
             String query = "SELECT * FROM nodes, moves, locationnames WHERE nodes.nodeid = moves.nodeid AND moves.longname = locationnames.longname";
+            ResultSet rs = stmt.executeQuery(query);
+            return rs;
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'NodeDAOImpl.joinFullNode's: " + e.getMessage());
+            return null;
+        }
+    }
+
+
+    public ResultSet joinFullNodesCond(String cond) {
+        try{
+            Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
+            String query = "SELECT * FROM nodes, moves, locationnames WHERE nodes.nodeid = moves.nodeid AND moves.longname = locationnames.longname AND " + cond;
             ResultSet rs = stmt.executeQuery(query);
             return rs;
         } catch (SQLException e) {

@@ -35,7 +35,7 @@ public class EditNodeMenuController {
     @FXML
     MFXTextField tfYCoord;
 
-    static Node currentNode = null;
+    static FullNode currentNode = null;
 
     MapEditorController mapEditorController = new MapEditorController();
     String oldLongName = "";
@@ -100,32 +100,33 @@ public class EditNodeMenuController {
         fullNode = new FullNode(Integer.parseInt(tfNodeId.getText()), (int) Integer.parseInt(tfXCoord.getText()), (int) Integer.parseInt(tfYCoord.getText()), mapEditorController.currentFloor, currentNode.getBuilding(), tfLongName.getText(), tfShortName.getText(), cbNodeType.getSelectedItem());
 
 
-        Repository.getRepository().deleteNode(currentNode); // Remove old node from the database
+        Repository.getRepository().deleteFullNode(fullNode); // Remove old node from the database
         Repository.getRepository().addFullNode(fullNode);  // Add new node to the database
 
-        Node newNode = new Node(fullNode.getNodeID(), fullNode.getxCoord(), fullNode.getyCoord(), fullNode.getFloor(), fullNode.getBuilding()); // Create a new node (DEFAULT IS HALL)
+        //Node newNode = new Node(fullNode); // Create a new node (DEFAULT IS HALL)
 
         // Remove full node from the MapEditor's list and add the new one
         for (FullNode fn : MapEditorController.fullNodesList) {
-            if (fn.getNodeID() == newNode.getNodeID()) {
+            if (fn.getNodeID() == fullNode.getNodeID()) {
                 MapEditorController.fullNodesList.remove(fn);
                 MapEditorController.fullNodesList.add(fullNode);
                 break;
             }
         }
+//
+//        // Remove Node from the MapEditor's list and add the new one
+//        for (FullNode n : MapEditorController.fullNodesList) {
+//            if (n.getNodeID() == newNode.getNodeID()) {
+//                MapEditorController.fullNodesList.remove(n);
+//                MapEditorController.fullNodesList.add(newNode);
+//                break;
+//            }
+//        }
 
-        // Remove Node from the MapEditor's list and add the new one
-        for (Node n : MapEditorController.nodeList) {
-            if (n.getNodeID() == newNode.getNodeID()) {
-                MapEditorController.nodeList.remove(n);
-                MapEditorController.nodeList.add(newNode);
-                break;
-            }
-        }
 
-
-        System.out.println("Adding a new node with nodeID: " + newNode.getNodeID());
-        //refreshMap();
+        System.out.println("Editing a  node with nodeID: " + fullNode.getNodeID());
+        mapEditorController.refreshMap();
+        mapEditorController.mapEditorContext.setState(new ViewState());
 
         // Close the window
         Stage stage = (Stage) btnSubmitNodeDetails.getScene().getWindow();
@@ -134,7 +135,7 @@ public class EditNodeMenuController {
 
 
 
-    public static void setCurrentNode(Node currentNode) {
+    public static void setCurrentNode(FullNode currentNode) {
         EditNodeMenuController.currentNode = currentNode;
     }
 }
