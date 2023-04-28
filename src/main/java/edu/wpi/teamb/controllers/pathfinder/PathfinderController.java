@@ -129,7 +129,7 @@ public class PathfinderController {
       navPane.setMouseTransparent(true);
       activateNav();
       deactivateNav();
-      DefaultStart.getInstance().setDefault_start("Neuroscience Waiting Room");
+      if (defaultStart.equals("")) {DefaultStart.getInstance().setDefault_start("15 Lobby Entrance Floor 2");}
       defaultStart = DefaultStart.getInstance().getDefault_start();
 
 
@@ -352,22 +352,26 @@ public class PathfinderController {
   }
 
 
-    public void moveAlert(String input) {
+    public String moveAlert(String input) {
       ArrayList<String> message = new ArrayList<>();
       for (Move move : upcoming_moves) {
           if (input.contains(move.getLongName())) {
-              message.add(move.getLongName() + " will be moving to node " + move.getNodeID() + " on " + move.getDate());
+              message.add(move.getLongName() + " will be moving to node " + move.getNodeID() + " on " + move.getDate() + ". ");
           }
       }
 
-        // Create an alert
+        // Create the message
+        String alert_message = "";
+        for (String string : message) {
+            alert_message += string;
+        }
+        return alert_message;
+    }
+
+    public void displayAlert(String alert_message){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Upcoming Moves");
         alert.setHeaderText(null);
-        String alert_message = "";
-        for (String string : message) {
-            alert_message += string + "\n";
-        }
         alert.setContentText(alert_message);
         alert.showAndWait();
     }
@@ -624,8 +628,7 @@ public class PathfinderController {
                   } else {
                       path = EPathfinder.getShortestPath("AStar", "None", start, end);
                   }
-
-
+                  if (path != null) {
 
 //Node node = PathFinding.ASTAR.get_node_map().get(EPathfinder.getPath().get(index));
 //                  FullNode n = fullNodesByID.get(node.getNodeID());
@@ -636,50 +639,59 @@ public class PathfinderController {
 //                  pane.centreOnX(n.getxCoord());
 //                  pane.centreOnY(n.getyCoord());
 
-                  ArrayList<Integer> int_path = EPathfinder.getPath();
-                  String prevNode = "";
-                  ArrayList<String> string_floor_path = new ArrayList<>();
-                  fullNode_by_floor = new ArrayList<>();
-                  for(int i = 0; i< int_path.size()-1; i++){
-                      String currfloor = fullNodesByID.get(int_path.get(i)).getFloor();
-                      if(!currfloor.equals(prevNode)){
-                          prevNode = currfloor;
-                          string_floor_path.add(currfloor);
-                          fullNode_by_floor.add(fullNodesByID.get(int_path.get(i)));
+                      ArrayList<Integer> int_path = EPathfinder.getPath();
+                      String prevNode = "";
+                      ArrayList<String> string_floor_path = new ArrayList<>();
+                      fullNode_by_floor = new ArrayList<>();
+                      for (int i = 0; i < int_path.size() - 1; i++) {
+                          String currfloor = fullNodesByID.get(int_path.get(i)).getFloor();
+                          if (!currfloor.equals(prevNode)) {
+                              prevNode = currfloor;
+                              string_floor_path.add(currfloor);
+                              fullNode_by_floor.add(fullNodesByID.get(int_path.get(i)));
+                          } else {
+                              string_floor_path.add(currfloor);
+                          }
                       }
-                      else{
-                          string_floor_path.add(currfloor);
+                      ArrayList<String> outputList = new ArrayList<>();
+                      String previousElement = "";
+                      for (String element : string_floor_path) {
+                          if (!element.equals(previousElement)) {
+                              outputList.add(element);
+                              previousElement = element;
+                          }
                       }
-                  }
-                  ArrayList<String> outputList = new ArrayList<>();
-                  String previousElement = "";
-                  for (String element : string_floor_path) {
-                      if (!element.equals(previousElement)) {
-                          outputList.add(element);
-                          previousElement = element;
-                      }
-                  }
-                  floorsTraversed = outputList;
+                      floorsTraversed = outputList;
 
 //                  for(int i = 0; i< int_path.size() - 1;i++){
 //                      System.out.println(outputList.get(i));
 //                  }
 
-                  nodes_by_floor = new HashMap<>();
-                  for (Integer id : int_path) {
-                      FullNode node = fullNodesByID.get(id);
-                      nodePath = nodes_by_floor.get(node.getFloor());
+                      nodes_by_floor = new HashMap<>();
+                      for (Integer id : int_path) {
+                          FullNode node = fullNodesByID.get(id);
+                          nodePath = nodes_by_floor.get(node.getFloor());
 //                  System.out.println(nodePath);
-                      if (nodePath == null) {
-                          nodePath = new ArrayList<>();
+                          if (nodePath == null) {
+                              nodePath = new ArrayList<>();
+                          }
+                          nodePath.add(PathFinding.ASTAR.get_node_map().get(id));
+                          nodes_by_floor.put(node.getFloor(), nodePath);
+                          string_path.add(node.getLongName());
                       }
-                      nodePath.add(PathFinding.ASTAR.get_node_map().get(id));
-                      nodes_by_floor.put(node.getFloor(), nodePath);
-                      string_path.add(node.getLongName());
-                  }
 
-                  String floor = PathFinding.ASTAR.get_node_map().get(start).getFloor();
-                  switchFloor(floor);
+                      String floor = PathFinding.ASTAR.get_node_map().get(start).getFloor();
+                      switchFloor(floor);
+                  }
+                  else {
+                      System.out.println("no path");
+                      Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                      alert.setTitle("No path found");
+                      alert.setHeaderText(null);
+                      String alert_message = "No valid path between start and end detected";
+                      alert.setContentText(alert_message);
+                      alert.showAndWait();
+                  }
 
               } catch (SQLException e) {
                   throw new RuntimeException(e);
@@ -703,32 +715,44 @@ public class PathfinderController {
 //                      floorsVisited.add(node.getFloor());
 //                  }
 //              }
-          }
 
-          if (floorsTraversed != null) {
-              //System.out.println(floorsVisited);
+
+              if (floorsTraversed != null) {
+                  //System.out.println(floorsVisited);
 //              for (String element : floorsTraversed) {
 //                  System.out.println(element);
 //              }
-              previousFloor.setVisible(true);
-              previousFloor.setDisable(true);
-              previousFloor.setOnMouseClicked(e->clickPreviousFloor());
-              nextFloor.setVisible(true);
-              nextFloor.setOnMouseClicked(e->clickNextFloor());
+                  previousFloor.setVisible(true);
+                  previousFloor.setDisable(true);
+                  previousFloor.setOnMouseClicked(e -> clickPreviousFloor());
+                  nextFloor.setVisible(true);
+                  nextFloor.setOnMouseClicked(e -> clickNextFloor());
 //          floorsVisited = new ArrayList<String>(nodes_by_floor.keySet());
-              //firstFloorVisited = floorsTraversed.get(0);
-             // lastFloorVisited = floorsTraversed.get(floorsTraversed.size() - 1);
-              currentIndex = 0;
-          }
-          for (Move move : upcoming_moves){
-              if (startNode.getSelectedItem().equals(move.getLongName())) {
-                  moveAlert(startNode.getSelectedItem());
+                  //firstFloorVisited = floorsTraversed.get(0);
+                  // lastFloorVisited = floorsTraversed.get(floorsTraversed.size() - 1);
+                  currentIndex = 0;
               }
-              if (endNode.getSelectedItem().equals(move.getLongName())) {
-                  moveAlert(endNode.getSelectedItem());
-              }
+              String alert_message = "";
+              for (Move move : upcoming_moves) {
+                  if (startNode.getSelectedItem().equals(move.getLongName())) {
+                      alert_message += moveAlert(startNode.getSelectedItem());
+                  }
+                  if (endNode.getSelectedItem().equals(move.getLongName())) {
+                      alert_message += moveAlert(endNode.getSelectedItem());
+                  }
 
+              }
+              if (!alert_message.isEmpty()) {displayAlert(alert_message);}
           }
+          else {
+              Alert alert = new Alert(Alert.AlertType.INFORMATION);
+              alert.setTitle("Select Valid Start and End");
+              alert.setHeaderText(null);
+              String alert_message = "Please select a valid start and end";
+              alert.setContentText(alert_message);
+              alert.showAndWait();
+          }
+
       });
   }
 
