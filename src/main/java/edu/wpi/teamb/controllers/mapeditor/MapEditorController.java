@@ -226,18 +226,29 @@ public class MapEditorController {
     Platform.runLater(() -> this.pane.centreOn(new Point2D(2190, 910)));
 
 
-    FileInputStream input = new FileInputStream("src/main/resources/edu/wpi/teamb/img/breakfast.png");
-    Image image = new Image(input);
-    ImageView imageView1 = new ImageView(image);
-    ImageView imageView2 = new ImageView(image);
-    ImageView imageView3 = new ImageView(image);
-    ImageView imageView4 = new ImageView(image);
-    ImageView imageView5 = new ImageView(image);
-    btnMenuNode.setGraphic(imageView1);
-    btnMenuEdge.setGraphic(imageView2);
-    btnMenuBackup.setGraphic(imageView3);
-    btnMenuMove.setGraphic(imageView4);
-    btnMenuTools.setGraphic(imageView5);
+    FileInputStream inputNode = new FileInputStream("src/main/resources/edu/wpi/teamb/img/icons/node.png");
+    FileInputStream inputEdge = new FileInputStream("src/main/resources/edu/wpi/teamb/img/icons/edge.png");
+    FileInputStream inputTools = new FileInputStream("src/main/resources/edu/wpi/teamb/img/icons/tools.png");
+    FileInputStream inputMove = new FileInputStream("src/main/resources/edu/wpi/teamb/img/icons/move.png");
+    FileInputStream inputReset = new FileInputStream("src/main/resources/edu/wpi/teamb/img/icons/reset.png");
+
+    Image imageNode = new Image(inputNode);
+    Image imageEdge = new Image(inputEdge);
+    Image imageTools = new Image(inputTools);
+    Image imageMove = new Image(inputMove);
+    Image imageReset = new Image(inputReset);
+
+    ImageView imageViewNode = new ImageView(imageNode);
+    ImageView imageViewEdge = new ImageView(imageEdge);
+    ImageView imageViewTools = new ImageView(imageTools);
+    ImageView imageViewMove = new ImageView(imageMove);
+    ImageView imageViewReset = new ImageView(imageReset);
+
+    btnMenuNode.setGraphic(imageViewNode);
+    btnMenuEdge.setGraphic(imageViewEdge);
+    btnMenuTools.setGraphic(imageViewTools);
+    btnMenuMove.setGraphic(imageViewMove);
+    btnMenuBackup.setGraphic(imageViewReset);
     btnAlignNodes.setVisible(false);
 
     System.out.println("MapEditorController initialized");
