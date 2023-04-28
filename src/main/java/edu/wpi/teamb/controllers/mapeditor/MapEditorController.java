@@ -259,7 +259,8 @@ public class MapEditorController {
 
     System.out.println("MapEditorController initialized");
 
-    System.out.println("off");
+
+    //Quick fix for an error that happens when you initialize a page from a non-nav bar location
     navPane.setMouseTransparent(true);
     vboxActivateNav.setDisable(false);
     navLoaded = false;
@@ -1002,7 +1003,6 @@ public class MapEditorController {
   public void activateNav(){
     vboxActivateNav.setOnMouseEntered(event -> {
       if(!navLoaded) {
-        System.out.println("on");
         navPane.setMouseTransparent(false);
         navLoaded = true;
         vboxActivateNav.setDisable(true);
@@ -1018,7 +1018,6 @@ public class MapEditorController {
   public void deactivateNav(){
     vboxActivateNav1.setOnMouseEntered(event -> {
       if(navLoaded){
-        System.out.println("off");
         navPane.setMouseTransparent(true);
         vboxActivateNav.setDisable(false);
         navLoaded = false;

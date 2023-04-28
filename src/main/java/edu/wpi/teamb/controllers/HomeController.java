@@ -69,6 +69,12 @@ public class HomeController {
         homeE = new EHome();
         bounds = homePane.getBoundsInLocal();
 
+        //Quick fix for not initializing a page from the navbar for some reason
+        navPane.setMouseTransparent(true);
+        vboxActivateNav.setDisable(false);
+        navLoaded = false;
+        vboxActivateNav1.setDisable(true);
+
     }
 
     private void initPathfinderBtn() {
