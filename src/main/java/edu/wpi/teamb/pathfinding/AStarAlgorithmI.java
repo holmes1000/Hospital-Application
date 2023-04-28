@@ -174,11 +174,14 @@ public class AStarAlgorithmI implements IPathFindingAlgorithm {
     }
 
     public String[] getPathAsStrings(ArrayList<Integer> shortestPath){
-        String[] longNames = new String[shortestPath.size()];
-        for (int i = 0; i < shortestPath.size(); i++) {
-            longNames[i] = fullNodesByID.get(shortestPath.get(i)).getLongName();
+        if (shortestPath != null) {
+            String[] longNames = new String[shortestPath.size()];
+            for (int i = 0; i < shortestPath.size(); i++) {
+                longNames[i] = fullNodesByID.get(shortestPath.get(i)).getLongName();
+            }
+            return longNames;
         }
-        return longNames;
+        else {return null;}
     }
 
 
