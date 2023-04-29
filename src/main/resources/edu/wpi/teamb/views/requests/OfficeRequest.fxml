@@ -56,7 +56,7 @@
                         <Cursor fx:constant="DEFAULT" />
                     </cursor>
                 </MFXFilterComboBox>
-                <MFXFilterComboBox fx:id="cbLongName" floatingText="Room Name" layoutX="20.0" layoutY="337.0" prefHeight="40.0" prefWidth="410.0" />
+                <MFXFilterComboBox fx:id="cbLongName" floatingText="Room" layoutX="20.0" layoutY="337.0" prefHeight="40.0" prefWidth="410.0" promptText="Search for room" />
             <MFXTextField fx:id="tbSupplyQuantities" alignment="TOP_LEFT" floatingText="Quantity" layoutX="20.0" layoutY="187.0" prefHeight="30.0" prefWidth="162.0" textLimit="10">
             </MFXTextField>
             <Text fill="RED" layoutX="968.0" layoutY="477.0" strokeType="OUTSIDE" strokeWidth="0.0" text="All fields required*">
