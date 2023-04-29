@@ -185,7 +185,6 @@ public class PathfinderController {
       startNode.getSelectionModel().selectItem(defaultStart); // not sure about this
       changeButtonColor(currentFloor);
       algorithmDropdown.selectFirst();
-      btnFindPath.setVisible(false);
 
 
       listView.getSelectionModel().selectionProperty().addListener(new ChangeListener<ObservableMap<Integer, String>>() {
