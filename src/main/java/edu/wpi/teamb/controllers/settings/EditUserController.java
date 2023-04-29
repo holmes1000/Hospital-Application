@@ -44,6 +44,7 @@ public class EditUserController {
         permissionLevels.add("EMPLOYEE");
         cbPermissionLevel.setItems(permissionLevels);
         cbPermissionLevel.selectItem(permissionLevelToString(currentUser.getPermissionLevel()));
+        cbPermissionLevel.setText(permissionLevelToString(currentUser.getPermissionLevel()));
 
         // Sort the combo boxes
         Collections.sort(permissionLevels);
@@ -94,6 +95,6 @@ public class EditUserController {
             return "EMPLOYEE";
         }
         else
-            return "Error"; // Error
+            return "EMPLOYEE"; // Error
     }
 }

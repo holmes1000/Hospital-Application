@@ -17,8 +17,10 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.Array;
 import java.sql.Timestamp;
+import java.text.CollationElementIterator;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class EditAlertController {
 
@@ -38,14 +40,16 @@ public class EditAlertController {
         // Initialize the alert data
         tfTitle.setText(currentAlert.getTitle());
         tfDescription.setText(currentAlert.getDescription());
+        ObservableList<String> employees =
+                FXCollections.observableArrayList();
         ArrayList<User> users = Repository.getRepository().getAllUsers();
-        ArrayList<String> usernames = new ArrayList<>();
         for(int i = 0; i < users.size(); i++){
-            usernames.add(users.get(i).getUsername());
+            employees.add(users.get(i).getUsername());
         }
-        cbEmployees.getItems().addAll(usernames);
-        cbEmployees.setValue(currentAlert.getEmployee());
-        Repository.getRepository().deleteAlert(currentAlert);
+        Collections.sort(employees);
+        cbEmployees.getItems().addAll(employees);
+        cbEmployees.selectItem(currentAlert.getEmployee());
+        cbEmployees.setText(currentAlert.getEmployee());
     }
 
     public void initButtons() {
@@ -57,11 +61,11 @@ public class EditAlertController {
         currentAlert.setDescription(tfDescription.getText());
         currentAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
         if(cbEmployees.getValue().equals("")){
-            currentAlert.setEmployee("unassigned");
+            currentAlert.setEmployee("Unassigned");
         } else {
             currentAlert.setEmployee(cbEmployees.getValue());
         }
-        Repository.getRepository().addAlert(currentAlert);
+        Repository.getRepository().updateAlert(currentAlert);
 
         // Create an alert
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
