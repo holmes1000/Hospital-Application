@@ -331,6 +331,11 @@ public class SubmittedRequestsController {
                         //if selection is null
                         loadRequestsIntoContainer();
                     } else if (newValue.equals("Unassigned Task")) {
+                        //clear cbFilterOptions current selection and items
+                        cbFilterOptions.getSelectionModel().clearSelection();
+                        cbFilterOptions.getItems().clear();
+                        //set the button to not be visible
+                        cbFilterOptions.setVisible(false);
                         loadRequestsIntoContainer("employee", "Unassigned");
                     } else if (!newValue.equals("")) {
                         //set cbFilterOptions to visible
@@ -340,7 +345,10 @@ public class SubmittedRequestsController {
                         //add filtering options to cbFilterOptions based on filter category
                         switch (newValue) {
                             case "Status":
-                                ArrayList<String> statusList = new ArrayList<>(Arrays.asList("", RequestStatus.PENDING.getStatus(), RequestStatus.COMPLETED.getStatus()));
+                                ArrayList<String> statusList = new ArrayList<>(Arrays.asList(
+                                        "",
+                                        RequestStatus.PENDING.getStatus(),
+                                        RequestStatus.COMPLETED.getStatus()));
                                 //sort statusList in alphabetical order
                                 Collections.sort(statusList);
                                 cbFilterOptions.getItems().addAll(statusList);
