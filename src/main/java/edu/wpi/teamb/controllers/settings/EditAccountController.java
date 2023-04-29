@@ -79,7 +79,7 @@ public class EditAccountController {
         alert.showAndWait();
 
         // Go home
-        Navigation.navigate(Screen.HOME);
+        Navigation.navigate(Screen.SETTINGS);
     }
 
     /**

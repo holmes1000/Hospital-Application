@@ -90,11 +90,6 @@
                         <TableView fx:id="tbAlerts" layoutX="613.0" layoutY="117.0" onMouseClicked="#tbItemSelected" prefHeight="460.0" prefWidth="369.0" />
                     </children>
                 </VBox>
-            <MFXButton fx:id="btnRefresh" layoutX="907.0" layoutY="92.0" prefHeight="33.0" prefWidth="66.0" rippleAnimateShadow="true" style="-fx-background-color: #012d5a; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Refresh" textFill="WHITE" visible="false">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </MFXButton>
             <VBox fx:id="vboxActivateNav" layoutX="-150.0" prefHeight="720.0" prefWidth="70.0" />
             <MFXButton fx:id="btnReset" layoutX="268.0" layoutY="395.0" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #012d5a; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Reset" textFill="WHITE">
                <font>
@@ -106,6 +101,11 @@
                         <Font name="System Bold" size="12.0" />
                     </font>
                 </MFXButton>
+            <MFXButton fx:id="btnRefresh" layoutX="681.0" layoutY="614.0" prefHeight="46.0" prefWidth="106.0" rippleAnimateShadow="true" style="-fx-background-color: #012d5a; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Refresh" textFill="WHITE" visible="false">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </MFXButton>
             </children>
         </AnchorPane>
     </center>
