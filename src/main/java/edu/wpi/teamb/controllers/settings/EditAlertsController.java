@@ -50,6 +50,7 @@ public class EditAlertsController {
     @FXML private MFXButton btnDeleteAlert;
     @FXML private MFXButton btnEditAlert;
     @FXML private MFXButton btnRefresh;
+    @FXML private MFXButton btnReset;
     @FXML private Pane navPane;
     @FXML private MFXButton btnBack;
     @FXML private TableView<edu.wpi.teamb.DBAccess.ORMs.Alert> tbAlerts;
@@ -88,6 +89,12 @@ public class EditAlertsController {
     }
 
     public void initButtons() {
+        btnAddAlert.setTooltip(new Tooltip("Click to add alert"));
+        btnEditAlert.setTooltip(new Tooltip("Click to edit alert"));
+        btnRefresh.setTooltip(new Tooltip("Click to refresh table"));
+        btnDeleteAlert.setTooltip(new Tooltip("Click to delete alert"));
+        btnReset.setTooltip(new Tooltip("Click to reset fields"));
+        btnBack.setTooltip(new Tooltip("Click to go to settings"));
         btnAddAlert.setOnMouseClicked(event -> handleAddAlert());
         btnEditAlert.setOnMouseClicked(event -> {
             try {
@@ -104,6 +111,13 @@ public class EditAlertsController {
         btnEditAlert.setDisable(true);
         btnDeleteAlert.setDisable(true);
         btnBack.setOnMouseClicked(event -> Navigation.navigate(Screen.SETTINGS));
+        btnReset.setOnMouseClicked(event -> handleReset());
+    }
+
+    private void handleReset() {
+        textTitle.clear();
+        textDescription.clear();
+        cbEmployees.clear();
     }
 
     private void handleDeleteAlert() {
@@ -147,13 +161,23 @@ public class EditAlertsController {
         newAlert.setDescription(textDescription.getText().toLowerCase());
         newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
         if(cbEmployees.getValue() == null){
-            newAlert.setEmployee("unassigned");
+            newAlert.setEmployee("Unassigned");
         } else {
             newAlert.setEmployee(cbEmployees.getValue());
         }
-        Repository.getRepository().addAlert(newAlert);
-        createAlert("Alert added", "Alert added successfully");
-        initializeFields(); // Refresh the combo box
+        if (!nullInputs()) {
+            createAlert("Alert added", "Alert added successfully");
+            Repository.getRepository().addAlert(newAlert);
+            handleReset();
+            tbAlerts.refresh();
+            updateTable();
+        }
+        else
+            createAlert("Alert not added", "Please fill out the required fields");
+    }
+
+    private boolean nullInputs() {
+        return textTitle.getText().isEmpty() || textDescription.getText().isEmpty();
     }
 
     private void createAlert(String title, String context) {

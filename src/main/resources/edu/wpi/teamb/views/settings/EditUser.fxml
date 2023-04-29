@@ -10,7 +10,7 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="400.0" style="-fx-background-color: #7089a2; -fx-border-color: #ffffff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.settings.EditUserController">
     <children>
-                <VBox fx:id="vboxEditUser" layoutX="12.0" layoutY="118.0" prefHeight="401.0" prefWidth="376.0">
+                <VBox fx:id="vboxEditUser" alignment="CENTER" layoutX="12.0" layoutY="118.0" prefHeight="401.0" prefWidth="376.0">
                     <children>
                         <MFXTextField fx:id="tfName" floatingText="Name" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="362.0">
                             <opaqueInsets>
@@ -21,14 +21,6 @@
                             </VBox.margin>
                         </MFXTextField>
                         <MFXTextField fx:id="tfUsername" floatingText="Username" prefHeight="50.0" prefWidth="362.0">
-                            <opaqueInsets>
-                                <Insets />
-                            </opaqueInsets>
-                            <VBox.margin>
-                                <Insets bottom="10.0" />
-                            </VBox.margin>
-                        </MFXTextField>
-                        <MFXTextField fx:id="tfPassword" floatingText="Password" prefHeight="50.0" prefWidth="362.0">
                             <opaqueInsets>
                                 <Insets />
                             </opaqueInsets>
