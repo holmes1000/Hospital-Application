@@ -12,10 +12,12 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
@@ -29,6 +31,7 @@ import java.util.Collections;
 public class MealRequestControllerI implements IRequestController{
 
     @FXML private MFXButton btnSubmit;
+    @FXML private SplitPane spSubmit;
     @FXML private MFXButton btnReset;
     @FXML private ImageView helpIcon;
     @FXML private MFXFilterComboBox<String> cbAvailableMeals;
@@ -52,6 +55,23 @@ public class MealRequestControllerI implements IRequestController{
 
     @Override
     public void initBtns() {
+        spSubmit.setTooltip(new Tooltip("Enter all required fields to submit request"));
+        BooleanBinding bb = new BooleanBinding() {
+            {
+                super.bind(cbOrderLocation.valueProperty(),
+                        cbEmployeesToAssign.valueProperty(),
+                        cbLongName.valueProperty());
+            }
+
+            @Override
+            protected boolean computeValue() {
+                return (cbOrderLocation.getValue() == null ||
+                        cbEmployeesToAssign.getValue() == null ||
+                        cbLongName.getValue() == null);
+            }
+        };
+        btnSubmit.disableProperty().bind(bb);
+
         btnSubmit.setTooltip(new Tooltip("Click to submit your request"));
         btnSubmit.setOnAction(e -> handleSubmit());
         btnReset.setTooltip(new Tooltip("Click to reset the form"));
