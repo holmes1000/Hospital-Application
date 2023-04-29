@@ -17,6 +17,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
@@ -59,6 +60,8 @@ public class EditAccountController {
     }
 
     public void initButtons() {
+        btnSaveEdits.setTooltip(new Tooltip("Click to save your edits"));
+        btnBack.setTooltip(new Tooltip("Click to go back to the settings page"));
         btnSaveEdits.setOnMouseClicked(event -> handleSaveEdits());
         btnBack.setOnMouseClicked(event -> Navigation.navigate(Screen.SETTINGS));
     }

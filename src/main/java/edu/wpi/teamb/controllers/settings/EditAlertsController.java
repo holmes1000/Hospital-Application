@@ -89,6 +89,12 @@ public class EditAlertsController {
     }
 
     public void initButtons() {
+        btnAddAlert.setTooltip(new Tooltip("Click to add alert"));
+        btnEditAlert.setTooltip(new Tooltip("Click to edit alert"));
+        btnRefresh.setTooltip(new Tooltip("Click to refresh table"));
+        btnDeleteAlert.setTooltip(new Tooltip("Click to delete alert"));
+        btnReset.setTooltip(new Tooltip("Click to reset fields"));
+        btnBack.setTooltip(new Tooltip("Click to go to settings"));
         btnAddAlert.setOnMouseClicked(event -> handleAddAlert());
         btnEditAlert.setOnMouseClicked(event -> {
             try {

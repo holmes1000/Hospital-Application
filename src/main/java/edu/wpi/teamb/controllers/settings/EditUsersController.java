@@ -23,6 +23,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -95,6 +96,11 @@ public class EditUsersController {
     }
 
     public void initButtons() {
+        btnAddUser.setTooltip(new Tooltip("Click to add a new user"));
+        btnEditUser.setTooltip(new Tooltip("Click to edit a user's information"));
+        btnDeleteUser.setTooltip(new Tooltip("Click to delete a user"));
+        btnReset.setTooltip(new Tooltip("Click to reset the fields"));
+        btnBack.setTooltip(new Tooltip("Click to go back to the settings m"));
         btnAddUser.setOnMouseClicked(event -> handleAddUser());
         btnEditUser.setOnMouseClicked(event -> {
             try {
