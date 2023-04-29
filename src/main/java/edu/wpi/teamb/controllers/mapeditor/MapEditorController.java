@@ -913,6 +913,19 @@ public class MapEditorController {
     });
   }
 
+  private void setMenuItemTooltip(MenuButton b, CustomMenuItem c, String text, String toolTipText) {
+    // change the color of the custom menu item
+    Text text1 = new Text(text);
+    Tooltip tooltip = new Tooltip(toolTipText);
+    c.setContent(text1);
+    Tooltip.install(c.getContent(), tooltip);
+    // Set text properties
+    text1.setWrappingWidth(112);
+    text1.setX(10.0);
+    text1.setY(25.0);
+    b.getItems().addAll(c);
+  }
+
   public void initStateBtn() {
     // Init New State Buttons
     setMenuItemTooltip(btnMenuNode, btnAddNode, "Add Node", "Click on the map where you would like to add a node");
