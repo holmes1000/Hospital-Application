@@ -1,6 +1,8 @@
 package edu.wpi.teamb.Game;
 
 
+import java.io.IOException;
+
 import edu.wpi.teamb.Bapp;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -25,26 +27,28 @@ public class Gapp extends Application {
         Gapp.primaryStage = primaryStage;
         primaryStage.setResizable(false);
     
-        final FXMLLoader loader = new FXMLLoader(Gapp.class.getResource("./rsc/Screens/StartScn.fxml"));
-        final BorderPane root = loader.load();
-    
+        FXMLLoader loader = new FXMLLoader(Gapp.class.getResource("./rsc/Screens/StartScn.fxml"));
+        BorderPane root = loader.load();
+
         Gapp.rootPane = root;
-    
+
         final Scene scene = new Scene(root);
         primaryStage.setScene(scene);
-        // primaryStage.setScene(primaryStage.getScene());
+        primaryStage.setScene(primaryStage.getScene());
         primaryStage.setResizable(false);
 
         primaryStage.show();
 
     }
 
-    public void changeScene(String scene)
+    public static void  changeScene(String scene) 
     {
-        Group g = new Group();
-        
-        primaryStage.setScene(new Scene(g));
-        //change the scene to gicen scene filepath
-        primaryStage.setScene(new Scene(new Group()));
+        try {
+            BorderPane newroot = (new FXMLLoader(Gapp.class.getResource(scene))).load();
+            primaryStage.setScene(new Scene(newroot));;
+        } catch (Exception e) {
+            System.err.println( "ERROR: Unable to load: " +scene+"\n" + e.getMessage());
+        }
+       
     }
 }

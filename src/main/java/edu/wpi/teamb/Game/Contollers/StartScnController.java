@@ -40,7 +40,7 @@ public class StartScnController {
     @FXML
     public void playGame()
     {
-
+        Gapp.changeScene("./rsc/Screens/GameScn.fxml");
     }
 
     @FXML 
@@ -53,7 +53,9 @@ public class StartScnController {
     public void showHTP()
     {
         //change scene to ./rsc/Screens/StartScn.fxml
-        Gapp.changeScene("./rsc/Screens/HowToPlay.fxml");
+            
+            Gapp.changeScene("./rsc/Screens/HowToPlay.fxml");
+
     
     }
 

@@ -1,4 +1,5 @@
 package edu.wpi.teamb.Game.Contollers;
+
 /**
  * Sample Skeleton for 'HowToPlay.fxml' Controller Class
  */
@@ -6,6 +7,8 @@ package edu.wpi.teamb.Game.Contollers;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import edu.wpi.teamb.Game.Gapp;
 import javafx.fxml.FXML;
 
 public class HowToPlayController {
@@ -22,6 +25,14 @@ public class HowToPlayController {
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
         assert btnBack != null : "fx:id=\"btnBack\" was not injected: check your FXML file 'HowToPlay.fxml'.";
+
+    }
+
+    @FXML
+    public void showStartScene() {
+
+
+            Gapp.changeScene("./rsc/Screens/StartScn.fxml");
 
     }
 
