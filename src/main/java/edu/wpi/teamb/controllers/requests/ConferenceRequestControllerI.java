@@ -15,6 +15,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
@@ -73,6 +74,7 @@ public class ConferenceRequestControllerI implements IRequestController{
         longNames.addAll(Repository.getRepository().getLongNameByType("CONF"));
         Collections.sort(longNames);
         cbLongName.setItems(longNames);
+        cbLongName.setTooltip(new Tooltip("Select a location to direct the request to"));
 
         //Dropdown for employee selection
         ObservableList<String> employees =
@@ -81,30 +83,37 @@ public class ConferenceRequestControllerI implements IRequestController{
         Collections.sort(employees);
         employees.add(0, "Unassigned");
         cbEmployeesToAssign.setItems(employees);
+        cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
 
         //Dropdown for duration selection
         ObservableList<Integer> duration =
                 FXCollections.observableArrayList();
         duration.addAll(10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
         cbDuration.setItems(duration);
+        cbDuration.setTooltip(new Tooltip("Select a duration for the request"));
 
         // Dropdown for reservationHour
         ObservableList<Integer> hoursListItems =
                 FXCollections.observableArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
         reservationHour.setItems(hoursListItems);
+        reservationHour.setTooltip(new Tooltip("Select a time for the request"));
 
         // Dropdown for reservationMinute
         ObservableList<String> minutesListItems = FXCollections.observableArrayList("00", "15", "30", "45");
         reservationMinute.setItems(minutesListItems);
+        reservationMinute.setTooltip(new Tooltip("Select a time for the request"));
 
         // Dropdown for reservationAmPm
         ObservableList<String> AmPm = FXCollections.observableArrayList("AM", "PM");
         reservationAmPm.setItems(AmPm);
+        reservationAmPm.setTooltip(new Tooltip("Select a time for the request"));
 
         // changing some properties of the text fields
         // makes cursor visible
         eventNameTextField.setCaretVisible(true);
+        eventNameTextField.setTooltip(new Tooltip("Enter a name for the event"));
         bookingReasonTextField.setCaretVisible(true);
+        bookingReasonTextField.setTooltip(new Tooltip("Enter a reason for the booking"));
         // setting max character limits
         eventNameTextField.textLimitProperty().set(100);
         bookingReasonTextField.textLimitProperty().set(250);

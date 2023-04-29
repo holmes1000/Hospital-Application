@@ -16,6 +16,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
@@ -25,22 +26,30 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Collections;
 
-public class OfficeRequestControllerI implements IRequestController{
+public class OfficeRequestControllerI implements IRequestController {
 
     @FXML
     private MFXButton btnSubmit;
-    @FXML private MFXButton btnReset;
-    @FXML private ImageView helpIcon;
-    @FXML private MFXFilterComboBox<String> cbSupplyItems;
-    @FXML private MFXFilterComboBox<String> cbSupplyType;
-    @FXML private MFXTextField tbSupplyQuantities;
-    @FXML private MFXTextField txtFldNotes;
-    @FXML private MFXFilterComboBox<String> cbEmployeesToAssign;
-    @FXML private MFXFilterComboBox<String> cbLongName;
+    @FXML
+    private MFXButton btnReset;
+    @FXML
+    private ImageView helpIcon;
+    @FXML
+    private MFXFilterComboBox<String> cbSupplyItems;
+    @FXML
+    private MFXFilterComboBox<String> cbSupplyType;
+    @FXML
+    private MFXTextField tbSupplyQuantities;
+    @FXML
+    private MFXTextField txtFldNotes;
+    @FXML
+    private MFXFilterComboBox<String> cbEmployeesToAssign;
+    @FXML
+    private MFXFilterComboBox<String> cbLongName;
 
     private final EOfficeRequest EOfficeRequest;
 
-    public OfficeRequestControllerI(){
+    public OfficeRequestControllerI() {
         this.EOfficeRequest = new EOfficeRequest();
     }
 
@@ -63,22 +72,56 @@ public class OfficeRequestControllerI implements IRequestController{
         longNames.addAll(Repository.getRepository().getPracticalLongNames());
         Collections.sort(longNames);
         cbLongName.setItems(longNames);
-
+        cbLongName.setTooltip(new Tooltip("Select a location"));
         //DROPDOWN INITIALIZATION
         ObservableList<String> employees = FXCollections.observableArrayList(EOfficeRequest.getUsernames());
         Collections.sort(employees);
         employees.add(0, "Unassigned");
         cbEmployeesToAssign.setItems(employees);
+        cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
 
         //DROPDOWN INITIALIZATION
         ObservableList<String> supplies = FXCollections.observableArrayList("Pencils", "Pens", "Paper", "Stapler", "Staples", "Tape", "Scissors", "Glue", "Markers", "Highlighters", "Post-It Notes", "Paper Clips", "Binder Clips", "Folders", "Envelopes", "Printer Paper");
         Collections.sort(supplies);
-        cbSupplyItems.setItems(supplies);
+        //cbSupplyItems.setItems(supplies);
 
         //DROPDOWN INITIALIZATION
         ObservableList<String> supplyType = FXCollections.observableArrayList("Office Supplies", "Cleaning Supplies");
         Collections.sort(supplyType);
-        cbSupplyType.setItems(supplyType);
+        //cbSupplyType.setItems(supplyType);
+        initComboBoxChangeListeners();
+    }
+
+
+    private void initComboBoxChangeListeners() {
+        cbSupplyItems.setVisible(false);
+        cbSupplyItems.setTooltip(new Tooltip("Select a supply item"));
+        cbSupplyType.setTooltip(new Tooltip("Select a supply category"));
+        cbSupplyType.getItems().addAll("Cleaning Supplies", "Electronics Supplies", "Office Supplies");
+        cbSupplyType.valueProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    if (newValue.equals("Office Supplies")) {
+                        cbSupplyItems.getItems().clear();
+                        ObservableList<String> officeSupplies = FXCollections.observableArrayList("Pencils", "Pens", "Paper", "Stapler", "Staples", "Tape", "Scissors", "Glue", "Markers", "Highlighters", "Post-It Notes", "Paper Clips", "Binder Clips", "Folders", "Envelopes", "Printer Paper");
+                        Collections.sort(officeSupplies);
+                        cbSupplyItems.getItems().addAll(officeSupplies);
+                        cbSupplyItems.setVisible(true);
+                    } else if (newValue.equals("Cleaning Supplies")) {
+                        cbSupplyItems.getItems().clear();
+                        ObservableList<String> cleaningSupplies = FXCollections.observableArrayList("Bleach", "Disinfectant Wipes", "Hand Sanitizer", "Soap", "Toilet Paper", "Paper Towels", "Trash Bags", "Dish Soap", "Sponges", "Dishwasher Detergent", "Laundry Detergent", "Fabric Softener", "Dryer Sheets", "Broom", "Mop", "Vacuum", "Duster", "Dustpan", "Trash Can", "Trash Can Liners", "Air Freshener", "Glass Cleaner", "All-Purpose Cleaner", "Furniture Polish", "Squeegee", "Toilet Brush", "Plunger", "Rubber Gloves", "Bucket");
+                        Collections.sort(cleaningSupplies);
+                        cbSupplyItems.getItems().addAll(cleaningSupplies);
+                        cbSupplyItems.setVisible(true);
+                    } else if (newValue.equals("Electronic Supplies")){
+                        cbSupplyItems.getItems().clear();
+                        ObservableList<String> electronicSupplies = FXCollections.observableArrayList("Batteries", "Light Bulbs", "Extension Cords", "Power Strips", "Surge Protectors", "Ethernet Cables", "HDMI Cables", "USB Cables", "Phone Chargers", "Laptop Chargers", "Headphones", "Earbuds", "Speakers", "Microphone", "Webcam", "Printer Ink", "Printer Toner", "Printer Paper");
+                        Collections.sort(electronicSupplies);
+                        cbSupplyItems.getItems().addAll(electronicSupplies);
+                    } else {
+                        cbSupplyItems.getItems().clear();
+                        cbSupplyItems.setVisible(false);
+                    }
+                });
     }
 
     @Override

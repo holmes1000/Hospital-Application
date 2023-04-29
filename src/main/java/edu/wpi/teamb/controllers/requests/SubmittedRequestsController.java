@@ -320,8 +320,10 @@ public class SubmittedRequestsController {
      */
     private void initComboBoxChangeListeners() {
         //at the beginning set cbFilterOptions to invisible
+        cbFilterOptions.setTooltip(new Tooltip("Select a filter option"));
         cbFilterOptions.setVisible(false);
         //add filtering options to cbFilterCategory
+        cbFilterCategory.setTooltip(new Tooltip("Select a filter category"));
         cbFilterCategory.getItems().addAll("", "Status", "Request Type", "Date Submitted", "Unassigned Task");
         //add change listener to cbFilterCategory
         cbFilterCategory.valueProperty().addListener(

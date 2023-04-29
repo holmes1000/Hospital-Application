@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -51,6 +52,7 @@ public class InfoCardController {
   }
 
     private void initBtns() {
+      completeButton.setTooltip(new Tooltip("Click to mark request as Completed"));
         completeButton.setOnMouseClicked(e -> {
             if (!fullRequest.getRequestStatus().equals("Completed")) {
                 //update fullRequest status
@@ -76,7 +78,7 @@ public class InfoCardController {
                 alert.showAndWait();
             }
         });
-
+        deleteButton.setTooltip(new Tooltip("Click to delete request"));
     deleteButton.setOnMouseClicked(
         event -> {
           //remove the request from the list of requests
@@ -85,6 +87,7 @@ public class InfoCardController {
             //delete the request from the database
             EInfoCard.deleteRequest(fullRequest);
         });
+    editButton.setTooltip(new Tooltip("Click to edit request"));
     editButton.setOnMouseClicked(event -> {
         FXMLLoader loader = null;
         Scene editPageScene = null;

@@ -169,6 +169,7 @@ public class MoveMapController {
     }
 
     public void clickFloorBtn(String floor) {
+        btnL1.setTooltip(new Tooltip("Lower Level 1"));
         btnL1.setOnMouseClicked(event->{
             currentFloor = "L1";
             changeButtonColor(currentFloor);
@@ -179,6 +180,7 @@ public class MoveMapController {
             displayMoves(currentFloor);
             locationCanvas.getChildren().add(pathGroup);
         });
+        btnL2.setTooltip(new Tooltip("Lower Level 2"));
         btnL2.setOnMouseClicked(event->{
             currentFloor = "L2";
             changeButtonColor(currentFloor);
@@ -189,6 +191,7 @@ public class MoveMapController {
             displayMoves(currentFloor);
             locationCanvas.getChildren().add(pathGroup);
         });
+        btn1.setTooltip(new Tooltip("Level 1"));
         btn1.setOnMouseClicked(event->{
             currentFloor = "1";
             changeButtonColor(currentFloor);
@@ -198,6 +201,7 @@ public class MoveMapController {
             displayMoves(currentFloor);
             locationCanvas.getChildren().add(pathGroup);
         });
+        btn2.setTooltip(new Tooltip("Level 2"));
         btn2.setOnMouseClicked(event->{
             currentFloor = "2";
             changeButtonColor(currentFloor);
@@ -207,6 +211,7 @@ public class MoveMapController {
             displayMoves(currentFloor);
             locationCanvas.getChildren().add(pathGroup);
         });
+        btn3.setTooltip(new Tooltip("Level 3"));
         btn3.setOnMouseClicked(event->{
             currentFloor = "3";
             changeButtonColor(currentFloor);

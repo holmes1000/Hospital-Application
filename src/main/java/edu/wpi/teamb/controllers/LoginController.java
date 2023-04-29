@@ -72,9 +72,9 @@ public class LoginController {
     } catch (EmptyLoginCredentialsException e) {
       errorMsg.setText("Fields are empty...Enter your data.");
     } catch (NullPointerException e) {
-      errorMsg.setText("Username does not exist in our system.");
+      errorMsg.setText("Please check username and/or password.");
     } catch (IncorrectPasswordException e) {
-      errorMsg.setText("Wrong password entered for the given username.");
+      errorMsg.setText("Please check username and/or password.");
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }

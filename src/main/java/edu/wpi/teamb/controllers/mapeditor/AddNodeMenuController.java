@@ -10,6 +10,7 @@ import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -55,16 +56,21 @@ public class AddNodeMenuController {
         // initialize cbNodeType options
         ObservableList<String> listOfNodeTypes = FXCollections.observableArrayList(Repository.getRepository().getNodeTypesUniqueAlphabetical());
         cbNodeType.setItems(listOfNodeTypes);
+        cbNodeType.setTooltip(new Tooltip("Select a node type"));
         // Initialize the node data
         //FullNode newFullNode = Repository.getRepository().getFullNode(currentNode.getNodeID());
         // Initialize the user data
         tfNodeId.setText(String.valueOf(currentNode.getNodeID()));
+        tfNodeId.setTooltip(new Tooltip("Node ID cannot be changed"));
         tfXCoord.setText(String.valueOf(currentNode.getxCoord()));
+        tfXCoord.setTooltip(new Tooltip("Change the x coordinate of the node if needed"));
         tfYCoord.setText(String.valueOf(currentNode.getyCoord()));
+        tfYCoord.setTooltip(new Tooltip("Change the y coordinate of the node if needed"));
     }
 
     public void initButtons() {
         btnSubmitNodeDetails.setOnMouseClicked(event -> handleSubmitNodeDetails());
+        btnSubmitNodeDetails.setTooltip(new Tooltip("Click to submit the node details"));
     }
 
     private void handleSubmitNodeDetails() {

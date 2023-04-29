@@ -5,6 +5,7 @@
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXToggleButton?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CustomMenuItem?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.effect.ColorAdjust?>
@@ -95,9 +96,6 @@
                <children>
                   <MenuButton fx:id="btnMenuNode" mnemonicParsing="false" style="-fx-background-color: #7089A2; -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Node" textAlignment="CENTER" textFill="WHITE">
                     <items>
-                      <MenuItem fx:id="itemAddNode" mnemonicParsing="false" text="Add Node" />
-                      <MenuItem fx:id="itemDeleteNode" mnemonicParsing="false" text="Delete Node" />
-                        <MenuItem fx:id="itemEditNode" mnemonicParsing="false" text="Edit Node" />
                     </items>
                      <font>
                         <Font size="18.0" />

@@ -16,6 +16,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
@@ -51,7 +52,9 @@ public class MealRequestControllerI implements IRequestController{
 
     @Override
     public void initBtns() {
+        btnSubmit.setTooltip(new Tooltip("Click to submit your request"));
         btnSubmit.setOnAction(e -> handleSubmit());
+        btnReset.setTooltip(new Tooltip("Click to reset the form"));
         btnReset.setOnAction(e -> handleReset());
         helpIcon.setOnMouseClicked(e -> handleHelp());
     }
@@ -62,11 +65,13 @@ public class MealRequestControllerI implements IRequestController{
         ObservableList<String> longNames = FXCollections.observableArrayList();
         longNames.addAll(Repository.getRepository().getPracticalLongNames());
         Collections.sort(longNames);
+        cbLongName.setTooltip(new Tooltip("Select a location to direct your request to"));
         cbLongName.setItems(longNames);
 
         ObservableList<String> locations =
                 FXCollections.observableArrayList(Repository.getRepository().getLongNameByType("RETL"));
         Collections.sort(locations);
+        cbOrderLocation.setTooltip(new Tooltip("Select a location to order from"));
         cbOrderLocation.setItems(locations);
 
         // DROPDOWN INITIALIZATION
@@ -75,24 +80,31 @@ public class MealRequestControllerI implements IRequestController{
         employees.addAll(EMealRequest.getUsernames());
         Collections.sort(employees);
         employees.add(0, "Unassigned");
+        cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
         cbEmployeesToAssign.setItems(employees);
 
 
         // DROPDOWN INITIALIZATION
         ObservableList<String> meals = FXCollections.observableArrayList("Pizza", "Pasta", "Soup");
         Collections.sort(meals);
+        cbAvailableMeals.setTooltip(new Tooltip("Select a meal"));
         cbAvailableMeals.setItems(meals);
 
         // DROPDOWN INITIALIZATION
         ObservableList<String> drinks =
                 FXCollections.observableArrayList("Water", "Coca-Cola", "Ginger-Ale");
         Collections.sort(drinks);
+        cbAvailableDrinks.setTooltip(new Tooltip("Select a drink"));
         cbAvailableDrinks.setItems(drinks);
 
         // DROPDOWN INITIALIZATION
         ObservableList<String> snacks = FXCollections.observableArrayList("Chips", "Apple");
         Collections.sort(snacks);
+        cbAvailableSnacks.setTooltip(new Tooltip("Select a snack"));
         cbAvailableSnacks.setItems(snacks);
+
+        // TEXTFIELD INITIALIZATION
+        txtFldNotes.setTooltip(new Tooltip("Enter any additional notes here"));
     }
 
     @Override

@@ -17,6 +17,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -73,19 +74,27 @@ public class MoveRequestControllerI implements IRequestController{
 
     @Override
     public void initBtns() {
+        btnSubmit.setTooltip(new Tooltip("Click to submit request"));
         btnSubmit.setOnAction(e -> handleSubmit());
+        btnReset.setTooltip(new Tooltip("Click to reset fields"));
         btnReset.setOnAction(e -> handleReset());
         helpIcon.setOnMouseClicked(e -> handleHelp());
+        btnRemoveMove.setTooltip(new Tooltip("Click to remove selected move"));
         btnRemoveMove.setOnMouseClicked(e -> handleRemoveMove());
+        btnEditRequest.setTooltip(new Tooltip("Click to edit selected move"));
         btnEditRequest.setOnMouseClicked(e -> handleEditRequest());
     }
 
     @Override
     public void initializeFields() throws SQLException {
+        // initialize comboboxes
+        cdRoomToMove.setTooltip(new Tooltip("Select room to move"));
         cdRoomToMove.setValue("");
         cdRoomToMove.setPromptText("Room to Move");
+        cdWheretoMove.setTooltip(new Tooltip("Select where to move selected room"));
         cdWheretoMove.setValue(-1);
         cdWheretoMove.setPromptText("Where to Move");
+        dateOfMove.setTooltip(new Tooltip("Select date of move"));
         dateOfMove.setValue(LocalDate.now());
         // initialize date picker
         dateOfMove.setPromptText("Date of Move");
@@ -184,6 +193,7 @@ public class MoveRequestControllerI implements IRequestController{
         TableColumn<Move, Date> dates = new TableColumn<>("Dates");
         dates.setCellValueFactory(new PropertyValueFactory<Move, Date>("date"));
 
+        tbFutureMoves.setTooltip(new Tooltip("Table of future move requests"));
         tbFutureMoves.getColumns().addAll(ids, locs, dates);
 
         // ArrayList<Move> moves = Repository.getRepository().getAllMoves();

@@ -16,6 +16,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
@@ -62,7 +63,9 @@ public class FurnitureRequestControllerI implements IRequestController{
 
     @Override
     public void initBtns() {
+        btnSubmit.setTooltip(new Tooltip("Click to submit request"));
         btnSubmit.setOnAction(e -> handleSubmit());
+        btnReset.setTooltip(new Tooltip("Click to reset fields"));
         btnReset.setOnAction(e -> handleReset());
         helpIcon.setOnMouseClicked(e -> handleHelp());
     }
@@ -73,21 +76,25 @@ public class FurnitureRequestControllerI implements IRequestController{
         longNames.addAll(Repository.getRepository().getPracticalLongNames());
         Collections.sort(longNames);
         cbLongName.setItems(longNames);
+        cbLongName.setTooltip(new Tooltip("Select a location to direct the request to"));
 
         //Set list of furniture
-        ObservableList<String> furniture = FXCollections.observableArrayList("Chair", "Couch", "Table", "Desk", "Bed");
+        ObservableList<String> furniture = FXCollections.observableArrayList("Chair", "Table", "Bed");
         Collections.sort(furniture);
         cbAvailableFurniture.setItems(furniture);
+        cbAvailableFurniture.setTooltip(new Tooltip("Select the type of furniture you want"));
 
         //Set list of models
-        ObservableList<String> models = FXCollections.observableArrayList("Huge", "Big", "Medium", "Small", "Tiny");
-        Collections.sort(models);
-        cdAvailableModels.setItems(models);
+//        ObservableList<String> models = FXCollections.observableArrayList("Huge", "Big", "Medium", "Small", "Tiny");
+//        Collections.sort(models);
+        //cdAvailableModels.setItems(models);
+        cdAvailableModels.setTooltip(new Tooltip("Select the size of furniture you want"));
 
         //Set list of assembly options
         ObservableList<String> assembly = FXCollections.observableArrayList("No", "Yes");
         Collections.sort(assembly);
         cdAssembly.setItems(assembly);
+        cdAssembly.setTooltip(new Tooltip("Select whether you want the furniture assembled"));
 
         //Set list of employees
         ObservableList<String> employees =
@@ -96,6 +103,40 @@ public class FurnitureRequestControllerI implements IRequestController{
         Collections.sort(employees);
         employees.add(0, "Unassigned");
         cbEmployeesToAssign.setItems(employees);
+        cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
+        initComboBoxChangeListeners();
+
+        txtFldNotes.setTooltip(new Tooltip("Enter any special instructions"));
+    }
+
+    private void initComboBoxChangeListeners() {
+        cdAvailableModels.setVisible(false);
+        ObservableList<String> furniture = FXCollections.observableArrayList("Chair", "Table", "Bed");
+        Collections.sort(furniture);
+        cbAvailableFurniture.getItems().addAll(furniture);
+        cbAvailableFurniture.valueProperty().addListener(
+                ((observable, oldValue, newValue) -> {
+                    if (newValue.equals("Chair")) {
+                        cdAvailableModels.getItems().clear();
+                        ObservableList<String> models = FXCollections.observableArrayList("Sofa", "Armchair", "Recliner", "Desk Chair", "Stool");
+                        Collections.sort(models);
+                        cdAvailableModels.getItems().addAll(models);
+                        cdAvailableModels.setVisible(true);
+                    } else if (newValue.equals("Table")) {
+                        cdAvailableModels.getItems().clear();
+                        ObservableList<String> models = FXCollections.observableArrayList("Writing Desk", "Coffee Table", "Dining Table", "End Table", "Nightstand", "Computer Desk", "Dressing Table");
+                        Collections.sort(models);
+                        cdAvailableModels.getItems().addAll(models);
+                        cdAvailableModels.setVisible(true);
+                    } else if (newValue.equals("Bed")) {
+                        cdAvailableModels.getItems().clear();
+                        ObservableList<String> models = FXCollections.observableArrayList("Sofa Bed", "Futon", "Air Mattress", "Baby Cot", "Medical Bed", "Camp Bed");
+                        Collections.sort(models);
+                        cdAvailableModels.getItems().addAll(models);
+                        cdAvailableModels.setVisible(true);
+                    }
+                })
+        );
     }
 
     @Override
