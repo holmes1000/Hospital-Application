@@ -47,6 +47,7 @@ public class EditAlertController {
             employees.add(users.get(i).getUsername());
         }
         Collections.sort(employees);
+        employees.add(0, "Unassigned");
         cbEmployees.getItems().addAll(employees);
         cbEmployees.selectItem(currentAlert.getEmployee());
         cbEmployees.setText(currentAlert.getEmployee());
@@ -60,9 +61,7 @@ public class EditAlertController {
         currentAlert.setTitle(tfTitle.getText());
         currentAlert.setDescription(tfDescription.getText());
         currentAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
-        if(cbEmployees.getValue().equals("")){
-            currentAlert.setEmployee("Unassigned");
-        } else {
+        if(cbEmployees.getValue() != null){
             currentAlert.setEmployee(cbEmployees.getValue());
         }
         Repository.getRepository().updateAlert(currentAlert);
