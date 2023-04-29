@@ -172,8 +172,19 @@ public class InfoCardController {
     if (fullRequest.getDateSubmitted() != null) {
         //break up the date and time into two different variables
         String[] dateAndTime = fullRequest.getDateSubmitted().toString().split(" ");
-        setDateSubmittedLabel(dateAndTime[0]);
-        setTimeSubmittedLabel(dateAndTime[1]);
+        String[] date = dateAndTime[0].split("-");
+        String dateFormatted = date[1] + "/" + date[2] + "/" + date[0];
+        setDateSubmittedLabel(dateFormatted);
+        String[] time = dateAndTime[1].split(":");
+        String timeFormatted;
+        if (Integer.parseInt(time[0]) > 12) {
+            timeFormatted = Integer.toString(Integer.parseInt(time[0]) - 12) + ":" + time[1] + " PM";
+        } else if (Integer.parseInt(time[0]) == 0) {
+            timeFormatted = "12" + ":" + time[1] + " AM";
+        } else {
+            timeFormatted = time[0] + ":" + time[1] + " AM";
+        }
+        setTimeSubmittedLabel(timeFormatted);
     } else {
         setDateSubmittedLabel("Unavailable");
         setTimeSubmittedLabel("Unavailable");

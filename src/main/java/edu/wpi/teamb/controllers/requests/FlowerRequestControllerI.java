@@ -12,10 +12,12 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
@@ -28,6 +30,7 @@ import java.util.Collections;
 public class FlowerRequestControllerI implements IRequestController {
 
     @FXML private MFXButton btnSubmit;
+    @FXML private SplitPane spSubmit;
     @FXML private MFXButton btnReset;
     @FXML private ImageView helpIcon;
     @FXML private MFXFilterComboBox<String> cbAvailableFlowers;
@@ -52,9 +55,30 @@ public class FlowerRequestControllerI implements IRequestController {
 
     @Override
     public void initBtns() {
-        btnSubmit.setTooltip(new Tooltip("Submit the request"));
+        spSubmit.setTooltip(new Tooltip("Enter all required fields to submit request"));
+        BooleanBinding bb = new BooleanBinding() {
+            {
+                super.bind(cbAvailableFlowers.valueProperty(),
+                        cdAvailableColor.valueProperty(),
+                        cdAvailableType.valueProperty(),
+                        cbLongName.valueProperty(),
+                        cbEmployeesToAssign.valueProperty());
+            }
+
+            @Override
+            protected boolean computeValue() {
+                return (cbAvailableFlowers.getValue() == null ||
+                        cdAvailableColor.getValue() == null ||
+                        cdAvailableType.getValue() == null ||
+                        cbLongName.getValue() == null ||
+                        cbEmployeesToAssign.getValue() == null);
+            }
+        };
+        btnSubmit.disableProperty().bind(bb);
+
+        btnSubmit.setTooltip(new Tooltip("Click to submit request"));
         btnSubmit.setOnAction(e -> handleSubmit());
-        btnReset.setTooltip(new Tooltip("Reset the form"));
+        btnReset.setTooltip(new Tooltip("Click to reset the form"));
         btnReset.setOnAction(e -> handleReset());
         helpIcon.setOnMouseClicked(e -> handleHelp());
     }
