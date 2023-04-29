@@ -27,6 +27,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -37,6 +38,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -57,6 +59,7 @@ public class PathfinderController {
   @FXML private JFXDrawer menuDrawer;
   @FXML private ImageView helpIcon;
   @FXML private MFXButton btnFindPath;
+  @FXML private SplitPane spFindPath;
   @FXML private  Pane directionPane;
 
   @FXML private MFXFilterComboBox<String> startNode;
@@ -185,7 +188,24 @@ public class PathfinderController {
       startNode.getSelectionModel().selectItem(defaultStart); // not sure about this
       changeButtonColor(currentFloor);
       algorithmDropdown.selectFirst();
-      btnFindPath.setVisible(false);
+      spFindPath.setTooltip(new Tooltip("Select an ending location to find a path"));
+      BooleanBinding bb = new BooleanBinding() {
+          {
+              super.bind(startNode.valueProperty(),
+                      endNode.valueProperty(),
+                      algorithmDropdown.valueProperty(),
+                      datePicker.valueProperty());
+          }
+
+          @Override
+          protected boolean computeValue() {
+              return (startNode.getValue() == null || endNode.getValue() == null || algorithmDropdown.getValue() == null || datePicker.getValue() == null);
+          }
+      };
+        btnFindPath.disableProperty().bind(bb);
+
+        btnFindPath.setTooltip(new Tooltip("Click to find path"));
+
 
 
       listView.getSelectionModel().selectionProperty().addListener(new ChangeListener<ObservableMap<Integer, String>>() {

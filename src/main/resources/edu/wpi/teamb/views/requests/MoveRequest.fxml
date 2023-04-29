@@ -5,6 +5,7 @@
 <?import io.github.palexdev.materialfx.controls.MFXRadioButton?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
@@ -24,11 +25,15 @@
                   <Font name="System Bold" size="36.0" />
                </font>
             </Text>
-            <MFXButton fx:id="btnSubmit" defaultButton="true" layoutX="955.0" layoutY="481.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Submit" textFill="#f1f1f1">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </MFXButton>
+            <SplitPane fx:id="spSubmit" layoutX="955.0" layoutY="481.0" style="-fx-background-color: transparent;">
+               <items>
+                  <MFXButton fx:id="btnSubmit" defaultButton="true" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Submit" textFill="#f1f1f1">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </MFXButton>
+               </items>
+            </SplitPane>
             <MFXButton fx:id="btnReset" defaultButton="true" layoutX="20.0" layoutY="481.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Reset" textFill="#f1f1f1">
                <font>
                   <Font name="System Bold" size="18.0" />
