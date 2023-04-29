@@ -100,7 +100,9 @@ public class SignageController {
     }
 
     private void init_signage_form_btn(){
+      btnSignageForm.setTooltip(new Tooltip("Click to add a new sign"));
         btnSignageForm.setOnMouseClicked(e -> handleSignageForm());
+        btnRemoveSign.setTooltip(new Tooltip("Click to remove a sign"));
         btnRemoveSign.setOnMouseClicked(e -> handleRemoveSigns());
     }
 

@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
@@ -23,7 +24,9 @@ public class RemoveSignageController {
     public void initialize(){
         signageE = new ESignage();
         init_table();
+        btnSubmit.setTooltip(new Tooltip("Click to remove selected sign"));
         btnSubmit.setOnMouseClicked(e -> handleRemoveSign());
+        btnClose.setTooltip(new Tooltip("Click to return"));
         btnClose.setOnMouseClicked(e -> handleClose());
     }
 
