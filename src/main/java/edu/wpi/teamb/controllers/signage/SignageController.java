@@ -3,33 +3,54 @@ package edu.wpi.teamb.controllers.signage;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
+import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.ORMs.Sign;
 import edu.wpi.teamb.controllers.NavDrawerController;
-import edu.wpi.teamb.controllers.components.SignageComponent1Controller;
-import edu.wpi.teamb.controllers.components.SignageComponentIndividualDirectionController;
 import edu.wpi.teamb.entities.ESignage;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-
-import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
+import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXComboBox;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
+import javafx.scene.Group;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import net.kurobako.gesturefx.GesturePane;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Objects;
 
 public class SignageController {
 
   @FXML private JFXHamburger menuBurger;
   @FXML private JFXDrawer menuDrawer;
-  @FXML private MFXFilterComboBox<String> cbLocation;
+  @FXML private MFXComboBox<String> cbLocation;
+  @FXML private MFXButton btnSignageForm;
+  @FXML private MFXButton btnRemoveSign;
   @FXML private VBox signVbox;
+  public GesturePane pane = new GesturePane();
+    Group nodeGroup = new Group();
+    Pane locationCanvas;
+    Pane nodeCanvas;
   private ESignage signageE;
+    @FXML
+    private StackPane stackPaneMapView;
+    @FXML
+    private ImageView imageViewPathfinder;
+
+
 
   @FXML
   public void initialize() throws IOException {
@@ -37,8 +58,32 @@ public class SignageController {
       initNavBar();
       initializeFields();
       initalizeComboBox();
+      init_signage_form_btn();
       signVbox.getChildren().clear();
+//      vboxImage.getChildren().clear();
       loadPageBasedOnGroup("Shapiro 2 Screen 1 (info desk) May 23");
+
+      this.stackPaneMapView = new StackPane(); // no longer @FXML
+      // Used for nodes
+
+      this.locationCanvas = new Pane();
+      this.pane.setContent(stackPaneMapView);
+      this.imageViewPathfinder = new ImageView(Bapp.getHospitalListOfFloors().get(3)); // no longer @FXML
+      //Establishing everything that must occur in the stackpane
+      this.stackPaneMapView.getChildren().add(this.imageViewPathfinder);
+      this.stackPaneMapView.getChildren().add(this.locationCanvas);
+      this.locationCanvas.getChildren().add(nodeGroup);
+
+      //Fitting the scrollpane
+      pane.setScrollMode(GesturePane.ScrollMode.ZOOM);
+      pane.setScrollBarPolicy(GesturePane.ScrollBarPolicy.NEVER);
+
+      pane.toFront();
+//      pane.setLayoutX(480);
+//      pane.setLayoutY(400);
+
+
+      Platform.runLater(() -> this.pane.centreOn(new Point2D(2190, 910)));
   }
 
     private void initalizeComboBox() {
@@ -49,8 +94,12 @@ public class SignageController {
             signageGroupsList.add(element);
         }
         ObservableList<String> signageGroupsObservableList = FXCollections.observableArrayList(signageGroupsList);
-        Collections.sort(signageGroupsList);
         cbLocation.setItems(signageGroupsObservableList);
+    }
+
+    private void init_signage_form_btn(){
+        btnSignageForm.setOnMouseClicked(e -> handleSignageForm());
+        btnRemoveSign.setOnMouseClicked(e -> handleRemoveSigns());
     }
 
     public void clickCbLocation() {
@@ -95,7 +144,17 @@ public class SignageController {
               e.printStackTrace();
           }
       }
-      signVbox.setSpacing(5);
+      double vBoxHeight = 446;
+      double childHeight = 57;
+      double spacing = (vBoxHeight - (childHeight * signVbox.getChildren().size())) / (signVbox.getChildren().size());
+      System.out.println(spacing);
+      signVbox.setSpacing(spacing);
+  }
+
+  public void displayMap(){
+      String item = cbLocation.getSelectedItem().toString();
+      int[] xy = signageE.getSignXandY(item);
+      Platform.runLater(() -> this.pane.centreOn(new Point2D(xy[0], xy[1])));
   }
 
 //    public void loadPage2() {
@@ -140,4 +199,33 @@ public class SignageController {
                     }
                 });
     }
+
+    private void handleSignageForm() {
+        Parent root;
+        try {
+            root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("edu/wpi/teamb/views/signage/SignageForm.fxml")));
+            Stage stage = new Stage();
+            stage.setTitle("Add Signage");
+            stage.setScene(new Scene(root, 800, 400));
+            stage.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleRemoveSigns(){
+        Parent root;
+        try {
+            root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("edu/wpi/teamb/views/signage/RemoveSignageForm.fxml")));
+            Stage stage = new Stage();
+            stage.setTitle("Remove Signage");
+            stage.setScene(new Scene(root, 800, 400));
+            stage.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
