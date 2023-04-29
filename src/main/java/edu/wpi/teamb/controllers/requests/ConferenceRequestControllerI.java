@@ -39,7 +39,7 @@ public class ConferenceRequestControllerI implements IRequestController{
     @FXML private MFXFilterComboBox<String> cbEmployeesToAssign;
     @FXML private MFXTextField eventNameTextField;
     @FXML private MFXTextField bookingReasonTextField;
-    @FXML private MFXFilterComboBox<Integer> cbDuration;
+    @FXML private MFXFilterComboBox<String> cbDuration;
     @FXML private MFXFilterComboBox<String> cbLongName;
     @FXML private MFXTextField tfNotes;
     @FXML private MFXButton resetBtn;
@@ -269,8 +269,6 @@ public class ConferenceRequestControllerI implements IRequestController{
         } else {
             minutes = "" + fullConferenceRequest.getDateRequested().toLocalDateTime().getMinute();
         }
-        reservationMinute.getSelectionModel().selectItem(minutes);
-        reservationAmPm.getSelectionModel().selectItem(fullConferenceRequest.getDateRequested().toLocalDateTime().getHour() < 12 ? "AM" : "PM");
 
         //set the submit button to say update
         btnSubmit.setText("Update");
