@@ -6,6 +6,7 @@ import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public class LocationNameDAOImpl implements IDAO {
@@ -289,6 +290,21 @@ public class LocationNameDAOImpl implements IDAO {
             } catch (SQLException e) {
                 System.err.println("ERROR Query Failed in method 'NodeDAOImpl.getNodesByType': " + e.getMessage());
             }
+        }
+    }
+
+    public int getNodeIDfromLongName(String longName) {
+        try {
+            Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
+            String query = "SELECT * from locationnames join moves m on locationnames.longname = m.longname where locationnames.longname like " + longName;
+            ResultSet rs = stmt.executeQuery(query);
+            rs.next();
+            int set = rs.getInt("nodeID");
+            rs.close();
+            return set;
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'NodeDAOImpl.getLongNameFromNodeID': " + e.getMessage());
+            return 0;
         }
     }
 

@@ -38,7 +38,7 @@
                </textFill>
             </MFXPasswordField>
             <MFXTextField fx:id="textUsername" alignment="TOP_LEFT" layoutX="113.0" layoutY="243.0" prefHeight="50.0" prefWidth="460.0" style="-fx-background-color: #ffffff; -fx-prompt-text-fill: #f1f1f1; -fx-text-fill: black;" text="admin" />
-            <Text id="header" fill="#f1f1f1" layoutX="300.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Log In">
+            <Text id="header" fill="#f1f1f1" layoutX="300.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login">
                <font>
                   <Font size="36.0" />
                </font>

@@ -39,7 +39,7 @@
                         <Font name="System Bold" size="18.0" />
                     </font>
                 </MFXButton>
-                <VBox fx:id="vboxEditUser" layoutX="387.0" layoutY="177.0" prefHeight="401.0" prefWidth="376.0">
+                <VBox fx:id="vboxEditUser" alignment="CENTER" layoutX="387.0" layoutY="177.0" prefHeight="401.0" prefWidth="376.0">
                     <children>
                   <MFXTextField fx:id="tfName" floatingText="Name" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="362.0">
                      <opaqueInsets>
@@ -75,7 +75,7 @@
                   </MFXTextField>
                         <MFXButton fx:id="btnSaveEdits" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #012d5a; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Save" textFill="WHITE">
                             <font>
-                                <Font name="System Bold" size="12.0" />
+                                <Font name="System Bold" size="18.0" />
                             </font>
                         </MFXButton>
                     </children>
