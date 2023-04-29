@@ -14,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -51,6 +52,8 @@ public class CreateNewRequestController {
         adminTest = ELogin.getLogin().getPermissionLevel();
         initializeFields();
         initIcons();
+        btnAllRequests.setTooltip(new Tooltip("View all requests"));
+        btnMoveRequests.setTooltip(new Tooltip("Add and view move requests"));
         if (adminTest != ELogin.PermissionLevel.ADMIN) {
             btnAllRequests.setVisible(false);
             btnMoveRequests.setVisible(false);
@@ -65,18 +68,28 @@ public class CreateNewRequestController {
         icon1.setOnMouseClicked(event->{
             loadPage1();}
         );
+        Tooltip tooltip1 = new Tooltip("Meal Request");
+        Tooltip.install(icon1, tooltip1);
         icon2.setOnMouseClicked(event->{
             loadPage2();}
         );
+        Tooltip tooltip2 = new Tooltip("Conference Request");
+        Tooltip.install(icon2, tooltip2);
         icon3.setOnMouseClicked(event->{
             loadPage3();}
         );
+        Tooltip tooltip3 = new Tooltip("Flower Request");
+        Tooltip.install(icon3, tooltip3);
         icon4.setOnMouseClicked(event->{
             loadPage6();}
         );
+        Tooltip tooltip4 = new Tooltip("Furniture Request");
+        Tooltip.install(icon4, tooltip4);
         icon5.setOnMouseClicked(event->{
             loadPage5();
         });
+        Tooltip tooltip5 = new Tooltip("Office Supplies Request");
+        Tooltip.install(icon5, tooltip5);
     }
 
 //    public void toggleBtns(String btn){

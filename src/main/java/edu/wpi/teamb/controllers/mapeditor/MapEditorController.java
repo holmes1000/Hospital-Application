@@ -26,9 +26,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -39,6 +37,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -148,39 +147,36 @@ public class MapEditorController {
   // New menu buttons
   @FXML
   private MenuButton btnMenuNode;
-  @FXML
-  private MenuItem itemAddNode;
-  @FXML
-  private MenuItem itemEditNode;
-  @FXML
-  private MenuItem itemDeleteNode;
+  private CustomMenuItem btnAddNode = new CustomMenuItem();
+  private CustomMenuItem btnEditNode = new CustomMenuItem();
+  private CustomMenuItem btnDeleteNode = new CustomMenuItem();
   @FXML
   private MenuButton btnMenuEdge;
   @FXML
-  private MenuItem itemAddEdge;
+  private CustomMenuItem itemAddEdge = new CustomMenuItem();
   @FXML
-  private MenuItem itemDeleteEdge;
+  private CustomMenuItem itemDeleteEdge = new CustomMenuItem();
   @FXML
   private MenuButton btnMenuMove;
   @FXML
-  private MenuItem itemAddMove;
+  private CustomMenuItem itemAddMove = new CustomMenuItem();
   @FXML
-  private MenuItem itemDeleteMove;
+  private CustomMenuItem itemDeleteMove = new CustomMenuItem();
   @FXML
-  private MenuItem itemViewMoves;
+  private CustomMenuItem itemViewMoves = new CustomMenuItem();
   @FXML
   private MenuButton btnMenuTools;
   @FXML
-  private MenuItem itemAlign;
+  private CustomMenuItem itemAlign = new CustomMenuItem();
   @FXML
-  private MenuItem itemSetDefault;
+  private CustomMenuItem itemSetDefault = new CustomMenuItem();
 
   @FXML
   private MenuButton btnMenuBackup;
   @FXML
-  private MenuItem itemResetFromBackup;
+  private CustomMenuItem itemResetFromBackup = new CustomMenuItem();
   @FXML
-  private MenuItem itemSaveToBackup;
+  private CustomMenuItem itemSaveToBackup = new CustomMenuItem();
 
   public MapEditorController() throws SQLException {
     this.editor = new EMapEditor();
@@ -430,6 +426,26 @@ public class MapEditorController {
    * Checks if at least 2 nodes are selected to align
    */
   private void checkNodesToAlign() {
+    List<Integer> xCoords = new ArrayList<>();
+    List<Integer> yCoords = new ArrayList<>();
+
+    // Populate the list
+    if (nodesToAlign.size() > 2) {
+      for (Circle c : nodesToAlign) {
+        xCoords.add((int) c.getCenterX());
+        yCoords.add((int) c.getCenterY());
+        System.out.println(c);
+      }
+      System.out.println(nodesToAlign.size());
+    }
+
+    // Assign new Y coordinates
+    if (mapEditorContext.getState() == alignNodesState) {
+      calcBestFit(xCoords, yCoords);  // Calculate the best fit
+      btnAlignNodes.setVisible(true);
+    }
+  }
+  private void setDefaultPosition() {
     List<Integer> xCoords = new ArrayList<>();
     List<Integer> yCoords = new ArrayList<>();
 
@@ -844,6 +860,7 @@ public class MapEditorController {
   }
 
   public void clickFloorBtn() {
+    btnL1.setTooltip(new Tooltip("Lower Level 1"));
     btnL1.setOnMouseClicked(event -> {
       imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(0));
       currentFloor = "L1";
@@ -853,6 +870,7 @@ public class MapEditorController {
       nodeGroup.getChildren().clear();
       draw("L1");
     });
+    btnL2.setTooltip(new Tooltip("Lower Level 2"));
     btnL2.setOnMouseClicked(event -> {
       imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(1));
       currentFloor = "L2";
@@ -863,6 +881,7 @@ public class MapEditorController {
       nodeGroup.getChildren().clear();
       draw("L2");
     });
+    btn1.setTooltip(new Tooltip("Level 1"));
     btn1.setOnMouseClicked(event -> {
       currentFloor = "1";
       imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(3));
@@ -872,6 +891,7 @@ public class MapEditorController {
       nodeGroup.getChildren().clear();
       draw("1");
     });
+    btn2.setTooltip(new Tooltip("Level 2"));
     btn2.setOnMouseClicked(event -> {
       currentFloor = "2";
       imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(4));
@@ -881,6 +901,7 @@ public class MapEditorController {
       nodeGroup.getChildren().clear();
       draw("2");
     });
+    btn3.setTooltip(new Tooltip("Level 3"));
     btn3.setOnMouseClicked(event -> {
       currentFloor = "3";
       imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(5));
@@ -892,13 +913,41 @@ public class MapEditorController {
     });
   }
 
+  private void setMenuItemTooltip(MenuButton b, CustomMenuItem c, String text, String toolTipText) {
+    // change the color of the custom menu item
+    Text text1 = new Text(text);
+    Tooltip tooltip = new Tooltip(toolTipText);
+    c.setContent(text1);
+    Tooltip.install(c.getContent(), tooltip);
+    // Set text properties
+    text1.setWrappingWidth(112);
+    text1.setX(10.0);
+    text1.setY(25.0);
+    b.getItems().addAll(c);
+  }
+
   public void initStateBtn() {
     // Init New State Buttons
+    setMenuItemTooltip(btnMenuNode, btnAddNode, "Add Node", "Click on the map where you would like to add a node");
+    setMenuItemTooltip(btnMenuNode, btnDeleteNode, "Delete Node", "Click a node on the map to delete it");
+    setMenuItemTooltip(btnMenuNode, btnEditNode, "Edit Node", "Click a node on the map to edit it");
+
+    setMenuItemTooltip(btnMenuEdge, itemAddEdge, "Add Edge", "Click two nodes on the map to add an edge");
+    setMenuItemTooltip(btnMenuEdge, itemDeleteEdge, "Delete Edge", "Click an edge on the map to delete it");
+
+    setMenuItemTooltip(btnMenuTools, itemAlign, "Align Nodes", "Click on the map where you would like to add a node");
+    setMenuItemTooltip(btnMenuTools, itemSetDefault, "Set default position", "Click a node on the map to set a default location");
+
+    setMenuItemTooltip(btnMenuBackup, itemResetFromBackup, "Reset from Backup", "Click to reset the nodes/edges from the database");
+    setMenuItemTooltip(btnMenuBackup, itemSaveToBackup, "Save to Backup", "Click to save the current map configuration to the database");
+
+    setMenuItemTooltip(btnMenuMove, itemAddMove, "Add Move", "Click a node you'd like to move, then a node where it should move to");
+
     itemAddEdge.setOnAction(event -> {
       mapEditorContext.setState(addEdgeState);
       mapEditorContext.getState().printStatus();
     });
-    itemAddNode.setOnAction(event -> {
+    btnAddNode.setOnAction(event -> {
       mapEditorContext.setState(addNodeState);
       mapEditorContext.getState().printStatus();
       handleAddNode();
@@ -907,11 +956,11 @@ public class MapEditorController {
       mapEditorContext.setState(deleteEdgeState);
       mapEditorContext.getState().printStatus();
     });
-    itemDeleteNode.setOnAction(event -> {
+    btnDeleteNode.setOnAction(event -> {
       mapEditorContext.setState(deleteNodeState);
       mapEditorContext.getState().printStatus();
     });
-    itemEditNode.setOnAction(event -> {
+    btnEditNode.setOnAction(event -> {
       mapEditorContext.setState(editNodeState);
       mapEditorContext.getState().printStatus();
     });
@@ -919,6 +968,8 @@ public class MapEditorController {
       mapEditorContext.setState(addMoveState);
       mapEditorContext.getState().printStatus();
     });
+//    Tooltip alignNodesTooltip = new Tooltip("Click at least 3 nodes to align them, the click the Align button");
+//    alignNodesTooltip.install(itemAlign.getContent(), alignNodesTooltip);
     itemAlign.setOnAction(event -> {
       mapEditorContext.setState(alignNodesState);
       mapEditorContext.getState().printStatus();

@@ -16,6 +16,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
@@ -51,7 +52,9 @@ public class FlowerRequestControllerI implements IRequestController {
 
     @Override
     public void initBtns() {
+        btnSubmit.setTooltip(new Tooltip("Submit the request"));
         btnSubmit.setOnAction(e -> handleSubmit());
+        btnReset.setTooltip(new Tooltip("Reset the form"));
         btnReset.setOnAction(e -> handleReset());
         helpIcon.setOnMouseClicked(e -> handleHelp());
     }
@@ -63,22 +66,26 @@ public class FlowerRequestControllerI implements IRequestController {
         longNames.addAll(Repository.getRepository().getPracticalLongNames());
         Collections.sort(longNames);
         cbLongName.setItems(longNames);
+        cbLongName.setTooltip(new Tooltip("Select a location to direct the request to"));
 
         //Set types of flowers
         ObservableList<String> flowers = FXCollections.observableArrayList("Rose", "Tulip", "Daisy", "Lily", "Sunflower");
         Collections.sort(flowers);
         cbAvailableFlowers.setItems(flowers);
+        cbAvailableFlowers.setTooltip(new Tooltip("Select a type of flower"));
 
         //Set colors of flowers
         ObservableList<String> colors = FXCollections.observableArrayList("Red", "Orange", "Yellow", "Green", "Blue", "Purple", "Pink", "White", "Black", "Brown");
         Collections.sort(colors);
         cdAvailableColor.setItems(colors);
+        cdAvailableColor.setTooltip(new Tooltip("Select a color of flower"));
 
 
         //Set delivery types
         ObservableList<String> deliveryType = FXCollections.observableArrayList("Bouquet", "Single Flower", "Vase");
         Collections.sort(deliveryType);
         cdAvailableType.setItems(deliveryType);
+        cdAvailableType.setTooltip(new Tooltip("Select a type of delivery"));
         //todo: fix locations
 
         //Set list of employees
@@ -88,6 +95,7 @@ public class FlowerRequestControllerI implements IRequestController {
         Collections.sort(employees);
         employees.add(0, "Unassigned");
         cbEmployeesToAssign.setItems(employees);
+        cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
     }
 
     @Override

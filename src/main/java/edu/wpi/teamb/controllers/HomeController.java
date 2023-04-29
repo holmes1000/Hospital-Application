@@ -31,6 +31,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -236,6 +237,11 @@ public class HomeController {
     }
 
     private void initializeBtns() {
+        btnCredits.setTooltip(new Tooltip("Click to view the credits page"));
+        btnAbout.setTooltip(new Tooltip("Click to view the creators of the page"));
+        btnSecret.setTooltip(new Tooltip("Click to view a secret feature"));
+        btnClear.setTooltip(new Tooltip("Click to close the secret feature"));
+        viewUserRequestButton.setTooltip(new Tooltip("Click to view your current requests"));
         btnCredits.setOnMouseClicked(e -> handleCredits());
         btnAbout.setOnMouseClicked(e -> handleAbout());
         btnSecret.setOnMouseClicked(e -> secret(true));

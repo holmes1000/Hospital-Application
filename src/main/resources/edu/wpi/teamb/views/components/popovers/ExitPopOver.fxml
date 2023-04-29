@@ -6,14 +6,15 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="90.0" prefWidth="150.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.components.popovers.ExitPopOverController">
+<AnchorPane prefHeight="81.0" prefWidth="160.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.components.popovers.ExitPopOverController">
    <children>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#465777" height="72.0" layoutX="9.0" layoutY="9.0" stroke="BLACK" strokeType="INSIDE" width="132.0" />
-      <Text fill="#f6bd38" layoutX="18.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Do you wish to exit?">
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#465777" height="77.0" layoutX="5.0" layoutY="2.0" stroke="BLACK" strokeType="INSIDE" width="155.0" />
+      <Text fill="#f6bd38" layoutX="13.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Do you wish to exit?   " textAlignment="CENTER">
          <font>
-            <Font name="System Bold" size="12.0" />
+            <Font name="System Bold" size="17.0" />
          </font>
       </Text>
-      <MFXButton fx:id="btnYes" layoutX="42.0" layoutY="31.0" onAction="#clickExit" prefHeight="5.0" prefWidth="66.0" text="YES" />
+      <MFXButton fx:id="btnYes" layoutX="26.0" layoutY="41.0" onAction="#clickExit" prefHeight="30.0" prefWidth="50.0" text="YES" />
+      <MFXButton layoutX="91.0" layoutY="41.0" prefHeight="30.0" prefWidth="50.0" text="NO" />
    </children>
 </AnchorPane>

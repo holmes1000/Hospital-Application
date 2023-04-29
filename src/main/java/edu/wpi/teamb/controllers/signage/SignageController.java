@@ -20,6 +20,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -95,10 +96,13 @@ public class SignageController {
         }
         ObservableList<String> signageGroupsObservableList = FXCollections.observableArrayList(signageGroupsList);
         cbLocation.setItems(signageGroupsObservableList);
+        cbLocation.setTooltip(new Tooltip("Click the dropdown arrow to select a sign"));
     }
 
     private void init_signage_form_btn(){
+      btnSignageForm.setTooltip(new Tooltip("Click to add a new sign"));
         btnSignageForm.setOnMouseClicked(e -> handleSignageForm());
+        btnRemoveSign.setTooltip(new Tooltip("Click to remove a sign"));
         btnRemoveSign.setOnMouseClicked(e -> handleRemoveSigns());
     }
 

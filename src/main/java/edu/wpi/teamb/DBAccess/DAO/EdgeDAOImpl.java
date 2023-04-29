@@ -20,6 +20,9 @@ public class EdgeDAOImpl implements IDAO {
     static ArrayList<Edge> getEdges() {
         return edges;
     }
+    static void setEdges() {
+        edges = getAllHelper();
+    }
 
     public EdgeDAOImpl() {
         edges = getAllHelper();
@@ -260,6 +263,7 @@ public class EdgeDAOImpl implements IDAO {
         updateDBStartNode(""+ e.getStartNode(), e);
         updateDBEndNode(""+ e.getEndNode(), e);
     }
+
 
     /**
      * Deletes the row in the database that matches the edgeID
