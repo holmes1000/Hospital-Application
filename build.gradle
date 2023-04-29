@@ -75,6 +75,9 @@ dependencies {
 //            'com.oracle.ojdbc:ojdbc10:19.3.0.0',
     )
 
+    //for mail service for 2FA
+    implementation 'com.sun.mail:javax.mail:1.6.2'
+
 }
 
 
