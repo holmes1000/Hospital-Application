@@ -44,7 +44,7 @@
                         <ColorAdjust brightness="1.0" />
                     </effect>
                 </ImageView>
-                <MFXFilterComboBox fx:id="cbAvailableFlowers" floatingText="Language (idioma)" layoutX="20.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
+                <MFXFilterComboBox fx:id="cbAvaila" floatingText="Language (idioma)" layoutX="20.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
                     <cursor>
                         <Cursor fx:constant="DEFAULT" />
                     </cursor>
