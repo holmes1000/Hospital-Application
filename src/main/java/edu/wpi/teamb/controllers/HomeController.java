@@ -301,15 +301,15 @@ public class HomeController {
         }
     }
 
+
     public void activateNav(){
         vboxActivateNav.setOnMouseEntered(event -> {
-//            if(!navLoaded) {
-                System.out.println("on");
+            if(!navLoaded) {
                 navPane.setMouseTransparent(false);
                 navLoaded = true;
                 vboxActivateNav.setDisable(true);
                 vboxActivateNav1.setDisable(false);
-//            }
+            }
         });
     }
 
@@ -333,7 +333,6 @@ public class HomeController {
     public void deactivateNav(){
         vboxActivateNav1.setOnMouseEntered(event -> {
             if(navLoaded){
-                System.out.println("off");
                 navPane.setMouseTransparent(true);
                 vboxActivateNav.setDisable(false);
                 navLoaded = false;

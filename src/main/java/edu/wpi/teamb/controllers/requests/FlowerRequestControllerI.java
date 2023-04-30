@@ -99,7 +99,7 @@ public class FlowerRequestControllerI implements IRequestController {
         cbAvailableFlowers.setTooltip(new Tooltip("Select a type of flower"));
 
         //Set colors of flowers
-        ObservableList<String> colors = FXCollections.observableArrayList("Red", "Orange", "Yellow", "Green", "Blue", "Purple", "Pink", "White", "Black", "Brown");
+        ObservableList<String> colors = FXCollections.observableArrayList("Red", "Orange", "Yellow", "Green", "Blue", "Purple", "Pink", "White");
         Collections.sort(colors);
         cdAvailableColor.setItems(colors);
         cdAvailableColor.setTooltip(new Tooltip("Select a color of flower"));
@@ -153,7 +153,6 @@ public class FlowerRequestControllerI implements IRequestController {
                 };
                 EFlowerRequest.submitRequest(output);
                 handleReset();
-                Navigation.navigate(Screen.CREATE_NEW_REQUEST);
             }
             submissionAlert();
         }

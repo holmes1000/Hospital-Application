@@ -163,8 +163,8 @@ public class ConferenceRequestControllerI implements IRequestController{
                 int hour = Integer.parseInt(startHour) + 12;
                 timerequestedFormatted = "" + startHour + ":" + startMinute + ":00";
             }
-        String daterequested = datePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));;
-        String timeStamp = daterequested + " " + timerequestedFormatted;
+            String daterequested = datePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));;
+            String timeStamp = daterequested + " " + timerequestedFormatted;
 
             // Get the standard request fields
             EConferenceRequest.setEmployee(cbEmployeesToAssign.getValue());
@@ -193,7 +193,6 @@ public class ConferenceRequestControllerI implements IRequestController{
 
                 EConferenceRequest.submitRequest(output);
                 handleReset();
-                Navigation.navigate(Screen.CREATE_NEW_REQUEST);
             }
             submissionAlert();
         }
