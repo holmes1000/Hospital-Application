@@ -20,13 +20,13 @@
 <?import javafx.scene.text.Text?>
 <?import net.kurobako.gesturefx.GesturePane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #272523;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.mapeditor.MapEditorController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #5f7ca4;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.mapeditor.MapEditorController">
     <center>
         <AnchorPane prefHeight="720.0" prefWidth="1159.0" BorderPane.alignment="CENTER">
             <children>
                       <GesturePane fx:id="pane" prefHeight="720.0" prefWidth="1350.0">
                       </GesturePane>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#7089A2" height="60.0" layoutX="-113.0" layoutY="47.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1419.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#5f7ca4" height="60.0" layoutX="-113.0" layoutY="47.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1419.0" />
                 <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="1105.0" layoutY="54.0" onMouseEntered="#hoverHelp" onMouseExited="#hoverHelp" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@../../img/helpicon.png" />
@@ -109,35 +109,35 @@
             </VBox>
             <HBox layoutX="180.0" layoutY="30.0" spacing="30.0">
                <children>
-                  <MenuButton fx:id="btnMenuNode" mnemonicParsing="false" style="-fx-background-color: #7089A2; -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Node" textAlignment="CENTER" textFill="WHITE">
+                  <MenuButton fx:id="btnMenuNode" mnemonicParsing="false" style="-fx-background-color: #5f7ca4; -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Node" textAlignment="CENTER" textFill="WHITE">
                     <items>
                     </items>
                      <font>
                         <Font size="18.0" />
                      </font>
                   </MenuButton>
-                  <MenuButton fx:id="btnMenuEdge" mnemonicParsing="false" style="-fx-background-color: #7089A2; -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Edge" textAlignment="CENTER" textFill="WHITE">
+                  <MenuButton fx:id="btnMenuEdge" mnemonicParsing="false" style="-fx-background-color: #5f7ca4; -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Edge" textAlignment="CENTER" textFill="WHITE">
                      <items>
                      </items>
                      <font>
                         <Font size="18.0" />
                      </font>
                   </MenuButton>
-                   <MenuButton fx:id="btnMenuMove" mnemonicParsing="false" style="-fx-background-color: #7089A2; -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Move" textAlignment="CENTER" textFill="WHITE">
+                   <MenuButton fx:id="btnMenuMove" mnemonicParsing="false" style="-fx-background-color: #5f7ca4; -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Move" textAlignment="CENTER" textFill="WHITE">
                      <items>
                      </items>
                      <font>
                         <Font size="18.0" />
                      </font>
                   </MenuButton>
-                  <MenuButton fx:id="btnMenuTools" mnemonicParsing="false" style="-fx-background-color: #7089A2; -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Tools" textAlignment="CENTER" textFill="WHITE">
+                  <MenuButton fx:id="btnMenuTools" mnemonicParsing="false" style="-fx-background-color: #5f7ca4; -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Tools" textAlignment="CENTER" textFill="WHITE">
                      <items>
                      </items>
                      <font>
                         <Font size="18.0" />
                      </font>
                   </MenuButton>
-                   <MenuButton fx:id="btnMenuBackup" mnemonicParsing="false" style="-fx-background-color: #7089A2; -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Backup" textAlignment="CENTER" textFill="WHITE">
+                   <MenuButton fx:id="btnMenuBackup" mnemonicParsing="false" style="-fx-background-color: #5f7ca4; -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Backup" textAlignment="CENTER" textFill="WHITE">
                        <items>
                        </items>
                      <font>
