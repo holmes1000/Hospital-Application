@@ -82,6 +82,7 @@ public class EditAlertsController {
             usernames.add(users.get(i).getUsername());
         }
         Collections.sort(usernames);
+        usernames.add(0, "Unassigned");
         cbEmployees.getItems().addAll(usernames);
 
         alertTable();

@@ -70,7 +70,12 @@
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXFilterComboBox>
-            <MFXFilterComboBox fx:id="cbLongName" floatingText="Room Name" layoutX="20.0" layoutY="337.0" prefHeight="40.0" prefWidth="410.0" />
+            <MFXFilterComboBox fx:id="cbLongName" floatingText="Room" layoutX="20.0" layoutY="337.0" prefHeight="40.0" prefWidth="410.0" promptText="Search for room"/>
+            <Text fill="RED" layoutX="968.0" layoutY="477.0" strokeType="OUTSIDE" strokeWidth="0.0" text="All fields required*">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Text>
          </children>
       </AnchorPane>
    </center>
