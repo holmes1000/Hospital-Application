@@ -20,10 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -36,6 +33,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.Optional;
 
 public class EditUsersController {
     @FXML
@@ -117,11 +115,17 @@ public class EditUsersController {
     }
 
     private void handleDeleteUser() {
-        User user = tbUsers.getSelectionModel().getSelectedItem();
-        Repository.getRepository().deleteUser(user); // Delete the user
-        //tbUsers.refresh(); // Refresh the table
-        updateTable();
-        createAlert("User Deleted", "User Deleted Successfully");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete Edge");
+        alert.setContentText("Are you sure you want to delete this user?");
+        Optional<ButtonType> action = alert.showAndWait();
+        if (action.get() == ButtonType.OK) {
+            User user = tbUsers.getSelectionModel().getSelectedItem();
+            Repository.getRepository().deleteUser(user); // Delete the user
+            //tbUsers.refresh(); // Refresh the table
+            updateTable();
+            createAlert("User Deleted", "User Deleted Successfully");
+        }
     }
 
     private void handleEditUser() throws IOException {

@@ -2,7 +2,6 @@
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXPasswordField?>
-<?import io.github.palexdev.materialfx.controls.MFXRadioButton?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -53,7 +52,10 @@
                   <Font size="18.0" />
                </font>
             </Text>
-            <Text fx:id="errorMsg" fill="RED" layoutX="112.0" layoutY="204.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" />
+            <Text fx:id="errorMsg" fill="#c30000" layoutX="112.0" layoutY="204.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER">
+               <font>
+                  <Font size="18.0" />
+               </font></Text>
             <MFXButton fx:id="btnForgotPassword" layoutX="454.0" layoutY="405.0" onAction="#clickForgotPassword" prefHeight="26.0" prefWidth="120.0" rippleColor="WHITE" style="-fx-background-color: #465777;" text="Forgot password?" textFill="WHITE" />
          </children>
       </AnchorPane>
