@@ -31,6 +31,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -142,7 +143,7 @@ public class HomeController {
     public void loadAlerts(){
         ArrayList<Alert> allAlerts = Repository.getRepository().getAllAlerts();
         alertsTable.setEditable(false);
-        TableColumn<Alert, String> titles = new TableColumn<>("Title");
+        TableColumn<Alert, String> titles = new TableColumn<>("Subject");
         titles.setMinWidth(100);
         titles.setStyle("-fx-alignment: CENTER;");
         titles.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -236,6 +237,11 @@ public class HomeController {
     }
 
     private void initializeBtns() {
+        btnCredits.setTooltip(new Tooltip("Click to view the credits page"));
+        btnAbout.setTooltip(new Tooltip("Click to view the creators of the page"));
+        btnSecret.setTooltip(new Tooltip("Click to view a secret feature"));
+        btnClear.setTooltip(new Tooltip("Click to close the secret feature"));
+        viewUserRequestButton.setTooltip(new Tooltip("Click to view your current requests"));
         btnCredits.setOnMouseClicked(e -> handleCredits());
         btnAbout.setOnMouseClicked(e -> handleAbout());
         btnSecret.setOnMouseClicked(e -> secret(true));
@@ -295,15 +301,15 @@ public class HomeController {
         }
     }
 
+
     public void activateNav(){
         vboxActivateNav.setOnMouseEntered(event -> {
-//            if(!navLoaded) {
-                System.out.println("on");
+            if(!navLoaded) {
                 navPane.setMouseTransparent(false);
                 navLoaded = true;
                 vboxActivateNav.setDisable(true);
                 vboxActivateNav1.setDisable(false);
-//            }
+            }
         });
     }
 
@@ -327,7 +333,6 @@ public class HomeController {
     public void deactivateNav(){
         vboxActivateNav1.setOnMouseEntered(event -> {
             if(navLoaded){
-                System.out.println("off");
                 navPane.setMouseTransparent(true);
                 vboxActivateNav.setDisable(false);
                 navLoaded = false;

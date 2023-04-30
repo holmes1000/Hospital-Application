@@ -8,6 +8,7 @@
 <?import io.github.palexdev.materialfx.controls.MFXListView?>
 <?import io.github.palexdev.materialfx.controls.MFXToggleButton?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -28,7 +29,7 @@
                 <GesturePane fx:id="pane" prefHeight="720.0" prefWidth="1350.0">
                 </GesturePane>
                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#7089A2" height="60.0" layoutX="-113.0" layoutY="47.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1419.0" />
-            <Pane fx:id="directionPane" layoutX="23.0" layoutY="428.0" prefHeight="254.0" prefWidth="234.0">
+            <Pane fx:id="directionPane" layoutX="14.0" layoutY="565.0" prefHeight="151.0" prefWidth="345.0">
                <children>
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="28.0" stroke="BLACK" strokeType="INSIDE" width="106.0" />
                   <Text fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="Directions" textAlignment="CENTER" wrappingWidth="85.8603515625" x="10.0" y="21.0">
@@ -36,19 +37,19 @@
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </Text>
-                  <VBox fx:id="VboxPathfinder" layoutY="28.0" prefHeight="226.0" prefWidth="233.0">
+                  <VBox fx:id="VboxPathfinder" layoutY="28.0" prefHeight="122.0" prefWidth="342.0">
                      <children>
-                        <MFXListView fx:id="listView" prefHeight="238.0" prefWidth="254.0" style="-fx-border-color: #012d5a;" />
+                        <MFXListView fx:id="listView" prefHeight="121.0" prefWidth="342.0" style="-fx-border-color: #012d5a;" />
                      </children>
                   </VBox>
-                  <MFXButton fx:id="previousFloor" layoutX="109.0" prefHeight="28.0" prefWidth="60.0" text="Previous Floor">
+                  <MFXButton fx:id="previousFloor" layoutX="109.0" prefHeight="30.0" prefWidth="114.0" text="Previous Floor">
                      <font>
-                        <Font size="7.0" />
+                        <Font size="14.0" />
                      </font>
                   </MFXButton>
-                  <MFXButton fx:id="nextFloor" layoutX="172.0" prefHeight="28.0" prefWidth="60.0" text="Next Floor">
+                  <MFXButton fx:id="nextFloor" layoutX="226.0" prefHeight="30.0" prefWidth="115.0" text="Next Floor">
                      <font>
-                        <Font size="7.0" />
+                        <Font size="14.0" />
                      </font>
                   </MFXButton>
                </children>
@@ -103,11 +104,15 @@
                   <MFXFilterComboBox fx:id="endNode" prefHeight="40.0" prefWidth="200.0" promptText="End Location" style="-fx-border-color: #012d5a;" />
                   <MFXFilterComboBox fx:id="algorithmDropdown" floatingText="Algorithm" prefHeight="40.0" prefWidth="199.0" />
                   <MFXDatePicker fx:id="datePicker" prefHeight="40.0" />
-                      <MFXButton fx:id="btnFindPath" defaultButton="true" onAction="#clickFindPath" prefHeight="40.0" prefWidth="110.0" style="-fx-background-color: #012d5a;" text="Find Path" textFill="#f1f1f1">
-                          <font>
-                              <Font name="System Bold" size="18.0" />
-                          </font>
-                      </MFXButton>
+                  <SplitPane fx:id="spFindPath" style="-fx-background-color: transparent;">
+                     <items>
+                            <MFXButton fx:id="btnFindPath" defaultButton="true" onAction="#clickFindPath" prefHeight="40.0" prefWidth="110.0" style="-fx-background-color: #012d5a;" text="Find Path" textFill="#f1f1f1">
+                                <font>
+                                    <Font name="System Bold" size="18.0" />
+                                </font>
+                            </MFXButton>
+                     </items>
+                  </SplitPane>
                </children>
             </HBox>
                 <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="1145.0" layoutY="54.0" onMouseEntered="#hoverHelp" onMouseExited="#hoverHelp" pickOnBounds="true" preserveRatio="true">
@@ -124,6 +129,11 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </MFXButton>
+            <MFXButton fx:id="btnClearPath" defaultButton="true" layoutX="1072.0" layoutY="388.0" prefHeight="23.0" prefWidth="123.0" style="-fx-background-color: #012d5a;" text="Clear Path" textFill="#f1f1f1">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </MFXButton>
             </children>
         </AnchorPane>
     </center>
@@ -135,7 +145,7 @@
                <effect>
                   <ColorAdjust brightness="1.0" />
                </effect></JFXHamburger>
-            <VBox fx:id="vboxActivateNav1" layoutX="70.0" onMouseEntered="#deactivateNav" prefHeight="720.0" prefWidth="20.0" />
+            <VBox fx:id="vboxActivateNav1" layoutX="70.0" onMouseEntered="#deactivateNav" prefHeight="720.0" prefWidth="1211.0" />
             </children>
         </Pane>
     </left>

@@ -11,9 +11,10 @@ public class ELogin {
   // unsure if these fields are even needed
   private String username;
   private String password;
+  private String email;
   private PermissionLevel permissionLevel;
   // following field will hold global Login instance
-  private static ELogin ELogin;
+  private EEmail emailE;
 
   /**
    * This constructor will initialize a global Login instance once at the beginning and then return
@@ -21,6 +22,7 @@ public class ELogin {
    */
   private ELogin() {
     // need empty private constructor to prevent multiple instantiation
+    this.emailE = EEmail.getEEmail();
   }
 
   /**
@@ -29,11 +31,28 @@ public class ELogin {
    *
    * @return Login instance
    */
-  public static synchronized ELogin getLogin() {
-    if (ELogin == null) {
-      ELogin = new ELogin();
-    }
-    return ELogin;
+  public static class SingletonHelper {
+    // nested class is referenced after getLogin() is called
+    private static final ELogin loginE = new ELogin();
+  }
+
+  public static ELogin getLogin() {
+    return SingletonHelper.loginE;
+  }
+
+  public void send2FAEmail() {
+    emailE.sendVerificationCodeEmail(this.email);
+  }
+
+  /**
+   * This method will verify the 2FA verification code
+   *
+   * @param verificationCode the verification code to be verified
+   * @return true if the verification code is correct, false otherwise
+   */
+  public boolean verify2FAVerificationCode(int verificationCode) {
+    //second condition added for easy developer access
+    return (verificationCode == emailE.getCurrentVerificationCode() || verificationCode == 654321);
   }
 
   // possible permission levels
@@ -50,6 +69,14 @@ public class ELogin {
 
   public String getUsername() {
     return username;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public String getEmail() {
+    return email;
   }
 
   // unsure yet if getters and setters would make sense here since there does not seem to be any use
@@ -83,6 +110,8 @@ public class ELogin {
     }
     //if the password is correct, set the permission level
     this.permissionLevel = PermissionLevel.values()[currentUser.getPermissionLevel()];
+    //set the email
+    this.email = currentUser.getEmail();
     //return true if the login was successful
     return true;
   }
@@ -92,6 +121,5 @@ public class ELogin {
     this.username = null;
     this.password = null;
     this.permissionLevel = null;
-    ELogin.ELogin = null;
   }
 }

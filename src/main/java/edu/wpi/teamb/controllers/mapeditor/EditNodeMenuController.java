@@ -12,6 +12,7 @@ import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -62,17 +63,24 @@ public class EditNodeMenuController {
 
         // Initialize the user data
         tfNodeId.setText(String.valueOf(newFullNode.getNodeID()));
+        tfNodeId.setTooltip(new Tooltip("You cannot change the node ID"));
         tfLongName.setText(newFullNode.getLongName());
+        tfLongName.setTooltip(new Tooltip("Enter the long name of the node"));
         tfShortName.setText(newFullNode.getShortName());
+        tfShortName.setTooltip(new Tooltip("Enter the short name of the node"));
         cbNodeType.selectItem(newFullNode.getNodeType());
+        cbNodeType.setTooltip(new Tooltip("Select a node type"));
         tfXCoord.setText(String.valueOf(currentNode.getxCoord()));
+        tfXCoord.setTooltip(new Tooltip("Change the x coordinate of the node if needed"));
         tfYCoord.setText(String.valueOf(currentNode.getyCoord()));
+        tfYCoord.setTooltip(new Tooltip("Change the y coordinate of the node if needed"));
         oldLongName = newFullNode.getLongName();
         oldShortName = newFullNode.getShortName();
         oldNodeType = newFullNode.getNodeType();
     }
 
     public void initButtons() {
+        btnSubmitNodeDetails.setTooltip(new Tooltip("Submit the node details"));
         btnSubmitNodeDetails.setOnMouseClicked(event -> handleSubmitNodeDetails());
     }
 

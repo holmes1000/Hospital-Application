@@ -50,6 +50,7 @@
             </Text>
             <MFXButton fx:id="btnSignageForm" layoutX="24.0" layoutY="164.0" text="Add Sign" />
             <MFXButton fx:id="btnRemoveSign" layoutX="97.0" layoutY="164.0" text="Remove Signs" />
+            <VBox fx:id="vboxActivateNav" layoutX="-150.0" onMouseEntered="#activateNav" prefHeight="720.0" prefWidth="70.0" />
         </children>
     </AnchorPane>
     </center>
@@ -61,6 +62,7 @@
                     <effect>
                         <ColorAdjust brightness="1.0" />
                     </effect></JFXHamburger>
+            <VBox fx:id="vboxActivateNav1" layoutX="70.0" onMouseEntered="#deactivateNav" prefHeight="720.0" prefWidth="1211.0" />
             </children>
         </Pane>
     </left>

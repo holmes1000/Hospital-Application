@@ -317,6 +317,7 @@ public class SubmittedRequestsController {
      */
     private void initComboBoxChangeListeners() {
         //at the beginning set cbFilterOptions to invisible
+        cbFilterOptions.setTooltip(new Tooltip("Select a filter option"));
         cbFilterOptions.setVisible(false);
         //add filtering options to cbFilterCategory
         String[] filterCategories = {"", "Status", "Request Type", "Date Submitted", "Unassigned Task"};
@@ -324,6 +325,10 @@ public class SubmittedRequestsController {
         Arrays.sort(filterCategories);
         //add filter categories to cbFilterCategory
         cbFilterCategory.getItems().addAll(filterCategories);
+
+        //set the tooltip for cbFilterCategory
+        cbFilterCategory.setTooltip(new Tooltip("Select a filter category"));
+
         //add change listener to cbFilterCategory
         cbFilterCategory.valueProperty().addListener(
                 (observable, oldValue, newValue) -> {

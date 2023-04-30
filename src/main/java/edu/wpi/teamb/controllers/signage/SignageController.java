@@ -20,6 +20,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -49,6 +50,10 @@ public class SignageController {
     private StackPane stackPaneMapView;
     @FXML
     private ImageView imageViewPathfinder;
+    @FXML private Pane navPane;
+    @FXML private VBox vboxActivateNav;
+    @FXML private VBox vboxActivateNav1;
+    private boolean navLoaded;
 
 
 
@@ -84,6 +89,8 @@ public class SignageController {
 
 
       Platform.runLater(() -> this.pane.centreOn(new Point2D(2190, 910)));
+      navPane.setMouseTransparent(true);
+      initializeNavGates();
   }
 
     private void initalizeComboBox() {
@@ -95,16 +102,20 @@ public class SignageController {
         }
         ObservableList<String> signageGroupsObservableList = FXCollections.observableArrayList(signageGroupsList);
         cbLocation.setItems(signageGroupsObservableList);
+        cbLocation.setTooltip(new Tooltip("Click the dropdown arrow to select a sign"));
     }
 
     private void init_signage_form_btn(){
+      btnSignageForm.setTooltip(new Tooltip("Click to add a new sign"));
         btnSignageForm.setOnMouseClicked(e -> handleSignageForm());
+        btnRemoveSign.setTooltip(new Tooltip("Click to remove a sign"));
         btnRemoveSign.setOnMouseClicked(e -> handleRemoveSigns());
     }
 
     public void clickCbLocation() {
       signVbox.getChildren().clear();
       displaySelection();
+
   }
 
     public void displaySelection() {
@@ -147,7 +158,6 @@ public class SignageController {
       double vBoxHeight = 446;
       double childHeight = 57;
       double spacing = (vBoxHeight - (childHeight * signVbox.getChildren().size())) / (signVbox.getChildren().size());
-      System.out.println(spacing);
       signVbox.setSpacing(spacing);
   }
 
@@ -173,6 +183,50 @@ public class SignageController {
       cbLocation.setItems(locations);
   }
 
+    /**
+     * For some reason there are occasions when the nav-bar gates for toggling its handling does not start correctly
+     * This fixes this issue
+     */
+    public void initializeNavGates(){
+        activateNav();
+        deactivateNav();
+        navPane.setMouseTransparent(true);
+        vboxActivateNav.setDisable(false);
+        navLoaded = false;
+        vboxActivateNav1.setDisable(true);
+    }
+
+    /**
+     * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+     * Swaps ownership of the strip to the navdraw
+     */
+
+    public void activateNav(){
+        vboxActivateNav.setOnMouseEntered(event -> {
+            if(!navLoaded) {
+                navPane.setMouseTransparent(false);
+                navLoaded = true;
+                vboxActivateNav.setDisable(true);
+                vboxActivateNav1.setDisable(false);
+            }
+        });
+    }
+
+    /**
+     * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+     * Swaps ownership of the strip to the page
+     */
+    public void deactivateNav(){
+        vboxActivateNav1.setOnMouseEntered(event -> {
+            if(navLoaded){
+                navPane.setMouseTransparent(true);
+                vboxActivateNav.setDisable(false);
+                navLoaded = false;
+                vboxActivateNav1.setDisable(true);
+            }
+        });
+    }
+
     public void initNavBar() {
         // https://github.com/afsalashyana/JavaFX-Tutorial-Codes/tree/master/JavaFX%20Navigation%20Drawer/src/genuinecoder
         try {
@@ -181,6 +235,8 @@ public class SignageController {
             VBox vbox = loader.load();
             NavDrawerController navDrawerController = loader.getController();
             menuDrawer.setSidePane(vbox);
+            navPane.setMouseTransparent(true);
+            navLoaded = false;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -194,7 +250,10 @@ public class SignageController {
                     burgerOpen.play();
                     if (menuDrawer.isOpened()) {
                         menuDrawer.close();
+                        vboxActivateNav1.toFront();
                     } else {
+                        menuDrawer.toFront();
+                        menuBurger.toFront();
                         menuDrawer.open();
                     }
                 });

@@ -7,16 +7,16 @@ import edu.wpi.teamb.DBAccess.ORMs.Node;
 import edu.wpi.teamb.entities.requests.EMoveRequest;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
+import io.github.palexdev.materialfx.beans.NumberRange;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXRadioButton;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -26,11 +26,13 @@ import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 
 public class MoveRequestControllerI implements IRequestController{
 
     @FXML private MFXButton btnSubmit;
+    @FXML private SplitPane spSubmit;
     @FXML private MFXButton btnReset;
     @FXML private ImageView helpIcon;
     @FXML private VBox tableVbox;
@@ -73,19 +75,44 @@ public class MoveRequestControllerI implements IRequestController{
 
     @Override
     public void initBtns() {
+        spSubmit.setTooltip(new Tooltip("Enter all required fields to submit request"));
+        BooleanBinding bb = new BooleanBinding() {
+            {
+                super.bind(cdRoomToMove.valueProperty(),
+                        cdWheretoMove.valueProperty(),
+                        dateOfMove.valueProperty());
+            }
+
+            @Override
+            protected boolean computeValue() {
+                return (cdRoomToMove.getValue() == null
+                        || cdWheretoMove.getValue() == null
+                        || dateOfMove.getValue() == null);
+            }
+        };
+        btnSubmit.disableProperty().bind(bb);
+
+        btnSubmit.setTooltip(new Tooltip("Click to submit request"));
         btnSubmit.setOnAction(e -> handleSubmit());
+        btnReset.setTooltip(new Tooltip("Click to reset fields"));
         btnReset.setOnAction(e -> handleReset());
         helpIcon.setOnMouseClicked(e -> handleHelp());
+        btnRemoveMove.setTooltip(new Tooltip("Click to remove selected move"));
         btnRemoveMove.setOnMouseClicked(e -> handleRemoveMove());
+        btnEditRequest.setTooltip(new Tooltip("Click to edit selected move"));
         btnEditRequest.setOnMouseClicked(e -> handleEditRequest());
     }
 
     @Override
     public void initializeFields() throws SQLException {
+        // initialize comboboxes
+        cdRoomToMove.setTooltip(new Tooltip("Select room to move"));
         cdRoomToMove.setValue("");
         cdRoomToMove.setPromptText("Room to Move");
+        cdWheretoMove.setTooltip(new Tooltip("Select where to move selected room"));
         cdWheretoMove.setValue(-1);
         cdWheretoMove.setPromptText("Where to Move");
+        dateOfMove.setTooltip(new Tooltip("Select date of move"));
         dateOfMove.setValue(LocalDate.now());
         // initialize date picker
         dateOfMove.setPromptText("Date of Move");
@@ -184,6 +211,7 @@ public class MoveRequestControllerI implements IRequestController{
         TableColumn<Move, Date> dates = new TableColumn<>("Dates");
         dates.setCellValueFactory(new PropertyValueFactory<Move, Date>("date"));
 
+        tbFutureMoves.setTooltip(new Tooltip("Table of future move requests"));
         tbFutureMoves.getColumns().addAll(ids, locs, dates);
 
         // ArrayList<Move> moves = Repository.getRepository().getAllMoves();
@@ -263,15 +291,15 @@ public class MoveRequestControllerI implements IRequestController{
     public void handleRemoveMove() {
         // when clicking on the remove button, the selected row is removed from the
         // table and the database
-            if (tbFutureMoves.getSelectionModel().getSelectedItem() != null) {
-                Move move = tbFutureMoves.getSelectionModel().getSelectedItem();
-                EMoveRequest = new EMoveRequest(move);
-                EMoveRequest.removeRequest();
-                tbFutureMoves.getItems().remove(move);
-                tableSize--;
-                handleReset();
+        if (tbFutureMoves.getSelectionModel().getSelectedItem() != null) {
+            Move move = tbFutureMoves.getSelectionModel().getSelectedItem();
+            EMoveRequest = new EMoveRequest(move);
+            EMoveRequest.removeRequest();
+            tbFutureMoves.getItems().remove(move);
+            tableSize--;
+            handleReset();
 
-            }
+        }
         btnRemoveMove.setDisable(true);
         handleReset();
     }
@@ -279,17 +307,17 @@ public class MoveRequestControllerI implements IRequestController{
     public void handleEditRequest() {
         // when clicking on the edit button, the selected row is removed from the table
         // and the database
-            if (tbFutureMoves.getSelectionModel().getSelectedItem() != null) {
-                Move move = tbFutureMoves.getSelectionModel().getSelectedItem();
-                tbFutureMoves.getItems().remove(move);
-                EMoveRequest = new EMoveRequest(move);
-                // set values of move request from form info
-                EMoveRequest.updateRequest();
+        if (tbFutureMoves.getSelectionModel().getSelectedItem() != null) {
+            Move move = tbFutureMoves.getSelectionModel().getSelectedItem();
+            tbFutureMoves.getItems().remove(move);
+            EMoveRequest = new EMoveRequest(move);
+            // set values of move request from form info
+            EMoveRequest.updateRequest();
 
-                EMoveRequest.updateRequest();
+            EMoveRequest.updateRequest();
 
-                tableSize--;
-                handleReset();
-            }
+            tableSize--;
+            handleReset();
+        }
     }
 }

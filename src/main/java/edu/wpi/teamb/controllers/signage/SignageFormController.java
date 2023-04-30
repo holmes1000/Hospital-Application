@@ -11,6 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 
 import java.sql.Date;
@@ -33,7 +34,9 @@ public class SignageFormController {
     public void initialize(){
         //Init
         signageE = new ESignage();
+        btnClose.setTooltip(new Tooltip("Click to return"));
         btnClose.setOnMouseClicked(e -> handleClose());
+        btnSubmit.setTooltip(new Tooltip("Click to submit the form"));
         btnSubmit.setOnMouseClicked(e -> handleSubmit());
         initalizeComboBox();
         initialize_date_pickers();

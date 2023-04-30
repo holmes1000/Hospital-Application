@@ -14,5 +14,6 @@
       <Text fill="WHITE" layoutX="11.0" layoutY="162.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Click the submit button to submit the request." wrappingWidth="364.9999999046322" />
       <Text fill="WHITE" layoutX="11.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select a floor and room to reserve." wrappingWidth="364.9999999046322" />
       <Text fill="WHITE" layoutX="11.0" layoutY="86.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter a name for the given event." wrappingWidth="364.9999999046322" />
+      <Text fill="WHITE" layoutX="11.0" layoutY="103.0" strokeType="OUTSIDE" strokeWidth="0.0" text="All fields are required." wrappingWidth="364.9999999046322" />
    </children>
 </AnchorPane>

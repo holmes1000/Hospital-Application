@@ -12,10 +12,13 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
@@ -27,6 +30,7 @@ import java.util.Collections;
 public class FlowerRequestControllerI implements IRequestController {
 
     @FXML private MFXButton btnSubmit;
+    @FXML private SplitPane spSubmit;
     @FXML private MFXButton btnReset;
     @FXML private ImageView helpIcon;
     @FXML private MFXFilterComboBox<String> cbAvailableFlowers;
@@ -51,7 +55,30 @@ public class FlowerRequestControllerI implements IRequestController {
 
     @Override
     public void initBtns() {
+        spSubmit.setTooltip(new Tooltip("Enter all required fields to submit request"));
+        BooleanBinding bb = new BooleanBinding() {
+            {
+                super.bind(cbAvailableFlowers.valueProperty(),
+                        cdAvailableColor.valueProperty(),
+                        cdAvailableType.valueProperty(),
+                        cbLongName.valueProperty(),
+                        cbEmployeesToAssign.valueProperty());
+            }
+
+            @Override
+            protected boolean computeValue() {
+                return (cbAvailableFlowers.getValue() == null ||
+                        cdAvailableColor.getValue() == null ||
+                        cdAvailableType.getValue() == null ||
+                        cbLongName.getValue() == null ||
+                        cbEmployeesToAssign.getValue() == null);
+            }
+        };
+        btnSubmit.disableProperty().bind(bb);
+
+        btnSubmit.setTooltip(new Tooltip("Click to submit request"));
         btnSubmit.setOnAction(e -> handleSubmit());
+        btnReset.setTooltip(new Tooltip("Click to reset the form"));
         btnReset.setOnAction(e -> handleReset());
         helpIcon.setOnMouseClicked(e -> handleHelp());
     }
@@ -63,22 +90,26 @@ public class FlowerRequestControllerI implements IRequestController {
         longNames.addAll(Repository.getRepository().getPracticalLongNames());
         Collections.sort(longNames);
         cbLongName.setItems(longNames);
+        cbLongName.setTooltip(new Tooltip("Select a location to direct the request to"));
 
         //Set types of flowers
         ObservableList<String> flowers = FXCollections.observableArrayList("Rose", "Tulip", "Daisy", "Lily", "Sunflower");
         Collections.sort(flowers);
         cbAvailableFlowers.setItems(flowers);
+        cbAvailableFlowers.setTooltip(new Tooltip("Select a type of flower"));
 
         //Set colors of flowers
-        ObservableList<String> colors = FXCollections.observableArrayList("Red", "Orange", "Yellow", "Green", "Blue", "Purple", "Pink", "White", "Black", "Brown");
+        ObservableList<String> colors = FXCollections.observableArrayList("Red", "Orange", "Yellow", "Green", "Blue", "Purple", "Pink", "White");
         Collections.sort(colors);
         cdAvailableColor.setItems(colors);
+        cdAvailableColor.setTooltip(new Tooltip("Select a color of flower"));
 
 
         //Set delivery types
         ObservableList<String> deliveryType = FXCollections.observableArrayList("Bouquet", "Single Flower", "Vase");
         Collections.sort(deliveryType);
         cdAvailableType.setItems(deliveryType);
+        cdAvailableType.setTooltip(new Tooltip("Select a type of delivery"));
         //todo: fix locations
 
         //Set list of employees
@@ -88,6 +119,7 @@ public class FlowerRequestControllerI implements IRequestController {
         Collections.sort(employees);
         employees.add(0, "Unassigned");
         cbEmployeesToAssign.setItems(employees);
+        cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
     }
 
     @Override
@@ -121,7 +153,6 @@ public class FlowerRequestControllerI implements IRequestController {
                 };
                 EFlowerRequest.submitRequest(output);
                 handleReset();
-                Navigation.navigate(Screen.CREATE_NEW_REQUEST);
             }
             submissionAlert();
         }
