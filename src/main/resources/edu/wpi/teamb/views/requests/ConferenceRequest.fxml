@@ -54,9 +54,9 @@
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXFilterComboBox>
-            <MFXFilterComboBox fx:id="cbLongName" floatingText="Room" layoutX="20.0" layoutY="187.0" prefHeight="40.0" prefWidth="410.0" promptText="Search for room" />
-            <MFXTextField fx:id="tfNotes" floatingText="Notes" layoutX="20.0" layoutY="397.0" prefHeight="40.0" prefWidth="698.0" />
-            <MFXFilterComboBox fx:id="cbDuration" floatingText="End Time" layoutX="425.0" layoutY="117.0" prefHeight="46.0" prefWidth="123.0" />
+                <MFXFilterComboBox fx:id="cbLongName" floatingText="Room" layoutX="20.0" layoutY="187.0" prefHeight="40.0" prefWidth="410.0" promptText="Search for room" />
+                <MFXTextField fx:id="tfNotes" floatingText="Notes" layoutX="20.0" layoutY="397.0" prefHeight="40.0" prefWidth="698.0" />
+                <MFXFilterComboBox fx:id="cbDuration" floatingText="End Time" layoutX="469.0" layoutY="116.0" />
             </children>
         </AnchorPane>
     </center>
