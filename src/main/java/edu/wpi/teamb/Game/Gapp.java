@@ -62,6 +62,10 @@ public class Gapp extends Application {
 
     }
 
+    public static BorderPane getRootPane() {
+        return rootPane;
+    }
+
     /**
      * gets the current scene
      * 
