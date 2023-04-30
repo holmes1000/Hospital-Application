@@ -2,9 +2,9 @@
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
-<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -22,11 +22,15 @@
                         <Font name="System Bold" size="36.0" />
                     </font>
                 </Text>
-                <MFXButton fx:id="btnSubmit" defaultButton="true" layoutX="955.0" layoutY="481.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Submit" textFill="#f1f1f1">
-                    <font>
-                        <Font name="System Bold" size="18.0" />
-                    </font>
-                </MFXButton>
+            <SplitPane fx:id="spSubmit" layoutX="955.0" layoutY="481.0" style="-fx-background-color: transparent;">
+               <items>
+                      <MFXButton fx:id="btnSubmit" defaultButton="true" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Submit" textFill="#f1f1f1">
+                          <font>
+                              <Font name="System Bold" size="18.0" />
+                          </font>
+                      </MFXButton>
+               </items>
+            </SplitPane>
                 <MFXButton fx:id="btnReset" defaultButton="true" layoutX="20.0" layoutY="481.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Reset" textFill="#f1f1f1">
                     <font>
                         <Font name="System Bold" size="18.0" />
@@ -56,7 +60,7 @@
                         <Cursor fx:constant="DEFAULT" />
                     </cursor>
                 </MFXFilterComboBox>
-                <MFXFilterComboBox fx:id="cbLongName" floatingText="Room Name" layoutX="20.0" layoutY="337.0" prefHeight="40.0" prefWidth="410.0" />
+                <MFXFilterComboBox fx:id="cbLongName" floatingText="Room" layoutX="20.0" layoutY="337.0" prefHeight="40.0" prefWidth="410.0" promptText="Search for room" />
             <MFXTextField fx:id="tbSupplyQuantities" alignment="TOP_LEFT" floatingText="Quantity" layoutX="20.0" layoutY="187.0" prefHeight="30.0" prefWidth="162.0" textLimit="10">
             </MFXTextField>
             <Text fill="RED" layoutX="968.0" layoutY="477.0" strokeType="OUTSIDE" strokeWidth="0.0" text="All fields required*">

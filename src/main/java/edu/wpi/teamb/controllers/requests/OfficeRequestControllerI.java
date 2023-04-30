@@ -12,10 +12,12 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
@@ -30,6 +32,8 @@ public class OfficeRequestControllerI implements IRequestController {
 
     @FXML
     private MFXButton btnSubmit;
+    @FXML
+    private SplitPane spSubmit;
     @FXML
     private MFXButton btnReset;
     @FXML
@@ -61,7 +65,32 @@ public class OfficeRequestControllerI implements IRequestController {
 
     @Override
     public void initBtns() {
+        spSubmit.setTooltip(new Tooltip("Enter all required fields to submit request"));
+        BooleanBinding bb = new BooleanBinding() {
+            {
+                super.bind(cbSupplyItems.valueProperty(),
+                        cbSupplyType.valueProperty(),
+                        tbSupplyQuantities.textProperty(),
+                        txtFldNotes.textProperty(),
+                        cbEmployeesToAssign.valueProperty(),
+                        cbLongName.valueProperty());
+            }
+
+            @Override
+            protected boolean computeValue() {
+                return (cbSupplyItems.getValue() == null
+                        || cbSupplyType.getValue() == null
+                        || tbSupplyQuantities.getText().isEmpty()
+                        || txtFldNotes.getText().isEmpty()
+                        || cbEmployeesToAssign.getValue() == null
+                        || cbLongName.getValue() == null);
+            }
+        };
+        btnSubmit.disableProperty().bind(bb);
+
+        btnSubmit.setTooltip(new Tooltip("Click to submit request"));
         btnSubmit.setOnAction(e -> handleSubmit());
+        btnReset.setTooltip(new Tooltip("Click to reset all fields"));
         btnReset.setOnAction(e -> handleReset());
         helpIcon.setOnMouseClicked(e -> handleHelp());
     }

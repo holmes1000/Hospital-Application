@@ -12,10 +12,12 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
@@ -31,6 +33,8 @@ public class FurnitureRequestControllerI implements IRequestController{
 
     @FXML
     private MFXButton btnSubmit;
+    @FXML
+    private SplitPane spSubmit;
     @FXML
     private MFXButton btnReset;
     @FXML
@@ -63,6 +67,27 @@ public class FurnitureRequestControllerI implements IRequestController{
 
     @Override
     public void initBtns() {
+        spSubmit.setTooltip(new Tooltip("Enter all required fields to submit request"));
+        BooleanBinding bb = new BooleanBinding() {
+            {
+                super.bind(cbAvailableFurniture.valueProperty(),
+                        cdAvailableModels.valueProperty(),
+                        cdAssembly.valueProperty(),
+                        cbLongName.valueProperty(),
+                        cbEmployeesToAssign.valueProperty());
+            }
+
+            @Override
+            protected boolean computeValue() {
+                return (cbAvailableFurniture.getValue() == null ||
+                        cdAvailableModels.getValue() == null ||
+                        cdAssembly.getValue() == null ||
+                        cbLongName.getValue() == null ||
+                        cbEmployeesToAssign.getValue() == null);
+            }
+        };
+        btnSubmit.disableProperty().bind(bb);
+
         btnSubmit.setTooltip(new Tooltip("Click to submit request"));
         btnSubmit.setOnAction(e -> handleSubmit());
         btnReset.setTooltip(new Tooltip("Click to reset fields"));

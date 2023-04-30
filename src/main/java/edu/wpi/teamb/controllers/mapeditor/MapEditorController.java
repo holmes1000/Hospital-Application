@@ -9,6 +9,7 @@ import edu.wpi.teamb.DBAccess.DBoutput;
 import edu.wpi.teamb.DBAccess.Full.FullNode;
 import edu.wpi.teamb.DBAccess.ORMs.Edge;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
+import edu.wpi.teamb.DBAccess.ORMs.Move;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 import edu.wpi.teamb.entities.EMapEditor;
 import edu.wpi.teamb.navigation.Navigation;
@@ -51,7 +52,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.ResponseCache;
 import java.sql.Array;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.*;
 
 import static javafx.scene.paint.Color.RED;
@@ -145,6 +148,10 @@ public class MapEditorController {
   Circle c2;
 
   // New menu buttons
+  @FXML
+  private MFXButton btnSubmitMove;
+  @FXML
+  private MFXDatePicker datePicker;
   @FXML
   private MenuButton btnMenuNode;
   private CustomMenuItem btnAddNode = new CustomMenuItem();
@@ -252,6 +259,8 @@ public class MapEditorController {
     btnMenuMove.setGraphic(imageViewMove);
     btnMenuBackup.setGraphic(imageViewReset);
     btnAlignNodes.setVisible(false);
+    btnSubmitMove.setVisible(false);
+    datePicker.setVisible(false);
 
     System.out.println("MapEditorController initialized");
 
@@ -396,7 +405,7 @@ public class MapEditorController {
     });
     c.setOnMouseClicked(event -> {
       try {
-        selectedNodes.add(c); // Used for creating edges
+        selectedNodes.add(c); // Used for creating edges and moves
         nodesToAlign.add(c); // Used for aligning nodes
         checkSelectedNodes(); // Check if two circles are selected to create an edge
         checkNodesToAlign(); // Check if at least two circles are selected to align
@@ -504,7 +513,12 @@ public class MapEditorController {
       System.out.println(c1.toString());
       System.out.println(c2.toString());
       selectedNodes.clear();
-      handleAddEdge(c1, c2);
+      if (mapEditorContext.getState() == addEdgeState) {
+        handleAddEdge(c1, c2);
+      }
+      else if (mapEditorContext.getState() == addMoveState) {
+        handleAddMove(c1,c2);
+      }
     }
   }
 
@@ -812,9 +826,38 @@ public class MapEditorController {
 
     // Init new buttons
     btnAlignNodes.setOnMouseClicked(event -> alignNodes());
+    btnSubmitMove.setOnMouseClicked(event -> handleSubmitMove());
   }
 
-  private void handleAddMove() {
+  private void handleSubmitMove() {
+    // Get the date from the date picker
+    LocalDate date = datePicker.getValue();
+
+    // Get the nodes from the circle ids
+    FullNode startNode = Repository.getRepository().getFullNode(Integer.parseInt(c1.getId()));
+    FullNode endNode = Repository.getRepository().getFullNode(Integer.parseInt(c2.getId()));
+
+    // Get the move data
+    Move move = new Move();
+    move.setLongName(startNode.getLongName()); // Location name of the start node
+    move.setNodeID(endNode.getNodeID()); // ID of end node
+    move.setDate(Date.valueOf(date));
+
+    // Add the move to the database
+    Repository.getRepository().addMove(move);
+
+    // Hide the submit button and date picker
+    btnSubmitMove.setVisible(false);
+    datePicker.setVisible(false);
+
+    // Refresh the map
+    refreshMap();
+  }
+
+  private void handleAddMove(Circle c1, Circle c2) {
+    btnSubmitMove.setVisible(true);
+    datePicker.setVisible(true);
+    datePicker.setValue(LocalDate.now());
   }
 
   /**

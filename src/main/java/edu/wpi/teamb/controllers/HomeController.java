@@ -143,7 +143,7 @@ public class HomeController {
     public void loadAlerts(){
         ArrayList<Alert> allAlerts = Repository.getRepository().getAllAlerts();
         alertsTable.setEditable(false);
-        TableColumn<Alert, String> titles = new TableColumn<>("Title");
+        TableColumn<Alert, String> titles = new TableColumn<>("Subject");
         titles.setMinWidth(100);
         titles.setStyle("-fx-alignment: CENTER;");
         titles.setCellValueFactory(new PropertyValueFactory<>("title"));
