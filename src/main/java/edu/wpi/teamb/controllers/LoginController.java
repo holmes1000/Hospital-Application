@@ -6,7 +6,6 @@ import edu.wpi.teamb.exceptions.IncorrectPasswordException;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXRadioButton;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -21,10 +20,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import org.controlsfx.validation.ValidationResult;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
@@ -35,10 +32,10 @@ public class LoginController {
   @FXML private MFXTextField textUsername;
   @FXML private MFXTextField textPassword;
   @FXML private Text errorMsg;
-  private ELogin ELogin;
+  private ELogin loginE;
 
   public LoginController() {
-    this.ELogin = ELogin.getLogin();
+    this.loginE = ELogin.getLogin();
   }
 
   @FXML
@@ -70,9 +67,9 @@ public class LoginController {
     // otherwise send the username and password data over to Login entity to be checked with
     // database
     try {
-      if (ELogin.checkLogin(textUsername.getText(), textPassword.getText())) {
+      if (loginE.checkLogin(textUsername.getText(), textPassword.getText())) {
         // if login is successful, then send 2FA email
-        ELogin.send2FAEmail();
+        loginE.send2FAEmail();
         //perform 2Factor Authentication
         //if successful, perform2FactorAuthentication() will handle navigate to home page
         perform2FactorAuthentication();
@@ -100,7 +97,7 @@ public class LoginController {
   private void perform2FactorAuthentication() {
     TextInputDialog dialog = new TextInputDialog();
     dialog.setTitle("2-Factor Authentication: ");
-    dialog.setHeaderText("Please enter the verification code sent to the email address associated with the username: " + ELogin.getUsername());
+    dialog.setHeaderText("Please enter the verification code sent to the email address associated with the username: " + loginE.getUsername());
     dialog.setContentText("Verification Code:");
 
     // create a formatter that only allows numbers
@@ -127,7 +124,7 @@ public class LoginController {
     // Show the dialog and wait for the result
     Optional<String> result = dialog.showAndWait();
     if (result.isPresent()) {
-      if (ELogin.verify2FAVerificationCode(Integer.parseInt(dialog.getEditor().getText()))) {
+      if (loginE.verify2FAVerificationCode(Integer.parseInt(dialog.getEditor().getText()))) {
         //condition where 2-factor authentication code matched
         errorMsg.setText("Logged in Successful!");
         Navigation.navigate(Screen.HOME);

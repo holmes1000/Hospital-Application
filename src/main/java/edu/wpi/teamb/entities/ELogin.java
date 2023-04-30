@@ -14,7 +14,6 @@ public class ELogin {
   private String email;
   private PermissionLevel permissionLevel;
   // following field will hold global Login instance
-  private static ELogin ELogin;
   private EEmail emailE;
 
   /**
@@ -32,11 +31,13 @@ public class ELogin {
    *
    * @return Login instance
    */
-  public static synchronized ELogin getLogin() {
-    if (ELogin == null) {
-      ELogin = new ELogin();
-    }
-    return ELogin;
+  public static class SingletonHelper {
+    // nested class is referenced after getLogin() is called
+    private static final ELogin loginE = new ELogin();
+  }
+
+  public static ELogin getLogin() {
+    return SingletonHelper.loginE;
   }
 
   public void send2FAEmail() {
@@ -111,6 +112,5 @@ public class ELogin {
     this.username = null;
     this.password = null;
     this.permissionLevel = null;
-    ELogin.ELogin = null;
   }
 }
