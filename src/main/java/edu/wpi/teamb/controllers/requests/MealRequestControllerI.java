@@ -159,7 +159,6 @@ public class MealRequestControllerI implements IRequestController{
                 };
                 EMealRequest.submitRequest(output);
                 handleReset();
-                Navigation.navigate(Screen.CREATE_NEW_REQUEST);
             }
             submissionAlert();
         }

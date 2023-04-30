@@ -64,7 +64,7 @@
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXFilterComboBox>
-            <MFXTextField fx:id="txtFldNotes" animated="false" floatingText="Specify any Additional Notes" layoutX="20.0" layoutY="355.0" prefHeight="50.0" prefWidth="450.0" textLimit="80" />
+            <MFXTextField fx:id="txtFldNotes" animated="false" floatingText="Specify any Additional Notes" layoutX="20.0" layoutY="355.0" prefHeight="50.0" prefWidth="450.0" textLimit="150" />
             <MFXFilterComboBox fx:id="cbLongName" animated="false" floatingText="Choose Room to Order To" layoutX="20.0" layoutY="295.0" prefHeight="50.0" prefWidth="450.0" />
             <ImageView fitHeight="305.0" fitWidth="550.0" layoutX="525.0" layoutY="129.0" pickOnBounds="true" preserveRatio="true">
                <image>

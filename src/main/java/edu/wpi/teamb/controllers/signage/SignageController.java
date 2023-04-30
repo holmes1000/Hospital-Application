@@ -115,6 +115,7 @@ public class SignageController {
     public void clickCbLocation() {
       signVbox.getChildren().clear();
       displaySelection();
+
   }
 
     public void displaySelection() {

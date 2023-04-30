@@ -193,7 +193,6 @@ public class FurnitureRequestControllerI implements IRequestController{
                 };
                 EFurnitureRequest.submitRequest(output);
                 handleReset();
-                Navigation.navigate(Screen.CREATE_NEW_REQUEST);
             }
             submissionAlert();
         }

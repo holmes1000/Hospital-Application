@@ -193,7 +193,6 @@ public class ConferenceRequestControllerI implements IRequestController{
 
                 EConferenceRequest.submitRequest(output);
                 handleReset();
-                Navigation.navigate(Screen.CREATE_NEW_REQUEST);
             }
             submissionAlert();
         }

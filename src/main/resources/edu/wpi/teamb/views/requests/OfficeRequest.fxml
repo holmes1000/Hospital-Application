@@ -54,7 +54,7 @@
                         <Cursor fx:constant="DEFAULT" />
                     </cursor>
                 </MFXFilterComboBox>
-                <MFXTextField fx:id="txtFldNotes" floatingText="Specify any Additional Notes" layoutX="20.0" layoutY="360.0" prefHeight="45.0" prefWidth="450.0" textLimit="80" />
+                <MFXTextField fx:id="txtFldNotes" floatingText="Specify any Additional Notes" layoutX="20.0" layoutY="360.0" prefHeight="45.0" prefWidth="450.0" textLimit="150" />
                 <MFXFilterComboBox fx:id="cbEmployeesToAssign" floatingText="Specify Employee to Assign to Request" layoutX="20.0" layoutY="242.0" prefHeight="50.0" prefWidth="450.0">
                     <cursor>
                         <Cursor fx:constant="DEFAULT" />
