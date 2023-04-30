@@ -117,31 +117,12 @@ public class LoginController {
     // create a validation support object to show error messages
     ValidationSupport validationSupport = new ValidationSupport();
     validationSupport.setErrorDecorationEnabled(true);
-//    validationSupport.registerValidator(dialog.getEditor(), Validator.createEmptyValidator("Please enter a number"));
+    //validationSupport.registerValidator(dialog.getEditor(), Validator.createEmptyValidator("Please enter a number"));
     validationSupport.registerValidator(dialog.getEditor(), Validator.createPredicateValidator((String s) -> s.length() == 6, "Please enter a 6 digit number"));
 
     // Binding to disable the OK button until input is valid
     Node okButton = dialog.getDialogPane().lookupButton(ButtonType.OK);
     okButton.disableProperty().bind(validationSupport.invalidProperty());
-
-//    //Set the ok and cancel onclick listeners
-//    ((Button)okButton).setOnMouseClicked(event -> {
-//      if (ELogin.verify2FAVerificationCode(Integer.parseInt(dialog.getEditor().getText()))) {
-//        //condition where 2-factor authentication code matched
-//        errorMsg.setText("Logged in Successful!");
-//        Navigation.navigate(Screen.HOME);
-//      } else {
-//        //condition where 2-factor authentication code did not match
-//        errorMsg.setText("Incorrect 2-factor authentication code. Please try again.");
-//      }
-//    });
-//
-//    //set the cancel button onclickListener
-//    Button cancelButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
-//    cancelButton.setOnMouseClicked(event -> {
-//      //condition where user canceled 2-factor authentication
-//      errorMsg.setText("2-factor authentication canceled. Login failed.");
-//    });
 
     // Show the dialog and wait for the result
     Optional<String> result = dialog.showAndWait();
