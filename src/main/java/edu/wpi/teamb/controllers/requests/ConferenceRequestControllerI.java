@@ -139,6 +139,7 @@ public class ConferenceRequestControllerI implements IRequestController{
         // setting max character limits
         eventNameTextField.textLimitProperty().set(100);
         bookingReasonTextField.textLimitProperty().set(250);
+        reservationHour.clear();
     }
 
     @Override
@@ -201,7 +202,7 @@ public class ConferenceRequestControllerI implements IRequestController{
     @Override
     public void handleReset() {
         datePicker.clear();
-        reservationHour.setValue("12:00 AM");
+        ///reservationHour.setValue("12:00 AM");
         datePicker.clear();
         cbDuration.clear();
         eventNameTextField.clear();

@@ -35,6 +35,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.Optional;
 
 public class EditAlertsController {
     @FXML
@@ -122,10 +123,16 @@ public class EditAlertsController {
     }
 
     private void handleDeleteAlert() {
-        edu.wpi.teamb.DBAccess.ORMs.Alert alert = tbAlerts.getSelectionModel().getSelectedItem();
-        Repository.getRepository().deleteAlert(alert); // Delete the user
-        updateTable();
-        createAlert("Alert Deleted", "Alert Deleted Successfully");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete Edge");
+        alert.setContentText("Are you sure you want to delete this alert?");
+        Optional<ButtonType> action = alert.showAndWait();
+        if (action.get() == ButtonType.OK) {
+            edu.wpi.teamb.DBAccess.ORMs.Alert alert1 = tbAlerts.getSelectionModel().getSelectedItem();
+            Repository.getRepository().deleteAlert(alert1); // Delete the user
+            updateTable();
+            createAlert("Alert Deleted", "Alert Deleted Successfully");
+        }
     }
 
     private void handleEditAlert() throws IOException {
