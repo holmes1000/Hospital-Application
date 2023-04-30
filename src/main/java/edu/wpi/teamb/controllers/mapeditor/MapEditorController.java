@@ -90,6 +90,8 @@ public class MapEditorController {
   @FXML
   private MFXToggleButton toggleEdges;
   @FXML
+  private MFXToggleButton toggleMoves;
+  @FXML
   private MFXButton btnViewMoveMap;
   @FXML private MFXButton btnFindPath;
 
@@ -186,6 +188,7 @@ public class MapEditorController {
   @FXML
   private CustomMenuItem itemSaveToBackup = new CustomMenuItem();
   @FXML private MFXButton btnRefresh;
+  private MoveMap moveMap;
 
   public MapEditorController() throws SQLException {
     this.editor = new EMapEditor();
@@ -195,22 +198,15 @@ public class MapEditorController {
   public void initialize() throws IOException, SQLException {
     initNavBar();
     hoverHelp();
-//    initializeFields();
     initButtons();
     initStateBtn();
     PathFinding.ASTAR.init_pathfinder();
-    // Initialize the edges, nodes, and names on the map
-    //nodeList = Repository.getRepository().getAllNodes();
+    moveMap = new MoveMap(); // Create move map
     fullNodesList = Repository.getRepository().getAllFullNodes();
-//    fullNodes = Repository.getRepository().getFullNodes();
 
     this.stackPaneMapView = new StackPane(); // no longer @FXML
     // Used for nodes
     this.locationCanvas = new Pane();
-
-//    this.nodeGroup = new Group();
-//    this.nameGroup = new Group();
-//    this.edgeGroup = new Group();
 
     // Used for location names
     this.fullNodeCanvas = new Pane();
@@ -225,6 +221,10 @@ public class MapEditorController {
     this.locationCanvas.getChildren().add(nodeGroup);
     this.locationCanvas.getChildren().add(edgeGroup);
     this.locationCanvas.getChildren().add(nameGroup);
+    this.locationCanvas.getChildren().add(moveMap.getPathGroup());
+    this.locationCanvas.getChildren().add(moveMap.getMoveInfo());
+    moveMap.getPathGroup().setVisible(false);
+    moveMap.getMoveInfo().setVisible(false);
 
     //Fitting the scrollpane
     pane.setScrollMode(GesturePane.ScrollMode.ZOOM);
@@ -265,10 +265,9 @@ public class MapEditorController {
     datePicker.setVisible(false);
     btnFindPath.setVisible(false);
 
-    System.out.println("MapEditorController initialized");
-
-
     initializeNavGates();
+
+    System.out.println("MapEditorController initialized");
   }
 
   /**
@@ -801,12 +800,12 @@ public class MapEditorController {
       handleResetFromBackupBtn();
     });
 
-    btnViewMoveMap.setOnMouseClicked(e -> Navigation.navigate(Screen.MOVE_MAP));
-
     // initialize the toggles
     toggleEdges.setSelected(true);
     toggleNodes.setSelected(true);
     toggleLocationNames.setSelected(true);
+    toggleMoves.setSelected(false);
+    
     toggleLocationNames.setOnMouseClicked(event -> {
       handleToggleLocationNames();
     });
@@ -816,12 +815,28 @@ public class MapEditorController {
     toggleNodes.setOnMouseClicked(event -> {
       handleToggleNodes();
     });
+    toggleMoves.setOnMouseClicked(event -> {
+      handleToggleMoves();
+    });
 
     // Init new buttons
     btnAlignNodes.setOnMouseClicked(event -> alignNodes());
     btnSubmitMove.setOnMouseClicked(event -> handleSubmitMove());
     btnRefresh.setOnMouseClicked(event -> refreshMap());
     btnFindPath.setOnMouseClicked(event -> handleFindPath());
+  }
+
+  private void handleToggleMoves() {
+    if (toggleMoves.isSelected()) {
+      moveMap.getPathGroup().setVisible(true);
+      moveMap.getMoveInfo().setVisible(true);
+      System.out.println("Moves are on");
+    } else {
+      //nameGroup.setVisible(false);
+      System.out.println("Moves are off");
+      moveMap.getPathGroup().setVisible(false);
+      moveMap.getMoveInfo().setVisible(false);
+    }
   }
 
   private void handleFindPath() {
@@ -912,6 +927,7 @@ public class MapEditorController {
       edgeGroup.getChildren().clear();
       nodeGroup.getChildren().clear();
       draw("L1");
+      drawMoveMap(currentFloor);
     });
     btnL2.setTooltip(new Tooltip("Lower Level 2"));
     btnL2.setOnMouseClicked(event -> {
@@ -919,10 +935,10 @@ public class MapEditorController {
       currentFloor = "L2";
       changeButtonColor(currentFloor);
       floorList = Repository.getRepository().getFullNodesByFloor("L2");
-
       edgeGroup.getChildren().clear();
       nodeGroup.getChildren().clear();
       draw("L2");
+      drawMoveMap(currentFloor);
     });
     btn1.setTooltip(new Tooltip("Level 1"));
     btn1.setOnMouseClicked(event -> {
@@ -933,6 +949,7 @@ public class MapEditorController {
       edgeGroup.getChildren().clear();
       nodeGroup.getChildren().clear();
       draw("1");
+      drawMoveMap(currentFloor);
     });
     btn2.setTooltip(new Tooltip("Level 2"));
     btn2.setOnMouseClicked(event -> {
@@ -943,6 +960,7 @@ public class MapEditorController {
       edgeGroup.getChildren().clear();
       nodeGroup.getChildren().clear();
       draw("2");
+      drawMoveMap(currentFloor);
     });
     btn3.setTooltip(new Tooltip("Level 3"));
     btn3.setOnMouseClicked(event -> {
@@ -953,9 +971,16 @@ public class MapEditorController {
       edgeGroup.getChildren().clear();
       nodeGroup.getChildren().clear();
       draw("3");
+      drawMoveMap(currentFloor);
     });
   }
 
+  private void drawMoveMap(String currentFloor) {
+    locationCanvas.getChildren().remove(moveMap.getPathGroup());
+    moveMap.getPathGroup().getChildren().clear();
+    moveMap.displayMoves(currentFloor);
+    locationCanvas.getChildren().add(moveMap.getPathGroup());
+  }
   private void setMenuItemTooltip(MenuButton b, CustomMenuItem c, String text, String toolTipText) {
     // change the color of the custom menu item
     Text text1 = new Text(text);
