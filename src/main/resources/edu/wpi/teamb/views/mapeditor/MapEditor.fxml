@@ -3,9 +3,9 @@
 <?import com.jfoenix.controls.JFXDrawer?>
 <?import com.jfoenix.controls.JFXHamburger?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
 <?import io.github.palexdev.materialfx.controls.MFXToggleButton?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
@@ -77,6 +77,7 @@
                </children>
             </VBox>
                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#012d5a" height="50.0" layoutX="-162.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1471.0" />
+            <DatePicker fx:id="dateToMove" layoutX="987.0" layoutY="175.0" prefHeight="40.0" prefWidth="201.0" />
                 <Text fill="WHITE" layoutX="-81.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Map Editor" textAlignment="CENTER" wrappingWidth="1354.103515625">
                     <font>
                         <Font name="System Bold" size="36.0" />
@@ -149,7 +150,6 @@
                </padding></HBox>
             <Text fx:id="tfState" fill="RED" layoutX="1013.0" layoutY="389.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="81.0" />
             <VBox fx:id="vboxActivateNav" layoutX="-70.0" prefHeight="720.0" prefWidth="70.0" />
-            <MFXDatePicker fx:id="datePicker" layoutX="994.0" layoutY="177.0" />
             </children>
         </AnchorPane>
     </center>

@@ -154,7 +154,7 @@ public class MapEditorController {
   @FXML
   private MFXButton btnSubmitMove;
   @FXML
-  private MFXDatePicker datePicker;
+  private DatePicker dateToMove;
   @FXML
   private MenuButton btnMenuNode;
   private CustomMenuItem btnAddNode = new CustomMenuItem();
@@ -262,7 +262,7 @@ public class MapEditorController {
     btnMenuBackup.setGraphic(imageViewReset);
     btnAlignNodes.setVisible(false);
     btnSubmitMove.setVisible(false);
-    datePicker.setVisible(false);
+    dateToMove.setVisible(false);
     btnFindPath.setVisible(false);
 
     initializeNavGates();
@@ -857,7 +857,7 @@ public class MapEditorController {
 
   private void handleSubmitMove() {
     // Get the date from the date picker
-    LocalDate date = datePicker.getValue();
+    LocalDate date = dateToMove.getValue();
 
     // Get the nodes from the circle ids
     FullNode startNode = Repository.getRepository().getFullNode(Integer.parseInt(c1.getId()));
@@ -874,7 +874,7 @@ public class MapEditorController {
 
     // Hide the submit button and date picker
     btnSubmitMove.setVisible(false);
-    datePicker.setVisible(false);
+    dateToMove.setVisible(false);
     btnFindPath.setVisible(true);
 
     // Refresh the map
@@ -883,8 +883,16 @@ public class MapEditorController {
 
   private void handleAddMove(Circle c1, Circle c2) {
     btnSubmitMove.setVisible(true);
-    datePicker.setVisible(true);
-    datePicker.setValue(LocalDate.now());
+    dateToMove.setVisible(true);
+    dateToMove.setValue(LocalDate.now());
+    dateToMove.setDayCellFactory(picker -> new DateCell() {
+      public void updateItem(LocalDate date, boolean empty) {
+        super.updateItem(date, empty);
+        LocalDate today = LocalDate.now();
+
+        setDisable(empty || date.compareTo(today) < 0 );
+      }
+    });
   }
 
   /**

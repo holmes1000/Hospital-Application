@@ -3,11 +3,11 @@
 <?import com.jfoenix.controls.JFXDrawer?>
 <?import com.jfoenix.controls.JFXHamburger?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
 <?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXListView?>
 <?import io.github.palexdev.materialfx.controls.MFXToggleButton?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
@@ -100,10 +100,10 @@
                 </VBox>
             <HBox layoutX="92.0" layoutY="58.0" spacing="10.0">
                <children>
-                  <MFXFilterComboBox fx:id="startNode" prefHeight="40.0" prefWidth="200.0" promptText="Start Location" style="-fx-border-color: #012d5a;" />
-                  <MFXFilterComboBox fx:id="endNode" prefHeight="40.0" prefWidth="200.0" promptText="End Location" style="-fx-border-color: #012d5a;" />
+                  <MFXFilterComboBox fx:id="startNode" prefHeight="40.0" prefWidth="200.0" promptText="Start Location" style="-fx-border-color: transparent;" />
+                  <MFXFilterComboBox fx:id="endNode" prefHeight="40.0" prefWidth="200.0" promptText="End Location" style="-fx-border-color: transparent;" />
                   <MFXFilterComboBox fx:id="algorithmDropdown" floatingText="Algorithm" prefHeight="40.0" prefWidth="199.0" />
-                  <MFXDatePicker fx:id="datePicker" prefHeight="40.0" />
+                  <DatePicker fx:id="dateToFindPath" prefHeight="41.0" prefWidth="186.0" promptText="MM/DD/YYYY" style="-fx-background-color: transparent;" />
                   <SplitPane fx:id="spFindPath" style="-fx-background-color: transparent;">
                      <items>
                             <MFXButton fx:id="btnFindPath" defaultButton="true" onAction="#clickFindPath" prefHeight="40.0" prefWidth="110.0" style="-fx-background-color: #012d5a;" text="Find Path" textFill="#f1f1f1">
