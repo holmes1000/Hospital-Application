@@ -65,8 +65,8 @@ public class ETranslationRequest extends RequestImpl {
         return this.medicalInNature != null && this.languageType != null && this.message != null;
     }
 
-    public void updateTranslationRequest(fullTranslationRequest fullTranslationRequest) {
-        Repository.getRepository().updateFlowerRequest(fullTranslationRequest);
+    public void updateTranslationRequest(FullTranslationRequest fullTranslationRequest) {
+        Repository.getRepository().updateTranslationRequest(fullTranslationRequest);
     }
 }
 }
