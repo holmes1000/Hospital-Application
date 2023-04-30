@@ -44,32 +44,32 @@
                   <ColorAdjust brightness="1.0" />
                </effect>
             </ImageView>
-            <MFXFilterComboBox fx:id="cbAvailableFlowers" floatingText="Flower type" layoutX="20.0" layoutY="80.0" prefHeight="45.0" prefWidth="230.0">
+            <MFXFilterComboBox fx:id="cbAvailableFlowers" animated="false" floatingText="Select a Type of Flower" layoutX="20.0" layoutY="80.0" prefHeight="45.0" prefWidth="450.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXFilterComboBox>
-            <MFXFilterComboBox fx:id="cdAvailableColor" floatingText="Color" layoutX="20.0" layoutY="132.0" prefHeight="45.0" prefWidth="230.0">
+            <MFXFilterComboBox fx:id="cdAvailableColor" animated="false" floatingText="Select a Flower Color" layoutX="20.0" layoutY="132.0" prefHeight="45.0" prefWidth="450.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXFilterComboBox>
-            <MFXFilterComboBox fx:id="cdAvailableType" floatingText="Quantity" layoutX="20.0" layoutY="185.0" prefHeight="45.0" prefWidth="230.0">
+            <MFXFilterComboBox fx:id="cdAvailableType" animated="false" floatingText="Select the Quantity of Flowers" layoutX="20.0" layoutY="185.0" prefHeight="45.0" prefWidth="450.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXFilterComboBox>
-            <MFXTextField fx:id="txtFldMessage" floatingText="Add a Message" layoutX="20.0" layoutY="415.0" prefHeight="45.0" prefWidth="430.0" textLimit="80" />
-            <MFXFilterComboBox fx:id="cbEmployeesToAssign" floatingText="Employee" layoutX="20.0" layoutY="240.0" prefHeight="45.0" prefWidth="230.0">
+            <MFXTextField fx:id="txtFldMessage" animated="false" floatingText="Specify any Additional Message to Accompany Flowers" layoutX="20.0" layoutY="415.0" prefHeight="45.0" prefWidth="450.0" textLimit="80" />
+            <MFXFilterComboBox fx:id="cbEmployeesToAssign" animated="false" floatingText="Specify Employee to Assign to Request" layoutX="20.0" layoutY="240.0" prefHeight="45.0" prefWidth="450.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXFilterComboBox>
-            <MFXTextField fx:id="txtFldNotes" floatingText="Special Instructions" layoutX="20.0" layoutY="355.0" prefHeight="34.0" prefWidth="430.0" textLimit="80" />
-            <MFXFilterComboBox fx:id="cbLongName" floatingText="Room Name" layoutX="20.0" layoutY="295.0" maxHeight="50.0" minHeight="45.0" prefHeight="50.0" prefWidth="430.0" />
-            <ImageView fitHeight="305.0" fitWidth="460.0" layoutX="617.0" layoutY="118.0" pickOnBounds="true" preserveRatio="true">
+            <MFXTextField fx:id="txtFldNotes" animated="false" floatingText="Specify any Special Instructions" layoutX="20.0" layoutY="355.0" prefHeight="34.0" prefWidth="450.0" textLimit="80" />
+            <MFXFilterComboBox fx:id="cbLongName" animated="false" floatingText="Specify a Room for Delivery" layoutX="20.0" layoutY="295.0" maxHeight="50.0" minHeight="45.0" prefHeight="50.0" prefWidth="450.0" />
+            <ImageView fitHeight="305.0" fitWidth="460.0" layoutX="616.0" layoutY="118.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../img/flower-vase.jpg" />
+                  <Image url="@../../img/flower-vase2.jpg" />
                </image>
             </ImageView>
          </children>
