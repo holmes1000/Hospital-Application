@@ -2,28 +2,22 @@ package edu.wpi.teamb.Game;
 
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Stack;
-
 import edu.wpi.teamb.Game.PatientThings.patient;
 import edu.wpi.teamb.Game.Player.Player;
 import edu.wpi.teamb.Game.Player.TimeController;
-import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
 
 public class Game {
     /* Game objects */
     static Player player;
     public static Queue<patient> customerQ;
-    public static Stack<patient> customerS;
+    public static LinkedList<patient> customerS;
     static TimeController timeController;
     // game state
     double timePassed;
     double gameSpeed;
-    difficultyLevels curDif;
+    static difficultyLevels  curDif;
     static boolean running = false;
     static Canvas canvas;
     static GraphicsContext gc;
@@ -32,7 +26,7 @@ public class Game {
 
     private static Game game;
 
-    enum difficultyLevels {
+    public enum difficultyLevels {
         EASY, MED, HARD;
 
         public static difficultyLevels int2dif(int d) {
@@ -58,10 +52,10 @@ public class Game {
     private Game() {
         int timeLeft = 50;
         player = new Player(0, timeLeft);
-        timeController = TimeController.newTimeController(50);
+        timeController = TimeController.newTimeController(15);
         gameSpeed = 1;
         customerQ = new LinkedList<>();
-        customerS = new Stack<>();
+        customerS = new LinkedList<>();
         curDif = difficultyLevels.EASY;
         running = true;
 
@@ -78,6 +72,11 @@ public class Game {
             game = new Game();
         }
         return game;
+    }
+
+    public static difficultyLevels getCurDif()
+    {
+        return curDif;
     }
 
     public void start(Thread mfxThread) {
@@ -103,10 +102,10 @@ public class Game {
             lastTime = currentTime;
             if (dt >= 1) {
                 // calls update
-                update(dt/10);
+                update(dt/60);
 
                 // calls paint component
-                repaint(dt/10);
+                repaint(dt/60);
                 dt--;
                 drawcount++;
 
@@ -117,6 +116,7 @@ public class Game {
                 timer = 0;
                 // degub info
                 System.out.println("update: " + timer);
+                System.out.println(Gapp.personImages[0].getHeight());
             }
             if(timeController.getTimeLeft()<=0)
             {

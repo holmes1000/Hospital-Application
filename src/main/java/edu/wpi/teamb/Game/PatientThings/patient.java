@@ -1,14 +1,11 @@
 package edu.wpi.teamb.Game.PatientThings;
 
-import javafx.scene.shape.Rectangle;
-
 import java.util.Random;
 
 import edu.wpi.teamb.Game.Gapp;
-import edu.wpi.teamb.Game.Contollers.GameScnController;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Paint;
 
 public class patient {
     PatientNeed need;
@@ -16,9 +13,9 @@ public class patient {
     Image patientImage;
     int position;
 
-    /*render */
-    int x = 100, y = 250, w = 75, h = 75, positionOffest;
-
+    /* render */
+    int x = 250, y = 140, w = 75, h = 75, positionOffest;
+    private int border = 13;
 
     double patients;
 
@@ -28,7 +25,7 @@ public class patient {
         this.patients = patients;
         this.position = position;
         personimage = Gapp.personImages[0];
-        positionOffest = position;
+        positionOffest = 75;
 
     }
 
@@ -61,17 +58,17 @@ public class patient {
      * @return the amount of time the patient will wait
      */
     private static double randPatients() {
-        return Math.random() * 10 + 10;
+        return Math.random() * 5 + 3;
 
     }
 
     private void setPatientImage(PatientNeed pn) {
-        // switch (pn) {
-        //     case HEART -> patientImage = new Image("heart.png");
-        //     case BROKEN_LIMB -> patientImage = new Image("brokenLimb.png");
-        //     case HUNGRY -> patientImage = new Image("hungry.png");
-        //     case NON_SEVERE -> patientImage = new Image("nonSevere.png");
-        // }
+        switch (pn) {
+            case HEART -> patientImage = Gapp.personImages[0];
+            case BROKEN_LIMB -> patientImage = Gapp.personImages[1];
+            case HUNGRY -> patientImage = Gapp.personImages[2];
+            case NON_SEVERE -> patientImage = Gapp.personImages[3];
+        }
     }
 
     public PatientNeed getNeed() {
@@ -95,19 +92,28 @@ public class patient {
     }
 
     public void decresePaditents(double amount) {
-        patients -= amount / position;
+        patients -= amount * 2 / position;
     }
 
     public void update(double time) {
-        //switch person image to the second one if patiets is below 3
-        if (patients < 3) {
+        decresePaditents(time);
+        // switch person image to the second one if patiets is below 3
+        if (personimage != Gapp.personImages[1] && patients < 3) {
             personimage = Gapp.personImages[1];
+            System.out.println("HAHA");
         }
     }
 
     public void show(GraphicsContext gc) {
-        //draw person image
-        gc.drawImage(personimage, x-w*position, y,w,h);
+        // draw person image
+
+        gc.drawImage(personimage, x - w / 2 * (position - 1), y, w, h);
+        if (position == 1) {
+            gc.setFill(Paint.valueOf("orange"));
+            gc.fillOval(x + positionOffest, y - positionOffest, 100, 100);
+            gc.drawImage(patientImage, x + positionOffest + border, y - positionOffest + border, 75, 75);
+        }
+
     }
 
 }

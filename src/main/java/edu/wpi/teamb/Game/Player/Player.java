@@ -1,12 +1,8 @@
 package edu.wpi.teamb.Game.Player;
 
-import edu.wpi.teamb.Game.Gapp;
 import edu.wpi.teamb.Game.PatientThings.PatientNeed;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
 
 public class Player {
     PatientNeed slectedNeed;

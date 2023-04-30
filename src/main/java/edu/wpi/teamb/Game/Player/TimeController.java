@@ -3,7 +3,6 @@ package edu.wpi.teamb.Game.Player;
 import edu.wpi.teamb.Game.Colors;
 import edu.wpi.teamb.Game.Game;
 import edu.wpi.teamb.Game.PatientThings.patient;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
 public class TimeController {
@@ -118,10 +117,12 @@ public class TimeController {
             timeTilNewPatient -= time;
         } else {
 
-            timeTilNewPatient = patientTime;
-            patient p = patient.genRandPat(Game.customerQ.size());
+            timeTilNewPatient = patientTime/(Math.random()*7*(Game.getCurDif().ordinal()+1)+1);
+            System.out.println(timeTilNewPatient);
+            System.out.println(Game.getCurDif());
+            patient p = patient.genRandPat(Game.customerQ.size()+1);
             Game.customerQ.add(p);
-            Game.customerS.add(p);
+            Game.customerS.add(0,p);
 
         }
 

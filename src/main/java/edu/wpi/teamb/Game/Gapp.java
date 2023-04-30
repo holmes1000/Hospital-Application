@@ -1,15 +1,10 @@
 package edu.wpi.teamb.Game;
 
-import java.io.IOException;
-
-import edu.wpi.teamb.Bapp;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -17,6 +12,17 @@ public class Gapp extends Application {
 
     private static Stage primaryStage;
     private static BorderPane rootPane;
+
+    public static Image[] personImages = new Image[] {
+            new Image(Gapp.class.getResourceAsStream("./rsc/images/HappyCustomer.png")),
+            new Image(Gapp.class.getResourceAsStream("./rsc/images/MadCustomer.png"))
+    };
+    public static Image[] patientImages = new Image[] {
+            new Image(Gapp.class.getResourceAsStream("./rsc/images/heart.png")),
+            new Image(Gapp.class.getResourceAsStream("./rsc/images/brokenLimb.png")),
+            new Image(Gapp.class.getResourceAsStream("./rsc/images/hungry.png")),
+            new Image(Gapp.class.getResourceAsStream("./rsc/images/nonSevere.png")),
+    };
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -66,9 +72,6 @@ public class Gapp extends Application {
     }
 
     static Thread gameThread;
-    //TODO: get path to images
-    //public static Image[] patientImages= new Image[]{new Image(null),new Image(null),new Image(null),new Image(null)};
-    public static Image[] personImages= new Image[]{new Image("/rsc/images/HappyCustomer.png"),new Image("/rsc/images/MadCustomer.png")};
 
     /**
      * runs the game thread
@@ -79,17 +82,14 @@ public class Gapp extends Application {
         gameThread.start();
     }
 
-
-    
     /**
      * ends the game thread
      */
     public static void endGame() {
         Game.stop();
-        
+
         gameThread.interrupt();
-        
-        
+
         Game.kill();
 
     }
@@ -104,7 +104,5 @@ public class Gapp extends Application {
         return (Canvas) primaryStage.getScene().lookup("#TheCanvas");
 
     }
-
-
 
 }

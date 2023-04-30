@@ -8,12 +8,8 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import edu.wpi.teamb.Game.Game;
 import edu.wpi.teamb.Game.Gapp;
 import javafx.fxml.FXML;
-import javafx.scene.Group;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class StartScnController {

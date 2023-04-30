@@ -13,7 +13,6 @@ import edu.wpi.teamb.Game.Gapp;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.layout.AnchorPane;
 
 public class GameScnController {
 
