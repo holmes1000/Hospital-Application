@@ -34,7 +34,7 @@ import static javax.mail.Message.RecipientType.TO;
 public class EEmail {
   private Gmail service;
 
-  public EEmail() {
+  private EEmail() {
     try {
       final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
       GsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
@@ -46,6 +46,16 @@ public class EEmail {
       e.printStackTrace();
     }
   }
+
+  private static class SingletonHelper {
+    //Nested class is referenced after getEEmail() is called
+    private static final EEmail eEmail = new EEmail();
+  }
+
+  public static EEmail getEEmail() {
+    return SingletonHelper.eEmail;
+  }
+
   private static final String fromEmailAddress = "teambD2023@gmail.com";
   private static final String toEmailAddress = "teambD2023@gmail.com";
 
