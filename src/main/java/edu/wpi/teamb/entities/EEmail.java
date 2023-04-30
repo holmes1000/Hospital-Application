@@ -27,6 +27,7 @@ import java.io.InputStreamReader;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
+import java.util.Random;
 import java.util.Set;
 
 import static javax.mail.Message.RecipientType.TO;
@@ -133,7 +134,10 @@ public class EEmail {
 
   private void generateVerificationCode() {
     //generate a random 6 digit number
-    currentVerificationCode = (int) (Math.random() * 1000000);
+    Random rand = new Random();
+    int min = 100000;
+    int max = 999999;
+    currentVerificationCode = rand.nextInt((max - min) + 1) + min;
   }
 
   public int getCurrentVerificationCode() {
