@@ -1,59 +1,122 @@
 package edu.wpi.teamb.entities;
 
-import javax.mail.*;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
+import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
+import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.googleapis.json.GoogleJsonError;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.util.Base64;
+import com.google.api.client.util.store.FileDataStoreFactory;
+import com.google.api.services.gmail.Gmail;
+import com.google.api.services.gmail.GmailScopes;
+import com.google.api.services.gmail.model.Message;
+
+import javax.mail.MessagingException;
+import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.file.Paths;
+import java.security.GeneralSecurityException;
 import java.util.Properties;
+import java.util.Set;
+
+import static javax.mail.Message.RecipientType.TO;
 
 public class EEmail {
-  //Disable SSL certificate validation
-//  static {
-//    javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
-//        (hostname, sslSession) -> hostname.equals("localhost"));
-//  }
-  public static void sendEmail(String recipient) {
-    Properties properties = new Properties();
+  private Gmail service;
 
-    //setups properties for email
-    properties.put("mail.smtp.auth", "true");
-    properties.put("mail.smtp.starttls.enable", "true");
-    properties.put("mail.smtp.host", "smtp.gmail.com");
-    properties.put("mail.smtp.port", "587");
-
-    //email account credentials
-    String teambEmail = "teambd2023@gmail.com";
-    String password = "cenpswqqtjrhzanj";
-
-    Session session = Session.getInstance(properties, new Authenticator() {
-      @Override
-      protected PasswordAuthentication getPasswordAuthentication() {
-        return new PasswordAuthentication(teambEmail, password);
-      }
-    });
-
-    Message message = prepareMessage(session, teambEmail, recipient);
-    try{
-      Transport transport = session.getTransport("smtp");
-      transport.connect("smtp.gmail.com", teambEmail, "cenpswqqtjrhzanj");
-      transport.sendMessage(message, message.getAllRecipients());
-      transport.close();
-      System.out.println("Message sent successfully");
-    } catch (MessagingException e) {
+  public EEmail() {
+    try {
+      final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+      GsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
+      this.service = new Gmail.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT, JSON_FACTORY))
+              .setApplicationName("TestMailer")
+              .build();
+    }
+    catch (GeneralSecurityException | IOException e) {
       e.printStackTrace();
     }
   }
+  private static final String fromEmailAddress = "teambD2023@gmail.com";
+  private static final String toEmailAddress = "teambD2023@gmail.com";
 
-  private static Message prepareMessage(Session session, String fromAddress, String toAddress) {
-    Message message = new MimeMessage(session);
+  private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT, GsonFactory JSON_FACTORY)
+          throws IOException {
+    // Load client secrets.
+//    InputStream in = EEmail.class.getResourceAsStream("/...json");
+//    if (in == null) {
+//      throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
+//    }
+    GoogleClientSecrets clientSecrets =
+            GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(EEmail.class.getResourceAsStream("/TwoFactorAutheticationClientSecrets/client_secret_327339985363-vms6v6s3gfrusiqrhdh9o81vn4uehdrc.apps.googleusercontent.com.json")));
+
+    // Build flow and trigger user authorization request.
+    GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
+            HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, Set.of(GmailScopes.GMAIL_SEND))
+            .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(Paths.get("token").toFile().toURI())))
+            .setAccessType("offline")
+            .build();
+    LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
+    Credential credential = new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
+    //returns an authorized Credential object.
+    return credential;
+  }
+
+  public void sendMail(String subject, String msg) {
+
+    // Encode as MIME message
+    Properties props = new Properties();
+    Session session = Session.getDefaultInstance(props, null);
+    MimeMessage email = new MimeMessage(session);
     try {
-      message.setFrom(new InternetAddress(fromAddress));
-      message.setRecipient(Message.RecipientType.TO, new InternetAddress(toAddress));
-      message.setSubject("Hi Jackson");
-      message.setText("This is a test email/n Best regards, Team B");
-      return message;
-    } catch (Exception e) {
+      email.setFrom(new InternetAddress(fromEmailAddress));
+      email.addRecipient(TO, new InternetAddress(toEmailAddress));
+      email.setSubject(subject);
+      email.setText(msg);
+    } catch (javax.mail.MessagingException e) {
       e.printStackTrace();
     }
-    return null;
+
+    // Encode and wrap the MIME message into a gmail message
+    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    try {
+      email.writeTo(buffer);
+    } catch (MessagingException | IOException e) {
+      e.printStackTrace();
+    }
+    byte[] rawMessageBytes = buffer.toByteArray();
+    String encodedEmail = Base64.encodeBase64URLSafeString(rawMessageBytes);
+    Message message = new Message();
+    message.setRaw(encodedEmail);
+
+    try {
+      // Create send message
+      message = service.users().messages().send("me", message).execute();
+      System.out.println("Message id: " + message.getId());
+      System.out.println(message.toPrettyString());
+    } catch (GoogleJsonResponseException e) {
+      GoogleJsonError error = e.getDetails();
+      if (error.getCode() == 403) {
+        System.err.println("Unable to send message: " + e.getDetails());
+      } else {
+        try {
+          throw e;
+        } catch(GoogleJsonResponseException f) {
+          f.printStackTrace();
+        }
+      }
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }
