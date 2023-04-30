@@ -7,6 +7,7 @@ import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.*;
 
 import edu.wpi.teamb.Bapp;
@@ -21,6 +22,7 @@ import edu.wpi.teamb.navigation.Screen;
 import edu.wpi.teamb.pathfinding.PathFinding;
 import edu.wpi.teamb.controllers.NavDrawerController;
 import edu.wpi.teamb.entities.EPathfinder;
+import io.github.palexdev.materialfx.beans.NumberRange;
 import io.github.palexdev.materialfx.controls.*;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -117,6 +119,7 @@ public class PathfinderController {
     ArrayList<String> keysList;
 
     LinkedHashMap<String, ObservableList<String>> floorsMap;
+    @FXML private MFXButton btnClearPath;
 
   @FXML
   public void initialize() throws IOException {
@@ -124,6 +127,11 @@ public class PathfinderController {
       if (adminTest != ELogin.PermissionLevel.ADMIN) {
           btnEditMap.setVisible(false);
       }
+
+      datePicker.setStartingYearMonth(YearMonth.from(datePicker.getCurrentDate()));
+      NumberRange<Integer> range = new NumberRange<>(datePicker.getCurrentDate().getYear(), datePicker.getCurrentDate().getYear() + 1);
+      datePicker.setYearsRange(range);
+
       Platform.setImplicitExit(false);
 
       initNavBar();
@@ -192,6 +200,7 @@ public class PathfinderController {
       changeButtonColor(currentFloor);
       algorithmDropdown.selectFirst();
       spFindPath.setTooltip(new Tooltip("Select an ending location to find a path"));
+      btnClearPath.setVisible(false);
       BooleanBinding bb = new BooleanBinding() {
           {
               super.bind(startNode.valueProperty(),
@@ -565,9 +574,20 @@ public class PathfinderController {
         btnEditMap.setTooltip(new Tooltip("Click to edit the map"));
         btnEditMap.setOnMouseClicked(event -> Navigation.navigate(Screen.MAP_EDITOR));
         toggleAvoidStairs.setTooltip(new Tooltip("Click to toggle Avoid Stairs"));
+        
+        btnClearPath.setOnMouseClicked(event -> handleClearPath());
     }
 
-   public void handleToggleShowNames() {
+    private void handleClearPath() {
+      try {
+          initialize();
+      }
+      catch (Exception e) {
+          e.printStackTrace();
+      }
+    }
+
+    public void handleToggleShowNames() {
        if(toggleShowNames.isSelected()){
            nameGroup.setVisible(true);
            System.out.println("Location names on");
@@ -714,6 +734,7 @@ public class PathfinderController {
     }
 
   public void clickFindPath() throws SQLException {
+      btnClearPath.setVisible(true);
       btnFindPath.setTooltip(new Tooltip("Click to find path"));
       btnFindPath.setOnMouseClicked(event-> {
           ArrayList<Node> nodePath = new ArrayList<>();
