@@ -33,6 +33,7 @@ public class InfoCardController {
   @FXML private Label timeSubmittedLabel;
   @FXML private Label locationNameLabel;
   @FXML private Label employeeAssignedLabel;
+  @FXML private Label requestTypeLabel;
   @FXML private Label statusLabel; //deprecated implementation comment: make a button for this *Note: Please Disregard*
   @FXML private VBox buttonContainerVBox;
   @FXML private VBox subComponentContainer;
@@ -201,6 +202,7 @@ public class InfoCardController {
     setEmployeeAssignedLabel(fullRequest.getEmployee());
     setStatusLabel(fullRequest.getRequestStatus());
     requestTypeIconImageView.setImage(fullRequest.setRequestTypeIconImageView());
+    requestTypeLabel.setText(fullRequest.getRequestType());
     fullRequest.setRequestType();
   }
 
