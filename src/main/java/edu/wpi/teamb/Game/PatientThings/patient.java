@@ -64,10 +64,10 @@ public class patient {
 
     private void setPatientImage(PatientNeed pn) {
         switch (pn) {
-            case HEART -> patientImage = Gapp.personImages[0];
-            case BROKEN_LIMB -> patientImage = Gapp.personImages[1];
-            case HUNGRY -> patientImage = Gapp.personImages[2];
-            case NON_SEVERE -> patientImage = Gapp.personImages[3];
+            case HEART -> patientImage = Gapp.patientImages[0];
+            case BROKEN_LIMB -> patientImage = Gapp.patientImages[1];
+            case HUNGRY -> patientImage = Gapp.patientImages[2];
+            case NON_SEVERE -> patientImage = Gapp.patientImages[3];
         }
     }
 
