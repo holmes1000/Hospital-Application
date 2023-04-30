@@ -291,15 +291,15 @@ public class MoveRequestControllerI implements IRequestController{
     public void handleRemoveMove() {
         // when clicking on the remove button, the selected row is removed from the
         // table and the database
-            if (tbFutureMoves.getSelectionModel().getSelectedItem() != null) {
-                Move move = tbFutureMoves.getSelectionModel().getSelectedItem();
-                EMoveRequest = new EMoveRequest(move);
-                EMoveRequest.removeRequest();
-                tbFutureMoves.getItems().remove(move);
-                tableSize--;
-                handleReset();
+        if (tbFutureMoves.getSelectionModel().getSelectedItem() != null) {
+            Move move = tbFutureMoves.getSelectionModel().getSelectedItem();
+            EMoveRequest = new EMoveRequest(move);
+            EMoveRequest.removeRequest();
+            tbFutureMoves.getItems().remove(move);
+            tableSize--;
+            handleReset();
 
-            }
+        }
         btnRemoveMove.setDisable(true);
         handleReset();
     }
@@ -307,17 +307,17 @@ public class MoveRequestControllerI implements IRequestController{
     public void handleEditRequest() {
         // when clicking on the edit button, the selected row is removed from the table
         // and the database
-            if (tbFutureMoves.getSelectionModel().getSelectedItem() != null) {
-                Move move = tbFutureMoves.getSelectionModel().getSelectedItem();
-                tbFutureMoves.getItems().remove(move);
-                EMoveRequest = new EMoveRequest(move);
-                // set values of move request from form info
-                EMoveRequest.updateRequest();
+        if (tbFutureMoves.getSelectionModel().getSelectedItem() != null) {
+            Move move = tbFutureMoves.getSelectionModel().getSelectedItem();
+            tbFutureMoves.getItems().remove(move);
+            EMoveRequest = new EMoveRequest(move);
+            // set values of move request from form info
+            EMoveRequest.updateRequest();
 
-                EMoveRequest.updateRequest();
+            EMoveRequest.updateRequest();
 
-                tableSize--;
-                handleReset();
-            }
+            tableSize--;
+            handleReset();
+        }
     }
 }

@@ -13,16 +13,16 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="1107.0" style="-fx-background-color: #7089a2;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.requests.FlowerRequestControllerI">
-   <left>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="1107.0" style="-fx-background-color: #5f7ca4;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.requests.FlowerRequestControllerI">
+   <center>
       <AnchorPane prefHeight="720.0" prefWidth="1159.0" BorderPane.alignment="CENTER">
          <children>
-            <Text fill="#ffffff" layoutX="20.0" layoutY="64.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Flower Request" textAlignment="CENTER">
+            <Text fill="#ffffff" layoutX="20.0" layoutY="54.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Flower Request" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="36.0" />
                </font>
             </Text>
-            <SplitPane fx:id="spSubmit" layoutX="955.0" layoutY="481.0" style="-fx-background-color: transparent;">
+            <SplitPane fx:id="spSubmit" layoutX="952.0" layoutY="479.0" style="-fx-background-color: transparent;">
                <items>
                   <MFXButton fx:id="btnSubmit" defaultButton="true" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Submit" textFill="#f1f1f1">
                      <font>
@@ -31,12 +31,12 @@
                   </MFXButton>
                </items>
             </SplitPane>
-            <MFXButton fx:id="btnReset" defaultButton="true" layoutX="20.0" layoutY="481.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Reset" textFill="#f1f1f1">
+            <MFXButton fx:id="btnReset" defaultButton="true" layoutX="20.0" layoutY="480.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Reset" textFill="#f1f1f1">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </MFXButton>
-            <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="1028.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="1028.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../img/helpicon.png" />
                </image>
@@ -44,30 +44,35 @@
                   <ColorAdjust brightness="1.0" />
                </effect>
             </ImageView>
-            <MFXFilterComboBox fx:id="cbAvailableFlowers" floatingText="Flower type" layoutX="20.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
+            <MFXFilterComboBox fx:id="cbAvailableFlowers" animated="false" floatingText="Select a Type of Flower" layoutX="20.0" layoutY="80.0" prefHeight="45.0" prefWidth="450.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXFilterComboBox>
-            <MFXFilterComboBox fx:id="cdAvailableColor" floatingText="Color" layoutX="280.0" layoutY="117.0" prefHeight="40.0" prefWidth="205.0">
+            <MFXFilterComboBox fx:id="cdAvailableColor" animated="false" floatingText="Select a Flower Color" layoutX="20.0" layoutY="132.0" prefHeight="45.0" prefWidth="450.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXFilterComboBox>
-            <MFXFilterComboBox fx:id="cdAvailableType" floatingText="Quantity" layoutX="20.0" layoutY="187.0" prefHeight="40.0" prefWidth="218.0">
+            <MFXFilterComboBox fx:id="cdAvailableType" animated="false" floatingText="Select the Quantity of Flowers" layoutX="20.0" layoutY="185.0" prefHeight="45.0" prefWidth="450.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXFilterComboBox>
-            <MFXTextField fx:id="txtFldMessage" floatingText="Add a Message" layoutX="20.0" layoutY="397.0" prefHeight="26.0" prefWidth="428.0" textLimit="80" />
-            <MFXFilterComboBox fx:id="cbEmployeesToAssign" floatingText="Employee" layoutX="841.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
+            <MFXTextField fx:id="txtFldMessage" animated="false" floatingText="Specify any Additional Message to Accompany Flowers" layoutX="20.0" layoutY="415.0" prefHeight="45.0" prefWidth="450.0" textLimit="150" />
+            <MFXFilterComboBox fx:id="cbEmployeesToAssign" animated="false" floatingText="Specify Employee to Assign to Request" layoutX="20.0" layoutY="240.0" prefHeight="45.0" prefWidth="450.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXFilterComboBox>
-            <MFXTextField fx:id="txtFldNotes" floatingText="Special Instructions" layoutX="502.0" layoutY="397.0" prefHeight="34.0" prefWidth="428.0" textLimit="80" />
-            <MFXFilterComboBox fx:id="cbLongName" floatingText="Room Name" layoutX="20.0" layoutY="337.0" prefHeight="24.0" prefWidth="410.0" />
+            <MFXTextField fx:id="txtFldNotes" animated="false" floatingText="Specify any Special Instructions" layoutX="20.0" layoutY="355.0" prefHeight="34.0" prefWidth="450.0" textLimit="150" />
+            <MFXFilterComboBox fx:id="cbLongName" animated="false" floatingText="Specify a Room for Delivery" layoutX="20.0" layoutY="295.0" maxHeight="50.0" minHeight="45.0" prefHeight="50.0" prefWidth="450.0" />
+            <ImageView fitHeight="305.0" fitWidth="460.0" layoutX="616.0" layoutY="118.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../img/flower-vase2.jpg" />
+               </image>
+            </ImageView>
          </children>
       </AnchorPane>
-   </left>
+   </center>
 </BorderPane>
