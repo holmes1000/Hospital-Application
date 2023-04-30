@@ -31,6 +31,21 @@ public class UserDAOImpl implements IDAO {
         } return null;
     }
 
+  /**
+   * Gets a User by its email
+   * @param email
+   * @return
+   */
+  public User getUserByEmail(Object email) {
+        String emailStr = (String) email;
+        for (User u : users) {
+            if (u.getEmail().equals(emailStr)) {
+                return u;
+            }
+        }
+        return null;
+    }
+
     /**
      * Gets all local User objects
      *

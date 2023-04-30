@@ -1513,6 +1513,13 @@ public class Repository {
         return u;
     }
 
+    public User getUserByEmail(String email) {
+        User u = (User) userDAO.getUserByEmail(email);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return u;
+    }
+
     public ArrayList<User> getAllUsers() {
         ArrayList<User> u = userDAO.getAll();
         dbConnection.closeDBconnection();
