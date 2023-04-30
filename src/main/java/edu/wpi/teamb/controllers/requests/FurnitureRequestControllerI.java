@@ -110,10 +110,10 @@ public class FurnitureRequestControllerI implements IRequestController{
         cbAvailableFurniture.setTooltip(new Tooltip("Select the type of furniture you want"));
 
         //Set list of models
-//        ObservableList<String> models = FXCollections.observableArrayList("Huge", "Big", "Medium", "Small", "Tiny");
-//        Collections.sort(models);
-        //cdAvailableModels.setItems(models);
-        cdAvailableModels.setTooltip(new Tooltip("Select the size of furniture you want"));
+        ObservableList<String> models = FXCollections.observableArrayList("Please select a type of furniture to view the available models.");
+        Collections.sort(models);
+        cdAvailableModels.setItems(models);
+        cdAvailableModels.setTooltip(new Tooltip("Select the model of furniture you want"));
 
         //Set list of assembly options
         ObservableList<String> assembly = FXCollections.observableArrayList("No", "Yes");
@@ -135,9 +135,10 @@ public class FurnitureRequestControllerI implements IRequestController{
     }
 
     private void initComboBoxChangeListeners() {
-        cdAvailableModels.setVisible(false);
+//        cdAvailableModels.setVisible(true);
         ObservableList<String> furniture = FXCollections.observableArrayList("Chair", "Table", "Bed");
         Collections.sort(furniture);
+        cbAvailableFurniture.getItems().clear();
         cbAvailableFurniture.getItems().addAll(furniture);
         cbAvailableFurniture.valueProperty().addListener(
                 ((observable, oldValue, newValue) -> {

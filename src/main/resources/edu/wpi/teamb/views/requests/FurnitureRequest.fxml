@@ -13,16 +13,16 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="1107.0" style="-fx-background-color: #7089a2;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.requests.FurnitureRequestControllerI">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="1107.0" style="-fx-background-color: #5f7ca4;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.requests.FurnitureRequestControllerI">
    <center>
       <AnchorPane prefHeight="720.0" prefWidth="1159.0" BorderPane.alignment="CENTER">
          <children>
-            <Text fill="#ffffff" layoutX="20.0" layoutY="64.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Furniture Request" textAlignment="CENTER">
+            <Text fill="#ffffff" layoutX="20.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Furniture Request" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="36.0" />
                </font>
             </Text>
-            <SplitPane fx:id="spSubmit" layoutX="955.0" layoutY="481.0" style="-fx-background-color: transparent;">
+            <SplitPane fx:id="spSubmit" layoutX="953.0" layoutY="480.0" style="-fx-background-color: transparent;">
                <items>
                   <MFXButton fx:id="btnSubmit" defaultButton="true" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Submit" textFill="#f1f1f1">
                      <font>
@@ -31,7 +31,7 @@
                   </MFXButton>
                </items>
             </SplitPane>
-            <MFXButton fx:id="btnReset" defaultButton="true" layoutX="20.0" layoutY="481.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Reset" textFill="#f1f1f1">
+            <MFXButton fx:id="btnReset" defaultButton="true" layoutX="20.0" layoutY="480.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Reset" textFill="#f1f1f1">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
@@ -44,32 +44,33 @@
                   <ColorAdjust brightness="1.0" />
                </effect>
             </ImageView>
-            <MFXFilterComboBox fx:id="cbAvailableFurniture" floatingText="Furniture Type" layoutX="20.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
+            <MFXFilterComboBox fx:id="cbAvailableFurniture" animated="false" floatingText="Choose a Type of Furniture" layoutX="20.0" layoutY="80.0" prefHeight="45.0" prefWidth="450.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXFilterComboBox>
-            <MFXFilterComboBox fx:id="cdAvailableModels" floatingText="Style" layoutX="276.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
+            <MFXFilterComboBox fx:id="cdAvailableModels" animated="false" floatingText="Choose a Model of Your Specified Furniture Type" layoutX="20.0" layoutY="132.0" prefHeight="45.0" prefWidth="450.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXFilterComboBox>
-            <MFXFilterComboBox fx:id="cdAssembly" floatingText="Assembly?" layoutX="532.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
+            <MFXFilterComboBox fx:id="cdAssembly" animated="false" floatingText="Specify if Furniture Should Arrive Assembled" layoutX="20.0" layoutY="185.0" prefHeight="45.0" prefWidth="450.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXFilterComboBox>
-            <MFXFilterComboBox fx:id="cbEmployeesToAssign" floatingText="Employee" layoutX="841.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
+            <MFXFilterComboBox fx:id="cbEmployeesToAssign" animated="false" floatingText="Specify Employee to Assign to Request" layoutX="20.0" layoutY="240.0" prefHeight="45.0" prefWidth="450.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXFilterComboBox>
-            <MFXTextField fx:id="txtFldNotes" floatingText="Special Instructions" layoutX="20.0" layoutY="397.0" prefHeight="40.0" prefWidth="428.0" textLimit="80">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </MFXTextField>
-            <MFXFilterComboBox fx:id="cbLongName" floatingText="Room" layoutX="20.0" layoutY="337.0" prefHeight="40.0" prefWidth="410.0" promptText="Search for room" />
+            <MFXTextField fx:id="txtFldNotes" animated="false" floatingText="Specify any Additional Notes" layoutX="20.0" layoutY="355.0" prefHeight="50.0" prefWidth="450.0" textLimit="80" />
+            <MFXFilterComboBox fx:id="cbLongName" animated="false" floatingText="Choose Room to Order To" layoutX="20.0" layoutY="295.0" prefHeight="50.0" prefWidth="450.0" />
+            <ImageView fitHeight="305.0" fitWidth="550.0" layoutX="525.0" layoutY="129.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../img/furtniture-request.jpg" />
+               </image>
+            </ImageView>
          </children>
       </AnchorPane>
    </center>
