@@ -7,6 +7,7 @@ import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.ORMs.Alert;
 import edu.wpi.teamb.DBAccess.ORMs.User;
+import edu.wpi.teamb.controllers.components.AlertCardController;
 import edu.wpi.teamb.entities.ELogin;
 import edu.wpi.teamb.entities.EHome;
 import edu.wpi.teamb.navigation.Navigation;
@@ -27,6 +28,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
@@ -58,8 +60,9 @@ public class HomeController {
     @FXML private  MFXButton btnSecret;
     @FXML private MFXButton btnClear;
     @FXML private MFXButton viewUserRequestButton;
-    @FXML private TableView<Alert> alertsTable;
-    @FXML private VBox vboxWelcomeBack;
+    @FXML private VBox vboxAlerts;
+    @FXML private HBox hboxWelcomeBack;
+
     private MFXButton pathfinderImgBtn = new MFXButton();
     private boolean navLoaded;
 
@@ -93,10 +96,11 @@ public class HomeController {
         Text welcomeBack = new Text();
         welcomeBack.setFill(Color.WHITE);
         welcomeBack.setFont(Font.font("System", FontWeight.BOLD, 36));
-        welcomeBack.setText("Welcome " + user + ", the time is: " + timeMessage);
+        welcomeBack.setText("Welcome " + user + ". The time is: " + timeMessage + ".");
+        hboxWelcomeBack.getChildren().clear();
+//        hboxWelcomeBack.setAlignment(Pos.CENTER_LEFT);
+        hboxWelcomeBack.getChildren().add(welcomeBack);
         welcomeBack.toFront();
-        vboxWelcomeBack.getChildren().clear();
-        vboxWelcomeBack.getChildren().add(welcomeBack);
     }
 
     private void handleDateTime(){
@@ -141,35 +145,25 @@ public class HomeController {
     }
 
     public void loadAlerts(){
+//        AlertCardController  alertCardController = new AlertCardController();
         ArrayList<Alert> allAlerts = Repository.getRepository().getAllAlerts();
-        alertsTable.setEditable(false);
-        TableColumn<Alert, String> titles = new TableColumn<>("Subject");
-        titles.setMinWidth(100);
-        titles.setStyle("-fx-alignment: CENTER;");
-        titles.setCellValueFactory(new PropertyValueFactory<>("title"));
-
-        TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, String> descriptions = new TableColumn<>("Description");
-        descriptions.setStyle("-fx-alignment: CENTER;");
-        descriptions.setMinWidth(220);
-        descriptions.setCellValueFactory(new PropertyValueFactory<>("description"));
-
-
-        TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, Timestamp> time = new TableColumn<>("Created at");
-        time.setStyle("-fx-alignment: CENTER;");
-        time.setCellValueFactory((new PropertyValueFactory<>("createdAt")));
-        alertsTable.getColumns().addAll(titles, descriptions, time);
-        time.setSortType(TableColumn.SortType.DESCENDING);
-        alertsTable.getSortOrder().setAll(time);
-
-
         for(Alert alert : allAlerts){
             if(alert.getEmployee().equals(username) || alert.getEmployee().equals("unassigned")) {
-                alertsTable.getItems().add(alert);
+                FXMLLoader loader = null;
+                AnchorPane alertCardRoot = null;
+                AlertCardController alertCardController = null;
+                try{
+                    loader = new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/components/AlertCard.fxml"));
+                    alertCardRoot = loader.load();
+                    alertCardController = loader.getController();
+                } catch (IOException e){
+                    System.out.println("IOException in loadAlerts of HomeController: " + e.getMessage());
+                }
+                alertCardController.setLabels(alert);
+
+                vboxAlerts.getChildren().add(alertCardRoot);
             }
         }
-
-        alertsTable.getSortOrder().setAll(alertsTable.getColumns().get(2));
-        time.setVisible(false);
 
     }
 

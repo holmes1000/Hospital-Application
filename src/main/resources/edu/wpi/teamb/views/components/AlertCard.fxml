@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="500.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.components.AlertCardController">
+   <children>
+      <Rectangle arcHeight="10.0" arcWidth="10.0" fill="#f1f1f1" height="60.0" stroke="WHITE" strokeLineJoin="ROUND" strokeMiterLimit="0.0" strokeType="INSIDE" strokeWidth="2.0" width="500.0" />
+      <Rectangle arcHeight="10.0" arcWidth="10.0" fill="#5f7ca4" height="50.0" layoutX="5.0" layoutY="5.0" stroke="BLACK" strokeLineJoin="ROUND" strokeMiterLimit="0.0" strokeType="INSIDE" strokeWidth="0.0" width="490.0" />
+      <Label fx:id="titleLabel" layoutX="14.0" layoutY="11.0" prefHeight="40.0" prefWidth="120.0" text="Title Label">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="contextLabel" layoutX="134.0" layoutY="10.0" prefHeight="40.0" prefWidth="360.0" text="Context Label" />
+   </children>
+</AnchorPane>

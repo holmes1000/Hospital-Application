@@ -4,7 +4,8 @@
 <?import com.jfoenix.controls.JFXDrawersStack?>
 <?import com.jfoenix.controls.JFXHamburger?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.effect.Lighting?>
 <?import javafx.scene.effect.Shadow?>
@@ -12,10 +13,13 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #272523;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.HomeController">
    <center>
@@ -27,7 +31,7 @@
                   <Image url="@../img/bwh-background.jpg" />
                </image>
             </ImageView>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#7089a2" height="586.0" layoutX="-23.0" layoutY="84.0" stroke="#ffffff00" strokeType="INSIDE" width="1100.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#5f7ca4" height="586.0" layoutX="-23.0" layoutY="84.0" stroke="#ffffff00" strokeType="INSIDE" width="1100.0" />
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#012d5a" height="50.0" layoutX="-162.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1347.0" />
             <Pane fx:id="homePane" prefHeight="691.0" prefWidth="1067.0">
                <children>
@@ -37,8 +41,18 @@
                   <MFXButton fx:id="btnSecret" layoutX="830.0" layoutY="633.0" mnemonicParsing="false" text="Secret" />
                   <MFXButton fx:id="viewUserRequestButton" layoutX="843.0" layoutY="107.0" prefHeight="50.0" prefWidth="200.0" text="View My Requests" />
                   <JFXDrawersStack layoutX="14.0" layoutY="230.0" prefHeight="63.0" prefWidth="85.0" />
-                  <TableView fx:id="alertsTable" layoutX="22.0" layoutY="318.0" prefHeight="328.0" prefWidth="340.0" />
-                  <VBox fx:id="vboxWelcomeBack" alignment="TOP_CENTER" layoutX="240.0" prefHeight="53.0" prefWidth="500.0" />
+                  <HBox fx:id="hboxWelcomeBack" alignment="CENTER_LEFT" layoutX="-23.0" maxHeight="1.7976931348623157E308" prefHeight="50.0" prefWidth="1.0" />
+                  <ScrollPane hbarPolicy="NEVER" layoutY="150.0" prefHeight="220.0" prefWidth="520.0" style="-fx-background-color: #5f7ca4;" vbarPolicy="NEVER">
+                     <content>
+                        <VBox fx:id="vboxAlerts" prefHeight="220.0" prefWidth="520.0" style="-fx-background-color: #5f7ca4; -fx-border-color: #5f7ca4; -fx-spacing: 10;" />
+                     </content>
+                  </ScrollPane>
+                  <Text fill="WHITE" layoutX="1.0" layoutY="130.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Alerts">
+                     <font>
+                        <Font name="System Bold" size="36.0" />
+                     </font>
+                  </Text>
+                  <Separator layoutX="1.0" layoutY="138.0" prefWidth="200.0" />
                </children></Pane>
             <ImageView fitHeight="88.0" fitWidth="350.0" layoutX="414.0" layoutY="596.0" pickOnBounds="true">
                <image>
@@ -66,7 +80,7 @@
                <effect>
                   <ColorAdjust brightness="1.0" />
                </effect></JFXHamburger>
-            <VBox fx:id="vboxActivateNav1" layoutX="70.0" onMouseEntered="#deactivateNav" prefHeight="720.0" prefWidth="1211.0" />
+            <VBox fx:id="vboxActivateNav1" layoutX="70.0" onMouseEntered="#deactivateNav" prefHeight="720.0" prefWidth="1.0" />
          </children>
       </Pane>
    </left>
