@@ -10,14 +10,12 @@ import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXRadioButton;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -32,6 +30,7 @@ import java.util.ArrayList;
 public class MoveRequestControllerI implements IRequestController{
 
     @FXML private MFXButton btnSubmit;
+    @FXML private SplitPane spSubmit;
     @FXML private MFXButton btnReset;
     @FXML private ImageView helpIcon;
     @FXML private VBox tableVbox;
@@ -74,6 +73,23 @@ public class MoveRequestControllerI implements IRequestController{
 
     @Override
     public void initBtns() {
+        spSubmit.setTooltip(new Tooltip("Enter all required fields to submit request"));
+        BooleanBinding bb = new BooleanBinding() {
+            {
+                super.bind(cdRoomToMove.valueProperty(),
+                        cdWheretoMove.valueProperty(),
+                        dateOfMove.valueProperty());
+            }
+
+            @Override
+            protected boolean computeValue() {
+                return (cdRoomToMove.getValue() == null
+                        || cdWheretoMove.getValue() == null
+                        || dateOfMove.getValue() == null);
+            }
+        };
+        btnSubmit.disableProperty().bind(bb);
+
         btnSubmit.setTooltip(new Tooltip("Click to submit request"));
         btnSubmit.setOnAction(e -> handleSubmit());
         btnReset.setTooltip(new Tooltip("Click to reset fields"));

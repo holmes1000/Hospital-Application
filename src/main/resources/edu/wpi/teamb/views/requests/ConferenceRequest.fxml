@@ -5,6 +5,7 @@
 <?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -22,30 +23,27 @@
                         <Font name="System Bold" size="36.0" />
                     </font>
                 </Text>
-                <MFXButton fx:id="btnSubmit" defaultButton="true" layoutX="955.0" layoutY="481.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Submit" textFill="#f1f1f1">
-                    <font>
-                        <Font name="System Bold" size="18.0" />
-                    </font>
-                </MFXButton>
+            <SplitPane fx:id="spSubmit" layoutX="955.0" layoutY="481.0" style="-fx-background-color: transparent;">
+               <items>
+                      <MFXButton fx:id="btnSubmit" defaultButton="true" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Submit" textFill="#f1f1f1">
+                          <font>
+                              <Font name="System Bold" size="18.0" />
+                          </font>
+                      </MFXButton>
+               </items>
+            </SplitPane>
                 <MFXDatePicker fx:id="datePicker" floatMode="INLINE" floatingText="Date To Reserve" layoutX="20.0" layoutY="117.0" prefHeight="35.0" prefWidth="238.0" promptText="MM/DD/YYYY" />
                 <MFXButton fx:id="resetBtn" defaultButton="true" layoutX="20.0" layoutY="481.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Reset" textFill="#f1f1f1">
                     <font>
                         <Font name="System Bold" size="18.0" />
                     </font>
                 </MFXButton>
-                <MFXFilterComboBox fx:id="reservationHour" layoutX="288.0" layoutY="117.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="38.0" prefWidth="73.0" text="12" />
+                <MFXFilterComboBox fx:id="reservationHour" floatingText="Start Time" layoutX="288.0" layoutY="117.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="38.0" prefWidth="73.0" text="12" />
                 <Text fill="WHITE" layoutX="369.0" layoutY="141.0" strokeType="OUTSIDE" strokeWidth="0.0" text=":">
                     <font>
                         <Font name="System Bold" size="14.0" />
                     </font>
                 </Text>
-                <MFXFilterComboBox fx:id="reservationMinute" layoutX="381.0" layoutY="117.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="38.0" prefWidth="73.0" text="00" />
-                <Text fill="WHITE" layoutX="462.0" layoutY="141.0" strokeType="OUTSIDE" strokeWidth="0.0" text=":">
-                    <font>
-                        <Font name="System Bold" size="14.0" />
-                    </font>
-                </Text>
-                <MFXFilterComboBox fx:id="reservationAmPm" layoutX="474.0" layoutY="117.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="38.0" prefWidth="79.0" text="AM" />
                 <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="1028.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@../../img/helpicon.png" />
@@ -63,7 +61,7 @@
             </MFXFilterComboBox>
             <MFXFilterComboBox fx:id="cbLongName" floatingText="Room" layoutX="20.0" layoutY="187.0" prefHeight="40.0" prefWidth="410.0" promptText="Search for room" />
             <MFXTextField fx:id="tfNotes" floatingText="Notes" layoutX="20.0" layoutY="397.0" prefHeight="40.0" prefWidth="698.0" />
-            <MFXFilterComboBox fx:id="cbDuration" floatingText="Duration (hrs)" layoutX="588.0" layoutY="117.0" />
+            <MFXFilterComboBox fx:id="cbDuration" floatingText="End Time" layoutX="588.0" layoutY="117.0" />
             <Text fill="RED" layoutX="968.0" layoutY="477.0" strokeType="OUTSIDE" strokeWidth="0.0" text="All fields required*">
                <font>
                   <Font name="System Bold" size="12.0" />
