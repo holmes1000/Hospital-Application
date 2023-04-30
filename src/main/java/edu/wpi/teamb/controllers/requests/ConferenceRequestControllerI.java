@@ -139,6 +139,7 @@ public class ConferenceRequestControllerI implements IRequestController{
         // setting max character limits
         eventNameTextField.textLimitProperty().set(100);
         bookingReasonTextField.textLimitProperty().set(250);
+        reservationHour.clear();
     }
 
     @Override
