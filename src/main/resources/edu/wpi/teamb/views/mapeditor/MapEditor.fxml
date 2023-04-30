@@ -3,11 +3,10 @@
 <?import com.jfoenix.controls.JFXDrawer?>
 <?import com.jfoenix.controls.JFXHamburger?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
 <?import io.github.palexdev.materialfx.controls.MFXToggleButton?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.CustomMenuItem?>
 <?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -133,8 +132,14 @@
                <padding>
                   <Insets bottom="25.0" left="22.0" right="32.0" top="25.0" />
                </padding></HBox>
-            <Text fx:id="tfState" fill="RED" layoutX="983.0" layoutY="176.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+            <Text fx:id="tfState" fill="RED" layoutX="1013.0" layoutY="389.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="81.0" />
             <VBox fx:id="vboxActivateNav" layoutX="-70.0" prefHeight="720.0" prefWidth="70.0" />
+            <MFXDatePicker fx:id="datePicker" layoutX="997.0" layoutY="234.0" />
+            <MFXButton fx:id="btnSubmitMove" defaultButton="true" layoutX="1107.0" layoutY="280.0" prefHeight="40.0" prefWidth="91.0" style="-fx-background-color: #012d5a;" text="Submit" textFill="#f1f1f1">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </MFXButton>
             </children>
         </AnchorPane>
     </center>

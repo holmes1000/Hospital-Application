@@ -43,7 +43,7 @@
                 </MFXButton>
             <VBox layoutX="25.0" layoutY="154.0" style="-fx-spacing: 20;">
                <children>
-                  <MFXTextField fx:id="textTitle" floatingText="Title" prefHeight="50.0" prefWidth="362.0">
+                  <MFXTextField fx:id="textTitle" floatingText="Subject" prefHeight="50.0" prefWidth="362.0">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
