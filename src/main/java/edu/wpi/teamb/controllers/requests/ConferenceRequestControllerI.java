@@ -201,8 +201,7 @@ public class ConferenceRequestControllerI implements IRequestController{
     @Override
     public void handleReset() {
         datePicker.clear();
-        ///reservationHour.setValue("12:00 AM");
-        datePicker.clear();
+        reservationHour.setValue("12:00 AM");
         cbDuration.clear();
         eventNameTextField.clear();
         bookingReasonTextField.clear();
