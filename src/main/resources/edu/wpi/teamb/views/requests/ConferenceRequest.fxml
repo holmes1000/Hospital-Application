@@ -23,7 +23,7 @@
                         <Font name="System Bold" size="36.0" />
                     </font>
                 </Text>
-                <MFXDatePicker fx:id="datePicker" floatMode="INLINE" floatingText="Date To Reserve" layoutX="20.0" layoutY="80.0" prefHeight="45.0" prefWidth="238.0" promptText="MM/DD/YYYY" />
+                <MFXDatePicker fx:id="datePicker" floatMode="INLINE" floatingText="Date To Reserve" layoutX="20.0" layoutY="80.0" prefHeight="45.0" prefWidth="450.0" promptText="MM/DD/YYYY" />
                 <MFXButton fx:id="resetBtn" defaultButton="true" layoutX="20.0" layoutY="480.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Reset" textFill="#f1f1f1">
                     <font>
                         <Font name="System Bold" size="18.0" />
@@ -42,22 +42,22 @@
                         <ColorAdjust brightness="1.0" />
                     </effect>
                 </ImageView>
-                <MFXTextField fx:id="eventNameTextField" borderGap="0.0" floatingText="Event Name" graphicTextGap="0.0" layoutX="20.0" layoutY="295.0" maxHeight="50.0" measureUnitGap="0.0" prefHeight="50.0" prefWidth="450.0" />
-                <MFXTextField fx:id="bookingReasonTextField" floatingText="Reason for Booking" layoutX="20.0" layoutY="355.0" maxHeight="45.0" prefHeight="45.0" prefWidth="450.0" />
-            <MFXFilterComboBox fx:id="cbEmployeesToAssign" floatingText="Employee" layoutX="20.0" layoutY="240.0" prefHeight="45.0" prefWidth="315.0">
+                <MFXTextField fx:id="eventNameTextField" borderGap="0.0" floatingText="Specify an Event Name" graphicTextGap="0.0" layoutX="20.0" layoutY="295.0" maxHeight="50.0" measureUnitGap="0.0" prefHeight="50.0" prefWidth="450.0" />
+                <MFXTextField fx:id="bookingReasonTextField" floatingText="Specify a Reason for Booking" layoutX="20.0" layoutY="355.0" maxHeight="45.0" prefHeight="45.0" prefWidth="450.0" />
+            <MFXFilterComboBox fx:id="cbEmployeesToAssign" floatingText="Specify Employee to Assign to Request" layoutX="20.0" layoutY="240.0" prefHeight="45.0" prefWidth="450.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXFilterComboBox>
-            <MFXFilterComboBox fx:id="cbLongName" floatingText="Room Name" layoutX="20.0" layoutY="185.0" minHeight="45.0" prefHeight="45.0" prefWidth="315.0" />
-            <MFXTextField fx:id="tfNotes" floatingText="Notes" layoutX="20.0" layoutY="415.0" maxHeight="45.0" prefHeight="45.0" prefWidth="450.0" />
+            <MFXFilterComboBox fx:id="cbLongName" floatingText="Select a Room To Reserve" layoutX="20.0" layoutY="185.0" minHeight="45.0" prefHeight="45.0" prefWidth="450.0" />
+            <MFXTextField fx:id="tfNotes" floatingText="Specify any Additional Notes" layoutX="20.0" layoutY="415.0" maxHeight="45.0" prefHeight="45.0" prefWidth="450.0" />
             <ImageView fitHeight="305.0" fitWidth="550.0" layoutX="525.0" layoutY="118.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../img/conference-room.jpg" />
                </image>
             </ImageView>
-            <MFXFilterComboBox fx:id="reservationHour" floatingText="Start Time" layoutX="20.0" layoutY="132.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="46.0" prefWidth="150.0" />
-            <MFXFilterComboBox fx:id="cbDuration" floatingText="End Time" layoutX="184.0" layoutY="132.0" prefHeight="45.0" prefWidth="150.0" />
+            <MFXFilterComboBox fx:id="reservationHour" floatingText="Start Time" layoutX="20.0" layoutY="132.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="46.0" prefWidth="220.0" />
+            <MFXFilterComboBox fx:id="cbDuration" floatingText="End Time" layoutX="250.0" layoutY="132.0" prefHeight="45.0" prefWidth="220.0" />
             <SplitPane fx:id="spSubmit" layoutX="953.0" layoutY="479.0" style="-fx-background-color: transparent;">
                <items>
                   <MFXButton fx:id="btnSubmit" defaultButton="true" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Submit" textFill="#f1f1f1">
