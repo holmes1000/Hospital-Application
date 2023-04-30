@@ -66,12 +66,7 @@
                </cursor>
             </MFXFilterComboBox>
             <MFXTextField fx:id="txtFldNotes" floatingText="Special Instructions" layoutX="502.0" layoutY="397.0" prefHeight="34.0" prefWidth="428.0" textLimit="80" />
-            <MFXFilterComboBox fx:id="cbLongName" floatingText="Room" layoutX="20.0" layoutY="337.0" prefHeight="24.0" prefWidth="410.0" promptText="Search for room"/>
-            <Text fill="RED" layoutX="968.0" layoutY="477.0" strokeType="OUTSIDE" strokeWidth="0.0" text="All fields required*">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Text>
+            <MFXFilterComboBox fx:id="cbLongName" floatingText="Room Name" layoutX="20.0" layoutY="337.0" prefHeight="24.0" prefWidth="410.0" />
          </children>
       </AnchorPane>
    </left>

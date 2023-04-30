@@ -637,43 +637,55 @@ public class MapEditorController {
    * @throws SQLException
    */
   private void handleDeleteNode(MouseEvent e, FullNode n) throws SQLException {
-    // Get the node ID from the circle's ID
-    int nodeID = n.getNodeID();
-    // delete from move table
-    Repository.getRepository().deleteMove(Repository.getRepository().getMove(nodeID));
-    // Delete the node from the database
-    Repository.getRepository().deleteNode(Repository.getRepository().getNode(nodeID));
-    PathFinding.ASTAR.get_node_map().remove(n.getNodeID());
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    alert.setTitle("Delete Edge");
+    alert.setContentText("Are you sure you want to delete this edge?");
+    Optional <ButtonType> action = alert.showAndWait();
+    if (action.get() == ButtonType.OK) {
+      // Get the node ID from the circle's ID
+      int nodeID = n.getNodeID();
+      // delete from move table
+      Repository.getRepository().deleteMove(Repository.getRepository().getMove(nodeID));
+      // Delete the node from the database
+      Repository.getRepository().deleteNode(Repository.getRepository().getNode(nodeID));
+      PathFinding.ASTAR.get_node_map().remove(n.getNodeID());
 
-    // Remove the node from the map
-    nodeGroup.getChildren().remove(n);
+      // Remove the node from the map
+      nodeGroup.getChildren().remove(n);
 
-    // remove node from list
-    for (FullNode node : fullNodesList) {
-      if (node.getNodeID() == nodeID) {
-        fullNodesList.remove(node);
-        break;
+      // remove node from list
+      for (FullNode node : fullNodesList) {
+        if (node.getNodeID() == nodeID) {
+          fullNodesList.remove(node);
+          break;
+        }
       }
-    }
 
-    refreshMap();
-    System.out.println("Node: " + nodeID + " deleted");
+      refreshMap();
+      System.out.println("Node: " + nodeID + " deleted");
+    }
   }
 
   private void handleDeleteEdge(MouseEvent e, Line l) {
     if (mapEditorContext.getState() == deleteEdgeState) {
-      // Delete the edge from the database
-      Edge edge = Repository.getRepository().getEdge(l.getId());
-      Repository.getRepository().deleteEdge(edge);
+      Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+      alert.setTitle("Delete Edge");
+      alert.setContentText("Are you sure you want to delete this edge?");
+      Optional <ButtonType> action = alert.showAndWait();
+      if (action.get() == ButtonType.OK) {
+        // Delete the edge from the database
+        Edge edge = Repository.getRepository().getEdge(l.getId());
+        Repository.getRepository().deleteEdge(edge);
 
-      ArrayList<Edge> edges = Repository.getRepository().getAllEdges();
+        ArrayList<Edge> edges = Repository.getRepository().getAllEdges();
 
-      // Remove the edge from the map
-      edgeGroup.getChildren().remove(l);
+        // Remove the edge from the map
+        edgeGroup.getChildren().remove(l);
 
-      refreshMap();
+        refreshMap();
 
-      System.out.println("Edge: " + l.getId() + " deleted");
+        System.out.println("Edge: " + l.getId() + " deleted");
+      }
     }
   }
 
