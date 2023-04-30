@@ -140,6 +140,11 @@
                   <Font name="System Bold" size="12.0" />
                </font>
             </MFXButton>
+            <MFXButton fx:id="btnRefresh" defaultButton="true" layoutX="1107.0" layoutY="336.0" prefHeight="40.0" prefWidth="91.0" style="-fx-background-color: #012d5a;" text="Refresh" textFill="#f1f1f1">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </MFXButton>
             </children>
         </AnchorPane>
     </center>

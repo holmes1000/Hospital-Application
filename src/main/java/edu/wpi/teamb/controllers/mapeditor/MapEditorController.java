@@ -184,6 +184,7 @@ public class MapEditorController {
   private CustomMenuItem itemResetFromBackup = new CustomMenuItem();
   @FXML
   private CustomMenuItem itemSaveToBackup = new CustomMenuItem();
+  @FXML private MFXButton btnRefresh;
 
   public MapEditorController() throws SQLException {
     this.editor = new EMapEditor();
@@ -827,6 +828,7 @@ public class MapEditorController {
     // Init new buttons
     btnAlignNodes.setOnMouseClicked(event -> alignNodes());
     btnSubmitMove.setOnMouseClicked(event -> handleSubmitMove());
+    btnRefresh.setOnMouseClicked(event -> refreshMap());
   }
 
   private void handleSubmitMove() {
