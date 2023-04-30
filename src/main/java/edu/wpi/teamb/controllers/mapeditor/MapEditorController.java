@@ -91,6 +91,7 @@ public class MapEditorController {
   private MFXToggleButton toggleEdges;
   @FXML
   private MFXButton btnViewMoveMap;
+  @FXML private MFXButton btnFindPath;
 
   //Objects for updating nav bar
   @FXML private Pane navPane;
@@ -262,21 +263,12 @@ public class MapEditorController {
     btnAlignNodes.setVisible(false);
     btnSubmitMove.setVisible(false);
     datePicker.setVisible(false);
+    btnFindPath.setVisible(false);
 
     System.out.println("MapEditorController initialized");
 
 
     initializeNavGates();
-  }
-
-  private void handleNodes() {
-    System.out.println("Handling nodes");
-    determineState();
-  }
-
-  private void handleEdges() {
-    System.out.println("Handling edges");
-    determineState();
   }
 
   /**
@@ -829,6 +821,11 @@ public class MapEditorController {
     btnAlignNodes.setOnMouseClicked(event -> alignNodes());
     btnSubmitMove.setOnMouseClicked(event -> handleSubmitMove());
     btnRefresh.setOnMouseClicked(event -> refreshMap());
+    btnFindPath.setOnMouseClicked(event -> handleFindPath());
+  }
+
+  private void handleFindPath() {
+    Navigation.navigate(Screen.PATHFINDER);
   }
 
   private void handleSubmitMove() {
@@ -851,6 +848,7 @@ public class MapEditorController {
     // Hide the submit button and date picker
     btnSubmitMove.setVisible(false);
     datePicker.setVisible(false);
+    btnFindPath.setVisible(true);
 
     // Refresh the map
     refreshMap();

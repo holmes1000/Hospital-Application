@@ -86,11 +86,30 @@
                         <Font name="System Bold" size="36.0" />
                     </font>
                 </Text>
-            <MFXButton fx:id="btnAlignNodes" defaultButton="true" layoutX="1105.0" layoutY="179.0" prefHeight="40.0" prefWidth="91.0" style="-fx-background-color: #012d5a;" text="Align Nodes" textFill="#f1f1f1">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </MFXButton>
+            <VBox layoutX="1097.0" layoutY="234.0" spacing="10.0">
+               <children>
+                  <MFXButton fx:id="btnAlignNodes" defaultButton="true" prefHeight="20.0" prefWidth="91.0" style="-fx-background-color: #012d5a;" text="Align Nodes" textFill="#f1f1f1">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </MFXButton>
+                  <MFXButton fx:id="btnSubmitMove" defaultButton="true" prefHeight="20.0" prefWidth="91.0" style="-fx-background-color: #012d5a;" text="Submit" textFill="#f1f1f1">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </MFXButton>
+                  <MFXButton fx:id="btnRefresh" defaultButton="true" prefHeight="20.0" prefWidth="91.0" style="-fx-background-color: #012d5a;" text="Refresh" textFill="#f1f1f1">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </MFXButton>
+                  <MFXButton fx:id="btnFindPath" defaultButton="true" prefHeight="20.0" prefWidth="91.0" style="-fx-background-color: #012d5a;" text="Find Path" textFill="#f1f1f1">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </MFXButton>
+               </children>
+            </VBox>
             <HBox layoutX="180.0" layoutY="30.0" spacing="30.0">
                <children>
                   <MenuButton fx:id="btnMenuNode" mnemonicParsing="false" style="-fx-background-color: #7089A2; -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Node" textAlignment="CENTER" textFill="WHITE">
@@ -134,17 +153,7 @@
                </padding></HBox>
             <Text fx:id="tfState" fill="RED" layoutX="1013.0" layoutY="389.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="81.0" />
             <VBox fx:id="vboxActivateNav" layoutX="-70.0" prefHeight="720.0" prefWidth="70.0" />
-            <MFXDatePicker fx:id="datePicker" layoutX="997.0" layoutY="234.0" />
-            <MFXButton fx:id="btnSubmitMove" defaultButton="true" layoutX="1107.0" layoutY="280.0" prefHeight="40.0" prefWidth="91.0" style="-fx-background-color: #012d5a;" text="Submit" textFill="#f1f1f1">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </MFXButton>
-            <MFXButton fx:id="btnRefresh" defaultButton="true" layoutX="1107.0" layoutY="336.0" prefHeight="40.0" prefWidth="91.0" style="-fx-background-color: #012d5a;" text="Refresh" textFill="#f1f1f1">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </MFXButton>
+            <MFXDatePicker fx:id="datePicker" layoutX="994.0" layoutY="177.0" />
             </children>
         </AnchorPane>
     </center>
