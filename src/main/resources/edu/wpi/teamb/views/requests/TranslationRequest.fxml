@@ -44,12 +44,12 @@
                         <ColorAdjust brightness="1.0" />
                     </effect>
                 </ImageView>
-                <MFXFilterComboBox fx:id="cbAvaila" floatingText="Language (idioma)" layoutX="20.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
+                <MFXFilterComboBox fx:id="cbLanguageSelect" floatingText="Language (idioma)" layoutX="20.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
                     <cursor>
                         <Cursor fx:constant="DEFAULT" />
                     </cursor>
                 </MFXFilterComboBox>
-                <MFXFilterComboBox fx:id="cdAvailableColor" floatingText="Related to medical diagnosis" layoutX="280.0" layoutY="117.0" prefHeight="40.0" prefWidth="205.0">
+                <MFXFilterComboBox fx:id="cdMedicalInfo" floatingText="Directly Healthcare Related (relacionado con la salud)" layoutX="280.0" layoutY="117.0" prefHeight="40.0" prefWidth="205.0">
                     <cursor>
                         <Cursor fx:constant="DEFAULT" />
                     </cursor>
@@ -67,16 +67,26 @@
                         <Font name="System Bold" size="12.0" />
                     </font>
                 </Text>
-            <ImageView fitHeight="323.0" fitWidth="331.0" layoutX="748.0" layoutY="117.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../img/servicerec/translation.JPG" />
-               </image>
-            </ImageView>
-            <Text fill="#ffffff" layoutX="543.0" layoutY="152.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Here at Brigham Young, we value you and your understanding as much as the rest of your healthcare." wrappingWidth="200.0">
+            <Text fill="#ffffff" layoutX="522.0" layoutY="132.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Here at Brigham Young, we value you and your understanding as much as the rest of your healthcare." wrappingWidth="215.0">
                <font>
                   <Font size="14.0" />
                </font>
             </Text>
+            <Text fill="#ffffff" layoutX="522.0" layoutY="327.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Aquí en Brigham Young, lo valoramos a usted y su comprensión tanto como al resto de su atención médica." wrappingWidth="215.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+            <Text fill="#ffffff" layoutX="522.0" layoutY="230.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Zài yīyuàn, wǒmen zhòngshì nín hé nín de lǐjiě, jiù xiàng zhòngshì nín de qítā yīliáo bǎojiàn yīyàng." wrappingWidth="215.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+            <ImageView fitHeight="276.0" fitWidth="291.0" layoutX="785.0" layoutY="116.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../img/servicerec/translation.JPG" />
+               </image>
+            </ImageView>
             </children>
         </AnchorPane>
     </left>
