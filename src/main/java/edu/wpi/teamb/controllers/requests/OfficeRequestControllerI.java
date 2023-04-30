@@ -110,9 +110,9 @@ public class OfficeRequestControllerI implements IRequestController {
         cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
 
         //DROPDOWN INITIALIZATION
-        ObservableList<String> supplies = FXCollections.observableArrayList("Pencils", "Pens", "Paper", "Stapler", "Staples", "Tape", "Scissors", "Glue", "Markers", "Highlighters", "Post-It Notes", "Paper Clips", "Binder Clips", "Folders", "Envelopes", "Printer Paper");
+        ObservableList<String> supplies = FXCollections.observableArrayList("Please select a type of supply to view the available options.");
         Collections.sort(supplies);
-        //cbSupplyItems.setItems(supplies);
+        cbSupplyItems.setItems(supplies);
 
         //DROPDOWN INITIALIZATION
         ObservableList<String> supplyType = FXCollections.observableArrayList("Office Supplies", "Cleaning Supplies");
@@ -123,7 +123,7 @@ public class OfficeRequestControllerI implements IRequestController {
 
 
     private void initComboBoxChangeListeners() {
-        cbSupplyItems.setVisible(false);
+//        cbSupplyItems.setVisible(false);
         cbSupplyItems.setTooltip(new Tooltip("Select a supply item"));
         cbSupplyType.setTooltip(new Tooltip("Select a supply category"));
         cbSupplyType.getItems().addAll("Cleaning Supplies", "Electronics Supplies", "Office Supplies");
