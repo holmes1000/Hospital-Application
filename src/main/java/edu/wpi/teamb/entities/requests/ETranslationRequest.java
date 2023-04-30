@@ -1,7 +1,7 @@
 package edu.wpi.teamb.entities.requests;
 
 import edu.wpi.teamb.DBAccess.DAO.Repository;
-import edu.wpi.teamb.DBAccess.Full.FullFlowerRequest;
+import edu.wpi.teamb.DBAccess.Full.FullTranslationRequest;
 
 public class ETranslationRequest extends RequestImpl {
     private String languageType;
@@ -65,8 +65,8 @@ public class ETranslationRequest extends RequestImpl {
         return this.medicalInNature != null && this.languageType != null && this.message != null;
     }
 
-    public void updateFlowerRequest(FullFlowerRequest fullFlowerRequest) {
-        Repository.getRepository().updateFlowerRequest(fullFlowerRequest);
+    public void updateTranslationRequest(fullTranslationRequest fullTranslationRequest) {
+        Repository.getRepository().updateFlowerRequest(fullTranslationRequest);
     }
 }
 }
