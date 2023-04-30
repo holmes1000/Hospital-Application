@@ -8,8 +8,12 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import edu.wpi.teamb.Game.Game;
 import edu.wpi.teamb.Game.Gapp;
 import javafx.fxml.FXML;
+import javafx.scene.Group;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class StartScnController {
@@ -37,16 +41,22 @@ public class StartScnController {
 
     }
 
+    
     @FXML
     public void playGame()
     {
         Gapp.changeScene("./rsc/Screens/GameScn.fxml");
+        //create a new thread for the game to run
+
+        Gapp.runGame();
+     
     }
 
     @FXML 
     public void closeGame()
     {
         ((Stage)btnPlay.getScene().getWindow()).close();
+        
     }
 
     @FXML 
