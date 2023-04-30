@@ -14,32 +14,27 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="1107.0" style="-fx-background-color: #7089a2;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.requests.ConferenceRequestControllerI">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="1107.0" style="-fx-background-color: #5f7ca4;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.requests.ConferenceRequestControllerI">
     <center>
         <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
-                <Text fill="#ffffff" layoutX="20.0" layoutY="64.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Conference Room Request" textAlignment="CENTER">
+                <Text fill="#ffffff" layoutX="20.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Conference Room Request" textAlignment="CENTER">
                     <font>
                         <Font name="System Bold" size="36.0" />
                     </font>
                 </Text>
-            <SplitPane fx:id="spSubmit" layoutX="955.0" layoutY="481.0" style="-fx-background-color: transparent;">
-               <items>
-                      <MFXButton fx:id="btnSubmit" defaultButton="true" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Submit" textFill="#f1f1f1">
-                          <font>
-                              <Font name="System Bold" size="18.0" />
-                          </font>
-                      </MFXButton>
-               </items>
-            </SplitPane>
-                <MFXDatePicker fx:id="datePicker" floatMode="INLINE" floatingText="Date To Reserve" layoutX="20.0" layoutY="117.0" prefHeight="35.0" prefWidth="238.0" promptText="MM/DD/YYYY" />
-                <MFXButton fx:id="resetBtn" defaultButton="true" layoutX="20.0" layoutY="481.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Reset" textFill="#f1f1f1">
+                <MFXDatePicker fx:id="datePicker" floatMode="INLINE" floatingText="Date To Reserve" layoutX="20.0" layoutY="80.0" prefHeight="45.0" prefWidth="450.0" promptText="MM/DD/YYYY" />
+                <MFXButton fx:id="resetBtn" defaultButton="true" layoutX="20.0" layoutY="480.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Reset" textFill="#f1f1f1">
                     <font>
                         <Font name="System Bold" size="18.0" />
                     </font>
                 </MFXButton>
-                <MFXFilterComboBox fx:id="reservationHour" floatingText="Start Time" layoutX="288.0" layoutY="117.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="46.0" prefWidth="123.0" />
-                <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="1028.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
+                <Text fill="WHITE" layoutX="179.0" layoutY="160.0" strokeType="OUTSIDE" strokeWidth="0.0">
+                    <font>
+                        <Font name="System Bold" size="14.0" />
+                    </font>
+                </Text>
+                <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="1028.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@../../img/helpicon.png" />
                     </image>
@@ -47,16 +42,31 @@
                         <ColorAdjust brightness="1.0" />
                     </effect>
                 </ImageView>
-                <MFXTextField fx:id="eventNameTextField" floatingText="Event Name" layoutX="20.0" layoutY="267.0" prefHeight="40.0" prefWidth="366.0" />
-                <MFXTextField fx:id="bookingReasonTextField" floatingText="Reason for Booking" layoutX="20.0" layoutY="337.0" prefHeight="40.0" prefWidth="698.0" />
-            <MFXFilterComboBox fx:id="cbEmployeesToAssign" floatingText="Employee" layoutX="841.0" layoutY="117.0" prefHeight="40.0" prefWidth="233.0">
+                <MFXTextField fx:id="eventNameTextField" borderGap="0.0" floatingText="Specify an Event Name" graphicTextGap="0.0" layoutX="20.0" layoutY="295.0" maxHeight="50.0" measureUnitGap="0.0" prefHeight="50.0" prefWidth="450.0" textLimit="50" />
+                <MFXTextField fx:id="bookingReasonTextField" floatingText="Specify a Reason for Booking" layoutX="20.0" layoutY="355.0" maxHeight="45.0" prefHeight="45.0" prefWidth="450.0" textLimit="150" />
+            <MFXFilterComboBox fx:id="cbEmployeesToAssign" floatingText="Specify Employee to Assign to Request" layoutX="20.0" layoutY="240.0" prefHeight="45.0" prefWidth="450.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </MFXFilterComboBox>
-                <MFXFilterComboBox fx:id="cbLongName" floatingText="Room" layoutX="20.0" layoutY="187.0" prefHeight="40.0" prefWidth="410.0" promptText="Search for room" />
-                <MFXTextField fx:id="tfNotes" floatingText="Notes" layoutX="20.0" layoutY="397.0" prefHeight="40.0" prefWidth="698.0" />
-                <MFXFilterComboBox fx:id="cbDuration" floatingText="End Time" layoutX="469.0" layoutY="116.0" />
+            <MFXFilterComboBox fx:id="cbLongName" floatingText="Select a Room To Reserve" layoutX="20.0" layoutY="185.0" minHeight="45.0" prefHeight="45.0" prefWidth="450.0" />
+            <MFXTextField fx:id="tfNotes" floatingText="Specify any Additional Notes" layoutX="20.0" layoutY="415.0" maxHeight="45.0" prefHeight="45.0" prefWidth="450.0" textLimit="150" />
+            <ImageView fitHeight="305.0" fitWidth="550.0" layoutX="525.0" layoutY="118.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../img/conference-room.jpg" />
+               </image>
+            </ImageView>
+            <MFXFilterComboBox fx:id="reservationHour" floatingText="Start Time" layoutX="20.0" layoutY="132.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="46.0" prefWidth="220.0" />
+            <MFXFilterComboBox fx:id="cbDuration" floatingText="End Time" layoutX="250.0" layoutY="132.0" prefHeight="45.0" prefWidth="220.0" />
+            <SplitPane fx:id="spSubmit" layoutX="953.0" layoutY="479.0" style="-fx-background-color: transparent;">
+               <items>
+                  <MFXButton fx:id="btnSubmit" defaultButton="true" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Submit" textFill="#f1f1f1">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </MFXButton>
+               </items>
+            </SplitPane>
             </children>
         </AnchorPane>
     </center>

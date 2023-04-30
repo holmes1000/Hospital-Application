@@ -7,6 +7,7 @@ import edu.wpi.teamb.DBAccess.ORMs.Node;
 import edu.wpi.teamb.entities.requests.EMoveRequest;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
+import io.github.palexdev.materialfx.beans.NumberRange;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXRadioButton;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 
 public class MoveRequestControllerI implements IRequestController{
@@ -289,15 +291,15 @@ public class MoveRequestControllerI implements IRequestController{
     public void handleRemoveMove() {
         // when clicking on the remove button, the selected row is removed from the
         // table and the database
-            if (tbFutureMoves.getSelectionModel().getSelectedItem() != null) {
-                Move move = tbFutureMoves.getSelectionModel().getSelectedItem();
-                EMoveRequest = new EMoveRequest(move);
-                EMoveRequest.removeRequest();
-                tbFutureMoves.getItems().remove(move);
-                tableSize--;
-                handleReset();
+        if (tbFutureMoves.getSelectionModel().getSelectedItem() != null) {
+            Move move = tbFutureMoves.getSelectionModel().getSelectedItem();
+            EMoveRequest = new EMoveRequest(move);
+            EMoveRequest.removeRequest();
+            tbFutureMoves.getItems().remove(move);
+            tableSize--;
+            handleReset();
 
-            }
+        }
         btnRemoveMove.setDisable(true);
         handleReset();
     }
@@ -305,17 +307,17 @@ public class MoveRequestControllerI implements IRequestController{
     public void handleEditRequest() {
         // when clicking on the edit button, the selected row is removed from the table
         // and the database
-            if (tbFutureMoves.getSelectionModel().getSelectedItem() != null) {
-                Move move = tbFutureMoves.getSelectionModel().getSelectedItem();
-                tbFutureMoves.getItems().remove(move);
-                EMoveRequest = new EMoveRequest(move);
-                // set values of move request from form info
-                EMoveRequest.updateRequest();
+        if (tbFutureMoves.getSelectionModel().getSelectedItem() != null) {
+            Move move = tbFutureMoves.getSelectionModel().getSelectedItem();
+            tbFutureMoves.getItems().remove(move);
+            EMoveRequest = new EMoveRequest(move);
+            // set values of move request from form info
+            EMoveRequest.updateRequest();
 
-                EMoveRequest.updateRequest();
+            EMoveRequest.updateRequest();
 
-                tableSize--;
-                handleReset();
-            }
+            tableSize--;
+            handleReset();
+        }
     }
 }

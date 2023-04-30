@@ -110,12 +110,12 @@ public class OfficeRequestControllerI implements IRequestController {
         cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
 
         //DROPDOWN INITIALIZATION
-        ObservableList<String> supplies = FXCollections.observableArrayList("Pencils", "Pens", "Paper", "Stapler", "Staples", "Tape", "Scissors", "Glue", "Markers", "Highlighters", "Post-It Notes", "Paper Clips", "Binder Clips", "Folders", "Envelopes", "Printer Paper");
+        ObservableList<String> supplies = FXCollections.observableArrayList("Please select a type of supply to view the available options.");
         Collections.sort(supplies);
-        //cbSupplyItems.setItems(supplies);
+        cbSupplyItems.setItems(supplies);
 
         //DROPDOWN INITIALIZATION
-        ObservableList<String> supplyType = FXCollections.observableArrayList("Office Supplies", "Cleaning Supplies");
+        ObservableList<String> supplyType = FXCollections.observableArrayList("Cleaning Supplies", "Electronics Supplies", "Office Supplies");
         Collections.sort(supplyType);
         //cbSupplyType.setItems(supplyType);
         initComboBoxChangeListeners();
@@ -123,7 +123,7 @@ public class OfficeRequestControllerI implements IRequestController {
 
 
     private void initComboBoxChangeListeners() {
-        cbSupplyItems.setVisible(false);
+//        cbSupplyItems.setVisible(false);
         cbSupplyItems.setTooltip(new Tooltip("Select a supply item"));
         cbSupplyType.setTooltip(new Tooltip("Select a supply category"));
         cbSupplyType.getItems().addAll("Cleaning Supplies", "Electronics Supplies", "Office Supplies");
@@ -134,30 +134,31 @@ public class OfficeRequestControllerI implements IRequestController {
                         ObservableList<String> officeSupplies = FXCollections.observableArrayList("Pencils", "Pens", "Paper", "Stapler", "Staples", "Tape", "Scissors", "Glue", "Markers", "Highlighters", "Post-It Notes", "Paper Clips", "Binder Clips", "Folders", "Envelopes", "Printer Paper");
                         Collections.sort(officeSupplies);
                         cbSupplyItems.getItems().addAll(officeSupplies);
-                        cbSupplyItems.setVisible(true);
+//                        cbSupplyItems.setVisible(true);
                     } else if (newValue.equals("Cleaning Supplies")) {
                         cbSupplyItems.getItems().clear();
                         ObservableList<String> cleaningSupplies = FXCollections.observableArrayList("Bleach", "Disinfectant Wipes", "Hand Sanitizer", "Soap", "Toilet Paper", "Paper Towels", "Trash Bags", "Dish Soap", "Sponges", "Dishwasher Detergent", "Laundry Detergent", "Fabric Softener", "Dryer Sheets", "Broom", "Mop", "Vacuum", "Duster", "Dustpan", "Trash Can", "Trash Can Liners", "Air Freshener", "Glass Cleaner", "All-Purpose Cleaner", "Furniture Polish", "Squeegee", "Toilet Brush", "Plunger", "Rubber Gloves", "Bucket");
                         Collections.sort(cleaningSupplies);
                         cbSupplyItems.getItems().addAll(cleaningSupplies);
-                        cbSupplyItems.setVisible(true);
-                    } else if (newValue.equals("Electronic Supplies")){
+//                        cbSupplyItems.setVisible(true);
+                    } else if (newValue.equals("Electronics Supplies")){
                         cbSupplyItems.getItems().clear();
                         ObservableList<String> electronicSupplies = FXCollections.observableArrayList("Batteries", "Light Bulbs", "Extension Cords", "Power Strips", "Surge Protectors", "Ethernet Cables", "HDMI Cables", "USB Cables", "Phone Chargers", "Laptop Chargers", "Headphones", "Earbuds", "Speakers", "Microphone", "Webcam", "Printer Ink", "Printer Toner", "Printer Paper");
                         Collections.sort(electronicSupplies);
                         cbSupplyItems.getItems().addAll(electronicSupplies);
                     } else {
                         cbSupplyItems.getItems().clear();
-                        cbSupplyItems.setVisible(false);
+//                        cbSupplyItems.setVisible(false);
                     }
                 });
     }
 
+
     @Override
     public void handleSubmit() {
-        if (nullInputs())
+        if (nullInputs()) {
             showPopOver();
-        else {
+        } else if(tbSupplyQuantities.getText().replaceAll("[a-zA-Z]", "").length() != 0){
             // Get the standard request fields
             EOfficeRequest.setEmployee(cbEmployeesToAssign.getValue());
             EOfficeRequest.setLocationName(cbLongName.getValue());
@@ -181,7 +182,6 @@ public class OfficeRequestControllerI implements IRequestController {
                 };
                 EOfficeRequest.submitRequest(output);
                 handleReset();
-                Navigation.navigate(Screen.CREATE_NEW_REQUEST);
             }
             submissionAlert();
         }

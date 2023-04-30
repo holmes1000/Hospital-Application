@@ -54,7 +54,6 @@ public interface IRequestController {
         alert.setHeaderText(null);
         alert.setContentText("Successfully Submitted Request");
         alert.showAndWait();
-        Navigation.navigate(Screen.CREATE_NEW_REQUEST);
     }
 
     void showPopOver();
