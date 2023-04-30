@@ -22,9 +22,8 @@ public class FullTranslationRequest implements IFull {
     String requestStatus;
     String locationName;
     String notes;
-    String flowerType;
-    String color;
-    String size;
+    String languageType;
+    String medicalInNature;
     String message;
     String requestType = "Translation";
 
@@ -35,9 +34,9 @@ public class FullTranslationRequest implements IFull {
         this.requestStatus = requestStatus;
         this.locationName = locationName;
         this.notes = notes;
-        this.flowerType = flowerType;
-        this.color = color;
-        this.size = size;
+        this.languageType = flowerType;
+        this.medicalInNature = color;
+        this.medicalInNature = size;
         this.message = message;
     }
     public FullTranslationRequest(Request request, FlowerRequest f) {
@@ -47,9 +46,9 @@ public class FullTranslationRequest implements IFull {
         this.requestStatus = request.getRequestStatus();
         this.locationName = request.getLocationName();
         this.notes = request.getNotes();
-        this.flowerType = f.getFlowerType();
-        this.color = f.getColor();
-        this.size = f.getSize();
+        this.languageType = f.getFlowerType();
+        this.medicalInNature = f.getColor();
+        this.medicalInNature = f.getSize();
         this.message = f.getMessage();
     }
 
@@ -88,28 +87,20 @@ public class FullTranslationRequest implements IFull {
         this.requestStatus = requestStatus;
     }
 
-    public String getFlowerType() {
-        return flowerType;
+    public String getLanguageType() {
+        return languageType;
     }
 
-    public void setFlowerType(String flowerType) {
-        this.flowerType = flowerType;
+    public void setLanguageType(String flowerType) {
+        this.languageType = flowerType;
     }
 
-    public String getColor() {
-        return color;
+    public String getMedicalInNature() {
+        return medicalInNature;
     }
 
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public String getSize() {
-        return size;
-    }
-
-    public void setSize(String size) {
-        this.size = size;
+    public void setMedicalInNature(String color) {
+        this.medicalInNature = medicalInNature;
     }
 
     public String getMessage() {
@@ -154,9 +145,9 @@ public class FullTranslationRequest implements IFull {
     public ArrayList<?> listFullRequests(List<?> frs) {
         ArrayList<FullFlowerRequest> ffrs = new ArrayList<FullFlowerRequest>();
         for (int i = 0; i < frs.size(); i++) {
-            FlowerRequest fr = (FlowerRequest) frs.get(i);
+            TranslationRequest fr = (TranslationRequest) frs.get(i);
             Request r = RequestDAOImpl.getRequest(fr.getId());
-            FullFlowerRequest ffr = new FullFlowerRequest(r, fr);
+            FullTranslationRequest ffr = new FullTranslationRequest(r, fr);
             ffrs.add(ffr);
         }
         return ffrs;
@@ -164,16 +155,16 @@ public class FullTranslationRequest implements IFull {
 
     @Override
     public void printRequestType() {
-        System.out.println("Flower Request");
+        System.out.println("Translation Request");
     }
 
     @Override
     public void handleEditRequestMenu() {
         Parent root;
         try {
-            root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("/edu/wpi/teamb/views/requests/FlowerRequests.fxml")));
+            root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("/edu/wpi/teamb/views/requests/TranslationRequest.fxml")));
             Stage stage = new Stage();
-            stage.setTitle("Flower Edit Request Menu");
+            stage.setTitle("Language Edit Request Menu");
             stage.setScene(new Scene(root, 1280, 720));
             stage.show();
         }
