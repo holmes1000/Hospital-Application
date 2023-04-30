@@ -262,7 +262,6 @@ public class MoveMapController {
     public void activateNav(){
         vboxActivateNav.setOnMouseEntered(event -> {
             if(!navLoaded) {
-                System.out.println("on");
                 navPane.setMouseTransparent(false);
                 navLoaded = true;
                 vboxActivateNav.setDisable(true);
@@ -278,7 +277,6 @@ public class MoveMapController {
     public void deactivateNav(){
         vboxActivateNav1.setOnMouseEntered(event -> {
             if(navLoaded){
-                System.out.println("off");
                 navPane.setMouseTransparent(true);
                 vboxActivateNav.setDisable(false);
                 navLoaded = false;

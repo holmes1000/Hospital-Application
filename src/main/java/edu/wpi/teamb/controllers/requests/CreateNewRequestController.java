@@ -106,39 +106,39 @@ public class CreateNewRequestController {
     public void toggleBtns(String btn){
         switch(btn){
             case "icon1" -> {
-                back1.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
-                back2.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
-                back3.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
-                back4.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
-                back5.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
-            }
-            case "icon2" -> {
                 back1.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
                 back2.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
-                back3.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
-                back4.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
-                back5.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+                back3.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back4.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back5.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
             }
-            case "icon3" -> {
-                back1.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+            case "icon2" -> {
+                back1.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
                 back2.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
                 back3.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
-                back4.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
-                back5.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+                back4.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back5.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
             }
-            case "icon4" -> {
-                back1.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
-                back2.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+            case "icon3" -> {
+                back1.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back2.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
                 back3.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
                 back4.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
-                back5.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
-                }
-            case "icon5" -> {
-                back1.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
-                back2.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
-                back3.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+                back5.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+            }
+            case "icon4" -> {
+                back1.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back2.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back3.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
                 back4.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
                 back5.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                }
+            case "icon5" -> {
+                back1.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back2.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back3.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back4.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back5.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
             }
         }
     }
