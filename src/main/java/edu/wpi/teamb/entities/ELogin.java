@@ -11,9 +11,11 @@ public class ELogin {
   // unsure if these fields are even needed
   private String username;
   private String password;
+  private String email;
   private PermissionLevel permissionLevel;
   // following field will hold global Login instance
   private static ELogin ELogin;
+  private EEmail emailE;
 
   /**
    * This constructor will initialize a global Login instance once at the beginning and then return
@@ -21,6 +23,7 @@ public class ELogin {
    */
   private ELogin() {
     // need empty private constructor to prevent multiple instantiation
+    this.emailE = EEmail.getEEmail();
   }
 
   /**
@@ -34,6 +37,20 @@ public class ELogin {
       ELogin = new ELogin();
     }
     return ELogin;
+  }
+
+  public void send2FAEmail() {
+    emailE.sendVerificationCodeEmail(this.email);
+  }
+
+  /**
+   * This method will verify the 2FA verification code
+   *
+   * @param verificationCode the verification code to be verified
+   * @return true if the verification code is correct, false otherwise
+   */
+  public boolean verify2FAVerificationCode(int verificationCode) {
+    return verificationCode == emailE.getCurrentVerificationCode();
   }
 
   // possible permission levels
@@ -83,6 +100,8 @@ public class ELogin {
     }
     //if the password is correct, set the permission level
     this.permissionLevel = PermissionLevel.values()[currentUser.getPermissionLevel()];
+    //set the email
+    this.email = currentUser.getEmail();
     //return true if the login was successful
     return true;
   }

@@ -33,6 +33,7 @@ import static javax.mail.Message.RecipientType.TO;
 
 public class EEmail {
   private Gmail service;
+  private int currentVerificationCode;
 
   private EEmail() {
     try {
@@ -57,7 +58,7 @@ public class EEmail {
   }
 
   private static final String fromEmailAddress = "teambD2023@gmail.com";
-  private static final String toEmailAddress = "teambD2023@gmail.com";
+//  private static final String toEmailAddress = "teambD2023@gmail.com";
 
   private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT, GsonFactory JSON_FACTORY)
           throws IOException {
@@ -81,7 +82,7 @@ public class EEmail {
     return credential;
   }
 
-  public void sendMail(String subject, String msg) {
+  public void sendMail(String toEmailAddress, String subject, String msg) {
 
     // Encode as MIME message
     Properties props = new Properties();
@@ -128,5 +129,25 @@ public class EEmail {
     catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  private void generateVerificationCode() {
+    //generate a random 6 digit number
+    currentVerificationCode = (int) (Math.random() * 1000000);
+  }
+
+  public int getCurrentVerificationCode() {
+    return this.currentVerificationCode;
+  }
+
+  public void sendVerificationCodeEmail(String toEmailAddress) {
+    generateVerificationCode();
+    sendMail(
+            toEmailAddress,
+            "Verification Code for Hospital App Login",
+            "Your verification code is: " + currentVerificationCode
+                    + ".\n\nPlease enter this code to login to your account."
+                    + "\n\nIf you did not request this code, please ignore this email." +
+                    "\n\nThank you,\nHospital App Team");
   }
 }

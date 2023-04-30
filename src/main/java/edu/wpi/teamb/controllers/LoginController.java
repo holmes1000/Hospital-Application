@@ -11,14 +11,22 @@ import io.github.palexdev.materialfx.controls.MFXTextField;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.controlsfx.validation.ValidationResult;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
 
 public class LoginController {
   @FXML private MFXButton btnLogin;
@@ -63,8 +71,12 @@ public class LoginController {
     // database
     try {
       if (ELogin.checkLogin(textUsername.getText(), textPassword.getText())) {
-        errorMsg.setText("Logged in Successful!");
-        Navigation.navigate(Screen.HOME);
+        // if login is successful, then send 2FA email
+        ELogin.send2FAEmail();
+        //perform 2Factor Authentication
+        //if successful, perform2FactorAuthentication() will handle navigate to home page
+        perform2FactorAuthentication();
+//        errorMsg.setText("Logged in Successful!");
       } else {
         //should never run this section unless there is a catastrophic error of some sorts
         errorMsg.setText("Something has gone very wrong");
@@ -77,6 +89,92 @@ public class LoginController {
       errorMsg.setText("Please check username and/or password.");
     } catch (SQLException e) {
       throw new RuntimeException(e);
+    }
+  }
+
+  /**
+   * Performs 2FA.
+   *
+   * @throws IOException
+   */
+  private void perform2FactorAuthentication() {
+    TextInputDialog dialog = new TextInputDialog();
+    dialog.setTitle("2-Factor Authentication: ");
+    dialog.setHeaderText("Please enter the verification code sent to the email address associated with the username: " + ELogin.getUsername());
+    dialog.setContentText("Verification Code:");
+
+    // create a formatter that only allows numbers
+    UnaryOperator<TextFormatter.Change> filter = change -> {
+      String text = change.getText();
+      if (text.matches("\\d{0,6}")) {
+        return change;
+      }
+      return null;
+    };
+    TextFormatter<String> formatter = new TextFormatter<>(filter);
+    dialog.getEditor().setTextFormatter(formatter);
+
+    // create a validation support object to show error messages
+    ValidationSupport validationSupport = new ValidationSupport();
+    validationSupport.setErrorDecorationEnabled(true);
+//    validationSupport.registerValidator(dialog.getEditor(), Validator.createEmptyValidator("Please enter a number"));
+    validationSupport.registerValidator(dialog.getEditor(), Validator.createPredicateValidator((String s) -> s.length() == 6, "Please enter a 6 digit number"));
+
+    // Binding to disable the OK button until input is valid
+    Node okButton = dialog.getDialogPane().lookupButton(ButtonType.OK);
+    okButton.disableProperty().bind(validationSupport.invalidProperty());
+
+//    //Set the ok and cancel onclick listeners
+//    ((Button)okButton).setOnMouseClicked(event -> {
+//      if (ELogin.verify2FAVerificationCode(Integer.parseInt(dialog.getEditor().getText()))) {
+//        //condition where 2-factor authentication code matched
+//        errorMsg.setText("Logged in Successful!");
+//        Navigation.navigate(Screen.HOME);
+//      } else {
+//        //condition where 2-factor authentication code did not match
+//        errorMsg.setText("Incorrect 2-factor authentication code. Please try again.");
+//      }
+//    });
+//
+//    //set the cancel button onclickListener
+//    Button cancelButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+//    cancelButton.setOnMouseClicked(event -> {
+//      //condition where user canceled 2-factor authentication
+//      errorMsg.setText("2-factor authentication canceled. Login failed.");
+//    });
+
+    // Show the dialog and wait for the result
+    Optional<String> result = dialog.showAndWait();
+    if (result.isPresent()) {
+      if (ELogin.verify2FAVerificationCode(Integer.parseInt(dialog.getEditor().getText()))) {
+        //condition where 2-factor authentication code matched
+        errorMsg.setText("Logged in Successful!");
+        Navigation.navigate(Screen.HOME);
+      } else {
+        //condition where 2-factor authentication code did not match
+        errorMsg.setText("Incorrect 2-factor authentication code. Please try again.");
+      }
+    } else {
+      //condition where user canceled 2-factor authentication
+      errorMsg.setText("2-factor authentication canceled. Login failed.");
+    }
+  }
+
+  //enum for 2Factor authentication statuses
+  private enum TwoFactorStatus {
+
+    SUCCESS("SUCCESS"),
+    CANCELED("CANCELED"),
+    FAILED("FAILED");
+
+    private final String status;
+
+    TwoFactorStatus(String status) {
+      this.status = status;
+    }
+
+     private String getStatus() {
+      return status;
     }
   }
 }
