@@ -136,10 +136,12 @@ public class DButils {
      */
     public static void insertRow(String table, String[] columns, String[] value) {
         try {
-            Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
+            Connection c = DBconnection.getDBconnection().getConnection();
+            Statement stmt = c.createStatement();
             String update = "INSERT INTO teamb."  + table + " (" + strArray2InsertFormatCol(columns) + ") VALUES ("
                     + strArray2InsertFormat(value) + ")";
             stmt.executeUpdate(update);
+            c.commit();
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'DButils.insertRow': " + e.getMessage());
         }

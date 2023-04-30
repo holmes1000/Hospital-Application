@@ -9,6 +9,7 @@ import edu.wpi.teamb.DBAccess.DBoutput;
 import edu.wpi.teamb.DBAccess.Full.FullNode;
 import edu.wpi.teamb.DBAccess.ORMs.Edge;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
+import edu.wpi.teamb.DBAccess.ORMs.Move;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 import edu.wpi.teamb.entities.EMapEditor;
 import edu.wpi.teamb.navigation.Navigation;
@@ -26,9 +27,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -39,6 +38,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -52,7 +52,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.ResponseCache;
 import java.sql.Array;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.*;
 
 import static javafx.scene.paint.Color.RED;
@@ -147,40 +149,41 @@ public class MapEditorController {
 
   // New menu buttons
   @FXML
+  private MFXButton btnSubmitMove;
+  @FXML
+  private MFXDatePicker datePicker;
+  @FXML
   private MenuButton btnMenuNode;
-  @FXML
-  private MenuItem itemAddNode;
-  @FXML
-  private MenuItem itemEditNode;
-  @FXML
-  private MenuItem itemDeleteNode;
+  private CustomMenuItem btnAddNode = new CustomMenuItem();
+  private CustomMenuItem btnEditNode = new CustomMenuItem();
+  private CustomMenuItem btnDeleteNode = new CustomMenuItem();
   @FXML
   private MenuButton btnMenuEdge;
   @FXML
-  private MenuItem itemAddEdge;
+  private CustomMenuItem itemAddEdge = new CustomMenuItem();
   @FXML
-  private MenuItem itemDeleteEdge;
+  private CustomMenuItem itemDeleteEdge = new CustomMenuItem();
   @FXML
   private MenuButton btnMenuMove;
   @FXML
-  private MenuItem itemAddMove;
+  private CustomMenuItem itemAddMove = new CustomMenuItem();
   @FXML
-  private MenuItem itemDeleteMove;
+  private CustomMenuItem itemDeleteMove = new CustomMenuItem();
   @FXML
-  private MenuItem itemViewMoves;
+  private CustomMenuItem itemViewMoves = new CustomMenuItem();
   @FXML
   private MenuButton btnMenuTools;
   @FXML
-  private MenuItem itemAlign;
+  private CustomMenuItem itemAlign = new CustomMenuItem();
   @FXML
-  private MenuItem itemSetDefault;
+  private CustomMenuItem itemSetDefault = new CustomMenuItem();
 
   @FXML
   private MenuButton btnMenuBackup;
   @FXML
-  private MenuItem itemResetFromBackup;
+  private CustomMenuItem itemResetFromBackup = new CustomMenuItem();
   @FXML
-  private MenuItem itemSaveToBackup;
+  private CustomMenuItem itemSaveToBackup = new CustomMenuItem();
 
   public MapEditorController() throws SQLException {
     this.editor = new EMapEditor();
@@ -256,6 +259,8 @@ public class MapEditorController {
     btnMenuMove.setGraphic(imageViewMove);
     btnMenuBackup.setGraphic(imageViewReset);
     btnAlignNodes.setVisible(false);
+    btnSubmitMove.setVisible(false);
+    datePicker.setVisible(false);
 
     System.out.println("MapEditorController initialized");
 
@@ -400,7 +405,7 @@ public class MapEditorController {
     });
     c.setOnMouseClicked(event -> {
       try {
-        selectedNodes.add(c); // Used for creating edges
+        selectedNodes.add(c); // Used for creating edges and moves
         nodesToAlign.add(c); // Used for aligning nodes
         checkSelectedNodes(); // Check if two circles are selected to create an edge
         checkNodesToAlign(); // Check if at least two circles are selected to align
@@ -430,6 +435,26 @@ public class MapEditorController {
    * Checks if at least 2 nodes are selected to align
    */
   private void checkNodesToAlign() {
+    List<Integer> xCoords = new ArrayList<>();
+    List<Integer> yCoords = new ArrayList<>();
+
+    // Populate the list
+    if (nodesToAlign.size() > 2) {
+      for (Circle c : nodesToAlign) {
+        xCoords.add((int) c.getCenterX());
+        yCoords.add((int) c.getCenterY());
+        System.out.println(c);
+      }
+      System.out.println(nodesToAlign.size());
+    }
+
+    // Assign new Y coordinates
+    if (mapEditorContext.getState() == alignNodesState) {
+      calcBestFit(xCoords, yCoords);  // Calculate the best fit
+      btnAlignNodes.setVisible(true);
+    }
+  }
+  private void setDefaultPosition() {
     List<Integer> xCoords = new ArrayList<>();
     List<Integer> yCoords = new ArrayList<>();
 
@@ -488,7 +513,12 @@ public class MapEditorController {
       System.out.println(c1.toString());
       System.out.println(c2.toString());
       selectedNodes.clear();
-      handleAddEdge(c1, c2);
+      if (mapEditorContext.getState() == addEdgeState) {
+        handleAddEdge(c1, c2);
+      }
+      else if (mapEditorContext.getState() == addMoveState) {
+        handleAddMove(c1,c2);
+      }
     }
   }
 
@@ -796,9 +826,38 @@ public class MapEditorController {
 
     // Init new buttons
     btnAlignNodes.setOnMouseClicked(event -> alignNodes());
+    btnSubmitMove.setOnMouseClicked(event -> handleSubmitMove());
   }
 
-  private void handleAddMove() {
+  private void handleSubmitMove() {
+    // Get the date from the date picker
+    LocalDate date = datePicker.getValue();
+
+    // Get the nodes from the circle ids
+    FullNode startNode = Repository.getRepository().getFullNode(Integer.parseInt(c1.getId()));
+    FullNode endNode = Repository.getRepository().getFullNode(Integer.parseInt(c2.getId()));
+
+    // Get the move data
+    Move move = new Move();
+    move.setLongName(startNode.getLongName()); // Location name of the start node
+    move.setNodeID(endNode.getNodeID()); // ID of end node
+    move.setDate(Date.valueOf(date));
+
+    // Add the move to the database
+    Repository.getRepository().addMove(move);
+
+    // Hide the submit button and date picker
+    btnSubmitMove.setVisible(false);
+    datePicker.setVisible(false);
+
+    // Refresh the map
+    refreshMap();
+  }
+
+  private void handleAddMove(Circle c1, Circle c2) {
+    btnSubmitMove.setVisible(true);
+    datePicker.setVisible(true);
+    datePicker.setValue(LocalDate.now());
   }
 
   /**
@@ -844,6 +903,7 @@ public class MapEditorController {
   }
 
   public void clickFloorBtn() {
+    btnL1.setTooltip(new Tooltip("Lower Level 1"));
     btnL1.setOnMouseClicked(event -> {
       imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(0));
       currentFloor = "L1";
@@ -853,6 +913,7 @@ public class MapEditorController {
       nodeGroup.getChildren().clear();
       draw("L1");
     });
+    btnL2.setTooltip(new Tooltip("Lower Level 2"));
     btnL2.setOnMouseClicked(event -> {
       imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(1));
       currentFloor = "L2";
@@ -863,6 +924,7 @@ public class MapEditorController {
       nodeGroup.getChildren().clear();
       draw("L2");
     });
+    btn1.setTooltip(new Tooltip("Level 1"));
     btn1.setOnMouseClicked(event -> {
       currentFloor = "1";
       imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(3));
@@ -872,6 +934,7 @@ public class MapEditorController {
       nodeGroup.getChildren().clear();
       draw("1");
     });
+    btn2.setTooltip(new Tooltip("Level 2"));
     btn2.setOnMouseClicked(event -> {
       currentFloor = "2";
       imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(4));
@@ -881,6 +944,7 @@ public class MapEditorController {
       nodeGroup.getChildren().clear();
       draw("2");
     });
+    btn3.setTooltip(new Tooltip("Level 3"));
     btn3.setOnMouseClicked(event -> {
       currentFloor = "3";
       imageViewPathfinder.setImage(Bapp.getHospitalListOfFloors().get(5));
@@ -892,13 +956,41 @@ public class MapEditorController {
     });
   }
 
+  private void setMenuItemTooltip(MenuButton b, CustomMenuItem c, String text, String toolTipText) {
+    // change the color of the custom menu item
+    Text text1 = new Text(text);
+    Tooltip tooltip = new Tooltip(toolTipText);
+    c.setContent(text1);
+    Tooltip.install(c.getContent(), tooltip);
+    // Set text properties
+    text1.setWrappingWidth(112);
+    text1.setX(10.0);
+    text1.setY(25.0);
+    b.getItems().addAll(c);
+  }
+
   public void initStateBtn() {
     // Init New State Buttons
+    setMenuItemTooltip(btnMenuNode, btnAddNode, "Add Node", "Click on the map where you would like to add a node");
+    setMenuItemTooltip(btnMenuNode, btnDeleteNode, "Delete Node", "Click a node on the map to delete it");
+    setMenuItemTooltip(btnMenuNode, btnEditNode, "Edit Node", "Click a node on the map to edit it");
+
+    setMenuItemTooltip(btnMenuEdge, itemAddEdge, "Add Edge", "Click two nodes on the map to add an edge");
+    setMenuItemTooltip(btnMenuEdge, itemDeleteEdge, "Delete Edge", "Click an edge on the map to delete it");
+
+    setMenuItemTooltip(btnMenuTools, itemAlign, "Align Nodes", "Click on the map where you would like to add a node");
+    setMenuItemTooltip(btnMenuTools, itemSetDefault, "Set default position", "Click a node on the map to set a default location");
+
+    setMenuItemTooltip(btnMenuBackup, itemResetFromBackup, "Reset from Backup", "Click to reset the nodes/edges from the database");
+    setMenuItemTooltip(btnMenuBackup, itemSaveToBackup, "Save to Backup", "Click to save the current map configuration to the database");
+
+    setMenuItemTooltip(btnMenuMove, itemAddMove, "Add Move", "Click a node you'd like to move, then a node where it should move to");
+
     itemAddEdge.setOnAction(event -> {
       mapEditorContext.setState(addEdgeState);
       mapEditorContext.getState().printStatus();
     });
-    itemAddNode.setOnAction(event -> {
+    btnAddNode.setOnAction(event -> {
       mapEditorContext.setState(addNodeState);
       mapEditorContext.getState().printStatus();
       handleAddNode();
@@ -907,11 +999,11 @@ public class MapEditorController {
       mapEditorContext.setState(deleteEdgeState);
       mapEditorContext.getState().printStatus();
     });
-    itemDeleteNode.setOnAction(event -> {
+    btnDeleteNode.setOnAction(event -> {
       mapEditorContext.setState(deleteNodeState);
       mapEditorContext.getState().printStatus();
     });
-    itemEditNode.setOnAction(event -> {
+    btnEditNode.setOnAction(event -> {
       mapEditorContext.setState(editNodeState);
       mapEditorContext.getState().printStatus();
     });
@@ -919,6 +1011,8 @@ public class MapEditorController {
       mapEditorContext.setState(addMoveState);
       mapEditorContext.getState().printStatus();
     });
+//    Tooltip alignNodesTooltip = new Tooltip("Click at least 3 nodes to align them, the click the Align button");
+//    alignNodesTooltip.install(itemAlign.getContent(), alignNodesTooltip);
     itemAlign.setOnAction(event -> {
       mapEditorContext.setState(alignNodesState);
       mapEditorContext.getState().printStatus();

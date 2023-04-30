@@ -31,6 +31,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -106,14 +107,17 @@ public class HomeController {
                 now = LocalDateTime.now();
                 String am_pm = "";
                 Integer hour_int = now.getHour();
+                String minute = "";
+                int minute_int = now.getMinute();
+                if (minute_int < 10) {minute += "0" + minute_int;}
+                else {minute += minute_int;}
                 if (hour_int > 11) {am_pm = "PM";}
                 else {am_pm = "AM";}
-                hour_int %= 12;
+                if (hour_int > 12) {hour_int = hour_int - 12;}
+                if (hour_int == 0) {hour_int = 12;}
                 String hour = Integer.toString(hour_int);
 
-                String minute = Integer.toString(now.getMinute());
-                String second = Integer.toString(now.getSecond());
-                timeMessage = hour + ":" + minute + "." + second + " " + am_pm;
+                timeMessage = hour + ":" + minute + " " + am_pm;
                 initName();
             }
 
@@ -139,7 +143,7 @@ public class HomeController {
     public void loadAlerts(){
         ArrayList<Alert> allAlerts = Repository.getRepository().getAllAlerts();
         alertsTable.setEditable(false);
-        TableColumn<Alert, String> titles = new TableColumn<>("Title");
+        TableColumn<Alert, String> titles = new TableColumn<>("Subject");
         titles.setMinWidth(100);
         titles.setStyle("-fx-alignment: CENTER;");
         titles.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -233,6 +237,11 @@ public class HomeController {
     }
 
     private void initializeBtns() {
+        btnCredits.setTooltip(new Tooltip("Click to view the credits page"));
+        btnAbout.setTooltip(new Tooltip("Click to view the creators of the page"));
+        btnSecret.setTooltip(new Tooltip("Click to view a secret feature"));
+        btnClear.setTooltip(new Tooltip("Click to close the secret feature"));
+        viewUserRequestButton.setTooltip(new Tooltip("Click to view your current requests"));
         btnCredits.setOnMouseClicked(e -> handleCredits());
         btnAbout.setOnMouseClicked(e -> handleAbout());
         btnSecret.setOnMouseClicked(e -> secret(true));

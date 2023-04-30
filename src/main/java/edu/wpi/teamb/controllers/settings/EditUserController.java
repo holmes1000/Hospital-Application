@@ -11,6 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -19,7 +20,6 @@ import java.util.Collections;
 
 public class EditUserController {
 
-    @FXML private MFXTextField tfPassword;
     @FXML private MFXTextField tfUsername;
     @FXML private MFXTextField tfName;
     @FXML private MFXTextField tfEmail;
@@ -37,7 +37,6 @@ public class EditUserController {
         tfName.setText(currentUser.getName());
         tfUsername.setText(currentUser.getUsername());
         tfUsername.setEditable(false); // cannot change username
-        tfPassword.setText(currentUser.getPassword());
         tfEmail.setText(currentUser.getEmail());
         // Init combo box
         ObservableList<String> permissionLevels = FXCollections.observableArrayList();
@@ -46,6 +45,7 @@ public class EditUserController {
         permissionLevels.add("EMPLOYEE");
         cbPermissionLevel.setItems(permissionLevels);
         cbPermissionLevel.selectItem(permissionLevelToString(currentUser.getPermissionLevel()));
+        cbPermissionLevel.setText(permissionLevelToString(currentUser.getPermissionLevel()));
 
         // Sort the combo boxes
         Collections.sort(permissionLevels);
@@ -53,13 +53,13 @@ public class EditUserController {
     }
 
     public void initButtons() {
+        btnSaveEdits.setTooltip(new Tooltip("Click to save edits"));
         btnSaveEdits.setOnMouseClicked(event -> handleSaveEdits());
     }
 
     private void handleSaveEdits() {
         currentUser.setName(tfName.getText());
         currentUser.setUsername(tfUsername.getText());
-        currentUser.setPassword(tfPassword.getText());
         currentUser.setEmail(tfEmail.getText());
         currentUser.setPermissionLevel(permissionLevelToInt(cbPermissionLevel.getValue()));
         Repository.getRepository().updateUser(currentUser);
@@ -97,6 +97,6 @@ public class EditUserController {
             return "EMPLOYEE";
         }
         else
-            return "Error"; // Error
+            return "EMPLOYEE"; // Error
     }
 }

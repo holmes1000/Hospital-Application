@@ -27,6 +27,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -37,6 +38,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -57,6 +59,7 @@ public class PathfinderController {
   @FXML private JFXDrawer menuDrawer;
   @FXML private ImageView helpIcon;
   @FXML private MFXButton btnFindPath;
+  @FXML private SplitPane spFindPath;
   @FXML private  Pane directionPane;
 
   @FXML private MFXFilterComboBox<String> startNode;
@@ -174,14 +177,35 @@ public class PathfinderController {
 
       nodes.addAll(getFilteredLongnames());
       algorithmDropdown.setItems(algorithms);
+      algorithmDropdown.setTooltip(new Tooltip("Select an algorithm to path find with"));
       startNode.setItems(nodes);
+      startNode.setTooltip(new Tooltip("Select a starting location"));
       endNode.setItems(nodes);
+      endNode.setTooltip(new Tooltip("Select an ending location"));
       startNode.getSearchText();
       endNode.getSearchText();
       handleDate();
       startNode.getSelectionModel().selectItem(defaultStart); // not sure about this
       changeButtonColor(currentFloor);
       algorithmDropdown.selectFirst();
+      spFindPath.setTooltip(new Tooltip("Select an ending location to find a path"));
+      BooleanBinding bb = new BooleanBinding() {
+          {
+              super.bind(startNode.valueProperty(),
+                      endNode.valueProperty(),
+                      algorithmDropdown.valueProperty(),
+                      datePicker.valueProperty());
+          }
+
+          @Override
+          protected boolean computeValue() {
+              return (startNode.getValue() == null || endNode.getValue() == null || algorithmDropdown.getValue() == null || datePicker.getValue() == null);
+          }
+      };
+        btnFindPath.disableProperty().bind(bb);
+
+        btnFindPath.setTooltip(new Tooltip("Click to find path"));
+
 
 
       listView.getSelectionModel().selectionProperty().addListener(new ChangeListener<ObservableMap<Integer, String>>() {
@@ -231,6 +255,7 @@ public class PathfinderController {
   public void handleDate(){
       datePicker.setValue(LocalDate.now()); // Init to current date
       LocalDate date_inputted = datePicker.getCurrentDate();
+      datePicker.setTooltip(new Tooltip("Select a date to view the map on that day"));
       handle_move();
       datePicker.valueProperty().addListener(new ChangeListener<LocalDate>() {
           @Override
@@ -528,11 +553,16 @@ public class PathfinderController {
         clickFloorBtn("2");
         clickFloorBtn("3");
 
+        previousFloor.setTooltip(new Tooltip("Click to go to Previous Floor"));
         previousFloor.setVisible(false);
+        nextFloor.setTooltip(new Tooltip("Click to go to Next Floor"));
         nextFloor.setVisible(false);
+        toggleShowNames.setTooltip(new Tooltip("Click to toggle Location Names"));
         toggleShowNames.setSelected(true);
         toggleShowNames.setOnMouseClicked(event->{handleToggleShowNames();});
+        btnEditMap.setTooltip(new Tooltip("Click to edit the map"));
         btnEditMap.setOnMouseClicked(event -> Navigation.navigate(Screen.MAP_EDITOR));
+        toggleAvoidStairs.setTooltip(new Tooltip("Click to toggle Avoid Stairs"));
     }
 
    public void handleToggleShowNames() {
@@ -547,6 +577,7 @@ public class PathfinderController {
     }
 
     public void clickFloorBtn(String floor) {
+      btnL1.setTooltip(new Tooltip("Lower Level 1"));
         btnL1.setOnMouseClicked(event->{
             currentFloor = "L1";
             changeButtonColor(currentFloor);
@@ -558,6 +589,7 @@ public class PathfinderController {
             locationCanvas.getChildren().add(pathGroup);
             getFilteredLongnames();
         });
+        btnL2.setTooltip(new Tooltip("Lower Level 2"));
         btnL2.setOnMouseClicked(event->{
             currentFloor = "L2";
             changeButtonColor(currentFloor);
@@ -569,6 +601,7 @@ public class PathfinderController {
             locationCanvas.getChildren().add(pathGroup);
             getFilteredLongnames();
         });
+        btn1.setTooltip(new Tooltip("Level 1"));
         btn1.setOnMouseClicked(event->{
             currentFloor = "1";
             changeButtonColor(currentFloor);
@@ -579,6 +612,7 @@ public class PathfinderController {
             locationCanvas.getChildren().add(pathGroup);
             getFilteredLongnames();
         });
+        btn2.setTooltip(new Tooltip("Level 2"));
         btn2.setOnMouseClicked(event->{
             currentFloor = "2";
             changeButtonColor(currentFloor);
@@ -589,6 +623,7 @@ public class PathfinderController {
             locationCanvas.getChildren().add(pathGroup);
             getFilteredLongnames();
         });
+        btn3.setTooltip(new Tooltip("Level 3"));
         btn3.setOnMouseClicked(event->{
             currentFloor = "3";
             changeButtonColor(currentFloor);
@@ -602,6 +637,7 @@ public class PathfinderController {
     }
 
   public void clickFindPath() throws SQLException {
+      btnFindPath.setTooltip(new Tooltip("Click to find path"));
       btnFindPath.setOnMouseClicked(event-> {
           ArrayList<Node> nodePath = new ArrayList<>();
           ArrayList<String> string_path = new ArrayList<>();
