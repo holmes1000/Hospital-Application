@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Objects;
+
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.Full.FullNode;
 import edu.wpi.teamb.DBAccess.ORMs.Move;
@@ -118,7 +120,7 @@ public class MoveMap {
     public void displayMoves(String currentFloor){
         moveInfo.getChildren().clear();
         for (Move move : upcoming_moves) {
-            if (fullNodesByID.get(move.getNodeID()).getNodeID() != fullNodesByLongname.get(move.getLongName()).getNodeID()) {
+            if (fullNodesByID.get(move.getNodeID()).getNodeID() != fullNodesByLongname.get(move.getLongName()).getNodeID() && Objects.equals(currentFloor, fullNodesByID.get(move.getNodeID()).getFloor())) {
                 int originalX = fullNodesByLongname.get(move.getLongName()).getxCoord();
                 int originalY = fullNodesByLongname.get(move.getLongName()).getyCoord();
                 System.out.println("old "+ fullNodesByLongname.get(move.getLongName()).getNodeID());

@@ -198,7 +198,12 @@ public class MealRequestControllerI implements IRequestController{
 
     @Override
     public boolean nullInputs() {
-        return cbOrderLocation.getValue() == null || cbEmployeesToAssign.getValue() == null || cbAvailableMeals.getValue() == null || cbAvailableDrinks.getValue() == null || cbAvailableSnacks.getValue() == null || cbLongName.getValue() == null;
+        return cbOrderLocation.getValue() == null
+                || cbEmployeesToAssign.getValue() == null
+                || cbAvailableMeals.getValue() == null
+                || cbAvailableDrinks.getValue() == null
+                || cbAvailableSnacks.getValue() == null
+                || cbLongName.getValue() == null;
     }
 
     @Override

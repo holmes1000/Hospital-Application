@@ -90,6 +90,7 @@ public class ConferenceRequestControllerI implements IRequestController{
 
         btnSubmit.setTooltip(new Tooltip("Click to submit request"));
         btnSubmit.setOnAction(e -> handleSubmit());
+        resetBtn.setTooltip(new Tooltip("Click to reset all fields"));
         resetBtn.setOnAction(e -> handleReset());
         helpIcon.setOnMouseClicked(e -> handleHelp());
     }
@@ -217,7 +218,7 @@ public class ConferenceRequestControllerI implements IRequestController{
         popOver.setDetachable(true);
         popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_RIGHT);
         popOver.setArrowSize(0.0);
-        try {
+            try {
             popOver.setContentNode(popupLoader.load());
         } catch (IOException e) {
             throw new RuntimeException(e);
