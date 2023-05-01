@@ -68,7 +68,7 @@ public class InfoCardController {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Request Marked as Completed!");
                 alert.setHeaderText(null);
-                alert.setContentText("Request with Id: " + fullRequest.getId() + " has been marked as completed!");
+                alert.setContentText("Request with ID: " + fullRequest.getId() + " has been marked as completed!");
                 //set the icons of the alert to the same as the icons of the parent page
                 alert.initOwner((Stage) requestInfoAnchorPane.getScene().getWindow());
 

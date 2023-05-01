@@ -261,7 +261,6 @@ public class FurnitureRequestControllerI implements IRequestController{
         return cbAvailableFurniture.getValue() == null
                 || cdAvailableModels.getValue() == null
                 || cdAssembly.getValue() == null
-                || txtFldNotes.getText().isEmpty()
                 || cbEmployeesToAssign.getValue() == null
                 || cbLongName.getValue() == null;
     }
