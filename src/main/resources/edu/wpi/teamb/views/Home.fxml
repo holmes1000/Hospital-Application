@@ -31,30 +31,57 @@
                   <Image url="@../img/bwh-background.jpg" />
                </image>
             </ImageView>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#5f7ca4" height="586.0" layoutX="-23.0" layoutY="84.0" stroke="#ffffff00" strokeType="INSIDE" width="1100.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#5f7ca4" height="550.0" layoutX="-23.0" layoutY="84.0" stroke="#ffffff00" strokeType="INSIDE" width="1100.0" />
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#012d5a" height="50.0" layoutX="-162.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1347.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#012d5a" height="56.0" layoutX="340.0" layoutY="656.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="370.0" />
             <Pane fx:id="homePane" prefHeight="691.0" prefWidth="1067.0">
                <children>
-                  <MFXButton fx:id="btnCredits" layoutX="915.0" layoutY="633.0" mnemonicParsing="false" text="Credits" />
-                  <MFXButton fx:id="btnAbout" layoutX="992.0" layoutY="633.0" mnemonicParsing="false" text="About" />
-                  <MFXButton fx:id="btnClear" layoutX="833.0" layoutY="645.0" mnemonicParsing="false" text="Clear" visible="false" />
-                  <MFXButton fx:id="btnSecret" layoutX="830.0" layoutY="633.0" mnemonicParsing="false" text="Secret" />
-                  <MFXButton fx:id="viewUserRequestButton" layoutX="843.0" layoutY="107.0" prefHeight="50.0" prefWidth="200.0" text="View My Requests" />
+                  <MFXButton fx:id="btnCredits" layoutX="926.0" layoutY="13.0" mnemonicParsing="false" text="Credits">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></MFXButton>
+                  <MFXButton fx:id="btnAbout" layoutX="1015.0" layoutY="13.0" mnemonicParsing="false" text="About">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></MFXButton>
+                  <MFXButton fx:id="btnClear" layoutX="852.0" layoutY="13.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="53.0" text="Clear" visible="false" />
+                  <MFXButton fx:id="btnSecret" layoutX="842.0" layoutY="13.0" mnemonicParsing="false" text="Secret">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></MFXButton>
                   <JFXDrawersStack layoutX="14.0" layoutY="230.0" prefHeight="63.0" prefWidth="85.0" />
                   <HBox fx:id="hboxWelcomeBack" alignment="CENTER_LEFT" layoutX="-23.0" maxHeight="1.7976931348623157E308" prefHeight="50.0" prefWidth="1.0" />
-                  <ScrollPane hbarPolicy="NEVER" layoutY="150.0" prefHeight="220.0" prefWidth="520.0" style="-fx-background-color: #5f7ca4;" vbarPolicy="NEVER">
+                  <ScrollPane hbarPolicy="NEVER" hmax="10.0" hmin="520.0" layoutY="139.0" prefHeight="200.0" prefWidth="520.0" style="-fx-background-color: #5f7ca4;" vbarPolicy="NEVER">
                      <content>
-                        <VBox fx:id="vboxAlerts" prefHeight="220.0" prefWidth="520.0" style="-fx-background-color: #5f7ca4; -fx-border-color: #5f7ca4; -fx-spacing: 10;" />
+                        <VBox fx:id="vboxAlerts" prefHeight="200.0" prefWidth="520.0" style="-fx-background-color: #5f7ca4; -fx-border-color: #5f7ca4; -fx-spacing: 10;" />
                      </content>
                   </ScrollPane>
-                  <Text fill="WHITE" layoutX="1.0" layoutY="130.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Alerts">
+                  <Text fill="WHITE" layoutX="1.0" layoutY="120.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Alerts">
                      <font>
-                        <Font name="System Bold" size="36.0" />
+                        <Font name="System Bold" size="24.0" />
                      </font>
                   </Text>
-                  <Separator layoutX="1.0" layoutY="138.0" prefWidth="200.0" />
+                  <Separator layoutX="1.0" layoutY="130.0" prefWidth="200.0" />
+                  <ScrollPane hbarPolicy="NEVER" layoutY="414.0" prefHeight="210.0" prefWidth="1050.0" style="-fx-background-color: #5f7ca4;" vbarPolicy="NEVER">
+                     <content>
+                        <VBox fx:id="vboxRequests" prefHeight="211.0" prefWidth="1050.0" style="-fx-background-color: #5f7ca4; -fx-border-color: #5f7ca4; -fx-spacing: 10;" />
+                     </content>
+                  </ScrollPane>
+                  <Text fill="WHITE" layoutY="400.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Requests Assigned">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Text>
+                  <Separator layoutY="408.0" prefWidth="400.0" />
+                  <VBox fx:id="vboxPathfinder" layoutX="586.0" layoutY="139.0" prefHeight="260.0" prefWidth="350.0" />
+                  <Text fill="WHITE" layoutX="586.0" layoutY="120.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Pathfinder">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Text>
+                  <Separator layoutX="586.0" layoutY="130.0" prefWidth="200.0" />
                </children></Pane>
-            <ImageView fitHeight="88.0" fitWidth="350.0" layoutX="414.0" layoutY="596.0" pickOnBounds="true">
+            <ImageView fitHeight="88.0" fitWidth="350.0" layoutX="350.0" layoutY="640.0" pickOnBounds="true">
                <image>
                   <Image url="@../img/bwh-logo (1).png" />
                </image>
@@ -80,7 +107,7 @@
                <effect>
                   <ColorAdjust brightness="1.0" />
                </effect></JFXHamburger>
-            <VBox fx:id="vboxActivateNav1" layoutX="70.0" onMouseEntered="#deactivateNav" prefHeight="720.0" prefWidth="1211.0" />
+            <VBox fx:id="vboxActivateNav1" layoutX="70.0" onMouseEntered="#deactivateNav" prefHeight="720.0" prefWidth="1.0" />
          </children>
       </Pane>
    </left>

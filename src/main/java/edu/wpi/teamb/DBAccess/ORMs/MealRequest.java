@@ -77,4 +77,13 @@ public class MealRequest {
   public void setSnack(String snack) {
     this.snack = snack;
   }
+
+  @Override
+  public String toString() {
+    return "id=" + id +
+            ", orderFrom='" + orderFrom + '\'' +
+            ", food='" + food + '\'' +
+            ", drink='" + drink + '\'' +
+            ", snack='" + snack + '\'';
+  }
 }
