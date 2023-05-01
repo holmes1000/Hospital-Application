@@ -14,7 +14,7 @@
 <!--    -->
 <!--</AnchorPane>-->
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="374.0" prefWidth="821.0" style="-fx-background-color: #7089a2;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.signage.SignageFormController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="374.0" prefWidth="821.0" style="-fx-background-color: #5f7ca4;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.signage.SignageFormController">
     <children>
         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#012d5a" height="50.0" layoutX="-162.0" stroke="TRANSPARENT" strokeType="INSIDE" width="984.0" />
         <Text fill="WHITE" layoutX="6.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Submit Signage Information" textAlignment="CENTER" wrappingWidth="831.7034616470337">

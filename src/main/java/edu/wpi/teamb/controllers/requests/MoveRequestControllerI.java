@@ -38,7 +38,7 @@ public class MoveRequestControllerI implements IRequestController{
     @FXML private VBox tableVbox;
     @FXML private MFXFilterComboBox<String> cdRoomToMove;
     @FXML private MFXFilterComboBox<Integer> cdWheretoMove;
-    @FXML private DatePicker dateOfMove;
+    @FXML private DatePicker dateMove;
     @FXML private TableView<Move> tbFutureMoves;
     @FXML private MFXButton btnRemoveMove;
     @FXML private MFXButton btnEditRequest;
@@ -76,18 +76,26 @@ public class MoveRequestControllerI implements IRequestController{
     @Override
     public void initBtns() {
         spSubmit.setTooltip(new Tooltip("Enter all required fields to submit request"));
+        dateMove.setDayCellFactory(picker -> new DateCell() {
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                LocalDate today = LocalDate.now();
+
+                setDisable(empty || date.compareTo(today) < 0 );
+            }
+        });
         BooleanBinding bb = new BooleanBinding() {
             {
                 super.bind(cdRoomToMove.valueProperty(),
                         cdWheretoMove.valueProperty(),
-                        dateOfMove.valueProperty());
+                        dateMove.valueProperty());
             }
 
             @Override
             protected boolean computeValue() {
                 return (cdRoomToMove.getValue() == null
                         || cdWheretoMove.getValue() == null
-                        || dateOfMove.getValue() == null);
+                        || dateMove.getValue() == null);
             }
         };
         btnSubmit.disableProperty().bind(bb);
@@ -112,10 +120,10 @@ public class MoveRequestControllerI implements IRequestController{
         cdWheretoMove.setTooltip(new Tooltip("Select where to move selected room"));
         cdWheretoMove.setValue(-1);
         cdWheretoMove.setPromptText("Where to Move");
-        dateOfMove.setTooltip(new Tooltip("Select date of move"));
-        dateOfMove.setValue(LocalDate.now());
+        dateMove.setTooltip(new Tooltip("Select date of move"));
+        dateMove.setValue(LocalDate.now());
         // initialize date picker
-        dateOfMove.setPromptText("Date of Move");
+        dateMove.setPromptText("Date of Move");
     }
 
     @Override
@@ -125,7 +133,7 @@ public class MoveRequestControllerI implements IRequestController{
         else {
             String what = cdRoomToMove.getSelectedItem();
             Integer where = cdWheretoMove.getSelectedItem();
-            Date when = Date.valueOf(dateOfMove.getValue());
+            Date when = Date.valueOf(dateMove.getValue());
 
             // popup error when not all fields are filled or when date is before current
             // date or when the move is already in the table
@@ -156,7 +164,7 @@ public class MoveRequestControllerI implements IRequestController{
         cdRoomToMove.replaceSelection("Room to Move");
         cdWheretoMove.clear();
         cdWheretoMove.replaceSelection("Where to Move");
-        dateOfMove.setValue(null);
+        dateMove.setValue(null);
         btnRemoveMove.setDisable(true);
         changeRequest = false;
         btnEditRequest.setDisable(true);
@@ -197,7 +205,7 @@ public class MoveRequestControllerI implements IRequestController{
     @Override
     public boolean nullInputs() {
         return cdRoomToMove.getSelectedItem() == null || cdWheretoMove.getSelectedItem() == null
-                || dateOfMove.getValue() == null;
+                || dateMove.getValue() == null;
     }
 
     private void moveTable() {
@@ -282,7 +290,7 @@ public class MoveRequestControllerI implements IRequestController{
                 // make wheretomove box empty
                 cdWheretoMove.selectItem(move.getNodeID());
                 // set date value
-                dateOfMove.setValue(LocalDate.parse(ymd2ymd2(move.getDate().toString())));
+                dateMove.setValue(LocalDate.parse(ymd2ymd2(move.getDate().toString())));
             }
         });
 

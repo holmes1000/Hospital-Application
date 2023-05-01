@@ -6,6 +6,7 @@
 <?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
@@ -19,7 +20,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #272523;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.settings.EditAlertsController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #5f7ca4;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.settings.EditAlertsController">
     <center>
         <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER">
             <children>
@@ -29,7 +30,7 @@
                         <Image url="@../../img/bwh-background.jpg" />
                     </image>
                 </ImageView>
-                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#7089a2" height="586.0" layoutX="-23.0" layoutY="84.0" stroke="#ffffff00" strokeType="INSIDE" width="1100.0" />
+                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#5f7ca4" height="586.0" layoutX="-23.0" layoutY="84.0" stroke="#ffffff00" strokeType="INSIDE" width="1100.0" />
                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#012d5a" height="50.0" layoutX="-162.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1347.0" />
                 <Text fill="WHITE" layoutX="-21.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit Alerts" textAlignment="CENTER" wrappingWidth="1164.103515625">
                     <font>
@@ -75,12 +76,12 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Text>
-                <MFXButton fx:id="btnEditAlert" layoutX="855.0" layoutY="612.0" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #f6bd38; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Edit" textFill="WHITE">
+                <MFXButton fx:id="btnEditAlert" layoutX="855.0" layoutY="612.0" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #f6bd38; -fx-border-color: transparent; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Edit" textFill="WHITE">
                     <font>
                         <Font name="System Bold" size="18.0" />
                     </font>
                 </MFXButton>
-                <MFXButton fx:id="btnDeleteAlert" layoutX="502.0" layoutY="612.0" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #D2374A; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Delete" textFill="WHITE">
+                <MFXButton fx:id="btnDeleteAlert" layoutX="502.0" layoutY="612.0" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #D2374A; -fx-border-color: transparent; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Delete" textFill="WHITE">
                     <font>
                         <Font name="System Bold" size="18.0" />
                     </font>
@@ -91,16 +92,24 @@
                     </children>
                 </VBox>
             <VBox fx:id="vboxActivateNav" layoutX="-150.0" prefHeight="720.0" prefWidth="70.0" />
-            <MFXButton fx:id="btnReset" layoutX="268.0" layoutY="395.0" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #012d5a; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Reset" textFill="WHITE">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </MFXButton>
-                <MFXButton fx:id="btnAddAlert" layoutX="25.0" layoutY="395.0" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #012d5a; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Add" textFill="WHITE">
-                    <font>
+            <SplitPane fx:id="spReset" layoutX="268.0" layoutY="395.0" style="-fx-background-color: transparent;">
+               <items>
+                  <MFXButton fx:id="btnReset" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #012d5a; -fx-border-color: transparent; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Reset" textFill="WHITE">
+                     <font>
                         <Font name="System Bold" size="18.0" />
-                    </font>
-                </MFXButton>
+                     </font>
+                  </MFXButton>
+               </items>
+            </SplitPane>
+            <SplitPane fx:id="spAdd" layoutX="25.0" layoutY="395.0" style="-fx-background-color: transparent;">
+               <items>
+                      <MFXButton fx:id="btnAddAlert" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #012d5a; -fx-border-color: transaprent; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Add" textFill="WHITE">
+                          <font>
+                              <Font name="System Bold" size="18.0" />
+                          </font>
+                      </MFXButton>
+               </items>
+            </SplitPane>
             <MFXButton fx:id="btnRefresh" layoutX="681.0" layoutY="614.0" prefHeight="46.0" prefWidth="106.0" rippleAnimateShadow="true" style="-fx-background-color: #012d5a; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Refresh" textFill="WHITE" visible="false">
                <font>
                   <Font name="System Bold" size="18.0" />
