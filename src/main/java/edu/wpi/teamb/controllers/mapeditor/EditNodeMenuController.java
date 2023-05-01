@@ -4,8 +4,6 @@ import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.Full.FullNode;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 import edu.wpi.teamb.DBAccess.ORMs.Move;
-import edu.wpi.teamb.DBAccess.ORMs.Node;
-import edu.wpi.teamb.pathfinding.PathFinding;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
@@ -18,7 +16,6 @@ import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -39,11 +36,11 @@ public class EditNodeMenuController {
     MFXTextField tfYCoord;
 
     static FullNode currentNode = null;
-
-    MapEditorController mapEditorController = new MapEditorController();
+    
     String oldLongName = "";
     String oldShortName ="";
     String oldNodeType = "";
+    private static MapEditorController mapEditorController;
 
     public EditNodeMenuController() throws SQLException {
     }
@@ -54,6 +51,11 @@ public class EditNodeMenuController {
         initButtons();
         tfNodeId.setEditable(false);
     }
+
+    public void setMapEditorController(MapEditorController mapEditorController) {
+        EditNodeMenuController.mapEditorController = mapEditorController;
+    }
+
 
     public void initializeFields() {
         // Init combo box
@@ -142,7 +144,8 @@ public class EditNodeMenuController {
         }
 
         System.out.println("Editing a  node with nodeID: " + fullNode.getNodeID());
-        submissionAlert("Node successfully edited! Refresh the map.");
+        submissionAlert("Node successfully edited! Refreshing the map.");
+        mapEditorController.refreshMap();
         // Close the window
         Stage stage = (Stage) btnSubmitNodeDetails.getScene().getWindow();
         stage.close();
@@ -150,7 +153,7 @@ public class EditNodeMenuController {
 
 
 
-    public static void setCurrentNode(FullNode currentNode) {
+    public void setCurrentNode(FullNode currentNode) {
         EditNodeMenuController.currentNode = currentNode;
     }
 
