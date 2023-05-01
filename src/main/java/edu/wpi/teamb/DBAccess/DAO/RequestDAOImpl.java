@@ -361,7 +361,7 @@ public class RequestDAOImpl implements IDAO {
         for (int i = 0; i < requests.size(); i++) {
             if (requests.get(i).getEmployee().equals(username)) {
                 Request newRequest = requests.get(i);
-                newRequest.setEmployee("unassigned");
+                newRequest.setEmployee("Unassigned");
                 update(newRequest);
             }
         }

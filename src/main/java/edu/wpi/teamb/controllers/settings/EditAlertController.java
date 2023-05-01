@@ -48,7 +48,7 @@ public class EditAlertController {
             employees.add(users.get(i).getUsername());
         }
         Collections.sort(employees);
-        employees.add(0, "unassigned");
+        employees.add(0, "Unassigned");
         cbEmployees.getItems().addAll(employees);
         cbEmployees.selectItem(currentAlert.getEmployee());
         cbEmployees.setText(currentAlert.getEmployee());
