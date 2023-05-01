@@ -11,6 +11,7 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 
@@ -98,7 +99,7 @@ public class AddNodeMenuController {
 
     private void handleSubmitNodeDetails() {
         submitNode();
-        mapEditorController.refreshMap();
+        submissionAlert("Node added successfully! Refresh the map.");
     }
 
     private void submitNode() {
@@ -157,5 +158,14 @@ public class AddNodeMenuController {
 
     public static void setCurrentNode(Node currentNode) {
         AddNodeMenuController.currentNode = currentNode;
+    }
+
+    void submissionAlert(String message) {
+        // Create an alert
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Submission Successful");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
