@@ -13,6 +13,7 @@ public class Sign {
     private Date startDate;
     private Date endDate;
     private boolean singleBlock;
+    private String signLocation;
 
     public Sign(){
         this.signageGroup = "";
@@ -21,15 +22,17 @@ public class Sign {
         this.startDate = Date.valueOf(LocalDate.now());
         this.endDate = null;
         this.singleBlock = true;
+        this.signLocation = "";
     }
 
-    public Sign(String signageGroup, String locationName, String direction, Date startDate, Date endDate, boolean singleBlock) {
+    public Sign(String signageGroup, String locationName, String direction, Date startDate, Date endDate, boolean singleBlock, String signLocation) {
         this.signageGroup = signageGroup;
         this.locationName = locationName;
         this.direction = direction;
         this.startDate = startDate;
         this.endDate = endDate;
         this.singleBlock = singleBlock;
+        this.signLocation = signLocation;
     }
 
     public Sign(ResultSet rs) throws SQLException {
@@ -39,7 +42,8 @@ public class Sign {
                 rs.getString("direction"),
                 rs.getDate("startDate"),
                 rs.getDate("endDate"),
-                rs.getBoolean("singleBlock")
+                rs.getBoolean("singleBlock"),
+                rs.getString("signLocation")
         );
     }
 
@@ -91,12 +95,17 @@ public class Sign {
         this.singleBlock = singleBlock;
     }
 
+    public String getSignLocation() {return signLocation;}
+
+    public void setSignLocation(String signLocation) {this.signLocation = signLocation;}
+
     public String toString() {
         return "Signage Group: " + signageGroup + "\n" +
                 "Location Name: " + locationName + "\n" +
                 "Direction: " + direction + "\n" +
                 "Start Date: " + startDate + "\n" +
                 "End Date: " + endDate + "\n" +
-                "Single Block: " + singleBlock + "\n";
+                "Single Block: " + singleBlock + "\n" +
+                "Sign Location " + signLocation;
     }
 }
