@@ -158,7 +158,7 @@ public class OfficeRequestControllerI implements IRequestController {
     public void handleSubmit() {
         if (nullInputs()) {
             showPopOver();
-        } else if(tbSupplyQuantities.getText().replaceAll("[a-zA-Z]", "").length() != 0){
+        }else if(tbSupplyQuantities.getText().replaceAll("[a-zA-Z]", "").length() != 0){
             // Get the standard request fields
             EOfficeRequest.setEmployee(cbEmployeesToAssign.getValue());
             EOfficeRequest.setLocationName(cbLongName.getValue());
@@ -184,6 +184,9 @@ public class OfficeRequestControllerI implements IRequestController {
                 handleReset();
             }
             submissionAlert();
+        } else {
+            tbSupplyQuantities.clear();
+            tbSupplyQuantities.setTooltip(new Tooltip("Please only enter integer values"));
         }
     }
 

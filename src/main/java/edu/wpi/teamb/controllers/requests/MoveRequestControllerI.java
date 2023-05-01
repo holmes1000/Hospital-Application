@@ -115,15 +115,10 @@ public class MoveRequestControllerI implements IRequestController{
     public void initializeFields() throws SQLException {
         // initialize comboboxes
         cdRoomToMove.setTooltip(new Tooltip("Select room to move"));
-        cdRoomToMove.setValue("");
-        cdRoomToMove.setPromptText("Room to Move");
         cdWheretoMove.setTooltip(new Tooltip("Select where to move selected room"));
         cdWheretoMove.setValue(-1);
-        cdWheretoMove.setPromptText("Where to Move");
         dateMove.setTooltip(new Tooltip("Select date of move"));
         dateMove.setValue(LocalDate.now());
-        // initialize date picker
-        dateMove.setPromptText("Date of Move");
     }
 
     @Override
