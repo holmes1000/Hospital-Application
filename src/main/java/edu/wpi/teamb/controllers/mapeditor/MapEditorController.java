@@ -189,8 +189,9 @@ public class MapEditorController {
   private CustomMenuItem itemResetFromBackup = new CustomMenuItem();
   @FXML
   private CustomMenuItem itemSaveToBackup = new CustomMenuItem();
-  @FXML private MFXButton btnRefresh;
   private MoveMap moveMap;
+  private EditNodeMenuController editNodeMenuController;
+  private AddNodeMenuController addNodeMenuController;
 
   public MapEditorController() throws SQLException {
     this.editor = new EMapEditor();
@@ -268,6 +269,12 @@ public class MapEditorController {
     btnFindPath.setVisible(false);
 
     initializeNavGates();
+
+    editNodeMenuController = new EditNodeMenuController();
+    addNodeMenuController = new AddNodeMenuController();
+
+    editNodeMenuController.setMapEditorController(this);
+    addNodeMenuController.setMapEditorController(this);
 
     System.out.println("MapEditorController initialized");
   }
@@ -599,7 +606,7 @@ public class MapEditorController {
         n.setxCoord((int) e.getX());
         n.setyCoord((int) e.getY());
         n.setFloor(currentFloor);
-        AddNodeMenuController.setCurrentFloor(currentFloor);
+        addNodeMenuController.setCurrentFloor(currentFloor);
         n.setNodeID(getMaxID() + 5);
         showAddNodeMenu(n);
         mapEditorContext.setState(new ViewState());
@@ -614,7 +621,7 @@ public class MapEditorController {
 
   private void showAddNodeMenu(Node n) throws IOException {
     Parent root;
-    AddNodeMenuController.setCurrentNode(n);
+    addNodeMenuController.setCurrentNode(n);
     root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("edu/wpi/teamb/views/mapeditor/AddNodeMenu.fxml")));
     Stage stage = new Stage();
     stage.setTitle("Add Node");
@@ -624,7 +631,7 @@ public class MapEditorController {
 
   private void showEditNodeMenu(FullNode n) throws IOException {
     Parent root;
-    EditNodeMenuController.setCurrentNode(n);
+    editNodeMenuController.setCurrentNode(n);
     root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("edu/wpi/teamb/views/mapeditor/EditNodeMenu.fxml")));
     Stage stage = new Stage();
     stage.setTitle("Edit Node");
@@ -751,9 +758,6 @@ public class MapEditorController {
               n.setyCoord((int) (event.getY()));
               System.out.println("Location: " + n.getxCoord() + ", " + n.getyCoord());
               showEditNodeMenu(n);
-
-              refreshMap();
-
               // set the colors back
               finalClickedCircle.setFill(Color.RED);
               finalClickedCircle.setRadius(5);
@@ -767,7 +771,6 @@ public class MapEditorController {
         });
       }
     }
-    //refreshMap();
 
   }
 
@@ -848,7 +851,6 @@ public class MapEditorController {
     // Init new buttons
     btnAlignNodes.setOnMouseClicked(event -> alignNodes());
     btnSubmitMove.setOnMouseClicked(event -> handleSubmitMove());
-    btnRefresh.setOnMouseClicked(event -> refreshMap());
     btnFindPath.setOnMouseClicked(event -> handleFindPath());
     btnPathfinder.setOnMouseClicked(event -> Navigation.navigate(Screen.PATHFINDER));
   }

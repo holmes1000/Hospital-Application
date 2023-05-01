@@ -281,7 +281,27 @@ public class FlowerRequestControllerI implements IRequestController {
     public void enterFlowerRequestEditableMode(FullFlowerRequest fullFlowerRequest, InfoCardController currentInfoCardController) {
         //set the editable fields to the values of the request
         cbAvailableFlowers.getSelectionModel().selectItem(fullFlowerRequest.getFlowerType());
-        cdAvailableColor.getSelectionModel().selectItem(fullFlowerRequest.getColor());
+        if(cbAvailableFlowers.getSelectedItem().equals("Rose")){
+            cdAvailableColor.getItems().addAll("Red", "Orange", "Yellow", "Pink", "Purple", "White", "Green");
+            cdAvailableColor.getSelectionModel().selectItem(fullFlowerRequest.getColor());
+            cdAvailableColor.setText(fullFlowerRequest.getColor());
+        } else if(cbAvailableFlowers.getSelectedItem().equals("Lily")){
+            cdAvailableColor.getItems().addAll("White", "Pink", "Red", "Orange", "Yellow");
+            cdAvailableColor.getSelectionModel().selectItem(fullFlowerRequest.getColor());
+            cdAvailableColor.setText(fullFlowerRequest.getColor());
+        } else if(cbAvailableFlowers.getSelectedItem().equals("Daisy")){
+            cdAvailableColor.getItems().addAll("White", "Pink", "Red", "Blue");
+            cdAvailableColor.getSelectionModel().selectItem(fullFlowerRequest.getColor());
+            cdAvailableColor.setText(fullFlowerRequest.getColor());
+        } else if(cbAvailableFlowers.getSelectedItem().equals("Tulip")){
+            cdAvailableColor.getItems().addAll("Yellow", "White", "Purple", "Pink", "Orange", "Red");
+            cdAvailableColor.getSelectionModel().selectItem(fullFlowerRequest.getColor());
+            cdAvailableColor.setText(fullFlowerRequest.getColor());
+        } else if(cbAvailableFlowers.getSelectedItem().equals("Sunflower")){
+            cdAvailableColor.getItems().addAll("Yellow", "Red", "Orange", "Pink", "Purple");
+            cdAvailableColor.getSelectionModel().selectItem(fullFlowerRequest.getColor());
+            cdAvailableColor.setText(fullFlowerRequest.getColor());
+        }
         cdAvailableType.getSelectionModel().selectItem(fullFlowerRequest.getSize());
         txtFldMessage.setText(fullFlowerRequest.getMessage());
         txtFldNotes.setText(fullFlowerRequest.getNotes());
