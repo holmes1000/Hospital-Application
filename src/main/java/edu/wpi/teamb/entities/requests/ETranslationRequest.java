@@ -73,5 +73,4 @@ public class ETranslationRequest extends RequestImpl {
         Repository.getRepository().deleteTranslationRequest(fullTranslationRequest);
     }
 
-
 }

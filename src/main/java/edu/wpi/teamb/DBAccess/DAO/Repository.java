@@ -1768,14 +1768,21 @@ public class Repository {
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
     }
+
+    public FullTranslationRequest getTranslationRequest(int id) {
+        FullTranslationRequest ftr = translationRequestDAO.get(id);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return ftr;
+    }
     public void addTranslationRequest(String[] tr) {
         translationRequestDAO.add(tr);
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
     }
 
-    public void deleteTranslationRequest(TranslationRequest tr) {
-        translationRequestDAO.delete(tr);
+    public void deleteTranslationRequest(FullTranslationRequest ftr) {
+        translationRequestDAO.delete(ftr);
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
     }
