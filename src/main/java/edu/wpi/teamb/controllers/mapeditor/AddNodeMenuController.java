@@ -7,9 +7,11 @@ import edu.wpi.teamb.pathfinding.PathFinding;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 
@@ -70,13 +72,34 @@ public class AddNodeMenuController {
     }
 
     public void initButtons() {
+        BooleanBinding bb = new BooleanBinding() {
+            {
+                super.bind(tfNodeId.textProperty(),
+                        tfLongName.textProperty(),
+                        tfShortName.textProperty(),
+                        tfXCoord.textProperty(),
+                        tfYCoord.textProperty(),
+                        cbNodeType.valueProperty());
+            }
+
+            @Override
+            protected boolean computeValue() {
+                return (tfNodeId.getText().isEmpty() ||
+                        tfLongName.getText().isEmpty() ||
+                        tfShortName.getText().isEmpty() ||
+                        tfXCoord.getText().isEmpty() ||
+                        tfYCoord.getText().isEmpty() ||
+                        cbNodeType.getValue() == null);
+            }
+        };
+        btnSubmitNodeDetails.disableProperty().bind(bb);
         btnSubmitNodeDetails.setOnMouseClicked(event -> handleSubmitNodeDetails());
         btnSubmitNodeDetails.setTooltip(new Tooltip("Click to submit the node details"));
     }
 
     private void handleSubmitNodeDetails() {
         submitNode();
-        mapEditorController.refreshMap();
+        submissionAlert("Node added successfully! Refresh the map.");
     }
 
     private void submitNode() {
@@ -135,5 +158,14 @@ public class AddNodeMenuController {
 
     public static void setCurrentNode(Node currentNode) {
         AddNodeMenuController.currentNode = currentNode;
+    }
+
+    void submissionAlert(String message) {
+        // Create an alert
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Submission Successful");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

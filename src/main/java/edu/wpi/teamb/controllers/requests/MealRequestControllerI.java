@@ -13,6 +13,7 @@ import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -77,6 +78,18 @@ public class MealRequestControllerI implements IRequestController{
         btnReset.setTooltip(new Tooltip("Click to reset the form"));
         btnReset.setOnAction(e -> handleReset());
         helpIcon.setOnMouseClicked(e -> handleHelp());
+        btnReset.setDisable(true);
+        ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
+            btnReset.setDisable(false);
+        };
+        cbEmployeesToAssign.textProperty().addListener(changeListener);
+        cbLongName.textProperty().addListener(changeListener);
+        cbOrderLocation.textProperty().addListener(changeListener);
+        cbAvailableDrinks.textProperty().addListener(changeListener);
+        cbAvailableMeals.textProperty().addListener(changeListener);
+        cbAvailableSnacks.textProperty().addListener(changeListener);
+        txtFldNotes.textProperty().addListener(changeListener);
+
     }
 
     @Override

@@ -7,6 +7,7 @@ import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -55,6 +56,13 @@ public class EditUserController {
     public void initButtons() {
         btnSaveEdits.setTooltip(new Tooltip("Click to save edits"));
         btnSaveEdits.setOnMouseClicked(event -> handleSaveEdits());
+        ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
+            btnSaveEdits.setDisable(false);
+        };
+        tfName.textProperty().addListener(changeListener);
+        tfUsername.textProperty().addListener(changeListener);
+        tfEmail.textProperty().addListener(changeListener);
+        cbPermissionLevel.valueProperty().addListener(changeListener);
     }
 
     private void handleSaveEdits() {

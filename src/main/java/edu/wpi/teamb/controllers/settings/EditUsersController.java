@@ -13,6 +13,8 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -113,6 +115,34 @@ public class EditUsersController {
         btnDeleteUser.setDisable(true);
         btnBack.setOnMouseClicked(event -> Navigation.navigate(Screen.SETTINGS));
         btnReset.setOnMouseClicked(event -> handleReset());
+        BooleanBinding bb = new BooleanBinding() {
+            {
+                super.bind(textUsername.textProperty(),
+                        textPassword.textProperty(),
+                        textEmail.textProperty(),
+                        textName.textProperty(),
+                        cbPermissionLevel.valueProperty());
+            }
+
+            @Override
+            protected boolean computeValue() {
+                return (textUsername.getText().isEmpty()
+                        || textPassword.getText().isEmpty()
+                        || textEmail.getText().isEmpty()
+                        || textName.getText().isEmpty()
+                        || cbPermissionLevel.getValue() == null);
+            }
+        };
+        btnAddUser.disableProperty().bind(bb);
+
+        ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
+            btnReset.setDisable(false);
+        };
+        textUsername.textProperty().addListener(changeListener);
+        textPassword.textProperty().addListener(changeListener);
+        textEmail.textProperty().addListener(changeListener);
+        textName.textProperty().addListener(changeListener);
+        cbPermissionLevel.valueProperty().addListener(changeListener);
     }
 
     private void handleDeleteUser() {

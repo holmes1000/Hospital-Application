@@ -13,6 +13,7 @@ import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -93,6 +94,16 @@ public class OfficeRequestControllerI implements IRequestController {
         btnReset.setTooltip(new Tooltip("Click to reset all fields"));
         btnReset.setOnAction(e -> handleReset());
         helpIcon.setOnMouseClicked(e -> handleHelp());
+        btnReset.setDisable(true);
+        ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
+            btnReset.setDisable(false);
+        };
+        cbEmployeesToAssign.textProperty().addListener(changeListener);
+        cbLongName.textProperty().addListener(changeListener);
+        cbSupplyItems.textProperty().addListener(changeListener);
+        cbSupplyType.textProperty().addListener(changeListener);
+        tbSupplyQuantities.textProperty().addListener(changeListener);
+        txtFldNotes.textProperty().addListener(changeListener);
     }
 
     @Override
@@ -158,7 +169,7 @@ public class OfficeRequestControllerI implements IRequestController {
     public void handleSubmit() {
         if (nullInputs()) {
             showPopOver();
-        } else if(tbSupplyQuantities.getText().replaceAll("[a-zA-Z]", "").length() != 0){
+        }else if(tbSupplyQuantities.getText().replaceAll("[a-zA-Z]", "").length() != 0){
             // Get the standard request fields
             EOfficeRequest.setEmployee(cbEmployeesToAssign.getValue());
             EOfficeRequest.setLocationName(cbLongName.getValue());
@@ -184,6 +195,9 @@ public class OfficeRequestControllerI implements IRequestController {
                 handleReset();
             }
             submissionAlert();
+        } else {
+            tbSupplyQuantities.clear();
+            tbSupplyQuantities.setTooltip(new Tooltip("Please only enter integer values"));
         }
     }
 

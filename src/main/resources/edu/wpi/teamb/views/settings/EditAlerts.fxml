@@ -103,7 +103,7 @@
             </SplitPane>
             <SplitPane fx:id="spAdd" layoutX="25.0" layoutY="395.0" style="-fx-background-color: transparent;">
                <items>
-                      <MFXButton fx:id="btnAddAlert" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #012d5a; -fx-border-color: transaprent; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Add" textFill="WHITE">
+                      <MFXButton fx:id="btnAddAlert" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #012d5a; -fx-border-color: transparent; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Add" textFill="WHITE">
                           <font>
                               <Font name="System Bold" size="18.0" />
                           </font>

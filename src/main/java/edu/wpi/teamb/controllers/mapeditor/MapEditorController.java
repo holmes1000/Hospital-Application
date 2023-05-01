@@ -130,6 +130,8 @@ public class MapEditorController {
   @FXML
   private MFXButton btnAlignNodes;
 
+  @FXML private MFXButton btnPathfinder;
+
   // New States
   MapEditorState addNodeState = new AddNodeState();
   MapEditorState editNodeState = new EditNodeState();
@@ -294,7 +296,7 @@ public class MapEditorController {
   /**
    * Determines the state we are in and changes the text field accordingly
    */
-  private void determineState() {
+  void determineState() {
     if (mapEditorContext.getState() == addEdgeState) {
       System.out.println("Adding edge");
       tfState.setText("Adding Edge");
@@ -317,6 +319,8 @@ public class MapEditorController {
       System.out.println("Selecting nodes");
       tfState.setText("Selecting Nodes");
     }
+    else
+      tfState.setText("Viewing");
   }
 
 
@@ -538,6 +542,7 @@ public class MapEditorController {
     Repository.getRepository().resetNodesFromBackup();
     //nodeList = Repository.getRepository().getAllNodes();
     fullNodesList = Repository.getRepository().getAllFullNodes();
+    submissionAlert("Reset from backup successful");
     // Refresh the map
     refreshMap();
   }
@@ -559,6 +564,10 @@ public class MapEditorController {
    * Refreshes the map
    */
   void refreshMap() {
+    selectedNodes.clear();
+    nodesToAlign.clear();
+    mapEditorContext.setState(new ViewState());
+    determineState();
     // Clear the map
     nodeGroup.getChildren().clear();
     edgeGroup.getChildren().clear();
@@ -593,6 +602,8 @@ public class MapEditorController {
         AddNodeMenuController.setCurrentFloor(currentFloor);
         n.setNodeID(getMaxID() + 5);
         showAddNodeMenu(n);
+        mapEditorContext.setState(new ViewState());
+        determineState();
         editingNode = false;
         System.out.println("Added a node at " + e.getX() + ", " + e.getY());
       } catch (IOException ex) {
@@ -629,8 +640,8 @@ public class MapEditorController {
    */
   private void handleDeleteNode(MouseEvent e, FullNode n) throws SQLException {
     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-    alert.setTitle("Delete Edge");
-    alert.setContentText("Are you sure you want to delete this edge?");
+    alert.setTitle("Delete Node");
+    alert.setContentText("Are you sure you want to delete this node?");
     Optional <ButtonType> action = alert.showAndWait();
     if (action.get() == ButtonType.OK) {
       // Get the node ID from the circle's ID
@@ -652,6 +663,7 @@ public class MapEditorController {
         }
       }
 
+      submissionAlert("Node " + nodeID + " has been deleted.");
       refreshMap();
       System.out.println("Node: " + nodeID + " deleted");
     }
@@ -673,6 +685,7 @@ public class MapEditorController {
         // Remove the edge from the map
         edgeGroup.getChildren().remove(l);
 
+        submissionAlert("Edge " + l.getId() + " has been deleted.");
         refreshMap();
 
         System.out.println("Edge: " + l.getId() + " deleted");
@@ -701,9 +714,8 @@ public class MapEditorController {
       edge.setStartNodeID(Integer.parseInt(c1.getId()));
       edge.setEndNodeID(Integer.parseInt(c2.getId()));
       Repository.getRepository().addEdge(edge);
-//    ArrayList<Edge> edges = Repository.getRepository().getAllEdges();
-//    edges.size();
       refreshMap();
+      submissionAlert("Edge added successfully!");
     }
   }
 
@@ -739,6 +751,8 @@ public class MapEditorController {
               n.setyCoord((int) (event.getY()));
               System.out.println("Location: " + n.getxCoord() + ", " + n.getyCoord());
               showEditNodeMenu(n);
+
+              refreshMap();
 
               // set the colors back
               finalClickedCircle.setFill(Color.RED);
@@ -836,6 +850,7 @@ public class MapEditorController {
     btnSubmitMove.setOnMouseClicked(event -> handleSubmitMove());
     btnRefresh.setOnMouseClicked(event -> refreshMap());
     btnFindPath.setOnMouseClicked(event -> handleFindPath());
+    btnPathfinder.setOnMouseClicked(event -> Navigation.navigate(Screen.PATHFINDER));
   }
 
   private void handleToggleMoves() {
@@ -1034,33 +1049,40 @@ public class MapEditorController {
     itemAddEdge.setOnAction(event -> {
       mapEditorContext.setState(addEdgeState);
       mapEditorContext.getState().printStatus();
+      determineState();
     });
     btnAddNode.setOnAction(event -> {
       mapEditorContext.setState(addNodeState);
       mapEditorContext.getState().printStatus();
       handleAddNode();
+      determineState();
     });
     itemDeleteEdge.setOnAction(event -> {
       mapEditorContext.setState(deleteEdgeState);
       mapEditorContext.getState().printStatus();
+      determineState();
     });
     btnDeleteNode.setOnAction(event -> {
       mapEditorContext.setState(deleteNodeState);
       mapEditorContext.getState().printStatus();
+      determineState();
     });
     btnEditNode.setOnAction(event -> {
       mapEditorContext.setState(editNodeState);
       mapEditorContext.getState().printStatus();
+      determineState();
     });
     itemAddMove.setOnAction(event -> {
       mapEditorContext.setState(addMoveState);
       mapEditorContext.getState().printStatus();
+      determineState();
     });
 //    Tooltip alignNodesTooltip = new Tooltip("Click at least 3 nodes to align them, the click the Align button");
 //    alignNodesTooltip.install(itemAlign.getContent(), alignNodesTooltip);
     itemAlign.setOnAction(event -> {
       mapEditorContext.setState(alignNodesState);
       mapEditorContext.getState().printStatus();
+      determineState();
     });
   }
 
@@ -1206,5 +1228,14 @@ public class MapEditorController {
                 menuDrawer.open();
               }
             });
+  }
+
+  void submissionAlert(String message) {
+    // Create an alert
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle("Submission Successful");
+    alert.setHeaderText(null);
+    alert.setContentText(message);
+    alert.showAndWait();
   }
 }

@@ -11,7 +11,10 @@ import edu.wpi.teamb.navigation.Screen;
 import edu.wpi.teamb.utils.TimeFormattingHelpers;
 import io.github.palexdev.materialfx.beans.NumberRange;
 import io.github.palexdev.materialfx.controls.*;
+import javafx.beans.InvalidationListener;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -33,6 +36,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.Date;
 
 
 public class ConferenceRequestControllerI implements IRequestController{
@@ -104,7 +108,23 @@ public class ConferenceRequestControllerI implements IRequestController{
         btnSubmit.setOnAction(e -> handleSubmit());
         resetBtn.setTooltip(new Tooltip("Click to reset all fields"));
         resetBtn.setOnAction(e -> handleReset());
+        resetBtn.setDisable(true);
+        ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
+            resetBtn.setDisable(false);
+        };
+        reservationHour.textProperty().addListener(changeListener);
+        cbEmployeesToAssign.textProperty().addListener(changeListener);
+        cbLongName.textProperty().addListener(changeListener);
+        eventNameTextField.textProperty().addListener(changeListener);
+        bookingReasonTextField.textProperty().addListener(changeListener);
+        cbDuration.textProperty().addListener(changeListener);
         helpIcon.setOnMouseClicked(e -> handleHelp());
+        dateToReserve.valueProperty().addListener(new ChangeListener<LocalDate>() {
+            @Override
+            public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) {
+                resetBtn.setDisable(false);
+            }
+        });
     }
 
     @Override

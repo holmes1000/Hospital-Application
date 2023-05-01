@@ -12,6 +12,8 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXRadioButton;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -109,21 +111,33 @@ public class MoveRequestControllerI implements IRequestController{
         btnRemoveMove.setOnMouseClicked(e -> handleRemoveMove());
         btnEditRequest.setTooltip(new Tooltip("Click to edit selected move"));
         btnEditRequest.setOnMouseClicked(e -> handleEditRequest());
+        btnReset.setDisable(true);
+        ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
+            btnReset.setDisable(false);
+        };
+        cdRoomToMove.valueProperty().addListener(changeListener);
+        cdWheretoMove.valueProperty().addListener(new ChangeListener<Integer>() {
+                                                      @Override
+                                                      public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
+                                                            btnReset.setDisable(false);
+                                                      }
+                                                  });
+                dateMove.valueProperty().addListener(new ChangeListener<LocalDate>() {
+                    @Override
+                    public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) {
+                        btnReset.setDisable(false);
+                    }
+                });
     }
 
     @Override
     public void initializeFields() throws SQLException {
         // initialize comboboxes
         cdRoomToMove.setTooltip(new Tooltip("Select room to move"));
-        cdRoomToMove.setValue("");
-        cdRoomToMove.setPromptText("Room to Move");
         cdWheretoMove.setTooltip(new Tooltip("Select where to move selected room"));
         cdWheretoMove.setValue(-1);
-        cdWheretoMove.setPromptText("Where to Move");
         dateMove.setTooltip(new Tooltip("Select date of move"));
         dateMove.setValue(LocalDate.now());
-        // initialize date picker
-        dateMove.setPromptText("Date of Move");
     }
 
     @Override

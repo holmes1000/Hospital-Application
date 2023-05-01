@@ -15,6 +15,6 @@
          </font>
       </Text>
       <MFXButton fx:id="btnYes" layoutX="26.0" layoutY="41.0" onAction="#clickExit" prefHeight="30.0" prefWidth="61.0" text="YES" />
-      <MFXButton layoutX="101.0" layoutY="41.0" prefHeight="30.0" prefWidth="61.0" text="NO" />
+      <MFXButton fx:id="btnNo" layoutX="101.0" layoutY="41.0" onAction="#clickNo" prefHeight="30.0" prefWidth="61.0" text="NO" />
    </children>
 </AnchorPane>
