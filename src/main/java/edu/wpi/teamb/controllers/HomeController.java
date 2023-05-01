@@ -160,7 +160,7 @@ public class HomeController {
         ArrayList<Alert> orderedAlerts = new ArrayList<>();
         orderedAlerts = allAlerts.stream().sorted(Comparator.comparing(Alert::getCreatedAt).reversed()).collect(Collectors.toCollection(ArrayList::new));
         for(Alert alert : orderedAlerts){
-            if(alert.getEmployee().equals(username) || alert.getEmployee().equals("Unassigned")) {
+            if(alert.getEmployee().equals(username) || alert.getEmployee().equals("unassigned")) {
                 FXMLLoader loader = null;
                 AnchorPane alertCardRoot = null;
                 AlertCardController alertCardController = null;

@@ -51,9 +51,9 @@
                      </font></MFXButton>
                   <JFXDrawersStack layoutX="14.0" layoutY="230.0" prefHeight="63.0" prefWidth="85.0" />
                   <HBox fx:id="hboxWelcomeBack" alignment="CENTER_LEFT" layoutX="-23.0" maxHeight="1.7976931348623157E308" prefHeight="50.0" prefWidth="1.0" />
-                  <ScrollPane hbarPolicy="NEVER" hmax="10.0" hmin="520.0" layoutY="139.0" prefHeight="200.0" prefWidth="520.0" style="-fx-background-color: #5f7ca4;" vbarPolicy="NEVER">
+                  <ScrollPane hbarPolicy="NEVER" hmax="10.0" hmin="520.0" layoutY="139.0" prefHeight="200.0" prefWidth="600.0" style="-fx-background-color: #5f7ca4;" vbarPolicy="NEVER">
                      <content>
-                        <VBox fx:id="vboxAlerts" prefHeight="200.0" prefWidth="520.0" style="-fx-background-color: #5f7ca4; -fx-border-color: #5f7ca4; -fx-spacing: 10;" />
+                        <VBox fx:id="vboxAlerts" prefHeight="200.0" prefWidth="600.0" style="-fx-background-color: #5f7ca4; -fx-border-color: #5f7ca4; -fx-spacing: 10;" />
                      </content>
                   </ScrollPane>
                   <Text fill="WHITE" layoutX="1.0" layoutY="120.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Alerts">
@@ -73,13 +73,13 @@
                      </font>
                   </Text>
                   <Separator layoutY="408.0" prefWidth="400.0" />
-                  <VBox fx:id="vboxPathfinder" layoutX="586.0" layoutY="139.0" prefHeight="260.0" prefWidth="350.0" />
-                  <Text fill="WHITE" layoutX="586.0" layoutY="120.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Pathfinder">
+                  <VBox fx:id="vboxPathfinder" layoutX="620.0" layoutY="139.0" prefHeight="260.0" prefWidth="350.0" />
+                  <Text fill="WHITE" layoutX="620.0" layoutY="120.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Pathfinder">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>
                   </Text>
-                  <Separator layoutX="586.0" layoutY="130.0" prefWidth="200.0" />
+                  <Separator layoutX="620.0" layoutY="130.0" prefWidth="200.0" />
                </children></Pane>
             <ImageView fitHeight="88.0" fitWidth="350.0" layoutX="350.0" layoutY="640.0" pickOnBounds="true">
                <image>
