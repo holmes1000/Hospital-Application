@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
@@ -18,6 +19,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Optional;
 
 public class InfoCardController {
   @FXML private AnchorPane requestInfoAnchorPane;
@@ -31,6 +33,7 @@ public class InfoCardController {
   @FXML private Label timeSubmittedLabel;
   @FXML private Label locationNameLabel;
   @FXML private Label employeeAssignedLabel;
+  @FXML private Label requestTypeLabel;
   @FXML private Label statusLabel; //deprecated implementation comment: make a button for this *Note: Please Disregard*
   @FXML private VBox buttonContainerVBox;
   @FXML private VBox subComponentContainer;
@@ -81,11 +84,17 @@ public class InfoCardController {
         deleteButton.setTooltip(new Tooltip("Click to delete request"));
     deleteButton.setOnMouseClicked(
         event -> {
-          //remove the request from the list of requests
-            requestInfoAnchorPane.setVisible(false);
-            ((VBox) requestInfoAnchorPane.getParent()).getChildren().remove(requestInfoAnchorPane);
-            //delete the request from the database
-            EInfoCard.deleteRequest(fullRequest);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Edge");
+            alert.setContentText("Are you sure you want to delete this request?");
+            Optional<ButtonType> action = alert.showAndWait();
+            if (action.get() == ButtonType.OK) {
+                //remove the request from the list of requests
+                requestInfoAnchorPane.setVisible(false);
+                ((VBox) requestInfoAnchorPane.getParent()).getChildren().remove(requestInfoAnchorPane);
+                //delete the request from the database
+                EInfoCard.deleteRequest(fullRequest);
+            }
         });
     editButton.setTooltip(new Tooltip("Click to edit request"));
     editButton.setOnMouseClicked(event -> {
@@ -193,6 +202,7 @@ public class InfoCardController {
     setEmployeeAssignedLabel(fullRequest.getEmployee());
     setStatusLabel(fullRequest.getRequestStatus());
     requestTypeIconImageView.setImage(fullRequest.setRequestTypeIconImageView());
+    requestTypeLabel.setText(fullRequest.getRequestType());
     fullRequest.setRequestType();
   }
 

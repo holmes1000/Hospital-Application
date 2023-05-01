@@ -7,6 +7,7 @@ import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.*;
 
 import edu.wpi.teamb.Bapp;
@@ -21,6 +22,7 @@ import edu.wpi.teamb.navigation.Screen;
 import edu.wpi.teamb.pathfinding.PathFinding;
 import edu.wpi.teamb.controllers.NavDrawerController;
 import edu.wpi.teamb.entities.EPathfinder;
+import io.github.palexdev.materialfx.beans.NumberRange;
 import io.github.palexdev.materialfx.controls.*;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -114,6 +116,10 @@ public class PathfinderController {
     Pane locationCanvas;
     private String defaultStart = "";
     ELogin.PermissionLevel adminTest;
+    ArrayList<String> keysList;
+
+    LinkedHashMap<String, ObservableList<String>> floorsMap;
+    @FXML private MFXButton btnClearPath;
 
   @FXML
   public void initialize() throws IOException {
@@ -121,6 +127,11 @@ public class PathfinderController {
       if (adminTest != ELogin.PermissionLevel.ADMIN) {
           btnEditMap.setVisible(false);
       }
+
+      datePicker.setStartingYearMonth(YearMonth.from(datePicker.getCurrentDate()));
+      NumberRange<Integer> range = new NumberRange<>(datePicker.getCurrentDate().getYear(), datePicker.getCurrentDate().getYear() + 1);
+      datePicker.setYearsRange(range);
+
       Platform.setImplicitExit(false);
 
       initNavBar();
@@ -189,6 +200,7 @@ public class PathfinderController {
       changeButtonColor(currentFloor);
       algorithmDropdown.selectFirst();
       spFindPath.setTooltip(new Tooltip("Select an ending location to find a path"));
+      btnClearPath.setVisible(false);
       BooleanBinding bb = new BooleanBinding() {
           {
               super.bind(startNode.valueProperty(),
@@ -213,16 +225,19 @@ public class PathfinderController {
           public void changed(ObservableValue<? extends ObservableMap<Integer, String>> observable, ObservableMap<Integer, String> oldValue, ObservableMap<Integer, String> newValue) {
               if (!listView.getSelectionModel().getSelectedValues().isEmpty()) {
                   String selectedLongName = listView.getSelectionModel().getSelectedValues().get(0);
-                  Integer index = listView.getItems().indexOf(selectedLongName);
+                  if(listView.getItems() != null){
+                      Integer index = listView.getItems().indexOf(selectedLongName);
 //                  System.out.println(index);
-                  Node node = PathFinding.ASTAR.get_node_map().get(EPathfinder.getPath().get(index));
-                  FullNode n = fullNodesByID.get(node.getNodeID());
-                  String floor = n.getFloor();
-                  if (!currentFloor.equals(floor)) {
-                      switchFloor(floor);
+                      Node node = PathFinding.ASTAR.get_node_map().get(EPathfinder.getPath().get(index));
+                      FullNode n = fullNodesByID.get(node.getNodeID());
+                      String floor = n.getFloor();
+                      if (!currentFloor.equals(floor)) {
+                          switchFloor(floor);
+                      }
+                      pane.centreOnX(n.getxCoord());
+                      pane.centreOnY(n.getyCoord());
                   }
-                  pane.centreOnX(n.getxCoord());
-                  pane.centreOnY(n.getyCoord());
+
               }
               if (currentFloor.equals(firstFloorVisited) && floorsTraversed.size() >1 ) {nextFloor.setDisable(false); previousFloor.setDisable(true);}
               else if (currentFloor.equals((lastFloorVisited))&& floorsTraversed.size() >1) {nextFloor.setDisable(true); previousFloor.setDisable(false);}
@@ -547,11 +562,7 @@ public class PathfinderController {
 
 
     public void initButtons() {
-        clickFloorBtn("L1");
-        clickFloorBtn("L2");
-        clickFloorBtn("1");
-        clickFloorBtn("2");
-        clickFloorBtn("3");
+        clickFloorBtn();
 
         previousFloor.setTooltip(new Tooltip("Click to go to Previous Floor"));
         previousFloor.setVisible(false);
@@ -563,9 +574,20 @@ public class PathfinderController {
         btnEditMap.setTooltip(new Tooltip("Click to edit the map"));
         btnEditMap.setOnMouseClicked(event -> Navigation.navigate(Screen.MAP_EDITOR));
         toggleAvoidStairs.setTooltip(new Tooltip("Click to toggle Avoid Stairs"));
+        
+        btnClearPath.setOnMouseClicked(event -> handleClearPath());
     }
 
-   public void handleToggleShowNames() {
+    private void handleClearPath() {
+      try {
+          initialize();
+      }
+      catch (Exception e) {
+          e.printStackTrace();
+      }
+    }
+
+    public void handleToggleShowNames() {
        if(toggleShowNames.isSelected()){
            nameGroup.setVisible(true);
            System.out.println("Location names on");
@@ -576,7 +598,7 @@ public class PathfinderController {
        }
     }
 
-    public void clickFloorBtn(String floor) {
+    public void clickFloorBtn() {
       btnL1.setTooltip(new Tooltip("Lower Level 1"));
         btnL1.setOnMouseClicked(event->{
             currentFloor = "L1";
@@ -588,6 +610,21 @@ public class PathfinderController {
             changeButtonColor(currentFloor);
             locationCanvas.getChildren().add(pathGroup);
             getFilteredLongnames();
+            if(floorsMap.get(currentFloor) != null){
+                listView.setItems(floorsMap.get(currentFloor));
+                VboxPathfinder.getChildren().clear();
+                VboxPathfinder.getChildren().addAll(listView);
+                listView.getSelectionModel().clearSelection();
+            }
+            else {
+                //System.out.println("no path on this floor");
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("No path on this floor");
+                alert.setHeaderText(null);
+                String alert_message = "No path on this floor";
+                alert.setContentText(alert_message);
+                alert.showAndWait();
+            }
         });
         btnL2.setTooltip(new Tooltip("Lower Level 2"));
         btnL2.setOnMouseClicked(event->{
@@ -600,6 +637,21 @@ public class PathfinderController {
             changeButtonColor(currentFloor);
             locationCanvas.getChildren().add(pathGroup);
             getFilteredLongnames();
+            if(floorsMap.get(currentFloor) != null){
+                listView.setItems(floorsMap.get(currentFloor));
+                VboxPathfinder.getChildren().clear();
+                VboxPathfinder.getChildren().addAll(listView);
+                listView.getSelectionModel().clearSelection();
+            }
+            else {
+                //System.out.println("no path on this floor");
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("No path on this floor");
+                alert.setHeaderText(null);
+                String alert_message = "No path on this floor";
+                alert.setContentText(alert_message);
+                alert.showAndWait();
+            }
         });
         btn1.setTooltip(new Tooltip("Level 1"));
         btn1.setOnMouseClicked(event->{
@@ -611,6 +663,21 @@ public class PathfinderController {
             drawPath(nodes_by_floor.get("1"));
             locationCanvas.getChildren().add(pathGroup);
             getFilteredLongnames();
+            if(floorsMap.get(currentFloor) != null){
+                listView.setItems(floorsMap.get(currentFloor));
+                VboxPathfinder.getChildren().clear();
+                VboxPathfinder.getChildren().addAll(listView);
+                listView.getSelectionModel().clearSelection();
+            }
+            else {
+                //System.out.println("no path on this floor");
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("No path on this floor");
+                alert.setHeaderText(null);
+                String alert_message = "No path on this floor";
+                alert.setContentText(alert_message);
+                alert.showAndWait();
+            }
         });
         btn2.setTooltip(new Tooltip("Level 2"));
         btn2.setOnMouseClicked(event->{
@@ -622,6 +689,21 @@ public class PathfinderController {
             drawPath(nodes_by_floor.get("2"));
             locationCanvas.getChildren().add(pathGroup);
             getFilteredLongnames();
+            if(floorsMap.get(currentFloor) != null){
+                listView.setItems(floorsMap.get(currentFloor));
+                VboxPathfinder.getChildren().clear();
+                VboxPathfinder.getChildren().addAll(listView);
+                listView.getSelectionModel().clearSelection();
+            }
+            else {
+                //System.out.println("no path on this floor");
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("No path on this floor");
+                alert.setHeaderText(null);
+                String alert_message = "No path on this floor";
+                alert.setContentText(alert_message);
+                alert.showAndWait();
+            }
         });
         btn3.setTooltip(new Tooltip("Level 3"));
         btn3.setOnMouseClicked(event->{
@@ -633,15 +715,33 @@ public class PathfinderController {
             drawPath(nodes_by_floor.get("3"));
             locationCanvas.getChildren().add(pathGroup);
             getFilteredLongnames();
+            if(floorsMap.get(currentFloor) != null){
+                listView.setItems(floorsMap.get(currentFloor));
+                VboxPathfinder.getChildren().clear();
+                VboxPathfinder.getChildren().addAll(listView);
+                listView.getSelectionModel().clearSelection();
+            }
+            else {
+                //System.out.println("no path on this floor");
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("No path on this floor");
+                alert.setHeaderText(null);
+                String alert_message = "No path on this floor";
+                alert.setContentText(alert_message);
+                alert.showAndWait();
+            }
         });
     }
 
   public void clickFindPath() throws SQLException {
+      btnClearPath.setVisible(true);
       btnFindPath.setTooltip(new Tooltip("Click to find path"));
       btnFindPath.setOnMouseClicked(event-> {
           ArrayList<Node> nodePath = new ArrayList<>();
           ArrayList<String> string_path = new ArrayList<>();
+          ArrayList<String> longNamePath = new ArrayList<>();
           VboxPathfinder.getChildren().clear();
+
           if (!(startNode.getSelectedItem() == null)  && !(endNode.getSelectedItem() == null)) {
               int start = fullNodesByID.get(fullNodesByLongname.get(startNode.getSelectedItem()).getNodeID()).getNodeID();
               int end = fullNodesByID.get(fullNodesByLongname.get(endNode.getSelectedItem()).getNodeID()).getNodeID();
@@ -678,6 +778,12 @@ public class PathfinderController {
 //                  pane.centreOnY(n.getyCoord());
 
                       ArrayList<Integer> int_path = EPathfinder.getPath();
+//                      for(int i = 0; i < int_path.size(); i++){
+//                          String lName = fullNodesByID.get(int_path.get(i)).getLongName();
+//                          longNamePath.add(lName);
+//                      }
+
+
                       String prevNode = "";
                       ArrayList<String> string_floor_path = new ArrayList<>();
                       fullNode_by_floor = new ArrayList<>();
@@ -692,8 +798,11 @@ public class PathfinderController {
                           }
                       }
                       ArrayList<String> outputList = new ArrayList<>();
+
+
                       String previousElement = "";
                       for (String element : string_floor_path) {
+
                           if (!element.equals(previousElement)) {
                               outputList.add(element);
                               previousElement = element;
@@ -740,9 +849,41 @@ public class PathfinderController {
               //Assume all images were already added to the stackPane
 
               //Add the image to the Front
+              //ArrayList<String> floorByLongName = new ArrayList<>();
+
               ObservableList<String> items = FXCollections.observableArrayList(listSeparator(string_path));
+
+
+
+//              for (String item : items) {
+//                  System.out.println(fullNodesByLongname.);
+//              }
+
+//              StringJoiner joiner = new StringJoiner(", ");
+//              for (String item : items) {
+//                  joiner.add(item);
+//              }
+//              System.out.println(joiner.toString());
+
+              floorsMap = new LinkedHashMap<>();
+              //floorsMap = new LinkedHashMap<>();
+
+              for (String item : string_path) {
+                  String floorNum = fullNodesByID.get(fullNodesByLongname.get(item).getNodeID()).getFloor();
+                  //String floorNum = fullNodesByLongname.get(item).getNodeID();
+                  //System.out.println(floorNum);
+                  ObservableList<String> floorItems = floorsMap.getOrDefault(floorNum, FXCollections.observableArrayList());
+                  floorItems.add(item);
+                  floorsMap.put(floorNum, floorItems);
+              }
+
+              //System.out.println(floorsMap);
+              //System.out.println(floorsMap.get(floorsMap.keySet().iterator().next()));
+
+
 //              listView = new MFXListView<>();
-              listView.setItems(items);
+              keysList = new ArrayList <>(floorsMap.keySet());
+              listView.setItems(floorsMap.get(floorsMap.keySet().iterator().next()));
               VboxPathfinder.getChildren().addAll(listView);
               listView.getSelectionModel().clearSelection();
 //              floorsVisited = new ArrayList<>();
@@ -828,6 +969,10 @@ public class PathfinderController {
                 pane.centreOnY(fullNode_by_floor.get(currentIndex).getyCoord());
             }
         }
+        listView.setItems(floorsMap.get(currentFloor));
+        VboxPathfinder.getChildren().clear();
+        VboxPathfinder.getChildren().addAll(listView);
+        listView.getSelectionModel().clearSelection();
         if (currentIndex == 0) {
             previousFloor.setDisable(true);
         }
@@ -860,6 +1005,7 @@ public class PathfinderController {
               pane.centreOnX(fullNode_by_floor.get(currentIndex).getxCoord());
               pane.centreOnY(fullNode_by_floor.get(currentIndex).getyCoord());
               previousFloor.setDisable(false);
+
           }else{
               currentIndex++;
               switchFloor(floorsTraversed.get(currentIndex));
@@ -867,9 +1013,15 @@ public class PathfinderController {
               pane.centreOnY(fullNode_by_floor.get(currentIndex).getyCoord());
           }
       }
+
+        listView.setItems(floorsMap.get(currentFloor));
+        VboxPathfinder.getChildren().clear();
+        VboxPathfinder.getChildren().addAll(listView);
+        listView.getSelectionModel().clearSelection();
       if(currentIndex == floorsTraversed.size() - 1){
           nextFloor.setDisable(true);
       }
+
     }
 
     private void switchFloor(String floor) {

@@ -137,6 +137,7 @@ public class DButils {
     public static void insertRow(String table, String[] columns, String[] value) {
         try {
             Connection c = DBconnection.getDBconnection().getConnection();
+            c.setAutoCommit(false);
             Statement stmt = c.createStatement();
             String update = "INSERT INTO teamb."  + table + " (" + strArray2InsertFormatCol(columns) + ") VALUES ("
                     + strArray2InsertFormat(value) + ")";

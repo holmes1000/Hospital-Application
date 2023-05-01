@@ -143,7 +143,7 @@ public class HomeController {
     public void loadAlerts(){
         ArrayList<Alert> allAlerts = Repository.getRepository().getAllAlerts();
         alertsTable.setEditable(false);
-        TableColumn<Alert, String> titles = new TableColumn<>("Title");
+        TableColumn<Alert, String> titles = new TableColumn<>("Subject");
         titles.setMinWidth(100);
         titles.setStyle("-fx-alignment: CENTER;");
         titles.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -301,15 +301,15 @@ public class HomeController {
         }
     }
 
+
     public void activateNav(){
         vboxActivateNav.setOnMouseEntered(event -> {
-//            if(!navLoaded) {
-                System.out.println("on");
+            if(!navLoaded) {
                 navPane.setMouseTransparent(false);
                 navLoaded = true;
                 vboxActivateNav.setDisable(true);
                 vboxActivateNav1.setDisable(false);
-//            }
+            }
         });
     }
 
@@ -333,7 +333,6 @@ public class HomeController {
     public void deactivateNav(){
         vboxActivateNav1.setOnMouseEntered(event -> {
             if(navLoaded){
-                System.out.println("off");
                 navPane.setMouseTransparent(true);
                 vboxActivateNav.setDisable(false);
                 navLoaded = false;

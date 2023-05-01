@@ -90,6 +90,7 @@ public class ConferenceRequestControllerI implements IRequestController{
 
         btnSubmit.setTooltip(new Tooltip("Click to submit request"));
         btnSubmit.setOnAction(e -> handleSubmit());
+        resetBtn.setTooltip(new Tooltip("Click to reset all fields"));
         resetBtn.setOnAction(e -> handleReset());
         helpIcon.setOnMouseClicked(e -> handleHelp());
     }
@@ -139,6 +140,7 @@ public class ConferenceRequestControllerI implements IRequestController{
         // setting max character limits
         eventNameTextField.textLimitProperty().set(100);
         bookingReasonTextField.textLimitProperty().set(250);
+        reservationHour.clear();
     }
 
     @Override
@@ -162,8 +164,8 @@ public class ConferenceRequestControllerI implements IRequestController{
                 int hour = Integer.parseInt(startHour) + 12;
                 timerequestedFormatted = "" + startHour + ":" + startMinute + ":00";
             }
-        String daterequested = datePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));;
-        String timeStamp = daterequested + " " + timerequestedFormatted;
+            String daterequested = datePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));;
+            String timeStamp = daterequested + " " + timerequestedFormatted;
 
             // Get the standard request fields
             EConferenceRequest.setEmployee(cbEmployeesToAssign.getValue());
@@ -192,7 +194,6 @@ public class ConferenceRequestControllerI implements IRequestController{
 
                 EConferenceRequest.submitRequest(output);
                 handleReset();
-                Navigation.navigate(Screen.CREATE_NEW_REQUEST);
             }
             submissionAlert();
         }
@@ -202,7 +203,6 @@ public class ConferenceRequestControllerI implements IRequestController{
     public void handleReset() {
         datePicker.clear();
         reservationHour.setValue("12:00 AM");
-        datePicker.clear();
         cbDuration.clear();
         eventNameTextField.clear();
         bookingReasonTextField.clear();
@@ -218,7 +218,7 @@ public class ConferenceRequestControllerI implements IRequestController{
         popOver.setDetachable(true);
         popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_RIGHT);
         popOver.setArrowSize(0.0);
-        try {
+            try {
             popOver.setContentNode(popupLoader.load());
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -9,6 +9,7 @@ import edu.wpi.teamb.DBAccess.DBoutput;
 import edu.wpi.teamb.DBAccess.Full.FullNode;
 import edu.wpi.teamb.DBAccess.ORMs.Edge;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
+import edu.wpi.teamb.DBAccess.ORMs.Move;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 import edu.wpi.teamb.entities.EMapEditor;
 import edu.wpi.teamb.navigation.Navigation;
@@ -51,7 +52,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.ResponseCache;
 import java.sql.Array;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.*;
 
 import static javafx.scene.paint.Color.RED;
@@ -87,7 +90,10 @@ public class MapEditorController {
   @FXML
   private MFXToggleButton toggleEdges;
   @FXML
+  private MFXToggleButton toggleMoves;
+  @FXML
   private MFXButton btnViewMoveMap;
+  @FXML private MFXButton btnFindPath;
 
   //Objects for updating nav bar
   @FXML private Pane navPane;
@@ -146,6 +152,10 @@ public class MapEditorController {
 
   // New menu buttons
   @FXML
+  private MFXButton btnSubmitMove;
+  @FXML
+  private MFXDatePicker datePicker;
+  @FXML
   private MenuButton btnMenuNode;
   private CustomMenuItem btnAddNode = new CustomMenuItem();
   private CustomMenuItem btnEditNode = new CustomMenuItem();
@@ -177,6 +187,8 @@ public class MapEditorController {
   private CustomMenuItem itemResetFromBackup = new CustomMenuItem();
   @FXML
   private CustomMenuItem itemSaveToBackup = new CustomMenuItem();
+  @FXML private MFXButton btnRefresh;
+  private MoveMap moveMap;
 
   public MapEditorController() throws SQLException {
     this.editor = new EMapEditor();
@@ -186,22 +198,15 @@ public class MapEditorController {
   public void initialize() throws IOException, SQLException {
     initNavBar();
     hoverHelp();
-//    initializeFields();
     initButtons();
     initStateBtn();
     PathFinding.ASTAR.init_pathfinder();
-    // Initialize the edges, nodes, and names on the map
-    //nodeList = Repository.getRepository().getAllNodes();
+    moveMap = new MoveMap(); // Create move map
     fullNodesList = Repository.getRepository().getAllFullNodes();
-//    fullNodes = Repository.getRepository().getFullNodes();
 
     this.stackPaneMapView = new StackPane(); // no longer @FXML
     // Used for nodes
     this.locationCanvas = new Pane();
-
-//    this.nodeGroup = new Group();
-//    this.nameGroup = new Group();
-//    this.edgeGroup = new Group();
 
     // Used for location names
     this.fullNodeCanvas = new Pane();
@@ -216,6 +221,10 @@ public class MapEditorController {
     this.locationCanvas.getChildren().add(nodeGroup);
     this.locationCanvas.getChildren().add(edgeGroup);
     this.locationCanvas.getChildren().add(nameGroup);
+    this.locationCanvas.getChildren().add(moveMap.getPathGroup());
+    this.locationCanvas.getChildren().add(moveMap.getMoveInfo());
+    moveMap.getPathGroup().setVisible(false);
+    moveMap.getMoveInfo().setVisible(false);
 
     //Fitting the scrollpane
     pane.setScrollMode(GesturePane.ScrollMode.ZOOM);
@@ -252,21 +261,13 @@ public class MapEditorController {
     btnMenuMove.setGraphic(imageViewMove);
     btnMenuBackup.setGraphic(imageViewReset);
     btnAlignNodes.setVisible(false);
-
-    System.out.println("MapEditorController initialized");
-
+    btnSubmitMove.setVisible(false);
+    datePicker.setVisible(false);
+    btnFindPath.setVisible(false);
 
     initializeNavGates();
-  }
 
-  private void handleNodes() {
-    System.out.println("Handling nodes");
-    determineState();
-  }
-
-  private void handleEdges() {
-    System.out.println("Handling edges");
-    determineState();
+    System.out.println("MapEditorController initialized");
   }
 
   /**
@@ -396,7 +397,7 @@ public class MapEditorController {
     });
     c.setOnMouseClicked(event -> {
       try {
-        selectedNodes.add(c); // Used for creating edges
+        selectedNodes.add(c); // Used for creating edges and moves
         nodesToAlign.add(c); // Used for aligning nodes
         checkSelectedNodes(); // Check if two circles are selected to create an edge
         checkNodesToAlign(); // Check if at least two circles are selected to align
@@ -504,7 +505,12 @@ public class MapEditorController {
       System.out.println(c1.toString());
       System.out.println(c2.toString());
       selectedNodes.clear();
-      handleAddEdge(c1, c2);
+      if (mapEditorContext.getState() == addEdgeState) {
+        handleAddEdge(c1, c2);
+      }
+      else if (mapEditorContext.getState() == addMoveState) {
+        handleAddMove(c1,c2);
+      }
     }
   }
 
@@ -622,43 +628,55 @@ public class MapEditorController {
    * @throws SQLException
    */
   private void handleDeleteNode(MouseEvent e, FullNode n) throws SQLException {
-    // Get the node ID from the circle's ID
-    int nodeID = n.getNodeID();
-    // delete from move table
-    Repository.getRepository().deleteMove(Repository.getRepository().getMove(nodeID));
-    // Delete the node from the database
-    Repository.getRepository().deleteNode(Repository.getRepository().getNode(nodeID));
-    PathFinding.ASTAR.get_node_map().remove(n.getNodeID());
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    alert.setTitle("Delete Edge");
+    alert.setContentText("Are you sure you want to delete this edge?");
+    Optional <ButtonType> action = alert.showAndWait();
+    if (action.get() == ButtonType.OK) {
+      // Get the node ID from the circle's ID
+      int nodeID = n.getNodeID();
+      // delete from move table
+      Repository.getRepository().deleteMove(Repository.getRepository().getMove(nodeID));
+      // Delete the node from the database
+      Repository.getRepository().deleteNode(Repository.getRepository().getNode(nodeID));
+      PathFinding.ASTAR.get_node_map().remove(n.getNodeID());
 
-    // Remove the node from the map
-    nodeGroup.getChildren().remove(n);
+      // Remove the node from the map
+      nodeGroup.getChildren().remove(n);
 
-    // remove node from list
-    for (FullNode node : fullNodesList) {
-      if (node.getNodeID() == nodeID) {
-        fullNodesList.remove(node);
-        break;
+      // remove node from list
+      for (FullNode node : fullNodesList) {
+        if (node.getNodeID() == nodeID) {
+          fullNodesList.remove(node);
+          break;
+        }
       }
-    }
 
-    refreshMap();
-    System.out.println("Node: " + nodeID + " deleted");
+      refreshMap();
+      System.out.println("Node: " + nodeID + " deleted");
+    }
   }
 
   private void handleDeleteEdge(MouseEvent e, Line l) {
     if (mapEditorContext.getState() == deleteEdgeState) {
-      // Delete the edge from the database
-      Edge edge = Repository.getRepository().getEdge(l.getId());
-      Repository.getRepository().deleteEdge(edge);
+      Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+      alert.setTitle("Delete Edge");
+      alert.setContentText("Are you sure you want to delete this edge?");
+      Optional <ButtonType> action = alert.showAndWait();
+      if (action.get() == ButtonType.OK) {
+        // Delete the edge from the database
+        Edge edge = Repository.getRepository().getEdge(l.getId());
+        Repository.getRepository().deleteEdge(edge);
 
-      ArrayList<Edge> edges = Repository.getRepository().getAllEdges();
+        ArrayList<Edge> edges = Repository.getRepository().getAllEdges();
 
-      // Remove the edge from the map
-      edgeGroup.getChildren().remove(l);
+        // Remove the edge from the map
+        edgeGroup.getChildren().remove(l);
 
-      refreshMap();
+        refreshMap();
 
-      System.out.println("Edge: " + l.getId() + " deleted");
+        System.out.println("Edge: " + l.getId() + " deleted");
+      }
     }
   }
 
@@ -794,12 +812,12 @@ public class MapEditorController {
       handleResetFromBackupBtn();
     });
 
-    btnViewMoveMap.setOnMouseClicked(e -> Navigation.navigate(Screen.MOVE_MAP));
-
     // initialize the toggles
     toggleEdges.setSelected(true);
     toggleNodes.setSelected(true);
     toggleLocationNames.setSelected(true);
+    toggleMoves.setSelected(false);
+    
     toggleLocationNames.setOnMouseClicked(event -> {
       handleToggleLocationNames();
     });
@@ -809,12 +827,64 @@ public class MapEditorController {
     toggleNodes.setOnMouseClicked(event -> {
       handleToggleNodes();
     });
+    toggleMoves.setOnMouseClicked(event -> {
+      handleToggleMoves();
+    });
 
     // Init new buttons
     btnAlignNodes.setOnMouseClicked(event -> alignNodes());
+    btnSubmitMove.setOnMouseClicked(event -> handleSubmitMove());
+    btnRefresh.setOnMouseClicked(event -> refreshMap());
+    btnFindPath.setOnMouseClicked(event -> handleFindPath());
   }
 
-  private void handleAddMove() {
+  private void handleToggleMoves() {
+    if (toggleMoves.isSelected()) {
+      moveMap.getPathGroup().setVisible(true);
+      moveMap.getMoveInfo().setVisible(true);
+      System.out.println("Moves are on");
+    } else {
+      //nameGroup.setVisible(false);
+      System.out.println("Moves are off");
+      moveMap.getPathGroup().setVisible(false);
+      moveMap.getMoveInfo().setVisible(false);
+    }
+  }
+
+  private void handleFindPath() {
+    Navigation.navigate(Screen.PATHFINDER);
+  }
+
+  private void handleSubmitMove() {
+    // Get the date from the date picker
+    LocalDate date = datePicker.getValue();
+
+    // Get the nodes from the circle ids
+    FullNode startNode = Repository.getRepository().getFullNode(Integer.parseInt(c1.getId()));
+    FullNode endNode = Repository.getRepository().getFullNode(Integer.parseInt(c2.getId()));
+
+    // Get the move data
+    Move move = new Move();
+    move.setLongName(startNode.getLongName()); // Location name of the start node
+    move.setNodeID(endNode.getNodeID()); // ID of end node
+    move.setDate(Date.valueOf(date));
+
+    // Add the move to the database
+    Repository.getRepository().addMove(move);
+
+    // Hide the submit button and date picker
+    btnSubmitMove.setVisible(false);
+    datePicker.setVisible(false);
+    btnFindPath.setVisible(true);
+
+    // Refresh the map
+    refreshMap();
+  }
+
+  private void handleAddMove(Circle c1, Circle c2) {
+    btnSubmitMove.setVisible(true);
+    datePicker.setVisible(true);
+    datePicker.setValue(LocalDate.now());
   }
 
   /**
@@ -869,6 +939,7 @@ public class MapEditorController {
       edgeGroup.getChildren().clear();
       nodeGroup.getChildren().clear();
       draw("L1");
+      drawMoveMap(currentFloor);
     });
     btnL2.setTooltip(new Tooltip("Lower Level 2"));
     btnL2.setOnMouseClicked(event -> {
@@ -876,10 +947,10 @@ public class MapEditorController {
       currentFloor = "L2";
       changeButtonColor(currentFloor);
       floorList = Repository.getRepository().getFullNodesByFloor("L2");
-
       edgeGroup.getChildren().clear();
       nodeGroup.getChildren().clear();
       draw("L2");
+      drawMoveMap(currentFloor);
     });
     btn1.setTooltip(new Tooltip("Level 1"));
     btn1.setOnMouseClicked(event -> {
@@ -890,6 +961,7 @@ public class MapEditorController {
       edgeGroup.getChildren().clear();
       nodeGroup.getChildren().clear();
       draw("1");
+      drawMoveMap(currentFloor);
     });
     btn2.setTooltip(new Tooltip("Level 2"));
     btn2.setOnMouseClicked(event -> {
@@ -900,6 +972,7 @@ public class MapEditorController {
       edgeGroup.getChildren().clear();
       nodeGroup.getChildren().clear();
       draw("2");
+      drawMoveMap(currentFloor);
     });
     btn3.setTooltip(new Tooltip("Level 3"));
     btn3.setOnMouseClicked(event -> {
@@ -910,9 +983,16 @@ public class MapEditorController {
       edgeGroup.getChildren().clear();
       nodeGroup.getChildren().clear();
       draw("3");
+      drawMoveMap(currentFloor);
     });
   }
 
+  private void drawMoveMap(String currentFloor) {
+    locationCanvas.getChildren().remove(moveMap.getPathGroup());
+    moveMap.getPathGroup().getChildren().clear();
+    moveMap.displayMoves(currentFloor);
+    locationCanvas.getChildren().add(moveMap.getPathGroup());
+  }
   private void setMenuItemTooltip(MenuButton b, CustomMenuItem c, String text, String toolTipText) {
     // change the color of the custom menu item
     Text text1 = new Text(text);
