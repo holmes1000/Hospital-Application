@@ -183,7 +183,7 @@ public class EditAlertsController {
     private void handleAddAlert() {
         edu.wpi.teamb.DBAccess.ORMs.Alert newAlert = new edu.wpi.teamb.DBAccess.ORMs.Alert();
         newAlert.setTitle(textTitle.getText());
-        newAlert.setDescription(textDescription.getText().toLowerCase());
+        newAlert.setDescription(textDescription.getText());
         newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
         if(cbEmployees.getValue() == null){
             newAlert.setEmployee("unassigned");

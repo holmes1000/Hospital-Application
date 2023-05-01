@@ -2,6 +2,7 @@ package edu.wpi.teamb.controllers.requests;
 
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
+import edu.wpi.teamb.DBAccess.ORMs.Alert;
 import edu.wpi.teamb.DBAccess.ORMs.Move;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 import edu.wpi.teamb.entities.requests.EMoveRequest;
@@ -27,6 +28,7 @@ import org.controlsfx.control.PopOver;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -156,6 +158,7 @@ public class MoveRequestControllerI implements IRequestController{
                     if (when.after(new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24))) {
                         String[] output = {where.toString(), what, when.toString()};
                         EMoveRequest.submitRequest(output);
+                        alertEmployee("unassigned", what, cdWheretoMove.getSelectedItem().toString(), when.toString());
                         handleReset();
 
                         updateTable();
@@ -170,6 +173,19 @@ public class MoveRequestControllerI implements IRequestController{
                 submissionAlert();
             }
         }
+    }
+
+    /**
+     * Grabs the current employee that is referred to in the newly made request and alerts them of this
+     * @param employee
+     */
+    public void alertEmployee(String employee, String roomMoving, String moveTo, String when){
+        edu.wpi.teamb.DBAccess.ORMs.Alert newAlert = new Alert();
+        newAlert.setTitle("Move Alert");
+        newAlert.setDescription("The room " + roomMoving + " will be moving to " + moveTo + " on " + when);
+        newAlert.setEmployee(employee);
+        newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
+        Repository.getRepository().addAlert(newAlert);
     }
 
     @Override

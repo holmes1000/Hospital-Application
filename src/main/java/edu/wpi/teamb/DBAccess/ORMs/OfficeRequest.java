@@ -56,4 +56,12 @@ public class OfficeRequest {
     public void setType(String type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return  "id=" + id +
+                ", type='" + type + '\'' +
+                ", item='" + item + '\'' +
+                ", quantity=" + quantity;
+    }
 }

@@ -52,8 +52,8 @@ public class EditAccountController {
         initializeFields();
         initButtons();
         navLoaded = false;
-        activateNav();
-        deactivateNav();
+//        activateNav();
+//        deactivateNav();
         initializeNavGates();
     }
 
@@ -155,6 +155,8 @@ public class EditAccountController {
             VBox vbox = loader.load();
             NavDrawerController navDrawerController = loader.getController();
             menuDrawer.setSidePane(vbox);
+            navPane.setMouseTransparent(true);
+            navLoaded = false;
         } catch (IOException e) {
             e.printStackTrace();
         }

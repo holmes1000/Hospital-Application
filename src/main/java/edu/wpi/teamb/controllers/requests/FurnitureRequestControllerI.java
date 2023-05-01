@@ -3,6 +3,7 @@ package edu.wpi.teamb.controllers.requests;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.Full.FullFurnitureRequest;
+import edu.wpi.teamb.DBAccess.ORMs.Alert;
 import edu.wpi.teamb.controllers.components.InfoCardController;
 import edu.wpi.teamb.entities.requests.EFurnitureRequest;
 import edu.wpi.teamb.entities.requests.IRequest;
@@ -205,8 +206,23 @@ public class FurnitureRequestControllerI implements IRequestController{
                 handleReset();
             }
             submissionAlert();
+            alertEmployee(EFurnitureRequest.getEmployee());
         }
     }
+
+    /**
+     * Grabs the current employee that is referred to in the newly made request and alerts them of this
+     * @param employee
+     */
+    public void alertEmployee(String employee){
+        Alert newAlert = new Alert();
+        newAlert.setTitle("New Task Assigned");
+        newAlert.setDescription("You have been assigned a new furniture request to complete.");
+        newAlert.setEmployee(employee);
+        newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
+        Repository.getRepository().addAlert(newAlert);
+    }
+
 
     @Override
     public void handleReset() {

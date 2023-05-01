@@ -101,4 +101,13 @@ public class ConferenceRequest {
       return null;
     }
   }
+
+  @Override
+  public String toString() {
+    return "id=" + id +
+            ", dateRequested=" + dateRequested +
+            ", eventName='" + eventName + '\'' +
+            ", bookingReason='" + bookingReason + '\'' +
+            ", duration=" + duration;
+  }
 }

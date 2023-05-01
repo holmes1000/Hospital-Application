@@ -3,6 +3,7 @@ package edu.wpi.teamb.controllers.settings;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
+import com.sun.javafx.charts.Legend;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.DBoutput;
 import edu.wpi.teamb.controllers.NavDrawerController;
@@ -18,6 +19,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
@@ -50,7 +55,11 @@ public class ViewCSVsController {
     @FXML private VBox vboxActivateNav;
     @FXML private VBox vboxActivateNav1;
     @FXML private Pane navPane;
+    @FXML private VBox vboxSpecs;
+    @FXML private Text infoImport;
+    @FXML private Text infoExport;
     private boolean navLoaded;
+
 
     public ViewCSVsController() throws SQLException {
         this.editor = new EMapEditor();
@@ -62,6 +71,25 @@ public class ViewCSVsController {
         initializeFields();
         initButtons();
         initializeNavGates();
+        initInfoText();
+    }
+
+    /**
+     * Sets up the text fields that give information
+     */
+    public void initInfoText(){
+        infoExport = new Text();
+        infoImport = new Text();
+        infoImport.setFill(Color.WHITE);
+        infoImport.setFont(Font.font("System", FontWeight.BOLD, 18));
+        infoImport.setWrappingWidth(280);
+        infoImport.setText("Please select a CSV type to see import requirements");
+        infoExport.setFill(Color.WHITE);
+        infoExport.setFont(Font.font("System", FontWeight.BOLD, 18));
+        infoExport.setWrappingWidth(280);
+        infoExport.setText("Please select a CSV type to see export requirements");
+        vboxSpecs.getChildren().clear();
+        vboxSpecs.getChildren().addAll(infoImport, infoExport);
     }
 
     /**
@@ -163,13 +191,108 @@ public class ViewCSVsController {
 
     public void displaySelection() {
         String item = getSelectedItem();
-        ArrayList<?> itemsList = switch (item) {
-            case "Moves" -> editor.getMoveList();
-            case "Nodes" -> editor.getNodeList();
-            case "Edges" -> editor.getEdgeList();
-            case "Location Names" -> editor.getLocationNameList();
-            default -> new ArrayList<>();
-        };
+        ArrayList<?> itemsList = new ArrayList<>();
+        switch(item) {
+            case "Nodes" -> {
+                itemsList = editor.getNodeList();
+                infoImport.setText("Import info: Requires no additional imports");
+                infoExport.setText("Export info: Requires no additional exports");
+            }
+            case "Moves" -> {
+                itemsList = editor.getMoveList();
+                infoImport.setText("Import info: Requires additional importation of modes and location names");
+                infoExport.setText("Export info: Requires no additional exports");
+            }
+            case "Edges" -> {
+                itemsList = editor.getEdgeList();
+                infoImport.setText("Import info: Requires additional importation of nodes");
+                infoExport.setText("Export info: Requires no additional exports");
+            }
+            case "Location Names" -> {
+                itemsList = editor.getLocationNameList();
+                infoImport.setText("Import info: Requires no additional imports");
+                infoExport.setText("Export info: Requires no additional exports");
+            }
+            case "Users" -> {
+                itemsList = Repository.getRepository().getAllUsers();
+                infoImport.setText("Import info: Requires no additional imports");
+                infoExport.setText("Export info: Requires no additional exports");
+            }
+            case "Requests" -> {
+                itemsList = Repository.getRepository().getAllRequests();
+                infoImport.setText("Import info: Requires the additional importation of requests");
+                infoExport.setText("Export info: Requires no additional exports");
+            }
+            case "Conference Requests" -> {
+                ArrayList<?> items = Repository.getRepository().getConferenceRequests();
+                ArrayList<String> temp = new ArrayList<>();
+                for(int i = 0; i < items.size(); i ++){
+                    temp.add(items.get(i).toString());
+                }
+                itemsList = temp;
+                infoImport.setText("Import info: Requires the additional importation of requests");
+                infoExport.setText("Export info: Requires no additional exports");
+            }
+            case "Flower Requests" -> {
+                ArrayList<?> items = Repository.getRepository().getFlowerRequests();
+                ArrayList<String> temp = new ArrayList<>();
+                for(int i = 0; i < items.size(); i ++){
+                    temp.add(items.get(i).toString());
+                }
+                itemsList = temp;
+                infoImport.setText("Import info: Requires the additional importation of requests");
+                infoExport.setText("Export info: Requires no additional exports");
+            }
+            case "Furniture Requests" -> {
+                ArrayList<?> items = Repository.getRepository().getFurnitureRequests();
+                ArrayList<String> temp = new ArrayList<>();
+                for(int i = 0; i < items.size(); i ++){
+                    temp.add(items.get(i).toString());
+                }
+                itemsList = temp;
+                infoImport.setText("Import info: Requires the additional importation of requests");
+                infoExport.setText("Export info: Requires no additional exports");
+            }
+            case "Meal Requests" -> {
+                ArrayList<?> items = Repository.getRepository().getMealRequests();
+                ArrayList<String> temp = new ArrayList<>();
+                for(int i = 0; i < items.size(); i ++){
+                    temp.add(items.get(i).toString());
+                }
+                itemsList = temp;
+                infoImport.setText("Import info: Requires the additional importation of requests");
+                infoExport.setText("Export info: Requires no additional exports");
+            }
+            case "Office Requests" -> {
+                ArrayList<?> items = Repository.getRepository().getOfficeRequests();
+                ArrayList<String> temp = new ArrayList<>();
+                for(int i = 0; i < items.size(); i ++){
+                    temp.add(items.get(i).toString());
+                }
+                itemsList = temp;
+                infoImport.setText("Import info: Requires the additional importation of requests");
+                infoExport.setText("Export info: Requires no additional exports");
+            }
+            case "Alerts" -> {
+                ArrayList<?> items = Repository.getRepository().getAllAlerts();
+                ArrayList<String> temp = new ArrayList<>();
+                for(int i = 0; i < items.size(); i ++){
+                   temp.add(items.get(i).toString());
+                }
+                itemsList = temp;
+                infoImport.setText("Import info: Requires the additional importation of requests");
+                infoExport.setText("Export info: Requires no additional exports");
+            }
+            case "Signs" -> {
+                itemsList = Repository.getRepository().getAllSigns();
+                infoImport.setText("Import info: Requires the additional importation of requests");
+                infoExport.setText("Export info: Requires no additional exports");
+            }
+            default -> {
+                new ArrayList<>();
+            }
+        }
+
 
         ObservableList<?> items = FXCollections.observableList(itemsList);
         NodeInfo.setItems(items);
