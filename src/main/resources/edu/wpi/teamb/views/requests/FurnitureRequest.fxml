@@ -37,7 +37,7 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </MFXButton>
-            <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="1028.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="1028.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../img/helpicon.png" />
                </image>
