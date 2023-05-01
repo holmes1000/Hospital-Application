@@ -3,6 +3,7 @@ package edu.wpi.teamb.DBAccess.Full;
 import edu.wpi.teamb.DBAccess.DAO.RequestDAOImpl;
 import edu.wpi.teamb.DBAccess.ORMs.FlowerRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
+import edu.wpi.teamb.DBAccess.ORMs.TranslationRequest;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -23,32 +24,30 @@ public class FullTranslationRequest implements IFull {
     String locationName;
     String notes;
     String languageType;
-    String medicalInNature;
+    String medical;
     String message;
     String requestType = "Translation";
 
-    public FullTranslationRequest(int id, String employee, Timestamp dateSubmitted, String requestStatus, String locationName, String notes, String flowerType, String color, String size, String message) {
+    public FullTranslationRequest(int id, String employee, Timestamp dateSubmitted, String requestStatus, String locationName, String notes, String language, String medical, String message) {
         this.id = id;
         this.employee = employee;
         this.dateSubmitted = dateSubmitted;
         this.requestStatus = requestStatus;
         this.locationName = locationName;
         this.notes = notes;
-        this.languageType = flowerType;
-        this.medicalInNature = color;
-        this.medicalInNature = size;
+        this.languageType = language;
+        this.medical = medical;
         this.message = message;
     }
-    public FullTranslationRequest(Request request, FlowerRequest f) {
+    public FullTranslationRequest(Request request, TranslationRequest f) {
         this.id = request.getId();
         this.employee = request.getEmployee();
         this.dateSubmitted = request.getDateSubmitted();
         this.requestStatus = request.getRequestStatus();
         this.locationName = request.getLocationName();
         this.notes = request.getNotes();
-        this.languageType = f.getFlowerType();
-        this.medicalInNature = f.getColor();
-        this.medicalInNature = f.getSize();
+        this.languageType = f.getLanguage();
+        this.medical = f.getMedical();
         this.message = f.getMessage();
     }
 
@@ -87,20 +86,20 @@ public class FullTranslationRequest implements IFull {
         this.requestStatus = requestStatus;
     }
 
-    public String getLanguageType() {
+    public String getLanguage() {
         return languageType;
     }
 
-    public void setLanguageType(String flowerType) {
+    public void setLanguage(String flowerType) {
         this.languageType = flowerType;
     }
 
-    public String getMedicalInNature() {
-        return medicalInNature;
+    public String getMedical() {
+        return medical;
     }
 
-    public void setMedicalInNature(String color) {
-        this.medicalInNature = medicalInNature;
+    public void setMedical(String color) {
+        this.medical = medical;
     }
 
     public String getMessage() {
@@ -122,7 +121,7 @@ public class FullTranslationRequest implements IFull {
     }
     @Override
     public void setRequestType() {
-        this.requestType = "Flower";
+        this.requestType = "Translation";
     }
 
     public String getLocationName() {
@@ -143,7 +142,7 @@ public class FullTranslationRequest implements IFull {
 
     @Override
     public ArrayList<?> listFullRequests(List<?> frs) {
-        ArrayList<FullFlowerRequest> ffrs = new ArrayList<FullFlowerRequest>();
+        ArrayList<FullTranslationRequest> ffrs = new ArrayList<FullTranslationRequest>();
         for (int i = 0; i < frs.size(); i++) {
             TranslationRequest fr = (TranslationRequest) frs.get(i);
             Request r = RequestDAOImpl.getRequest(fr.getId());
