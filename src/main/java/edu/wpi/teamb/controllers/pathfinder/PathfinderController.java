@@ -752,6 +752,8 @@ public class PathfinderController {
     }
 
   public void clickFindPath() throws SQLException {
+      nextFloor.setDisable(false);
+      previousFloor.setDisable(false);
       btnClearPath.setVisible(true);
       btnFindPath.setTooltip(new Tooltip("Click to find path"));
       btnFindPath.setOnMouseClicked(event-> {
