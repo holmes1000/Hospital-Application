@@ -39,9 +39,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
-import javafx.scene.control.Alert;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -78,7 +76,7 @@ public class PathfinderController {
     @FXML private MFXButton btn1;
     @FXML private MFXButton btn2;
     @FXML private MFXButton btn3;
-    @FXML private MFXDatePicker datePicker;
+    @FXML private DatePicker dateToFindPath;
     @FXML private MFXToggleButton toggleAvoidStairs;
     @FXML private MFXToggleButton toggleShowNames;
 
@@ -128,9 +126,18 @@ public class PathfinderController {
           btnEditMap.setVisible(false);
       }
 
-      datePicker.setStartingYearMonth(YearMonth.from(datePicker.getCurrentDate()));
-      NumberRange<Integer> range = new NumberRange<>(datePicker.getCurrentDate().getYear(), datePicker.getCurrentDate().getYear() + 1);
-      datePicker.setYearsRange(range);
+//      dateToFindPath.setStartingYearMonth(YearMonth.from(datePicker.getCurrentDate()));
+//      NumberRange<Integer> range = new NumberRange<>(datePicker.getCurrentDate().getYear(), datePicker.getCurrentDate().getYear() + 1);
+//      datePicker.setYearsRange(range);
+
+      dateToFindPath.setDayCellFactory(picker -> new DateCell() {
+          public void updateItem(LocalDate date, boolean empty) {
+              super.updateItem(date, empty);
+              LocalDate today = LocalDate.now();
+
+              setDisable(empty || date.compareTo(today) < 0 );
+          }
+      });
 
       Platform.setImplicitExit(false);
 
@@ -206,12 +213,15 @@ public class PathfinderController {
               super.bind(startNode.valueProperty(),
                       endNode.valueProperty(),
                       algorithmDropdown.valueProperty(),
-                      datePicker.valueProperty());
+                      dateToFindPath.valueProperty());
           }
 
           @Override
           protected boolean computeValue() {
-              return (startNode.getValue() == null || endNode.getValue() == null || algorithmDropdown.getValue() == null || datePicker.getValue() == null);
+              return (startNode.getValue() == null
+                      || endNode.getValue() == null
+                      || algorithmDropdown.getValue() == null
+                      || dateToFindPath.getValue() == null);
           }
       };
         btnFindPath.disableProperty().bind(bb);
@@ -268,11 +278,11 @@ public class PathfinderController {
   }
 
   public void handleDate(){
-      datePicker.setValue(LocalDate.now()); // Init to current date
-      LocalDate date_inputted = datePicker.getCurrentDate();
-      datePicker.setTooltip(new Tooltip("Select a date to view the map on that day"));
+      dateToFindPath.setValue(LocalDate.now()); // Init to current date
+      LocalDate date_inputted = dateToFindPath.getValue();
+      dateToFindPath.setTooltip(new Tooltip("Select a date to view the map on that day"));
       handle_move();
-      datePicker.valueProperty().addListener(new ChangeListener<LocalDate>() {
+      dateToFindPath.valueProperty().addListener(new ChangeListener<LocalDate>() {
           @Override
           public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) {
               //Print date change to console
@@ -305,7 +315,7 @@ public class PathfinderController {
 //      System.out.println("handling moves");
       upcoming_moves.clear();
       HashMap<Integer,Move> nodes_to_update = new HashMap<>();
-      LocalDate current_date = datePicker.getValue();
+      LocalDate current_date = dateToFindPath.getValue();
       LocalDate tempDate;
       for (Integer id : move_map.keySet()){
           if (move_map.get(id).size() >= 1) {
@@ -322,7 +332,9 @@ public class PathfinderController {
                       tempDate = move_date;
                       nodes_to_update.put(move.getNodeID(),move);
                   }
-                  if (move_date.isAfter(current_date) || move_date.equals(current_date)) {upcoming_moves.add(move);}
+                  if (move_date.isAfter(current_date))
+//                  || move_date.isEqual(current_date))
+                  {upcoming_moves.add(move);}
               }
 
           }

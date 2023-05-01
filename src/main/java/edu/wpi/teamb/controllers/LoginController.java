@@ -79,7 +79,7 @@ public class LoginController {
         errorMsg.setText("Something has gone very wrong");
       }
     } catch (EmptyLoginCredentialsException e) {
-      errorMsg.setText("Fields are empty...Enter your data.");
+      errorMsg.setText("Please fill in all fields.");
     } catch (NullPointerException e) {
       errorMsg.setText("Please check username and/or password.");
     } catch (IncorrectPasswordException e) {

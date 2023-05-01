@@ -68,6 +68,7 @@ public class EditUsersController {
         initNavBar();
         initializeFields();
         initButtons();
+        initializeNavGates();
     }
 
     //EditUserController editUserController = new EditUserController();
@@ -126,6 +127,8 @@ public class EditUsersController {
             updateTable();
             createAlert("User Deleted", "User Deleted Successfully");
         }
+        btnEditUser.setDisable(true);
+        btnDeleteUser.setDisable(true);
     }
 
     private void handleEditUser() throws IOException {
@@ -133,6 +136,8 @@ public class EditUsersController {
         System.out.println("Edit user button");
         showEditMenu(user);
         tbUsers.refresh(); // Refresh the table
+        btnDeleteUser.setDisable(true);
+        btnEditUser.setDisable(true);
     }
 
     private void showEditMenu(User user) throws IOException {
@@ -298,6 +303,20 @@ public class EditUsersController {
         }
         else
             return "Error"; // Error
+    }
+
+
+    /**
+     * For some reason there are occasions when the nav-bar gates for toggling its handling does not start correctly
+     * This fixes this issue
+     */
+    public void initializeNavGates(){
+        activateNav();
+        deactivateNav();
+        navPane.setMouseTransparent(true);
+        vboxActivateNav.setDisable(false);
+        navLoaded = false;
+        vboxActivateNav1.setDisable(true);
     }
 
     /**

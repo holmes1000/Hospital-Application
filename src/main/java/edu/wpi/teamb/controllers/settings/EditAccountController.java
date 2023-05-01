@@ -12,6 +12,8 @@ import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -48,6 +50,10 @@ public class EditAccountController {
         initNavBar();
         initializeFields();
         initButtons();
+        navLoaded = false;
+        activateNav();
+        deactivateNav();
+        initializeNavGates();
     }
 
     public void initializeFields() {
@@ -57,6 +63,13 @@ public class EditAccountController {
         tfUsername.setEditable(false); // cannot change username
         tfPassword.setText(currentUser.getPassword());
         tfEmail.setText(currentUser.getEmail());
+
+//        ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
+//            btnSaveEdits.setDisable(false);
+//        };
+//        tfName.textProperty().addListener(changeListener);
+//        tfPassword.textProperty().addListener(changeListener);
+//        tfEmail.textProperty().addListener(changeListener);
     }
 
     public void initButtons() {
@@ -83,6 +96,19 @@ public class EditAccountController {
 
         // Go home
         Navigation.navigate(Screen.SETTINGS);
+    }
+
+    /**
+     * For some reason there are occasions when the nav-bar gates for toggling its handling does not start correctly
+     * This fixes this issue
+     */
+    public void initializeNavGates(){
+        activateNav();
+        deactivateNav();
+        navPane.setMouseTransparent(true);
+        vboxActivateNav.setDisable(false);
+        navLoaded = false;
+        vboxActivateNav1.setDisable(true);
     }
 
     /**
