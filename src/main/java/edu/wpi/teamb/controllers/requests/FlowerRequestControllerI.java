@@ -281,27 +281,39 @@ public class FlowerRequestControllerI implements IRequestController {
     public void enterFlowerRequestEditableMode(FullFlowerRequest fullFlowerRequest, InfoCardController currentInfoCardController) {
         //set the editable fields to the values of the request
         cbAvailableFlowers.getSelectionModel().selectItem(fullFlowerRequest.getFlowerType());
-        if(cbAvailableFlowers.getSelectedItem().equals("Rose")){
-            cdAvailableColor.getItems().addAll("Red", "Orange", "Yellow", "Pink", "Purple", "White", "Green");
-            cdAvailableColor.getSelectionModel().selectItem(fullFlowerRequest.getColor());
-            cdAvailableColor.setText(fullFlowerRequest.getColor());
-        } else if(cbAvailableFlowers.getSelectedItem().equals("Lily")){
-            cdAvailableColor.getItems().addAll("White", "Pink", "Red", "Orange", "Yellow");
-            cdAvailableColor.getSelectionModel().selectItem(fullFlowerRequest.getColor());
-            cdAvailableColor.setText(fullFlowerRequest.getColor());
-        } else if(cbAvailableFlowers.getSelectedItem().equals("Daisy")){
-            cdAvailableColor.getItems().addAll("White", "Pink", "Red", "Blue");
-            cdAvailableColor.getSelectionModel().selectItem(fullFlowerRequest.getColor());
-            cdAvailableColor.setText(fullFlowerRequest.getColor());
-        } else if(cbAvailableFlowers.getSelectedItem().equals("Tulip")){
-            cdAvailableColor.getItems().addAll("Yellow", "White", "Purple", "Pink", "Orange", "Red");
-            cdAvailableColor.getSelectionModel().selectItem(fullFlowerRequest.getColor());
-            cdAvailableColor.setText(fullFlowerRequest.getColor());
-        } else if(cbAvailableFlowers.getSelectedItem().equals("Sunflower")){
-            cdAvailableColor.getItems().addAll("Yellow", "Red", "Orange", "Pink", "Purple");
-            cdAvailableColor.getSelectionModel().selectItem(fullFlowerRequest.getColor());
-            cdAvailableColor.setText(fullFlowerRequest.getColor());
+        //loads the correct color options for the selected flower type so edit page does not crash
+        if (cbAvailableFlowers.equals("Rose")) {
+            cdAvailableColor.getItems().clear();
+            ObservableList<String> roseColors = FXCollections.observableArrayList("Red", "Orange", "Yellow", "Pink", "Purple", "White", "Green");
+            Collections.sort(roseColors);
+            cdAvailableColor.getItems().addAll(roseColors);
+            cdAvailableColor.setVisible(true);
+        } else if (cbAvailableFlowers.equals("Tulip")) {
+            cdAvailableColor.getItems().clear();
+            ObservableList<String> tulipColors = FXCollections.observableArrayList("Yellow", "White", "Purple", "Pink", "Orange", "Red");
+            Collections.sort(tulipColors);
+            cdAvailableColor.getItems().addAll(tulipColors);
+            cdAvailableColor.setVisible(true);
+        } else if (cbAvailableFlowers.equals("Daisy")) {
+            cdAvailableColor.getItems().clear();
+            ObservableList<String> daisyColors = FXCollections.observableArrayList("White", "Pink", "Red", "Blue");
+            Collections.sort(daisyColors);
+            cdAvailableColor.getItems().addAll(daisyColors);
+            cdAvailableColor.setVisible(true);
+        } else if (cbAvailableFlowers.equals("Lily")) {
+            cdAvailableColor.getItems().clear();
+            ObservableList<String> lilyColors = FXCollections.observableArrayList("White", "Pink", "Red", "Orange", "Yellow");
+            Collections.sort(lilyColors);
+            cdAvailableColor.getItems().addAll(lilyColors);
+            cdAvailableColor.setVisible(true);
+        } else if (cbAvailableFlowers.equals("Sunflower")) {
+            cdAvailableColor.getItems().clear();
+            ObservableList<String> sunflowerColors = FXCollections.observableArrayList("Yellow", "Red", "Orange", "Pink", "Purple");
+            Collections.sort(sunflowerColors);
+            cdAvailableColor.getItems().addAll(sunflowerColors);
+            cdAvailableColor.setVisible(true);
         }
+        //continue setting the editable fields to the values of the request
         cdAvailableType.getSelectionModel().selectItem(fullFlowerRequest.getSize());
         txtFldMessage.setText(fullFlowerRequest.getMessage());
         txtFldNotes.setText(fullFlowerRequest.getNotes());

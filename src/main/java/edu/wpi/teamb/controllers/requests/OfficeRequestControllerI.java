@@ -60,7 +60,7 @@ public class OfficeRequestControllerI implements IRequestController {
     }
 
     @FXML
-    public void initialize() throws IOException, SQLException {
+    public void initialize() {
         initBtns();
         initializeFields();
     }
@@ -108,7 +108,7 @@ public class OfficeRequestControllerI implements IRequestController {
     }
 
     @Override
-    public void initializeFields() throws SQLException {
+    public void initializeFields() {
         ObservableList<String> longNames = FXCollections.observableArrayList();
         longNames.addAll(Repository.getRepository().getPracticalLongNames());
         Collections.sort(longNames);
@@ -270,8 +270,31 @@ public class OfficeRequestControllerI implements IRequestController {
         //set the editable fields to the values of the request
         cbEmployeesToAssign.getSelectionModel().selectItem(fullOfficeRequest.getEmployee());
         System.out.println(fullOfficeRequest.getId() + " " + fullOfficeRequest.getItem());
-        cbSupplyItems.getSelectionModel().selectItem(fullOfficeRequest.getItem());
         cbSupplyType.getSelectionModel().selectItem(fullOfficeRequest.getType());
+        //loads the following supply types so edit page does not crash
+        if (cbSupplyType.getSelectionModel().getSelectedItem().equals("Office Supplies")) {
+            cbSupplyItems.getItems().clear();
+            ObservableList<String> officeSupplies = FXCollections.observableArrayList("Pencils", "Pens", "Paper", "Stapler", "Staples", "Tape", "Scissors", "Glue", "Markers", "Highlighters", "Post-It Notes", "Paper Clips", "Binder Clips", "Folders", "Envelopes", "Printer Paper");
+            Collections.sort(officeSupplies);
+            cbSupplyItems.getItems().addAll(officeSupplies);
+//                        cbSupplyItems.setVisible(true);
+        } else if (cbSupplyType.getSelectionModel().getSelectedItem().equals("Cleaning Supplies")) {
+            cbSupplyItems.getItems().clear();
+            ObservableList<String> cleaningSupplies = FXCollections.observableArrayList("Bleach", "Disinfectant Wipes", "Hand Sanitizer", "Soap", "Toilet Paper", "Paper Towels", "Trash Bags", "Dish Soap", "Sponges", "Dishwasher Detergent", "Laundry Detergent", "Fabric Softener", "Dryer Sheets", "Broom", "Mop", "Vacuum", "Duster", "Dustpan", "Trash Can", "Trash Can Liners", "Air Freshener", "Glass Cleaner", "All-Purpose Cleaner", "Furniture Polish", "Squeegee", "Toilet Brush", "Plunger", "Rubber Gloves", "Bucket");
+            Collections.sort(cleaningSupplies);
+            cbSupplyItems.getItems().addAll(cleaningSupplies);
+//                        cbSupplyItems.setVisible(true);
+        } else if (cbSupplyType.getSelectionModel().getSelectedItem().equals("Electronics Supplies")){
+            cbSupplyItems.getItems().clear();
+            ObservableList<String> electronicSupplies = FXCollections.observableArrayList("Batteries", "Light Bulbs", "Extension Cords", "Power Strips", "Surge Protectors", "Ethernet Cables", "HDMI Cables", "USB Cables", "Phone Chargers", "Laptop Chargers", "Headphones", "Earbuds", "Speakers", "Microphone", "Webcam", "Printer Ink", "Printer Toner", "Printer Paper");
+            Collections.sort(electronicSupplies);
+            cbSupplyItems.getItems().addAll(electronicSupplies);
+        } else {
+            cbSupplyItems.getItems().clear();
+//                        cbSupplyItems.setVisible(false);
+        }
+        //continue setting the editable fields to the values of the request
+        cbSupplyItems.getSelectionModel().selectItem(fullOfficeRequest.getItem());
         tbSupplyQuantities.setText(Integer.toString(fullOfficeRequest.getQuantity()));
         txtFldNotes.setText(fullOfficeRequest.getNotes());
         cbLongName.getSelectionModel().selectItem(fullOfficeRequest.getLocationName());

@@ -284,6 +284,27 @@ public class FurnitureRequestControllerI implements IRequestController{
     public void enterFurnitureRequestEditableMode(FullFurnitureRequest fullFurnitureRequest, InfoCardController currentInfoCardController) {
         //set the editable fields to the values of the request
         cbAvailableFurniture.getSelectionModel().selectItem(fullFurnitureRequest.getType());
+        //set the furniture types so that edit page does not crash
+        if (cbAvailableFurniture.getSelectionModel().getSelectedItem().equals("Chair")) {
+            cdAvailableModels.getItems().clear();
+            ObservableList<String> models = FXCollections.observableArrayList("Sofa", "Armchair", "Recliner", "Desk Chair", "Stool");
+            Collections.sort(models);
+            cdAvailableModels.getItems().addAll(models);
+            cdAvailableModels.setVisible(true);
+        } else if (cbAvailableFurniture.getSelectionModel().getSelectedItem().equals("Table")) {
+            cdAvailableModels.getItems().clear();
+            ObservableList<String> models = FXCollections.observableArrayList("Writing Desk", "Coffee Table", "Dining Table", "End Table", "Nightstand", "Computer Desk", "Dressing Table");
+            Collections.sort(models);
+            cdAvailableModels.getItems().addAll(models);
+            cdAvailableModels.setVisible(true);
+        } else if (cbAvailableFurniture.getSelectionModel().getSelectedItem().equals("Bed")) {
+            cdAvailableModels.getItems().clear();
+            ObservableList<String> models = FXCollections.observableArrayList("Sofa Bed", "Futon", "Air Mattress", "Baby Cot", "Medical Bed", "Camp Bed");
+            Collections.sort(models);
+            cdAvailableModels.getItems().addAll(models);
+            cdAvailableModels.setVisible(true);
+        }
+        //continue setting the editable fields to the values of the request
         cdAvailableModels.getSelectionModel().selectItem(fullFurnitureRequest.getModel());
         cdAssembly.getSelectionModel().selectItem(fullFurnitureRequest.getAssembly() ? "Yes" : "No");
         txtFldNotes.setText(fullFurnitureRequest.getNotes());
