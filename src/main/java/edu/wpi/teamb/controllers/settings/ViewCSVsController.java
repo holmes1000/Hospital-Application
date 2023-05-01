@@ -61,6 +61,7 @@ public class ViewCSVsController {
         initNavBar();
         initializeFields();
         initButtons();
+        initializeNavGates();
     }
 
     /**
@@ -188,6 +189,19 @@ public class ViewCSVsController {
             handleExportBtn();
         });
         btnBack.setOnMouseClicked(event -> Navigation.navigate(Screen.SETTINGS));
+    }
+
+    /**
+     * For some reason there are occasions when the nav-bar gates for toggling its handling does not start correctly
+     * This fixes this issue
+     */
+    public void initializeNavGates(){
+        activateNav();
+        deactivateNav();
+        navPane.setMouseTransparent(true);
+        vboxActivateNav.setDisable(false);
+        navLoaded = false;
+        vboxActivateNav1.setDisable(true);
     }
 
     /**

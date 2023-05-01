@@ -8,7 +8,7 @@
 
 <AnchorPane prefHeight="81.0" prefWidth="160.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.components.popovers.ExitPopOverController">
    <children>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#465777" height="77.0" layoutX="5.0" layoutY="2.0" stroke="BLACK" strokeType="INSIDE" width="184.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#5f7ca4" height="77.0" layoutX="5.0" layoutY="2.0" stroke="BLACK" strokeType="INSIDE" width="180.0" />
       <Text fill="#f6bd38" layoutX="13.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Do you wish to exit?   " textAlignment="CENTER">
          <font>
             <Font name="System Bold" size="17.0" />
