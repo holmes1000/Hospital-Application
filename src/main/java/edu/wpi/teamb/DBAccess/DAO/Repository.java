@@ -1628,7 +1628,6 @@ public class Repository {
         dbConnection.forceClose();
         return fcr;
     }
-
     public ArrayList<FlowerRequest> getFlowerRequests() {
         ArrayList<FlowerRequest> fcr = flowerRequestDAO.getAllHelper1();
         dbConnection.closeDBconnection();
@@ -1764,13 +1763,11 @@ public class Repository {
         dbConnection.forceClose();
         return or;
     }
-
-public void updateOfficeRequest(OfficeRequest or) {
+    public void updateOfficeRequest(OfficeRequest or) {
         officeRequestDAO.update(or);
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
     }
-
     public void addTranslationRequest(String[] tr) {
         translationRequestDAO.add(tr);
         dbConnection.closeDBconnection();
@@ -1781,24 +1778,6 @@ public void updateOfficeRequest(OfficeRequest or) {
         translationRequestDAO.delete(tr);
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
-    }
-
-    public void deleteTranslationRequest(FullTranslationRequest tr) {
-        translationRequestDAO.delete(tr);
-    }
-
-    public FullTranslationRequest getTranslationRequest(int id) {
-        FullTranslationRequest ftr = (FullTranslationRequest) translationRequestDAO.get(id);
-        dbConnection.closeDBconnection();
-        dbConnection.forceClose();
-        return ftr;
-    }
-
-    public ArrayList<FullTranslationRequest> getAllTranslationRequests() {
-        ArrayList<FullTranslationRequest> ftr = translationRequestDAO.getAll();
-        dbConnection.closeDBconnection();
-        dbConnection.forceClose();
-        return ftr;
     }
 
     public ArrayList<TranslationRequest> getTranslationRequests() {
