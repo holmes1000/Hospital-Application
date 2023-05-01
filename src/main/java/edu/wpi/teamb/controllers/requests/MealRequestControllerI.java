@@ -9,13 +9,17 @@ import edu.wpi.teamb.entities.requests.IRequest;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
@@ -23,17 +27,19 @@ import org.controlsfx.control.PopOver;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Collections;
 
 public class MealRequestControllerI implements IRequestController{
 
     @FXML private MFXButton btnSubmit;
+    @FXML private SplitPane spSubmit;
     @FXML private MFXButton btnReset;
     @FXML private ImageView helpIcon;
-    @FXML private MFXComboBox<String> cbAvailableMeals;
-    @FXML private MFXComboBox<String> cbAvailableDrinks;
-    @FXML private MFXComboBox<String> cbAvailableSnacks;
+    @FXML private MFXFilterComboBox<String> cbAvailableMeals;
+    @FXML private MFXFilterComboBox<String> cbAvailableDrinks;
+    @FXML private MFXFilterComboBox<String> cbAvailableSnacks;
     @FXML private MFXTextField txtFldNotes;
-    @FXML private MFXComboBox<String> cbOrderLocation;
+    @FXML private MFXFilterComboBox<String> cbOrderLocation;
     @FXML private MFXFilterComboBox<String> cbEmployeesToAssign;
     @FXML private MFXFilterComboBox<String> cbLongName;
     private EMealRequest EMealRequest;
@@ -50,9 +56,40 @@ public class MealRequestControllerI implements IRequestController{
 
     @Override
     public void initBtns() {
+        spSubmit.setTooltip(new Tooltip("Enter all required fields to submit request"));
+        BooleanBinding bb = new BooleanBinding() {
+            {
+                super.bind(cbOrderLocation.valueProperty(),
+                        cbEmployeesToAssign.valueProperty(),
+                        cbLongName.valueProperty());
+            }
+
+            @Override
+            protected boolean computeValue() {
+                return (cbOrderLocation.getValue() == null ||
+                        cbEmployeesToAssign.getValue() == null ||
+                        cbLongName.getValue() == null);
+            }
+        };
+        btnSubmit.disableProperty().bind(bb);
+
+        btnSubmit.setTooltip(new Tooltip("Click to submit your request"));
         btnSubmit.setOnAction(e -> handleSubmit());
+        btnReset.setTooltip(new Tooltip("Click to reset the form"));
         btnReset.setOnAction(e -> handleReset());
         helpIcon.setOnMouseClicked(e -> handleHelp());
+        btnReset.setDisable(true);
+        ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
+            btnReset.setDisable(false);
+        };
+        cbEmployeesToAssign.textProperty().addListener(changeListener);
+        cbLongName.textProperty().addListener(changeListener);
+        cbOrderLocation.textProperty().addListener(changeListener);
+        cbAvailableDrinks.textProperty().addListener(changeListener);
+        cbAvailableMeals.textProperty().addListener(changeListener);
+        cbAvailableSnacks.textProperty().addListener(changeListener);
+        txtFldNotes.textProperty().addListener(changeListener);
+
     }
 
     @Override
@@ -60,32 +97,47 @@ public class MealRequestControllerI implements IRequestController{
         // DROPDOWN INITIALIZATION
         ObservableList<String> longNames = FXCollections.observableArrayList();
         longNames.addAll(Repository.getRepository().getPracticalLongNames());
+        Collections.sort(longNames);
+        cbLongName.setTooltip(new Tooltip("Select a location to direct your request to"));
         cbLongName.setItems(longNames);
 
         ObservableList<String> locations =
                 FXCollections.observableArrayList(Repository.getRepository().getLongNameByType("RETL"));
+        Collections.sort(locations);
+        cbOrderLocation.setTooltip(new Tooltip("Select a location to order from"));
         cbOrderLocation.setItems(locations);
 
         // DROPDOWN INITIALIZATION
         ObservableList<String> employees =
                 FXCollections.observableArrayList();
-        employees.add("Unassigned");
         employees.addAll(EMealRequest.getUsernames());
+        Collections.sort(employees);
+        employees.add(0, "Unassigned");
+        cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
         cbEmployeesToAssign.setItems(employees);
 
 
         // DROPDOWN INITIALIZATION
         ObservableList<String> meals = FXCollections.observableArrayList("Pizza", "Pasta", "Soup");
+        Collections.sort(meals);
+        cbAvailableMeals.setTooltip(new Tooltip("Select a meal"));
         cbAvailableMeals.setItems(meals);
 
         // DROPDOWN INITIALIZATION
         ObservableList<String> drinks =
                 FXCollections.observableArrayList("Water", "Coca-Cola", "Ginger-Ale");
+        Collections.sort(drinks);
+        cbAvailableDrinks.setTooltip(new Tooltip("Select a drink"));
         cbAvailableDrinks.setItems(drinks);
 
         // DROPDOWN INITIALIZATION
         ObservableList<String> snacks = FXCollections.observableArrayList("Chips", "Apple");
+        Collections.sort(snacks);
+        cbAvailableSnacks.setTooltip(new Tooltip("Select a snack"));
         cbAvailableSnacks.setItems(snacks);
+
+        // TEXTFIELD INITIALIZATION
+        txtFldNotes.setTooltip(new Tooltip("Enter any additional notes here"));
     }
 
     @Override
@@ -120,7 +172,6 @@ public class MealRequestControllerI implements IRequestController{
                 };
                 EMealRequest.submitRequest(output);
                 handleReset();
-                Navigation.navigate(Screen.CREATE_NEW_REQUEST);
             }
             submissionAlert();
         }
@@ -130,17 +181,11 @@ public class MealRequestControllerI implements IRequestController{
     public void handleReset() {
         //Reset the combo-boxes
         cbOrderLocation.clear();
-        cbOrderLocation.replaceSelection("Order Location");
         cbEmployeesToAssign.clear();
-        cbEmployeesToAssign.replaceSelection("Employees Available");
         cbAvailableMeals.clear();
-        cbAvailableMeals.replaceSelection("Available Meals:");
         cbAvailableDrinks.clear();
-        cbAvailableDrinks.replaceSelection("Available Drinks:");
         cbAvailableSnacks.clear();
-        cbAvailableSnacks.replaceSelection("Available Snacks:");
         cbLongName.clear();
-        cbLongName.replaceSelection("All Room Names: ");
         //Reset text fields
         txtFldNotes.clear();
     }
@@ -166,7 +211,12 @@ public class MealRequestControllerI implements IRequestController{
 
     @Override
     public boolean nullInputs() {
-        return cbOrderLocation.getValue() == null || cbEmployeesToAssign.getValue() == null || cbAvailableMeals.getValue() == null || cbAvailableDrinks.getValue() == null || cbAvailableSnacks.getValue() == null || cbLongName.getValue() == null;
+        return cbOrderLocation.getValue() == null
+                || cbEmployeesToAssign.getValue() == null
+                || cbAvailableMeals.getValue() == null
+                || cbAvailableDrinks.getValue() == null
+                || cbAvailableSnacks.getValue() == null
+                || cbLongName.getValue() == null;
     }
 
     @Override

@@ -19,7 +19,7 @@ import java.util.Comparator;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -39,8 +39,8 @@ public class SubmittedRequestsController {
     @FXML VBox vboxActivateNav;
     @FXML VBox vboxActivateNav1;
     @FXML private ScrollPane allRequestsScrollPane;
-    @FXML private MFXComboBox<String> cbFilterCategory;
-    @FXML private MFXComboBox<String> cbFilterOptions;
+    @FXML private MFXFilterComboBox<String> cbFilterCategory;
+    @FXML private MFXFilterComboBox<String> cbFilterOptions;
 
     //entity object of class that contains all the methods to get the requests
     private EAllRequests allRequestsE;
@@ -320,8 +320,10 @@ public class SubmittedRequestsController {
      */
     private void initComboBoxChangeListeners() {
         //at the beginning set cbFilterOptions to invisible
+        cbFilterOptions.setTooltip(new Tooltip("Select a filter option"));
         cbFilterOptions.setVisible(false);
         //add filtering options to cbFilterCategory
+        cbFilterCategory.setTooltip(new Tooltip("Select a filter category"));
         cbFilterCategory.getItems().addAll("", "Status", "Request Type", "Date Submitted", "Unassigned Task");
         //add change listener to cbFilterCategory
         cbFilterCategory.valueProperty().addListener(

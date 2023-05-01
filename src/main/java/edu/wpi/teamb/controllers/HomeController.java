@@ -6,6 +6,8 @@ import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.ORMs.Alert;
+import edu.wpi.teamb.DBAccess.ORMs.User;
+import edu.wpi.teamb.controllers.components.AlertCardController;
 import edu.wpi.teamb.entities.ELogin;
 import edu.wpi.teamb.entities.EHome;
 import edu.wpi.teamb.navigation.Navigation;
@@ -14,6 +16,7 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -25,15 +28,22 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
@@ -50,11 +60,16 @@ public class HomeController {
     @FXML private  MFXButton btnSecret;
     @FXML private MFXButton btnClear;
     @FXML private MFXButton viewUserRequestButton;
-    @FXML private TableView<Alert> alertsTable;
+    @FXML private VBox vboxAlerts;
+    @FXML private HBox hboxWelcomeBack;
+
     private MFXButton pathfinderImgBtn = new MFXButton();
     private boolean navLoaded;
 
     private String username;
+
+
+    private String timeMessage = "";
 
     Bounds bounds;
     private EHome homeE;
@@ -62,6 +77,8 @@ public class HomeController {
     @FXML
     public void initialize() throws IOException {
         username = ELogin.getLogin().getUsername();
+        handleDateTime();
+        initName();
         initNavBar();
         initPathfinderBtn();
         initializeBtns();
@@ -71,6 +88,47 @@ public class HomeController {
 
 
         initializeNavGates();
+    }
+
+    private void initName(){
+        User grabUser = Repository.getRepository().getUser(username);
+        String user = grabUser.getName();
+        Text welcomeBack = new Text();
+        welcomeBack.setFill(Color.WHITE);
+        welcomeBack.setFont(Font.font("System", FontWeight.BOLD, 36));
+        welcomeBack.setText("Welcome " + user + ". The time is: " + timeMessage + ".");
+        hboxWelcomeBack.getChildren().clear();
+//        hboxWelcomeBack.setAlignment(Pos.CENTER_LEFT);
+        hboxWelcomeBack.getChildren().add(welcomeBack);
+        welcomeBack.toFront();
+    }
+
+    private void handleDateTime(){
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), new EventHandler<ActionEvent>() {
+            LocalDateTime now = LocalDateTime.now();
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                now = LocalDateTime.now();
+                String am_pm = "";
+                Integer hour_int = now.getHour();
+                String minute = "";
+                int minute_int = now.getMinute();
+                if (minute_int < 10) {minute += "0" + minute_int;}
+                else {minute += minute_int;}
+                if (hour_int > 11) {am_pm = "PM";}
+                else {am_pm = "AM";}
+                if (hour_int > 12) {hour_int = hour_int - 12;}
+                if (hour_int == 0) {hour_int = 12;}
+                String hour = Integer.toString(hour_int);
+
+                timeMessage = hour + ":" + minute + " " + am_pm;
+                initName();
+            }
+
+        }));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
+
     }
 
     private void initPathfinderBtn() {
@@ -87,32 +145,25 @@ public class HomeController {
     }
 
     public void loadAlerts(){
+//        AlertCardController  alertCardController = new AlertCardController();
         ArrayList<Alert> allAlerts = Repository.getRepository().getAllAlerts();
-        alertsTable.setEditable(false);
-        TableColumn<Alert, String> titles = new TableColumn<>("Title");
-        titles.setMinWidth(100);
-        titles.setCellValueFactory(new PropertyValueFactory<>("title"));
-
-        TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, String> descriptions = new TableColumn<>("Description");
-        descriptions.setMinWidth(220);
-        descriptions.setCellValueFactory(new PropertyValueFactory<>("description"));
-
-
-        TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, Timestamp> time = new TableColumn<>("Created at");
-        time.setCellValueFactory((new PropertyValueFactory<>("createdAt")));
-        alertsTable.getColumns().addAll(titles, descriptions, time);
-        time.setSortType(TableColumn.SortType.DESCENDING);
-        alertsTable.getSortOrder().setAll(time);
-
-
         for(Alert alert : allAlerts){
-            if(alert.getEmployee().equals(username) || alert.getEmployee().equals("unassigned")) {
-                alertsTable.getItems().add(alert);
+            if(alert.getEmployee().equals(username) || alert.getEmployee().equals("Unassigned")) {
+                FXMLLoader loader = null;
+                AnchorPane alertCardRoot = null;
+                AlertCardController alertCardController = null;
+                try{
+                    loader = new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/components/AlertCard.fxml"));
+                    alertCardRoot = loader.load();
+                    alertCardController = loader.getController();
+                } catch (IOException e){
+                    System.out.println("IOException in loadAlerts of HomeController: " + e.getMessage());
+                }
+                alertCardController.setLabels(alert);
+
+                vboxAlerts.getChildren().add(alertCardRoot);
             }
         }
-
-        alertsTable.getSortOrder().setAll(alertsTable.getColumns().get(2));
-        time.setVisible(false);
 
     }
 
@@ -180,6 +231,11 @@ public class HomeController {
     }
 
     private void initializeBtns() {
+        btnCredits.setTooltip(new Tooltip("Click to view the credits page"));
+        btnAbout.setTooltip(new Tooltip("Click to view the creators of the page"));
+        btnSecret.setTooltip(new Tooltip("Click to view a secret feature"));
+        btnClear.setTooltip(new Tooltip("Click to close the secret feature"));
+        viewUserRequestButton.setTooltip(new Tooltip("Click to view your current requests"));
         btnCredits.setOnMouseClicked(e -> handleCredits());
         btnAbout.setOnMouseClicked(e -> handleAbout());
         btnSecret.setOnMouseClicked(e -> secret(true));
@@ -239,15 +295,15 @@ public class HomeController {
         }
     }
 
+
     public void activateNav(){
         vboxActivateNav.setOnMouseEntered(event -> {
-//            if(!navLoaded) {
-                System.out.println("on");
+            if(!navLoaded) {
                 navPane.setMouseTransparent(false);
                 navLoaded = true;
                 vboxActivateNav.setDisable(true);
                 vboxActivateNav1.setDisable(false);
-//            }
+            }
         });
     }
 
@@ -271,7 +327,6 @@ public class HomeController {
     public void deactivateNav(){
         vboxActivateNav1.setOnMouseEntered(event -> {
             if(navLoaded){
-                System.out.println("off");
                 navPane.setMouseTransparent(true);
                 vboxActivateNav.setDisable(false);
                 navLoaded = false;

@@ -767,7 +767,12 @@ public class Repository {
 
     //TODO LocationName methods
 
-
+    public int getNodeIDfromLongName(String longName) {
+        int id = locationNameDAO.getNodeIDfromLongName(longName);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return id;
+    }
 
     //TODO Move methods
 
@@ -1503,6 +1508,13 @@ public class Repository {
 
     public User getUser(String id) {
         User u = (User) userDAO.get(id);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return u;
+    }
+
+    public User getUserByEmail(String email) {
+        User u = (User) userDAO.getUserByEmail(email);
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
         return u;

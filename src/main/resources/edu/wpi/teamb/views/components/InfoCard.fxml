@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="requestInfoAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="201.0" prefWidth="970.0" style="-fx-background-color: #7089a2;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.components.InfoCardController">
+<AnchorPane fx:id="requestInfoAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="201.0" prefWidth="970.0" style="-fx-background-color: #5f7ca4;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.components.InfoCardController">
    <children>
       <ImageView fx:id="requestTypeIconImageView" fitHeight="121.0" fitWidth="101.0" layoutX="14.0" layoutY="64.0" pickOnBounds="true" preserveRatio="true" style="-fx-border-style: solid; -fx-background-color: #f1f1f1;">
          <image>
@@ -21,19 +21,19 @@
             <ColorAdjust brightness="1.0" />
          </effect>
       </ImageView>
-      <VBox fx:id="buttonContainerVBox" layoutX="879.0" layoutY="63.0" prefHeight="116.0" prefWidth="78.0">
+      <VBox fx:id="buttonContainerVBox" layoutX="819.0" layoutY="63.0" prefHeight="116.0" prefWidth="138.0">
          <children>
-            <MFXButton fx:id="editButton" prefHeight="50.0" prefWidth="118.0" style="-fx-background-color: #012d5a; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Edit" textFill="WHITE">
+            <MFXButton fx:id="editButton" prefHeight="40.0" prefWidth="147.0" style="-fx-background-color: #012d5a; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Edit" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
             </MFXButton>
-            <MFXButton fx:id="deleteButton" prefHeight="50.0" prefWidth="118.0" style="-fx-background-color: #f44336; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Delete" textFill="WHITE">
+            <MFXButton fx:id="deleteButton" prefHeight="40.0" prefWidth="140.0" style="-fx-background-color: #f44336; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Delete" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
             </MFXButton>
-            <MFXButton fx:id="completeButton" prefHeight="50.0" prefWidth="118.0" style="-fx-background-color: #f6bd38; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Complete" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+            <MFXButton fx:id="completeButton" prefHeight="40.0" prefWidth="138.0" style="-fx-background-color: #f6bd38; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Mark as Completed" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
@@ -80,5 +80,10 @@
             </Label>
          </children>
       </HBox>
+      <Label fx:id="requestTypeLabel" layoutX="33.0" layoutY="170.0" text="Request Type" textFill="WHITE">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

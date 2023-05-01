@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <Pane prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.mapeditor.EditNodeMenuController">
    <children>
-      <VBox layoutX="98.0" layoutY="95.0" prefHeight="203.0" prefWidth="204.0" style="-fx-background-color: #f1f1f1;">
+      <VBox alignment="CENTER" layoutX="98.0" layoutY="95.0" prefHeight="203.0" prefWidth="204.0" style="-fx-background-color: #f1f1f1;">
          <children>
             <MFXTextField fx:id="tfNodeId" floatingText="Node ID" prefHeight="48.0" prefWidth="257.0">
                <VBox.margin>
                   <Insets bottom="20.0" />
                </VBox.margin>
             </MFXTextField>
-            <MFXComboBox fx:id="cbNodeType" floatingText="Node Type" prefHeight="39.0" prefWidth="257.0">
+            <MFXFilterComboBox fx:id="cbNodeType" floatingText="Node Type" prefHeight="48.0" prefWidth="257.0">
                <VBox.margin>
                   <Insets bottom="20.0" />
                </VBox.margin>
-            </MFXComboBox>
-            <MFXTextField fx:id="tfLongName" floatingText="Long Name" prefHeight="48.0" prefWidth="257.0">
+            </MFXFilterComboBox>
+            <MFXTextField fx:id="tfLongName" floatingText="Database Name" prefHeight="48.0" prefWidth="257.0">
                <VBox.margin>
                   <Insets bottom="20.0" />
                </VBox.margin>
             </MFXTextField>
-            <MFXTextField fx:id="tfShortName" floatingText="Short Name" prefHeight="48.0" prefWidth="257.0">
+            <MFXTextField fx:id="tfShortName" floatingText="Display Name" prefHeight="48.0" prefWidth="257.0">
                <VBox.margin>
                   <Insets bottom="20.0" />
                </VBox.margin>
@@ -41,7 +42,11 @@
                   <Insets bottom="20.0" />
                </VBox.margin>
             </MFXTextField>
-            <MFXButton fx:id="btnSubmitNodeDetails" text="Submit" />
+            <MFXButton fx:id="btnSubmitNodeDetails" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #012d5a; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Submit" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </MFXButton>
          </children>
       </VBox>
    </children>

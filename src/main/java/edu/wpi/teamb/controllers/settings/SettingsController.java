@@ -14,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -49,25 +50,17 @@ public class SettingsController {
     }
 
     public void initButtons() {
+        btnEditAlerts.setTooltip(new Tooltip("Edit the alerts that are sent to users"));
+        btnEditAccount.setTooltip(new Tooltip("Edit your account information"));
+        btnEditUsers.setTooltip(new Tooltip("Edit the users in the database"));
+        btnChangeServer.setTooltip(new Tooltip("Change the database server"));
+        btnViewCSVs.setTooltip(new Tooltip("View the CSVs of the database"));
+        
         btnEditAlerts.setOnMouseClicked(event -> Navigation.navigate(Screen.EDIT_ALERTS));
         btnEditAccount.setOnMouseClicked(event -> Navigation.navigate(Screen.EDIT_ACCOUNT));
         btnEditUsers.setOnMouseClicked(event -> Navigation.navigate(Screen.EDIT_USERS));
         btnChangeServer.setOnMouseClicked(event -> changeServer());
-        btnViewCSVs.setOnMouseClicked(event -> handleCSVs());
-    }
-
-    private void handleCSVs() {
-        Parent root;
-        try {
-            root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("edu/wpi/teamb/views/settings/ViewCSVs.fxml")));
-            Stage stage = new Stage();
-            stage.setTitle("View CSVs");
-            stage.setScene(new Scene(root, 1280, 720));
-            stage.show();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+        btnViewCSVs.setOnMouseClicked(event -> Navigation.navigate(Screen.VIEW_CSVS));
     }
 
     private void changeServer() {

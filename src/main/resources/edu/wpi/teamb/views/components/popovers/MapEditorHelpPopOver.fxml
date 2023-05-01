@@ -6,7 +6,7 @@
 
 <AnchorPane prefHeight="180.0" prefWidth="380.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.components.popovers.MapEditorHelpPopOverController">
     <children>
-        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#465777" height="170.0" layoutX="5.0" layoutY="5.0" stroke="BLACK" strokeType="INSIDE" width="373.0" />
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#5f7ca4" height="170.0" layoutX="5.0" layoutY="5.0" stroke="BLACK" strokeType="INSIDE" width="373.0" />
         <Text fx:id="text2" fill="WHITE" layoutX="10.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select a state button (View, Edit, Delete, Add)" wrappingWidth="364.9999999046322" />
       <Text fx:id="text3" fill="WHITE" layoutX="10.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select a object button (Node or Edge)" wrappingWidth="364.9999999046322" />
         <Text fx:id="text4" fill="WHITE" layoutX="10.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To delete an edge/node: click the edge/node" wrappingWidth="364.9999999046322" />

@@ -10,13 +10,17 @@ import edu.wpi.teamb.entities.ELogin;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
+import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
@@ -28,11 +32,12 @@ public class EditAccountController {
     @FXML
     private JFXHamburger menuBurger;
     @FXML private JFXDrawer menuDrawer;
-    @FXML private MFXTextField tfPassword;
+    @FXML private MFXPasswordField tfPassword;
     @FXML private MFXTextField tfUsername;
     @FXML private MFXTextField tfName;
     @FXML private MFXTextField tfEmail;
     @FXML private MFXButton btnSaveEdits;
+    @FXML private MFXButton btnBack;
     ELogin eLogin = ELogin.getLogin();
     private final User currentUser = Repository.getRepository().getUser(eLogin.getUsername());
 
@@ -46,6 +51,10 @@ public class EditAccountController {
         initNavBar();
         initializeFields();
         initButtons();
+        navLoaded = false;
+//        activateNav();
+//        deactivateNav();
+        initializeNavGates();
     }
 
     public void initializeFields() {
@@ -58,7 +67,17 @@ public class EditAccountController {
     }
 
     public void initButtons() {
+        btnSaveEdits.setTooltip(new Tooltip("Click to save your edits"));
+        btnSaveEdits.setDisable(true);
+        btnBack.setTooltip(new Tooltip("Click to go back to the settings page"));
         btnSaveEdits.setOnMouseClicked(event -> handleSaveEdits());
+        btnBack.setOnMouseClicked(event -> Navigation.navigate(Screen.SETTINGS));
+        ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
+            btnSaveEdits.setDisable(false);
+        };
+        tfName.textProperty().addListener(changeListener);
+        tfPassword.textProperty().addListener(changeListener);
+        tfEmail.textProperty().addListener(changeListener);
     }
 
     private void handleSaveEdits() {
@@ -77,7 +96,20 @@ public class EditAccountController {
         alert.showAndWait();
 
         // Go home
-        Navigation.navigate(Screen.HOME);
+        Navigation.navigate(Screen.SETTINGS);
+    }
+
+    /**
+     * For some reason there are occasions when the nav-bar gates for toggling its handling does not start correctly
+     * This fixes this issue
+     */
+    public void initializeNavGates(){
+        activateNav();
+        deactivateNav();
+        navPane.setMouseTransparent(true);
+        vboxActivateNav.setDisable(false);
+        navLoaded = false;
+        vboxActivateNav1.setDisable(true);
     }
 
     /**
@@ -123,6 +155,8 @@ public class EditAccountController {
             VBox vbox = loader.load();
             NavDrawerController navDrawerController = loader.getController();
             menuDrawer.setSidePane(vbox);
+            navPane.setMouseTransparent(true);
+            navLoaded = false;
         } catch (IOException e) {
             e.printStackTrace();
         }

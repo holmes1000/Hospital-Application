@@ -11,10 +11,18 @@ import edu.wpi.teamb.navigation.Screen;
 import edu.wpi.teamb.utils.TimeFormattingHelpers;
 import io.github.palexdev.materialfx.beans.NumberRange;
 import io.github.palexdev.materialfx.controls.*;
+import javafx.beans.InvalidationListener;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
@@ -24,24 +32,27 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.Date;
 
 
 public class ConferenceRequestControllerI implements IRequestController{
 
-    @FXML private MFXComboBox<Integer> reservationHour;
-    @FXML private MFXComboBox<String> reservationMinute;
-    @FXML private MFXComboBox<String> reservationAmPm;
-    @FXML private MFXDatePicker datePicker;
+    @FXML private MFXFilterComboBox<String> reservationHour;
+   // @FXML private MFXDatePicker datePicker;
+    @FXML private DatePicker dateToReserve;
     @FXML private MFXFilterComboBox<String> cbEmployeesToAssign;
     @FXML private MFXTextField eventNameTextField;
     @FXML private MFXTextField bookingReasonTextField;
-    @FXML private MFXComboBox<Integer> cbDuration;
+    @FXML private MFXFilterComboBox<String> cbDuration;
     @FXML private MFXFilterComboBox<String> cbLongName;
     @FXML private MFXTextField tfNotes;
     @FXML private MFXButton resetBtn;
     @FXML private MFXButton btnSubmit;
+    @FXML private SplitPane spSubmit;
     @FXML private ImageView helpIcon;
 
     private final EConferenceRequest EConferenceRequest;
@@ -53,16 +64,67 @@ public class ConferenceRequestControllerI implements IRequestController{
     public void initialize() throws IOException, SQLException {
         initBtns();
         initializeFields();
-        datePicker.setStartingYearMonth(YearMonth.from(datePicker.getCurrentDate()));
-        NumberRange<Integer> range = new NumberRange<>(datePicker.getCurrentDate().getYear(), datePicker.getCurrentDate().getYear() + 1);
-        datePicker.setYearsRange(range);
+//        datePicker.setStartingYearMonth(YearMonth.from(datePicker.getCurrentDate()));
+//        NumberRange<Integer> range = new NumberRange<>(datePicker.getCurrentDate().getYear(), datePicker.getCurrentDate().getYear() + 1);
+//        datePicker.setYearsRange(range);
+        dateToReserve.setDayCellFactory(picker -> new DateCell() {
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                LocalDate today = LocalDate.now();
+
+                setDisable(empty || date.compareTo(today) < 0 );
+            }
+        });
     }
 
     @Override
     public void initBtns() {
+        spSubmit.setTooltip(new Tooltip("Enter all required fields to submit request"));
+        BooleanBinding bb = new BooleanBinding() {
+            {
+                super.bind(reservationHour.valueProperty(),
+                        dateToReserve.valueProperty(),
+                        cbEmployeesToAssign.valueProperty(),
+                        eventNameTextField.textProperty(),
+                        bookingReasonTextField.textProperty(),
+                        cbDuration.valueProperty(),
+                        cbLongName.valueProperty());
+            }
+
+            @Override
+            protected boolean computeValue() {
+                return (reservationHour.getValue() == null ||
+                        dateToReserve.getValue() == null ||
+                        cbEmployeesToAssign.getValue() == null ||
+                        eventNameTextField.getText().isEmpty() ||
+                        bookingReasonTextField.getText().isEmpty() ||
+                        cbDuration.getValue() == null ||
+                        cbLongName.getValue() == null);
+            }
+        };
+        btnSubmit.disableProperty().bind(bb);
+
+        btnSubmit.setTooltip(new Tooltip("Click to submit request"));
         btnSubmit.setOnAction(e -> handleSubmit());
+        resetBtn.setTooltip(new Tooltip("Click to reset all fields"));
         resetBtn.setOnAction(e -> handleReset());
+        resetBtn.setDisable(true);
+        ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
+            resetBtn.setDisable(false);
+        };
+        reservationHour.textProperty().addListener(changeListener);
+        cbEmployeesToAssign.textProperty().addListener(changeListener);
+        cbLongName.textProperty().addListener(changeListener);
+        eventNameTextField.textProperty().addListener(changeListener);
+        bookingReasonTextField.textProperty().addListener(changeListener);
+        cbDuration.textProperty().addListener(changeListener);
         helpIcon.setOnMouseClicked(e -> handleHelp());
+        dateToReserve.valueProperty().addListener(new ChangeListener<LocalDate>() {
+            @Override
+            public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) {
+                resetBtn.setDisable(false);
+            }
+        });
     }
 
     @Override
@@ -70,41 +132,47 @@ public class ConferenceRequestControllerI implements IRequestController{
         //Initialize the list of locations to direct request to via dropdown
         ObservableList<String> longNames = FXCollections.observableArrayList();
         longNames.addAll(Repository.getRepository().getLongNameByType("CONF"));
+        Collections.sort(longNames);
         cbLongName.setItems(longNames);
+        cbLongName.setTooltip(new Tooltip("Select a location to direct the request to"));
 
         //Dropdown for employee selection
         ObservableList<String> employees =
                 FXCollections.observableArrayList();
-        employees.add("Unassigned");
         employees.addAll(EConferenceRequest.getUsernames());
+        Collections.sort(employees);
+        employees.add(0, "Unassigned");
         cbEmployeesToAssign.setItems(employees);
+        cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
 
-        //Dropdown for duration selection
-        ObservableList<Integer> duration =
+        ObservableList<String> duration =
                 FXCollections.observableArrayList();
-        duration.addAll(10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
+        duration.add(12 + ":00" + " AM");
+        duration.add(12 + ":30" + " AM");
+        for (int i = 1; i < 12; i++) {
+            duration.add(i + ":00" + " AM");
+            duration.add(i + ":30" + " AM");
+        }
+        duration.add(12 + ":00" + " PM");
+        duration.add(12 + ":30" + " PM");
+        for (int i = 1; i < 12; i++) {
+            duration.add(i + ":00" + " PM");
+            duration.add(i + ":30" + " PM");
+        }
         cbDuration.setItems(duration);
-
-        // Dropdown for reservationHour
-        ObservableList<Integer> hoursListItems =
-                FXCollections.observableArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
-        reservationHour.setItems(hoursListItems);
-
-        // Dropdown for reservationMinute
-        ObservableList<String> minutesListItems = FXCollections.observableArrayList("00", "15", "30", "45");
-        reservationMinute.setItems(minutesListItems);
-
-        // Dropdown for reservationAmPm
-        ObservableList<String> AmPm = FXCollections.observableArrayList("AM", "PM");
-        reservationAmPm.setItems(AmPm);
+        reservationHour.setItems(duration);
+        reservationHour.setTooltip(new Tooltip("Select a start time for the request"));
 
         // changing some properties of the text fields
         // makes cursor visible
         eventNameTextField.setCaretVisible(true);
+        eventNameTextField.setTooltip(new Tooltip("Enter a name for the event"));
         bookingReasonTextField.setCaretVisible(true);
+        bookingReasonTextField.setTooltip(new Tooltip("Enter a reason for the booking"));
         // setting max character limits
         eventNameTextField.textLimitProperty().set(100);
         bookingReasonTextField.textLimitProperty().set(250);
+        reservationHour.clear();
     }
 
     @Override
@@ -114,19 +182,22 @@ public class ConferenceRequestControllerI implements IRequestController{
             showPopOver();
         }
         else {
-        String timerequested = "";
-        if (reservationAmPm.getText().equals("AM") && reservationHour.getText().equals("12")) {
-            timerequested = "00:" + reservationMinute.getText() + ":00";
-        } else if (reservationAmPm.getText().equals("AM")) {
-            timerequested = reservationHour.getText() + ":" + reservationMinute.getText() + ":00";
-        }  else if (reservationAmPm.getText().equals("PM") && reservationHour.getText().equals("12")) {
-            timerequested = reservationHour.getText() + ":" + reservationMinute.getText() + ":00";
-        } else if (reservationAmPm.getText().equals("PM")) {
-            int hour = Integer.parseInt(reservationHour.getText()) + 12;
-            timerequested = "" + hour + ":" + reservationMinute.getText() + ":00";
-        }
-        String daterequested = datePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));;
-        String timeStamp = daterequested + " " + timerequested;
+            String startHour = reservationHour.getValue().substring(0, reservationHour.getValue().indexOf(":"));
+            String startMinute = reservationHour.getValue().substring(reservationHour.getValue().indexOf(":") + 1, reservationHour.getValue().indexOf(" "));
+            String startAmPm = reservationHour.getValue().substring(reservationHour.getValue().indexOf(" ") + 1);
+            String timerequestedFormatted = "";
+            if (startAmPm.equals("AM") && startHour.equals("12")) {
+                timerequestedFormatted = "00:" + startMinute + ":00";
+            } else if (startAmPm.equals("AM")) {
+                timerequestedFormatted = startHour + ":" + startMinute + ":00";
+            }  else if (startAmPm.equals("PM") && startHour.equals("12")) {
+                timerequestedFormatted = startHour + ":" + startMinute + ":00";
+            } else if (startAmPm.equals("PM")) {
+                int hour = Integer.parseInt(startHour) + 12;
+                timerequestedFormatted = "" + startHour + ":" + startMinute + ":00";
+            }
+            String daterequested = dateToReserve.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));;
+            String timeStamp = daterequested + " " + timerequestedFormatted;
 
             // Get the standard request fields
             EConferenceRequest.setEmployee(cbEmployeesToAssign.getValue());
@@ -138,9 +209,9 @@ public class ConferenceRequestControllerI implements IRequestController{
             EConferenceRequest.setDateRequested(Timestamp.valueOf(timeStamp));
             EConferenceRequest.setEventName(eventNameTextField.getText());
             EConferenceRequest.setBookingReason(bookingReasonTextField.getText());
-            EConferenceRequest.setDuration(cbDuration.getValue());
+            EConferenceRequest.setDuration(calcDuration(reservationHour.getValue(), cbDuration.getValue()));
 
-            //Check for required fields before allowing submittion
+            //Check for required fields before allowing submission
             if (EConferenceRequest.checkRequestFields() && EConferenceRequest.checkSpecialRequestFields()) {
                 //Set the gathered fields into a string array
                 String[] output = {EConferenceRequest.getEmployee(),
@@ -155,7 +226,6 @@ public class ConferenceRequestControllerI implements IRequestController{
 
                 EConferenceRequest.submitRequest(output);
                 handleReset();
-                Navigation.navigate(Screen.CREATE_NEW_REQUEST);
             }
             submissionAlert();
         }
@@ -163,18 +233,14 @@ public class ConferenceRequestControllerI implements IRequestController{
 
     @Override
     public void handleReset() {
-        datePicker.setValue(null);
-        reservationHour.setValue(12);
-        reservationMinute.setValue("00");
-        reservationAmPm.setValue("AM");
-        datePicker.setValue(null);
-        cbDuration.setValue(null);
-        eventNameTextField.setText("");
-        bookingReasonTextField.setText("");
-        tfNotes.setText("");
-        cbEmployeesToAssign.setText("Employees Available");
+        dateToReserve.getEditor().clear();
+//        reservationHour.setValue("12:00 AM");
+        cbDuration.clear();
+        eventNameTextField.clear();
+        bookingReasonTextField.clear();
+        tfNotes.clear();
+        cbEmployeesToAssign.clear();
         cbLongName.clear();
-        cbLongName.replaceSelection("All Room Names: ");
     }
 
     @Override
@@ -184,7 +250,7 @@ public class ConferenceRequestControllerI implements IRequestController{
         popOver.setDetachable(true);
         popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_RIGHT);
         popOver.setArrowSize(0.0);
-        try {
+            try {
             popOver.setContentNode(popupLoader.load());
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -200,9 +266,7 @@ public class ConferenceRequestControllerI implements IRequestController{
                 || bookingReasonTextField.getText().isEmpty()
                 || cbDuration.getValue() == null
                 || reservationHour.getValue() == null
-                || reservationMinute.getValue() == null
-                || reservationAmPm.getValue() == null
-                || datePicker.getValue() == null;
+                || dateToReserve.getValue() == null;
     }
 
     @Override
@@ -228,17 +292,32 @@ public class ConferenceRequestControllerI implements IRequestController{
         tfNotes.setText(fullConferenceRequest.getNotes());
         eventNameTextField.setText(fullConferenceRequest.getEventName());
         bookingReasonTextField.setText(fullConferenceRequest.getBookingReason());
-        cbDuration.getSelectionModel().selectItem(fullConferenceRequest.getDuration());
-        datePicker.setValue(fullConferenceRequest.getDateRequested().toLocalDateTime().toLocalDate());
-        reservationHour.getSelectionModel().selectItem(TimeFormattingHelpers.get24to12Hour(fullConferenceRequest.getDateRequested().toLocalDateTime().getHour()));
+        cbDuration.getSelectionModel().selectItem(calcTime(fullConferenceRequest.getDuration(), fullConferenceRequest.getDateRequested().toLocalDateTime().getHour(), fullConferenceRequest.getDateRequested().toLocalDateTime().getMinute()));
+        dateToReserve.setValue(fullConferenceRequest.getDateRequested().toLocalDateTime().toLocalDate());
+        int hour1 = fullConferenceRequest.getDateRequested().toLocalDateTime().getHour();
+        int minute1 = fullConferenceRequest.getDateRequested().toLocalDateTime().getMinute();
+        String am_pm = "AM";
+        if (hour1 > 12) {
+            hour1 -= 12;
+            am_pm = "PM";
+        } else if (hour1 == 12) {
+            am_pm = "PM";
+        } else if (hour1 == 0) {
+            hour1 = 12;
+        }
+        if (minute1 < 10) {
+            reservationHour.getSelectionModel().selectItem(String.valueOf(hour1) + ":" + "0" + String.valueOf(minute1) + " " + am_pm);
+        } else {
+            reservationHour.getSelectionModel().selectItem(String.valueOf(hour1) + ":" + String.valueOf(minute1) + " " + am_pm);
+        }
+        //String time = (String.valueOf(TimeFormattingHelpers.get24to12Hour(hour1)) + ":" + String.valueOf(fullConferenceRequest.getDateRequested().toLocalDateTime().getMinute()));
+        //reservationHour.getSelectionModel().selectItem(time);
         String minutes;
         if (fullConferenceRequest.getDateRequested().toLocalDateTime().getMinute() < 10) {
             minutes = "0" + fullConferenceRequest.getDateRequested().toLocalDateTime().getMinute();
         } else {
             minutes = "" + fullConferenceRequest.getDateRequested().toLocalDateTime().getMinute();
         }
-        reservationMinute.getSelectionModel().selectItem(minutes);
-        reservationAmPm.getSelectionModel().selectItem(fullConferenceRequest.getDateRequested().toLocalDateTime().getHour() < 12 ? "AM" : "PM");
 
         //set the submit button to say update
         btnSubmit.setText("Update");
@@ -252,20 +331,24 @@ public class ConferenceRequestControllerI implements IRequestController{
             fullConferenceRequest.setNotes(tfNotes.getText());
             fullConferenceRequest.setEventName(eventNameTextField.getText());
             fullConferenceRequest.setBookingReason(bookingReasonTextField.getText());
-            fullConferenceRequest.setDuration(cbDuration.getValue());
-            String timerequested = "";
-            if (reservationAmPm.getText().equals("AM") && reservationHour.getText().equals("12")) {
-                timerequested = "00:" + reservationMinute.getText() + ":00";
-            } else if (reservationAmPm.getText().equals("AM")) {
-                timerequested = reservationHour.getText() + ":" + reservationMinute.getText() + ":00";
-            }  else if (reservationAmPm.getText().equals("PM") && reservationHour.getText().equals("12")) {
-                timerequested = reservationHour.getText() + ":" + reservationMinute.getText() + ":00";
-            } else if (reservationAmPm.getText().equals("PM")) {
-                int hour = Integer.parseInt(reservationHour.getText()) + 12;
-                timerequested = "" + hour + ":" + reservationMinute.getText() + ":00";
+            fullConferenceRequest.setDateRequested(Timestamp.valueOf(dateToReserve.getValue() + " " + reservationHour.getValue() + ":00"));
+            fullConferenceRequest.setDuration(calcDuration(reservationHour.getText(), cbDuration.getValue()));
+            String startHour = reservationHour.getValue().substring(0, reservationHour.getValue().indexOf(":"));
+            String startMinute = reservationHour.getValue().substring(reservationHour.getValue().indexOf(":") + 1, reservationHour.getValue().indexOf(" "));
+            String startAmPm = reservationHour.getValue().substring(reservationHour.getValue().indexOf(" ") + 1);
+            String timerequestedFormatted = "";
+            if (startAmPm.equals("AM") && startHour.equals("12")) {
+                timerequestedFormatted = "00:" + startMinute + ":00";
+            } else if (startAmPm.equals("AM")) {
+                timerequestedFormatted = startHour + ":" + startMinute + ":00";
+            }  else if (startAmPm.equals("PM") && startHour.equals("12")) {
+                timerequestedFormatted = startHour + ":" + startMinute + ":00";
+            } else if (startAmPm.equals("PM")) {
+                int hour = Integer.parseInt(startHour) + 12;
+                timerequestedFormatted = "" + hour + ":" + startMinute + ":00";
             }
-            String daterequested = datePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));;
-            String timeStamp = daterequested + " " + timerequested;
+            String daterequested = dateToReserve.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));;
+            String timeStamp = daterequested + " " + timerequestedFormatted;
 
             fullConferenceRequest.setDateRequested(Timestamp.valueOf(timeStamp));
             //update the database
@@ -279,5 +362,55 @@ public class ConferenceRequestControllerI implements IRequestController{
 
         //set the cancel and reset buttons to not be visible
         resetBtn.setVisible(false);
+    }
+
+    public int calcDuration(String startTime, String endTime) {
+        int startHour = Integer.parseInt(startTime.substring(0, startTime.indexOf(":")));
+        int startMinute = Integer.parseInt(startTime.substring(startTime.indexOf(":") + 1, startTime.indexOf(" ")));
+        int endHour = Integer.parseInt(endTime.substring(0, endTime.indexOf(":")));
+        int endMinute = Integer.parseInt(endTime.substring(endTime.indexOf(":") + 1, endTime.indexOf(" ")));
+        if (endHour < startHour) {
+            endHour += 12;
+        }
+        if (endMinute < startMinute) {
+            endMinute += 60;
+            endHour--;
+        }
+        int totalMinutes = (endHour - startHour) * 60 + (endMinute - startMinute);
+        return totalMinutes;
+    }
+
+    public String calcTime(int duration, int startHour, int startMinute) {
+        String time = "";
+        String startAmPm = "AM";
+        if (startHour > 12) {
+            startHour -= 12;
+            startAmPm = "PM";
+        }
+        if (duration != 0) {
+            int endHour = startHour;
+            int endMinute = startMinute + duration;
+            if (endMinute >= 60) {
+                endHour++;
+                endMinute -= 60;
+            }
+            if (endHour >= 24) {
+                endHour -= 24;
+            }
+            if (endHour > 12) {
+                endHour -= 12;
+                if (startAmPm == "AM") {
+                    startAmPm = "PM";
+                } else {
+                    startAmPm = "AM";
+                }
+            }
+            if (endMinute < 10) {
+                time = endHour + ":0" + endMinute + " " + startAmPm;
+            } else {
+                time = endHour + ":" + endMinute + " " + startAmPm;
+            }
+        }
+        return time;
     }
 }

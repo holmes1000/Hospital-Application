@@ -7,11 +7,14 @@ import edu.wpi.teamb.DBAccess.ORMs.Move;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 import edu.wpi.teamb.pathfinding.PathFinding;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -29,7 +32,7 @@ public class EditNodeMenuController {
     @FXML
     MFXButton btnSubmitNodeDetails;
     @FXML
-    MFXComboBox<String> cbNodeType;
+    MFXFilterComboBox<String> cbNodeType;
     @FXML
     MFXTextField tfXCoord;
     @FXML
@@ -62,23 +65,50 @@ public class EditNodeMenuController {
 
         // Initialize the user data
         tfNodeId.setText(String.valueOf(newFullNode.getNodeID()));
+        tfNodeId.setTooltip(new Tooltip("You cannot change the node ID"));
         tfLongName.setText(newFullNode.getLongName());
+        tfLongName.setTooltip(new Tooltip("Enter the long name of the node"));
         tfShortName.setText(newFullNode.getShortName());
+        tfShortName.setTooltip(new Tooltip("Enter the short name of the node"));
         cbNodeType.selectItem(newFullNode.getNodeType());
+        cbNodeType.setTooltip(new Tooltip("Select a node type"));
         tfXCoord.setText(String.valueOf(currentNode.getxCoord()));
+        tfXCoord.setTooltip(new Tooltip("Change the x coordinate of the node if needed"));
         tfYCoord.setText(String.valueOf(currentNode.getyCoord()));
+        tfYCoord.setTooltip(new Tooltip("Change the y coordinate of the node if needed"));
         oldLongName = newFullNode.getLongName();
         oldShortName = newFullNode.getShortName();
         oldNodeType = newFullNode.getNodeType();
     }
 
     public void initButtons() {
+        BooleanBinding bb = new BooleanBinding() {
+            {
+                super.bind(tfNodeId.textProperty(),
+                        tfLongName.textProperty(),
+                        tfShortName.textProperty(),
+                        tfXCoord.textProperty(),
+                        tfYCoord.textProperty(),
+                        cbNodeType.valueProperty());
+            }
+
+            @Override
+            protected boolean computeValue() {
+                return (tfNodeId.getText().isEmpty() ||
+                        tfLongName.getText().isEmpty() ||
+                        tfShortName.getText().isEmpty() ||
+                        tfXCoord.getText().isEmpty() ||
+                        tfYCoord.getText().isEmpty() ||
+                        cbNodeType.getValue() == null);
+            }
+        };
+        btnSubmitNodeDetails.disableProperty().bind(bb);
+        btnSubmitNodeDetails.setTooltip(new Tooltip("Submit the node details"));
         btnSubmitNodeDetails.setOnMouseClicked(event -> handleSubmitNodeDetails());
     }
 
     private void handleSubmitNodeDetails() {
         submitNode();
-        //PathFinding.ASTAR.force_init();
     }
 
     private void submitNode() {
@@ -99,11 +129,8 @@ public class EditNodeMenuController {
         // Create new full node based on the user input
         fullNode = new FullNode(Integer.parseInt(tfNodeId.getText()), (int) Integer.parseInt(tfXCoord.getText()), (int) Integer.parseInt(tfYCoord.getText()), mapEditorController.currentFloor, currentNode.getBuilding(), tfLongName.getText(), tfShortName.getText(), cbNodeType.getSelectedItem());
 
-
         Repository.getRepository().deleteFullNode(fullNode); // Remove old node from the database
         Repository.getRepository().addFullNode(fullNode);  // Add new node to the database
-
-        //Node newNode = new Node(fullNode); // Create a new node (DEFAULT IS HALL)
 
         // Remove full node from the MapEditor's list and add the new one
         for (FullNode fn : MapEditorController.fullNodesList) {
@@ -113,21 +140,9 @@ public class EditNodeMenuController {
                 break;
             }
         }
-//
-//        // Remove Node from the MapEditor's list and add the new one
-//        for (FullNode n : MapEditorController.fullNodesList) {
-//            if (n.getNodeID() == newNode.getNodeID()) {
-//                MapEditorController.fullNodesList.remove(n);
-//                MapEditorController.fullNodesList.add(newNode);
-//                break;
-//            }
-//        }
-
 
         System.out.println("Editing a  node with nodeID: " + fullNode.getNodeID());
-        mapEditorController.refreshMap();
-        mapEditorController.mapEditorContext.setState(new ViewState());
-
+        submissionAlert("Node successfully edited! Refresh the map.");
         // Close the window
         Stage stage = (Stage) btnSubmitNodeDetails.getScene().getWindow();
         stage.close();
@@ -137,5 +152,14 @@ public class EditNodeMenuController {
 
     public static void setCurrentNode(FullNode currentNode) {
         EditNodeMenuController.currentNode = currentNode;
+    }
+
+    void submissionAlert(String message) {
+        // Create an alert
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Submission Successful");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

@@ -15,9 +15,9 @@ public enum Screen {
   EDIT_ALERTS("views/settings/EditAlerts.fxml"),
   PATHFINDER("views/pathfinder/Pathfinder.fxml"),
   MAP_EDITOR("views/mapeditor/MapEditor.fxml"),
-  MOVE_MAP("views/requests/MoveMap.fxml"),
   EXIT("views/Root.fxml"),
   SIGNAGE("views/signage/Signage.fxml"),
+  VIEW_CSVS("views/settings/ViewCSVs.fxml"),
   MOVE("views/requests/MoveRequest.fxml");
 
   private final String filename;
