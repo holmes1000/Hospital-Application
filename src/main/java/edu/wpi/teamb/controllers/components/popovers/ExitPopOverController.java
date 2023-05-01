@@ -2,6 +2,7 @@ package edu.wpi.teamb.controllers.components.popovers;
 
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
+import javafx.stage.Stage;
 
 public class ExitPopOverController {
 
@@ -9,7 +10,11 @@ public class ExitPopOverController {
     @FXML MFXButton btnNo;
 
     public void clickExit(){
-        btnYes.setOnMouseClicked(event -> System.exit(0));
+        System.exit(0);
+    }
+
+    public void clickNo(){
+        btnNo.getScene().getWindow().hide();
     }
 
 }
