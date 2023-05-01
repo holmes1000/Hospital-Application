@@ -53,6 +53,7 @@ public class EditAccountController {
         navLoaded = false;
         activateNav();
         deactivateNav();
+        initializeNavGates();
     }
 
     public void initializeFields() {
@@ -95,6 +96,19 @@ public class EditAccountController {
 
         // Go home
         Navigation.navigate(Screen.SETTINGS);
+    }
+
+    /**
+     * For some reason there are occasions when the nav-bar gates for toggling its handling does not start correctly
+     * This fixes this issue
+     */
+    public void initializeNavGates(){
+        activateNav();
+        deactivateNav();
+        navPane.setMouseTransparent(true);
+        vboxActivateNav.setDisable(false);
+        navLoaded = false;
+        vboxActivateNav1.setDisable(true);
     }
 
     /**

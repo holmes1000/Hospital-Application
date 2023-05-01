@@ -68,6 +68,7 @@ public class EditUsersController {
         initNavBar();
         initializeFields();
         initButtons();
+        initializeNavGates();
     }
 
     //EditUserController editUserController = new EditUserController();
@@ -302,6 +303,20 @@ public class EditUsersController {
         }
         else
             return "Error"; // Error
+    }
+
+
+    /**
+     * For some reason there are occasions when the nav-bar gates for toggling its handling does not start correctly
+     * This fixes this issue
+     */
+    public void initializeNavGates(){
+        activateNav();
+        deactivateNav();
+        navPane.setMouseTransparent(true);
+        vboxActivateNav.setDisable(false);
+        navLoaded = false;
+        vboxActivateNav1.setDisable(true);
     }
 
     /**
