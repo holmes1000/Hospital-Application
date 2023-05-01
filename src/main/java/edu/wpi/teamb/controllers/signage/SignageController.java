@@ -4,6 +4,9 @@ import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import edu.wpi.teamb.Bapp;
+import edu.wpi.teamb.DBAccess.DAO.Repository;
+import edu.wpi.teamb.DBAccess.Full.FullNode;
+import edu.wpi.teamb.DBAccess.ORMs.Node;
 import edu.wpi.teamb.DBAccess.ORMs.Sign;
 import edu.wpi.teamb.controllers.NavDrawerController;
 import edu.wpi.teamb.entities.ESignage;
@@ -25,6 +28,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import net.kurobako.gesturefx.GesturePane;
 
@@ -32,6 +37,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Objects;
+
+import static javafx.scene.paint.Color.RED;
 
 public class SignageController {
 
@@ -54,6 +61,7 @@ public class SignageController {
     @FXML private VBox vboxActivateNav;
     @FXML private VBox vboxActivateNav1;
     private boolean navLoaded;
+    private FullNode centerNode;
 
 
 
@@ -75,9 +83,6 @@ public class SignageController {
       this.pane.setContent(stackPaneMapView);
       this.imageViewPathfinder = new ImageView(Bapp.getHospitalListOfFloors().get(3)); // no longer @FXML
       //Establishing everything that must occur in the stackpane
-      this.stackPaneMapView.getChildren().add(this.imageViewPathfinder);
-      this.stackPaneMapView.getChildren().add(this.locationCanvas);
-      this.locationCanvas.getChildren().add(nodeGroup);
 
       //Fitting the scrollpane
       pane.setScrollMode(GesturePane.ScrollMode.ZOOM);
@@ -88,9 +93,12 @@ public class SignageController {
 //      pane.setLayoutY(400);
 
 
-      Platform.runLater(() -> this.pane.centreOn(new Point2D(2190, 910)));
+      Platform.runLater(() -> display_first_time());
       navPane.setMouseTransparent(true);
       initializeNavGates();
+      cbLocation.selectFirst();
+      displayMap();
+
   }
 
     private void initalizeComboBox() {
@@ -121,6 +129,7 @@ public class SignageController {
     public void displaySelection() {
         String item = cbLocation.getSelectedItem();
         loadPageBasedOnGroup(item);
+        displayMap();
     }
 
   public void loadPageBasedOnGroup(String group) {
@@ -163,8 +172,59 @@ public class SignageController {
 
   public void displayMap(){
       String item = cbLocation.getSelectedItem().toString();
+      System.out.println(item);
+//      System.out.println(item);
       int[] xy = signageE.getSignXandY(item);
-      Platform.runLater(() -> this.pane.centreOn(new Point2D(xy[0], xy[1])));
+      this.pane.centreOn(new Point2D(xy[0], xy[1]));
+      Circle c = new Circle();
+      c.setFill(RED);
+      c.setRadius(4);
+      c.setCenterX(xy[0]);
+      c.setCenterY(xy[1]);
+      Text text = new Text();
+      text.setX(xy[0]-5);
+      text.setY(xy[1] + 15);
+      text.setText("You are here");
+
+      this.stackPaneMapView.getChildren().clear();
+      this.locationCanvas.getChildren().clear();
+      this.stackPaneMapView.getChildren().add(this.imageViewPathfinder);
+      this.nodeGroup.getChildren().add(c);
+      this.nodeGroup.getChildren().add(text);
+      this.locationCanvas.getChildren().add(nodeGroup);
+      this.stackPaneMapView.getChildren().add(this.locationCanvas);
+      this.locationCanvas.toFront();
+
+
+
+      centerNode = signageE.getSignNode(item);
+      System.out.println("displayed");
+  }
+
+  private void display_first_time(){
+      int nodeID = 2170;
+      Node n = Repository.getRepository().getNode(nodeID);
+      int x = n.getxCoord();
+      int y = n.getyCoord();
+      this.pane.centreOn(new Point2D(x, y));
+      Circle c = new Circle();
+      c.setFill(RED);
+      c.setRadius(4);
+      c.setCenterX(x);
+      c.setCenterY(y);
+      Text text = new Text();
+      text.setX(x-5);
+      text.setY(y+ 15);
+      text.setText("You are here");
+
+      this.stackPaneMapView.getChildren().clear();
+      this.locationCanvas.getChildren().clear();
+      this.stackPaneMapView.getChildren().add(this.imageViewPathfinder);
+      this.nodeGroup.getChildren().add(c);
+      this.nodeGroup.getChildren().add(text);
+      this.locationCanvas.getChildren().add(nodeGroup);
+      this.stackPaneMapView.getChildren().add(this.locationCanvas);
+      this.locationCanvas.toFront();
   }
 
 //    public void loadPage2() {
