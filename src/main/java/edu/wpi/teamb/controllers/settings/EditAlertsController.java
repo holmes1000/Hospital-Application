@@ -84,7 +84,7 @@ public class EditAlertsController {
             usernames.add(users.get(i).getUsername());
         }
         Collections.sort(usernames);
-        usernames.add(0, "Unassigned");
+        usernames.add(0, "unassigned");
         cbEmployees.getItems().addAll(usernames);
 
         alertTable();
@@ -186,7 +186,7 @@ public class EditAlertsController {
         newAlert.setDescription(textDescription.getText().toLowerCase());
         newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
         if(cbEmployees.getValue() == null){
-            newAlert.setEmployee("Unassigned");
+            newAlert.setEmployee("unassigned");
         } else {
             newAlert.setEmployee(cbEmployees.getValue());
         }

@@ -117,7 +117,7 @@ public class FlowerRequestControllerI implements IRequestController {
                 FXCollections.observableArrayList();
         employees.addAll(EFlowerRequest.getUsernames());
         Collections.sort(employees);
-        employees.add(0, "Unassigned");
+        employees.add(0, "unassigned");
         cbEmployeesToAssign.setItems(employees);
         cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
     }
