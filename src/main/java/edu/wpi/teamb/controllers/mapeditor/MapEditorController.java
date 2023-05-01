@@ -738,41 +738,14 @@ public class MapEditorController {
     int nodeID = n.getNodeID();
 
     // Allow click and drag of the Circle
-    Circle clickedCircle = null;
     for (javafx.scene.Node c : nodeGroup.getChildren()) {
       if (c.getId().equals(String.valueOf(nodeID))) {
-        //makeDraggable((Circle) nodeGroup.getChildren().get(i));
-        clickedCircle = (Circle) c;
         makeDraggable((Circle) c);
-        boolEditingNode = true;
         System.out.println("Node: " + nodeID + " is draggable");
       }
-      if (boolEditingNode) {
-        Circle finalClickedCircle = clickedCircle;
-        stackPaneMapView.setOnMouseClicked(event -> {
-          if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
-            try {
-              // Update the node's location
-              System.out.println("Node: " + nodeID + " edited");
-              n.setxCoord((int) (event.getX()));
-              n.setyCoord((int) (event.getY()));
-              System.out.println("Location: " + n.getxCoord() + ", " + n.getyCoord());
-              showEditNodeMenu(n);
-              // set the colors back
-              finalClickedCircle.setFill(Color.RED);
-              finalClickedCircle.setRadius(5);
-            } catch (IOException ex) {
-              throw new RuntimeException(ex);
-            }
-            pane.gestureEnabledProperty().set(true);
-            boolEditingNode = false;
-          }
-
-        });
-      }
     }
-
   }
+
 
 
   /**
@@ -790,7 +763,6 @@ public class MapEditorController {
    * @param node
    */
   private void makeDraggable(Circle node) {
-    boolEditingNode = true;
     pane.setGestureEnabled(false);    // Disable gestures while dragging
     final Delta dragDelta = new Delta();
     node.setOnMouseEntered(me -> {
@@ -819,6 +791,28 @@ public class MapEditorController {
     node.setOnMouseDragged(me -> {
       node.setLayoutX(node.getLayoutX() + me.getX() - dragDelta.x);
       node.setLayoutY(node.getLayoutY() + me.getY() - dragDelta.y);
+    });
+    node.setOnMouseClicked(me -> {
+      if (me.getButton() == MouseButton.PRIMARY && me.getClickCount() == 2) {
+        node.getScene().setCursor(Cursor.DEFAULT);
+        FullNode n = Repository.getRepository().getFullNode(Integer.parseInt(node.getId()));
+
+        System.out.println("true x: " + n.getxCoord() );
+        System.out.println("drgged x: " + node.getLayoutX() );
+          System.out.println("true y: " + n.getyCoord() );
+            System.out.println("drgged y: " + node.getLayoutY() );
+        n.setxCoord((int) (n.getxCoord() + node.getLayoutX()));
+        n.setyCoord((int) (n.getyCoord() + node.getLayoutY()));
+        try {
+          showEditNodeMenu(n);
+          // set the colors back
+          node.setFill(Color.RED);
+          node.setRadius(5);
+          pane.gestureEnabledProperty().set(true);
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+      }
     });
   }
 
