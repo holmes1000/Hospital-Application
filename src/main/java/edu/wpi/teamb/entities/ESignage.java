@@ -34,10 +34,10 @@ public class ESignage {
         ArrayList<Sign> signs = Repository.getRepository().getAllSigns();
         for (Sign s : signs) {
             if (s.getSignageGroup().equals(signageGroup)) {
-                String signLocation = s.getLocationName(); // change to get sign location (Info Node 19 Floor 2)
-//                System.out.println("location name: "+ signLocation);
-                int nodeID = 2170;
-//                System.out.println("node id: "+ nodeID);
+                String signLocation = s.getSignLocation(); // change to get sign location (Info Node 19 Floor 2)
+                System.out.println("location name: "+ signLocation);
+                int nodeID = Repository.getRepository().getNodeIDfromLongName(signLocation);
+                System.out.println("node id: "+ nodeID);
                 Node n = Repository.getRepository().getNode(nodeID);
                 return new int[] {n.getxCoord(), n.getyCoord()};
             }

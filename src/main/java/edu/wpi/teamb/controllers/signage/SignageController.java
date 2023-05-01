@@ -199,6 +199,8 @@ public class SignageController {
 
       centerNode = signageE.getSignNode(item);
       System.out.println("displayed");
+
+      //Add button on top that redirects to pathfinding and sets default location
   }
 
   private void display_first_time(){
