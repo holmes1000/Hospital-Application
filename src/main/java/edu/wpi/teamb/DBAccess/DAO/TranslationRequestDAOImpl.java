@@ -83,6 +83,24 @@ public class TranslationRequestDAOImpl implements IDAO {
         return (ArrayList<FullTranslationRequest>) furn.listFullRequests(frs);
     }
 
+    public ArrayList<TranslationRequest> getAllHelper1() {
+        FullFactory ff = new FullFactory();
+        IFull furn = ff.getFullRequest("Translation");
+        ArrayList<TranslationRequest> ftr = new ArrayList<TranslationRequest>();
+        try {
+            ResultSet rs = getDBRowAllRequests();
+            while (rs.next()) {
+                ftr.add(new TranslationRequest(rs));
+            }
+            return ftr;
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'TranslationRequestDAOImpl.getAllHelper': " + e.getMessage());
+        }
+        DBconnection.getDBconnection().closeDBconnection();
+        DBconnection.getDBconnection().forceClose();
+        return ftr;
+    }
+
 
     /**
      * Adds a TranslationRequest object to the both the database and local list

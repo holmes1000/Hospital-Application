@@ -1393,6 +1393,13 @@ public class Repository {
         return fcr;
     }
 
+    public ArrayList<ConferenceRequest> getConferenceRequests() {
+        ArrayList<ConferenceRequest> cr = conferenceRequestDAO.getAllHelper1();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return cr;
+    }
+
     public void updateConferenceRequest(ConferenceRequest cr) {
         conferenceRequestDAO.update(cr);
         dbConnection.closeDBconnection();
@@ -1431,6 +1438,13 @@ public class Repository {
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
         return fmr;
+    }
+
+    public ArrayList<MealRequest> getMealRequests() {
+        ArrayList<MealRequest> mr = mealRequestDAO.getAllHelper1();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return mr;
     }
 
     public void updateMealRequest(MealRequest mr) {
@@ -1510,6 +1524,13 @@ public class Repository {
 
     public User getUser(String id) {
         User u = (User) userDAO.get(id);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return u;
+    }
+
+    public User getUserByEmail(String email) {
+        User u = (User) userDAO.getUserByEmail(email);
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
         return u;
@@ -1608,6 +1629,13 @@ public class Repository {
         return fcr;
     }
 
+    public ArrayList<FlowerRequest> getFlowerRequests() {
+        ArrayList<FlowerRequest> fcr = flowerRequestDAO.getAllHelper1();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return fcr;
+    }
+
     public void updateFlowerRequest(FlowerRequest fr) {
         flowerRequestDAO.update(fr);
         dbConnection.closeDBconnection();
@@ -1683,6 +1711,13 @@ public class Repository {
         return fcr;
     }
 
+    public ArrayList<FurnitureRequest> getFurnitureRequests() {
+        ArrayList<FurnitureRequest> fr = furnitureRequestDAO.getAllHelper1();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return fr;
+    }
+
     public void updateFurnitureRequest(FurnitureRequest fr) {
         furnitureRequestDAO.update(fr);
         dbConnection.closeDBconnection();
@@ -1723,6 +1758,13 @@ public class Repository {
         return fcr;
     }
 
+    public ArrayList<OfficeRequest> getOfficeRequests() {
+        ArrayList<OfficeRequest> or = officeRequestDAO.getAllHelper1();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return or;
+    }
+
 public void updateOfficeRequest(OfficeRequest or) {
         officeRequestDAO.update(or);
         dbConnection.closeDBconnection();
@@ -1757,6 +1799,13 @@ public void updateOfficeRequest(OfficeRequest or) {
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
         return ftr;
+    }
+
+    public ArrayList<TranslationRequest> getTranslationRequests() {
+        ArrayList<TranslationRequest> tr = translationRequestDAO.getAllHelper1();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return tr;
     }
 
     public void updateTranslationRequest(FullTranslationRequest ftr) {
