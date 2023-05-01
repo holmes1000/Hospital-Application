@@ -22,7 +22,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
@@ -69,7 +68,7 @@ public class EEmail {
 //      throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
 //    }
     GoogleClientSecrets clientSecrets =
-            GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(EEmail.class.getResourceAsStream("/TwoFactorAutheticationClientSecrets/client_secret_327339985363-vms6v6s3gfrusiqrhdh9o81vn4uehdrc.apps.googleusercontent.com.json")));
+            GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(EEmail.class.getResourceAsStream("/TwoFactorAutheticationClientSecrets/client_secret.json")));
 
     // Build flow and trigger user authorization request.
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
