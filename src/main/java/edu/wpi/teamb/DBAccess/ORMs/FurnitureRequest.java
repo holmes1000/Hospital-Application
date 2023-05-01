@@ -61,4 +61,12 @@ public class FurnitureRequest {
     public void setAssembly(boolean assembly) {
         this.assembly = assembly;
     }
+
+    @Override
+    public String toString() {
+        return "id=" + id +
+                ", type='" + type + '\'' +
+                ", model='" + model + '\'' +
+                ", assembly=" + assembly;
+    }
 }

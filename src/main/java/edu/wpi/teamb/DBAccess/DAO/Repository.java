@@ -1391,6 +1391,13 @@ public class Repository {
         return fcr;
     }
 
+    public ArrayList<ConferenceRequest> getConferenceRequests() {
+        ArrayList<ConferenceRequest> cr = conferenceRequestDAO.getAllHelper1();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return cr;
+    }
+
     public void updateConferenceRequest(ConferenceRequest cr) {
         conferenceRequestDAO.update(cr);
         dbConnection.closeDBconnection();
@@ -1429,6 +1436,13 @@ public class Repository {
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
         return fmr;
+    }
+
+    public ArrayList<MealRequest> getMealRequests() {
+        ArrayList<MealRequest> mr = mealRequestDAO.getAllHelper1();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return mr;
     }
 
     public void updateMealRequest(MealRequest mr) {
@@ -1612,6 +1626,12 @@ public class Repository {
         dbConnection.forceClose();
         return fcr;
     }
+    public ArrayList<FlowerRequest> getFlowerRequests() {
+        ArrayList<FlowerRequest> fcr = flowerRequestDAO.getAllHelper1();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return fcr;
+    }
 
     public void updateFlowerRequest(FlowerRequest fr) {
         flowerRequestDAO.update(fr);
@@ -1688,6 +1708,13 @@ public class Repository {
         return fcr;
     }
 
+    public ArrayList<FurnitureRequest> getFurnitureRequests() {
+        ArrayList<FurnitureRequest> fr = furnitureRequestDAO.getAllHelper1();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return fr;
+    }
+
     public void updateFurnitureRequest(FurnitureRequest fr) {
         furnitureRequestDAO.update(fr);
         dbConnection.closeDBconnection();
@@ -1726,6 +1753,13 @@ public class Repository {
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
         return fcr;
+    }
+
+    public ArrayList<OfficeRequest> getOfficeRequests() {
+        ArrayList<OfficeRequest> or = officeRequestDAO.getAllHelper1();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return or;
     }
 
     public Connection getConnection() {

@@ -3,6 +3,7 @@ package edu.wpi.teamb.controllers.requests;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.Full.FullFlowerRequest;
+import edu.wpi.teamb.DBAccess.ORMs.Alert;
 import edu.wpi.teamb.controllers.components.InfoCardController;
 import edu.wpi.teamb.entities.requests.EFlowerRequest;
 import edu.wpi.teamb.entities.requests.IRequest;
@@ -26,6 +27,7 @@ import org.controlsfx.control.PopOver;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Collections;
 
 public class FlowerRequestControllerI implements IRequestController {
@@ -52,6 +54,7 @@ public class FlowerRequestControllerI implements IRequestController {
     public void initialize() throws IOException, SQLException {
         initBtns();
         initializeFields();
+        initComboBoxChangeListeners();
     }
 
     @Override
@@ -103,13 +106,11 @@ public class FlowerRequestControllerI implements IRequestController {
         cbLongName.setTooltip(new Tooltip("Select a location to direct the request to"));
 
         //Set types of flowers
-        ObservableList<String> flowers = FXCollections.observableArrayList("Rose", "Tulip", "Daisy", "Lily", "Sunflower");
-        Collections.sort(flowers);
-        cbAvailableFlowers.setItems(flowers);
+//        /
         cbAvailableFlowers.setTooltip(new Tooltip("Select a type of flower"));
 
         //Set colors of flowers
-        ObservableList<String> colors = FXCollections.observableArrayList("Red", "Orange", "Yellow", "Green", "Blue", "Purple", "Pink", "White");
+        ObservableList<String> colors = FXCollections.observableArrayList("Select a flower to view the available colors");
         Collections.sort(colors);
         cdAvailableColor.setItems(colors);
         cdAvailableColor.setTooltip(new Tooltip("Select a color of flower"));
@@ -127,9 +128,54 @@ public class FlowerRequestControllerI implements IRequestController {
                 FXCollections.observableArrayList();
         employees.addAll(EFlowerRequest.getUsernames());
         Collections.sort(employees);
-        employees.add(0, "Unassigned");
+        employees.add(0, "unassigned");
         cbEmployeesToAssign.setItems(employees);
         cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
+    }
+
+    private void initComboBoxChangeListeners() {
+//        cdAvailableModels.setVisible(true);
+        ObservableList<String> flower = FXCollections.observableArrayList("Rose", "Tulip", "Daisy", "Lily", "Sunflower");
+        Collections.sort(flower);
+        cbAvailableFlowers.getItems().clear();
+        cbAvailableFlowers.getItems().addAll(flower);
+        cbAvailableFlowers.valueProperty().addListener(
+                ((observable, oldValue, newValue) -> {
+                    if (newValue.equals("Rose")) {
+                        cdAvailableColor.getItems().clear();
+                        ObservableList<String> roseColors = FXCollections.observableArrayList("Red", "Orange", "Yellow", "Pink", "Purple", "White", "Green");
+                        Collections.sort(roseColors);
+                        cdAvailableColor.getItems().addAll(roseColors);
+                        cdAvailableColor.setVisible(true);
+                    } else if (newValue.equals("Tulip")) {
+                        cdAvailableColor.getItems().clear();
+                        ObservableList<String> tulipColors = FXCollections.observableArrayList("Yellow", "White", "Purple", "Pink", "Orange", "Red");
+                        Collections.sort(tulipColors);
+                        cdAvailableColor.getItems().addAll(tulipColors);
+                        cdAvailableColor.setVisible(true);
+                    } else if (newValue.equals("Daisy")) {
+                        cdAvailableColor.getItems().clear();
+                        ObservableList<String> daisyColors = FXCollections.observableArrayList("White", "Pink", "Red", "Blue");
+                        Collections.sort(daisyColors);
+                        cdAvailableColor.getItems().addAll(daisyColors);
+                        cdAvailableColor.setVisible(true);
+                    } else if (newValue.equals("Lily")) {
+                        cdAvailableColor.getItems().clear();
+                        ObservableList<String> lilyColors = FXCollections.observableArrayList("White", "Pink", "Red", "Orange", "Yellow");
+                        Collections.sort(lilyColors);
+                        cdAvailableColor.getItems().addAll(lilyColors);
+                        cdAvailableColor.setVisible(true);
+                    } else if (newValue.equals("Sunflower")) {
+                        cdAvailableColor.getItems().clear();
+                        ObservableList<String> sunflowerColors = FXCollections.observableArrayList("Yellow", "Red", "Orange", "Pink", "Purple");
+                        Collections.sort(sunflowerColors);
+                        cdAvailableColor.getItems().addAll(sunflowerColors);
+                        cdAvailableColor.setVisible(true);
+                    } else {
+                        cdAvailableColor.setVisible(false);
+                    }
+                })
+        );
     }
 
     @Override
@@ -162,10 +208,24 @@ public class FlowerRequestControllerI implements IRequestController {
                         EFlowerRequest.getMessage()
                 };
                 EFlowerRequest.submitRequest(output);
+                alertEmployee(cbEmployeesToAssign.getValue());
                 handleReset();
             }
             submissionAlert();
         }
+    }
+
+    /**
+     * Grabs the current employee that is referred to in the newly made request and alerts them of this
+     * @param employee
+     */
+    public void alertEmployee(String employee){
+        Alert newAlert = new Alert();
+        newAlert.setTitle("New Task Assigned");
+        newAlert.setDescription("You have been assigned a new flower request to complete.");
+        newAlert.setEmployee(employee);
+        newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
+        Repository.getRepository().addAlert(newAlert);
     }
 
     @Override
@@ -195,7 +255,11 @@ public class FlowerRequestControllerI implements IRequestController {
 
     @Override
     public boolean nullInputs() {
-        return cbAvailableFlowers.getValue() == null || cdAvailableColor.getValue() == null || cdAvailableType.getValue() == null || txtFldMessage.getText().isEmpty() || txtFldNotes.getText().isEmpty() || cbEmployeesToAssign.getValue() == null || cbLongName.getValue() == null;
+        return cbAvailableFlowers.getValue() == null
+                || cdAvailableColor.getValue() == null
+                || cdAvailableType.getValue() == null
+                ||  cbEmployeesToAssign.getValue() == null
+                || cbLongName.getValue() == null;
     }
 
     @Override
