@@ -15,7 +15,8 @@ public class Gapp extends Application {
 
     public static Image[] personImages = new Image[] {
             new Image(Gapp.class.getResourceAsStream("./rsc/images/HappyCustomer.png")),
-            new Image(Gapp.class.getResourceAsStream("./rsc/images/MadCustomer.png"))
+            new Image(Gapp.class.getResourceAsStream("./rsc/images/MadCustomer.png")),
+            new Image(Gapp.class.getResourceAsStream("./rsc/images/VeryMadCustomer.png"))
     };
     public static Image[] patientImages = new Image[] {
             new Image(Gapp.class.getResourceAsStream("./rsc/images/heart.png")),
@@ -23,6 +24,13 @@ public class Gapp extends Application {
             new Image(Gapp.class.getResourceAsStream("./rsc/images/hungry.png")),
             new Image(Gapp.class.getResourceAsStream("./rsc/images/nonSevere.png")),
     };
+    public static Image[] deskImages = new Image[] {
+            new Image(Gapp.class.getResourceAsStream("./rsc/images/Desk_heart.png")),
+            new Image(Gapp.class.getResourceAsStream("./rsc/images/Desk_brokenLimb.png")),
+            new Image(Gapp.class.getResourceAsStream("./rsc/images/Desk_hungry.png")),
+            new Image(Gapp.class.getResourceAsStream("./rsc/images/Desk_nonSevere.png")),
+    };
+
 
     @Override
     public void start(Stage primaryStage) throws Exception {

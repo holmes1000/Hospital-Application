@@ -9,9 +9,13 @@ public class TimeController {
     static TimeController tC = null;
     double timeLeft;
     double maxTime;
+    double totalTime;
 
-    double patientTime = 5;
+    double patientTime = 3;
     double timeTilNewPatient;
+
+    final double submitCooldownTime =0.5;
+    double submitCooldown;
 
     /* render stuff */
     int x = 60, y = 10, width = 530, height = 25, border = 5;
@@ -26,6 +30,8 @@ public class TimeController {
         this.maxTime = maxTime;
         timeLeft = maxTime;
         timeTilNewPatient = 0;
+        submitCooldown = submitCooldownTime;
+        totalTime=0;
     }
 
     /**
@@ -88,7 +94,12 @@ public class TimeController {
      * @param time time to subtract
      */
     public void subtractTime(double time) {
+        
         timeLeft -= time;
+        if(timeLeft<0)
+        {
+            timeLeft=0;
+        }
     }
 
     /**
@@ -105,6 +116,10 @@ public class TimeController {
             timeLeft += time;
     }
 
+    public double gettotalTime()
+    {
+        return totalTime;
+    }
     /**
      * updates the time
      * 
@@ -112,20 +127,34 @@ public class TimeController {
      */
 
     public void update(double time) {
+        totalTime++;
         subtractTime(time);
         if (timeTilNewPatient > 0) {
             timeTilNewPatient -= time;
-        } else {
+        } else if(Game.customerQ.size()<=10){
 
-            timeTilNewPatient = patientTime/(Math.random()*7*(Game.getCurDif().ordinal()+1)+1);
-            System.out.println(timeTilNewPatient);
+            timeTilNewPatient = patientTime/(Math.random()*(3+(Game.getCurDif().ordinal()))+1);
             System.out.println(Game.getCurDif());
             patient p = patient.genRandPat(Game.customerQ.size()+1);
             Game.customerQ.add(p);
             Game.customerS.add(0,p);
 
         }
+        handleColldown(time);
 
+    }
+
+    private void handleColldown(double time)
+    {
+        
+        if(Game.getPlayer().isSubmitting()&&submitCooldown>0)
+        {
+            submitCooldown-=time;
+        }else
+        {
+            submitCooldown=submitCooldownTime;
+            Game.getPlayer().resetSubmitting();
+        }
     }
 
     /**

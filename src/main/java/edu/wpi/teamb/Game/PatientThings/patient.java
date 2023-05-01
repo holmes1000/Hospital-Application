@@ -2,27 +2,34 @@ package edu.wpi.teamb.Game.PatientThings;
 
 import java.util.Random;
 
+import edu.wpi.teamb.Game.Game;
 import edu.wpi.teamb.Game.Gapp;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 
 public class patient {
-    PatientNeed need;
-    Image personimage;
-    Image patientImage;
+
+    /* patient state */
     int position;
+    PatientNeed need;
+    boolean happy = true;
+    boolean dequeing = false;
+    double patients;
+    double initPat;
 
     /* render */
     int x = 250, y = 140, w = 75, h = 75, positionOffest;
-    private int border = 13;
-
-    double patients;
+    private int needBorder = 13;
+    Image personimage;
+    Image patientImage;
 
     public patient(PatientNeed need, double patients, int position) {
         this.need = need;
         setPatientImage(need);
         this.patients = patients;
+        this.initPat = patients;
         this.position = position;
         personimage = Gapp.personImages[0];
         positionOffest = 75;
@@ -30,7 +37,6 @@ public class patient {
     }
 
     public static patient genRandPat(int position) {
-        System.out.println("new Patient");
         return new patient(RandomNeed(), randPatients(), position);
     }
 
@@ -53,13 +59,25 @@ public class patient {
     }
 
     /**
-     * genrates a random amount of time the patient will wait
+     * genrates a random amount of time the patient will wait between 5 and 10 minus one for the curent difficulty
      * 
      * @return the amount of time the patient will wait
      */
     private static double randPatients() {
-        return Math.random() * 5 + 3;
+        return Math.random() * 5 + 5-Game.getCurDif().ordinal();
 
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int l) {
+        x = l;
+    }
+
+    public boolean isDequeing() {
+        return dequeing;
     }
 
     private void setPatientImage(PatientNeed pn) {
@@ -71,12 +89,38 @@ public class patient {
         }
     }
 
+    // used if their need is submitted corectly
+    public void fufilled() {
+        position = 0;
+        Game.timeController.addTime(patients);
+        Game.getPlayer().addScore(1);
+        happy = true;
+        dequeing = true;
+    }
+
+    // used if their need is not submitted corectly
+    public void unFufilled() {
+        position = 0;
+        Game.timeController.subtractTime(patients);
+        happy = false;
+        dequeing = true;
+
+    }
+
     public PatientNeed getNeed() {
         return need;
     }
 
     public int getPosition() {
         return position;
+    }
+
+    public void setPosition(int i) {
+        position = i;
+    }
+
+    public void updatePosition() {
+        position--;
     }
 
     public Image getPatientImage() {
@@ -96,24 +140,66 @@ public class patient {
     }
 
     public void update(double time) {
-        decresePaditents(time);
-        // switch person image to the second one if patiets is below 3
-        if (personimage != Gapp.personImages[1] && patients < 3) {
-            personimage = Gapp.personImages[1];
-            System.out.println("HAHA");
+        if (!dequeing) {
+            decresePaditents(time);
+            if (happy && patients < 3) {
+                personimage = Gapp.personImages[1];
+                happy = false;
+            }
+            if (shouldDequeue()) {
+                dequeing = true;
+                if (Game.customerS.contains(this)) {
+                    Game.customerQ.remove(this);
+                    Game.customerS.remove(this);
+                    Game.customersDone.add(this);
+                    position = 0;
+                    //Game.rePosition();
+                    Game.timeController.subtractTime(initPat/2);
+                }
+            }
+        } else {
+            dequeueing();
         }
+
     }
 
     public void show(GraphicsContext gc) {
-        // draw person image
 
         gc.drawImage(personimage, x - w / 2 * (position - 1), y, w, h);
         if (position == 1) {
             gc.setFill(Paint.valueOf("orange"));
             gc.fillOval(x + positionOffest, y - positionOffest, 100, 100);
-            gc.drawImage(patientImage, x + positionOffest + border, y - positionOffest + border, 75, 75);
+            gc.drawImage(patientImage, x + positionOffest + needBorder, y - positionOffest + needBorder, 75, 75);
         }
+        gc.setFont(new Font(30));
+       gc.fillText(position + "", x - w / 2 * (position - 1), y, h);
 
+    }
+
+    /**
+     * checks if the patient will deque becuase they ran out of time
+     * 
+     * @return
+     */
+    private boolean shouldDequeue() {
+
+        return patients <= 0;
+    }
+
+    // moves location if dequeing
+    public void dequeueing() {
+        // move right
+        if (dequeing||position==0) {
+            if (happy) {
+                // change image to happy
+                personimage = Gapp.personImages[0];
+            } else {
+                personimage = Gapp.personImages[2];
+                y-=10;
+            }
+            y-=5;
+            x += 10;
+        }
     }
 
 }

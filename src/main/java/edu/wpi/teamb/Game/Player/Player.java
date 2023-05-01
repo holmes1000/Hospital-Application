@@ -1,5 +1,7 @@
 package edu.wpi.teamb.Game.Player;
 
+import edu.wpi.teamb.Game.Game;
+import edu.wpi.teamb.Game.Gapp;
 import edu.wpi.teamb.Game.PatientThings.PatientNeed;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
@@ -8,7 +10,7 @@ public class Player {
     PatientNeed slectedNeed;
     int score;
     /*Render */
-    int x=100,y=250,w=75,h=75,border=5;
+    int x=120,y=250,w=75,h=75,border=5;
     private boolean submitting= false;
 
 
@@ -77,13 +79,37 @@ public class Player {
 
     }
 
-    /**
+        /**
      * Returns the currently selected need
      * @return the currently selected need
      */
-    public PatientNeed submitNeed() {
-        submitting = true;
+    public PatientNeed getSubmitNeed()
+    {
+
         return slectedNeed;
+    
+    }
+
+    public void submitNeed() {
+        if(Game.timeController.submitCooldown!=Game.timeController.submitCooldownTime)
+        {
+            return;
+        }
+        submitting = true;
+        if (Game.customerQ.peek() == null) {
+            return;
+        }
+        if(slectedNeed==Game.customerQ.peek().getNeed())
+        {
+            Game.customersDone.add(Game.customerQ.removeFirst());
+            Game.customerS.removeLast().fufilled();
+            score++;
+        }else{
+            Game.customersDone.add(Game.customerQ.removeFirst());
+            Game.customerS.removeLast().unFufilled();
+        }
+        Game.rePosition();
+
     }
 
     private int needtoInt()
@@ -107,12 +133,12 @@ public class Player {
             gc.setFill(Paint.valueOf("yellow"));
         }
         gc.clearRect(x, y, w*4+100, h);
-        gc.fillRect(x+w*needtoInt()+25*needtoInt(), y, w, h);
-    //TODO: draw images in stops corresponding to need
-        // gc.drawImage(Gapp.patientImages[0], x, y, w, h);
-        // gc.drawImage(Gapp.patientImages[1], x+w+25, y, w, h);
-        // gc.drawImage(Gapp.patientImages[2], x+w*2+50, y, w, h);
-        // gc.drawImage(Gapp.patientImages[3], x+w*3+75, y, w, h);
+        gc.fillRect(x+w*needtoInt()+25*needtoInt()-border, y-border, w+border*2, h+border*2);
+//    TODO: draw images in stops corresponding to need
+        gc.drawImage(Gapp.deskImages[0], x, y, w, h);
+        gc.drawImage(Gapp.deskImages[1], x+w+25, y, w, h);
+        gc.drawImage(Gapp.deskImages[2], x+w*2+50, y, w, h);
+        gc.drawImage(Gapp.deskImages[3], x+w*3+75, y, w, h);
     
 
         

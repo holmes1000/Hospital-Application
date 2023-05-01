@@ -1,7 +1,7 @@
 package edu.wpi.teamb.Game;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Queue;
 import edu.wpi.teamb.Game.PatientThings.patient;
 import edu.wpi.teamb.Game.Player.Player;
 import edu.wpi.teamb.Game.Player.TimeController;
@@ -11,18 +11,17 @@ import javafx.scene.canvas.GraphicsContext;
 public class Game {
     /* Game objects */
     static Player player;
-    public static Queue<patient> customerQ;
+    public static LinkedList<patient> customerQ;
     public static LinkedList<patient> customerS;
-    static TimeController timeController;
+    public static ArrayList<patient> customersDone;
+    public static TimeController timeController;
     // game state
     double timePassed;
     double gameSpeed;
-    static difficultyLevels  curDif;
+    static difficultyLevels curDif;
     static boolean running = false;
     static Canvas canvas;
     static GraphicsContext gc;
-
- 
 
     private static Game game;
 
@@ -52,14 +51,14 @@ public class Game {
     private Game() {
         int timeLeft = 50;
         player = new Player(0, timeLeft);
-        timeController = TimeController.newTimeController(15);
+        timeController = TimeController.newTimeController(20);
         gameSpeed = 1;
         customerQ = new LinkedList<>();
         customerS = new LinkedList<>();
+        customersDone = new ArrayList<>();
         curDif = difficultyLevels.EASY;
         running = true;
 
-        
     }
 
     /**
@@ -74,8 +73,7 @@ public class Game {
         return game;
     }
 
-    public static difficultyLevels getCurDif()
-    {
+    public static difficultyLevels getCurDif() {
         return curDif;
     }
 
@@ -102,29 +100,43 @@ public class Game {
             lastTime = currentTime;
             if (dt >= 1) {
                 // calls update
-                update(dt/60);
+                update(dt / 60);
 
                 // calls paint component
-                repaint(dt/60);
+                repaint(dt / 60);
+
+
                 dt--;
                 drawcount++;
 
             }
             if (timer >= 1000000000) {
+                if((int)(Math.random()*3)==1)
+                changeDif();
+                
+                //print position of every patiend in cQ and cS and cDone
+                for (patient patient : customerQ) {
+                    System.out.print(patient.getPosition()+" ");
+                }System.out.println("\t:"+customerQ.size());
+                for (patient patient : customerS) {
+                    System.out.print(patient.getPosition()+" ");
+                }System.out.println("\t:"+customerS.size());
+                for (patient patient : customersDone) {
+                    System.out.print(patient.getPosition()+ " ");
+                }System.out.println("\t:"+customersDone.size());
+                
                 System.out.println("FPS: " + drawcount);
                 drawcount = 0;
                 timer = 0;
                 // degub info
-                System.out.println("update: " + timer);
-                System.out.println(Gapp.personImages[0].getHeight());
             }
-            if(timeController.getTimeLeft()<=0)
-            {
+            if (timeController.getTimeLeft() <= 0) {
                 stop();
             }
 
             // checkLose();
         }
+        repaint(0);
         System.out.println("-------------------END-------------------");
 
     }
@@ -134,22 +146,22 @@ public class Game {
      */
     public static void stop() {
         running = false;
-        //destroy this instance of the game
+        // destroy this instance of the game
         game = null;
     }
-    public static void kill()
-    {
-        //uninit all objects
-        customerQ=null;
-        customerS= null;
+
+    public static void kill() {
+        // uninit all objects
+        customerQ = null;
+        customerS = null;
         TimeController.kill();
         player = null;
         canvas = null;
         gc = null;
 
-        //destroy this instance of the game
+        // destroy this instance of the game
         game = null;
-    
+
     }
 
     /**
@@ -158,26 +170,67 @@ public class Game {
      * @param delta time since last frame
      */
     private void update(double delta) {
+        QueueStackSync();
+        rePosition();
         timeController.update(delta);
         player.update(delta);
-        for (patient patient : customerQ) {
-            patient.update(delta);
+        for (int i = 0; i < customerQ.size(); i++) {
+            patient a = customerQ.get(i);
+            a.update(delta);
 
         }
 
+
+        //updates all in cD and when past screen, gets deleted
+        for (int i = 0; i <customersDone.size(); i++) {
+            customersDone.get(i).update(delta);
+            if(customersDone.get(i).getX()>canvas.getWidth()+30)
+            {
+                customersDone.remove(customersDone.get(i));
+                i--;
+            }
+        }
+        if(customerQ.size()==0)
+        {
+            timeController.addTime(9999);
+        }
+
+
     }
 
+    public void QueueStackSync()
+    {
+        customerS = new LinkedList<>();
+        for (int i = 0; i < customerQ.size(); i++) {
+            
+            customerS.add(0, customerQ.get(i));
+        }
+    }
+
+    public static void rePosition()
+    {
+        for (int i = 0; i < customerQ.size(); i++) {
+            customerQ.get(i).setPosition(i+1);
+        }
+    }
     /**
      * Repaints all the objects
      * 
      * @param delta time since last frame;
      */
     private void repaint(double delta) {
-        //gc.clearRect(0, 0, canvas.getLayoutX(), canvas.getLayoutY());
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         timeController.show(gc);
         player.show(gc);
+
+        //loop through sutomerS and customer done to show them
         for (patient patient : customerS) {
             patient.show(gc);
+        }
+        for (patient patient : customersDone) {
+            //patient.dequeueing();
+            patient.show(gc);
+            
         }
     }
 
@@ -217,8 +270,7 @@ public class Game {
     }
 
     public void initCanvas(Thread jfxThread) {
-        if (canvas == null)
-        {
+        if (canvas == null) {
             canvas = Gapp.getMainCanvas();
             gc = canvas.getGraphicsContext2D();
         }
