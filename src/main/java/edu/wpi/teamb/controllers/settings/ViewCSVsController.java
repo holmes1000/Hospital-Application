@@ -234,7 +234,7 @@ public class ViewCSVsController {
                 infoExport.setText("Export info: Requires no additional exports");
             }
             case "Flower Requests" -> {
-                ArrayList<?> items = Repository.getRepository().getFlowerRequests();
+                ArrayList<?> items = Repository.getRepository().getAllFlowerRequests();
                 ArrayList<String> temp = new ArrayList<>();
                 for(int i = 0; i < items.size(); i ++){
                     temp.add(items.get(i).toString());
@@ -244,7 +244,7 @@ public class ViewCSVsController {
                 infoExport.setText("Export info: Requires no additional exports");
             }
             case "Furniture Requests" -> {
-                ArrayList<?> items = Repository.getRepository().getFurnitureRequests();
+                ArrayList<?> items = Repository.getRepository().getAllFurnitureRequests();
                 ArrayList<String> temp = new ArrayList<>();
                 for(int i = 0; i < items.size(); i ++){
                     temp.add(items.get(i).toString());
@@ -254,7 +254,7 @@ public class ViewCSVsController {
                 infoExport.setText("Export info: Requires no additional exports");
             }
             case "Meal Requests" -> {
-                ArrayList<?> items = Repository.getRepository().getMealRequests();
+                ArrayList<?> items = Repository.getRepository().getAllMealRequests();
                 ArrayList<String> temp = new ArrayList<>();
                 for(int i = 0; i < items.size(); i ++){
                     temp.add(items.get(i).toString());
@@ -264,7 +264,7 @@ public class ViewCSVsController {
                 infoExport.setText("Export info: Requires no additional exports");
             }
             case "Office Requests" -> {
-                ArrayList<?> items = Repository.getRepository().getOfficeRequests();
+                ArrayList<?> items = Repository.getRepository().getAllOfficeRequests();
                 ArrayList<String> temp = new ArrayList<>();
                 for(int i = 0; i < items.size(); i ++){
                     temp.add(items.get(i).toString());

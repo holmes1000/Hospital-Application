@@ -29,25 +29,25 @@
                 <GesturePane fx:id="pane" prefHeight="720.0" prefWidth="1350.0">
                 </GesturePane>
                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#5f7ca4" height="60.0" layoutX="-113.0" layoutY="47.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1419.0" />
-            <Pane fx:id="directionPane" layoutX="14.0" layoutY="565.0" prefHeight="151.0" prefWidth="345.0">
+            <Pane fx:id="directionPane" layoutX="846.0" layoutY="564.0" prefHeight="151.0" prefWidth="345.0">
                <children>
-                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="28.0" stroke="BLACK" strokeType="INSIDE" width="106.0" />
-                  <Text fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="Directions" textAlignment="CENTER" wrappingWidth="85.8603515625" x="10.0" y="21.0">
-                     <font>
-                        <Font name="System Bold" size="18.0" />
-                     </font>
-                  </Text>
                   <VBox fx:id="VboxPathfinder" layoutY="28.0" prefHeight="122.0" prefWidth="342.0">
                      <children>
                         <MFXListView fx:id="listView" prefHeight="121.0" prefWidth="342.0" style="-fx-border-color: #012d5a;" />
                      </children>
                   </VBox>
-                  <MFXButton fx:id="previousFloor" layoutX="109.0" prefHeight="30.0" prefWidth="114.0" text="Previous Floor">
+                  <Rectangle fill="WHITE" height="32.0" stroke="BLACK" strokeType="INSIDE" width="106.0" />
+                  <Text fontSmoothingType="LCD" layoutY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Directions" textAlignment="CENTER" wrappingWidth="85.8603515625" x="10.0" y="21.0">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Text>
+                  <MFXButton fx:id="previousFloor" layoutX="109.0" prefHeight="18.0" prefWidth="114.0" style="-fx-border-color: #012d5a;" text="Previous Floor">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </MFXButton>
-                  <MFXButton fx:id="nextFloor" layoutX="226.0" prefHeight="30.0" prefWidth="115.0" text="Next Floor">
+                  <MFXButton fx:id="nextFloor" layoutX="226.0" prefHeight="30.0" prefWidth="115.0" style="-fx-border-color: #012d5a;" text="Next Floor">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -60,45 +60,13 @@
                         <Font name="System Bold" size="36.0" />
                     </font>
                 </Text>
-                <VBox layoutX="1065.0" layoutY="443.0" prefHeight="119.0" prefWidth="131.0" style="-fx-background-color: #f1f1f1; -fx-border-color: #012d5a;">
+                <VBox layoutX="1054.0" layoutY="410.0" prefHeight="81.0" prefWidth="138.0" style="-fx-background-color: #f1f1f1; -fx-border-color: #012d5a;">
                     <children>
-                        <VBox fx:id="vboxBtns" alignment="CENTER" prefHeight="192.0" prefWidth="134.0" spacing="10.0">
-                            <children>
-                                <MFXButton fx:id="btn3" defaultButton="true" prefHeight="46.0" prefWidth="42.0" style="-fx-background-color: #012d5a;" text="3" textFill="#f1f1f1">
-                                    <font>
-                                        <Font name="System Bold" size="12.0" />
-                                    </font>
-                                    <VBox.margin>
-                                        <Insets top="10.0" />
-                                    </VBox.margin>
-                                </MFXButton>
-                                <MFXButton fx:id="btn2" defaultButton="true" prefHeight="46.0" prefWidth="42.0" style="-fx-background-color: #012d5a;" text="2" textFill="#f1f1f1">
-                                    <font>
-                                        <Font name="System Bold" size="12.0" />
-                                    </font>
-                                </MFXButton>
-                                <MFXButton fx:id="btn1" defaultButton="true" prefHeight="46.0" prefWidth="42.0" style="-fx-background-color: #012d5a;" text="1" textFill="#f1f1f1">
-                                    <font>
-                                        <Font name="System Bold" size="12.0" />
-                                    </font>
-                                </MFXButton>
-                                <MFXButton fx:id="btnL1" defaultButton="true" prefHeight="46.0" prefWidth="42.0" style="-fx-background-color: #012d5a;" text="LL1" textFill="#f1f1f1">
-                                    <font>
-                                        <Font name="System Bold" size="12.0" />
-                                    </font>
-                                </MFXButton>
-                                <MFXButton fx:id="btnL2" defaultButton="true" prefHeight="46.0" prefWidth="42.0" style="-fx-background-color: #012d5a;" text="LL2" textFill="#f1f1f1">
-                                    <font>
-                                        <Font name="System Bold" size="12.0" />
-                                    </font>
-                                </MFXButton>
-                            </children>
-                        </VBox>
-                        <MFXToggleButton fx:id="toggleAvoidStairs" prefWidth="150.0" text="Avoid Stairs" />
-                  <MFXToggleButton fx:id="toggleShowNames" layoutX="11.0" layoutY="178.0" prefWidth="150.0" text="Show Names" />
+                        <MFXToggleButton fx:id="toggleAvoidStairs" prefWidth="150.0" style="-fx-background-color: #ffffff; -fx-border-color: #012d5a;" text="Avoid Stairs" />
+                  <MFXToggleButton fx:id="toggleShowNames" layoutX="11.0" layoutY="178.0" prefWidth="150.0" style="-fx-background-color: #ffffff; -fx-border-color: #012d5a;" text="Show Names" />
                     </children>
                 </VBox>
-            <HBox layoutX="92.0" layoutY="58.0" spacing="10.0">
+            <HBox layoutX="20.0" layoutY="58.0" spacing="10.0">
                <children>
                   <MFXFilterComboBox fx:id="startNode" prefHeight="40.0" prefWidth="200.0" promptText="Start Location" style="-fx-border-color: transparent;" />
                   <MFXFilterComboBox fx:id="endNode" prefHeight="40.0" prefWidth="200.0" promptText="End Location" style="-fx-border-color: transparent;" />
@@ -113,6 +81,11 @@
                             </MFXButton>
                      </items>
                   </SplitPane>
+                  <MFXButton fx:id="btnClearPath" defaultButton="true" layoutY="8.0" prefHeight="42.0" prefWidth="110.0" style="-fx-background-color: #012d5a;" text="Clear Path" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </MFXButton>
                </children>
             </HBox>
                 <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="1145.0" layoutY="54.0" onMouseEntered="#hoverHelp" onMouseExited="#hoverHelp" pickOnBounds="true" preserveRatio="true">
@@ -124,16 +97,49 @@
                     </effect>
                 </ImageView>
             <VBox fx:id="vboxActivateNav" layoutX="-50.0" layoutY="10.0" prefHeight="720.0" prefWidth="60.0" />
-            <MFXButton fx:id="btnEditMap" defaultButton="true" layoutX="1078.0" layoutY="119.0" prefHeight="46.0" prefWidth="110.0" style="-fx-background-color: #012d5a;" text="Edit Map" textFill="#f1f1f1">
+            <MFXButton fx:id="btnEditMap" defaultButton="true" layoutX="1081.0" layoutY="120.0" prefHeight="46.0" prefWidth="110.0" style="-fx-background-color: #012d5a;" text="Edit Map" textFill="#f1f1f1">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </MFXButton>
-            <MFXButton fx:id="btnClearPath" defaultButton="true" layoutX="1072.0" layoutY="388.0" prefHeight="23.0" prefWidth="123.0" style="-fx-background-color: #012d5a;" text="Clear Path" textFill="#f1f1f1">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </MFXButton>
+                  <VBox fx:id="vboxBtns" alignment="CENTER" layoutX="1121.0" layoutY="173.0" prefHeight="220.0" prefWidth="70.0" spacing="10.0" style="-fx-background-color: #ffffff; -fx-border-color: #012d5a;">
+                      <children>
+                          <MFXButton fx:id="btn3" defaultButton="true" prefHeight="46.0" prefWidth="42.0" style="-fx-background-color: #012d5a;" text="3" textFill="#f1f1f1">
+                              <font>
+                                  <Font name="System Bold" size="12.0" />
+                              </font>
+                              <VBox.margin>
+                                  <Insets top="10.0" />
+                              </VBox.margin>
+                          </MFXButton>
+                          <MFXButton fx:id="btn2" defaultButton="true" prefHeight="46.0" prefWidth="42.0" style="-fx-background-color: #012d5a;" text="2" textFill="#f1f1f1">
+                              <font>
+                                  <Font name="System Bold" size="12.0" />
+                              </font>
+                          </MFXButton>
+                          <MFXButton fx:id="btn1" defaultButton="true" prefHeight="46.0" prefWidth="42.0" style="-fx-background-color: #012d5a;" text="1" textFill="#f1f1f1">
+                              <font>
+                                  <Font name="System Bold" size="12.0" />
+                              </font>
+                          </MFXButton>
+                          <MFXButton fx:id="btnL1" defaultButton="true" prefHeight="46.0" prefWidth="42.0" style="-fx-background-color: #012d5a;" text="LL1" textFill="#f1f1f1">
+                              <font>
+                                  <Font name="System Bold" size="12.0" />
+                              </font>
+                          </MFXButton>
+                          <MFXButton fx:id="btnL2" defaultButton="true" prefHeight="46.0" prefWidth="42.0" style="-fx-background-color: #012d5a;" text="LL2" textFill="#f1f1f1">
+                              <font>
+                                  <Font name="System Bold" size="12.0" />
+                              </font>
+                          </MFXButton>
+                      </children>
+               <opaqueInsets>
+                  <Insets bottom="10.0" />
+               </opaqueInsets>
+               <padding>
+                  <Insets bottom="10.0" left="5.0" right="5.0" />
+               </padding>
+                  </VBox>
             </children>
         </AnchorPane>
     </center>
@@ -145,7 +151,7 @@
                <effect>
                   <ColorAdjust brightness="1.0" />
                </effect></JFXHamburger>
-            <VBox fx:id="vboxActivateNav1" layoutX="70.0" onMouseEntered="#deactivateNav" prefHeight="720.0" prefWidth="1211.0" />
+            <VBox fx:id="vboxActivateNav1" layoutX="70.0" onMouseEntered="#deactivateNav" prefHeight="720.0" prefWidth="1.0" />
             </children>
         </Pane>
     </left>
