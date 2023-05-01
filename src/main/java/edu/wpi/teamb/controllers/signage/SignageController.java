@@ -171,7 +171,7 @@ public class SignageController {
   }
 
   public void displayMap(){
-      String item = cbLocation.getSelectedItem().toString();
+      String item = cbLocation.getSelectedItem();
       System.out.println(item);
 //      System.out.println(item);
       int[] xy = signageE.getSignXandY(item);
