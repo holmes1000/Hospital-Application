@@ -5,6 +5,7 @@
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
@@ -67,6 +68,7 @@
                </items>
             </SplitPane>
             <DatePicker fx:id="dateToReserve" layoutX="20.0" layoutY="80.0" prefHeight="45.0" prefWidth="450.0" promptText="MM/DD/YYYY" style="-fx-background-color: transparent;" />
+            <Separator layoutX="20.0" layoutY="62.0" prefWidth="450.0" />
             </children>
         </AnchorPane>
     </center>
