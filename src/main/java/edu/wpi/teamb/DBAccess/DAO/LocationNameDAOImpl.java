@@ -296,7 +296,7 @@ public class LocationNameDAOImpl implements IDAO {
     public int getNodeIDfromLongName(String longName) {
         try {
             Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
-            String query = "SELECT * from locationnames join moves m on locationnames.longname = m.longname where locationnames.longname like " + longName;
+            String query = "SELECT * from locationnames join moves m on locationnames.longname = m.longname where locationnames.longname = '" + longName + "'";
             ResultSet rs = stmt.executeQuery(query);
             rs.next();
             int set = rs.getInt("nodeID");

@@ -564,6 +564,8 @@ public class MapEditorController {
    * Refreshes the map
    */
   void refreshMap() {
+    selectedNodes.clear();
+    nodesToAlign.clear();
     mapEditorContext.setState(new ViewState());
     determineState();
     // Clear the map
