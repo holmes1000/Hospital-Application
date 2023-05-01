@@ -152,6 +152,7 @@ public class PathfinderController {
       directionPane.setVisible(false);
       activateNav();
       deactivateNav();
+      defaultStart = DefaultStart.getInstance().getDefault_start();
       if (defaultStart.equals("")) {DefaultStart.getInstance().setDefault_start("15 Lobby Entrance Floor 2");}
       defaultStart = DefaultStart.getInstance().getDefault_start();
 
