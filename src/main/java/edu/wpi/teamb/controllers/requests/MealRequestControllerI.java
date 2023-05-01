@@ -142,7 +142,7 @@ public class MealRequestControllerI implements IRequestController{
 
     @Override
     public void handleSubmit() {
-        if (nullInputs())
+        if (nullInputs() || nullInputsFood())
             showPopOver();
         else {
             // Get the standard request fields
@@ -213,10 +213,13 @@ public class MealRequestControllerI implements IRequestController{
     public boolean nullInputs() {
         return cbOrderLocation.getValue() == null
                 || cbEmployeesToAssign.getValue() == null
-                || cbAvailableMeals.getValue() == null
-                || cbAvailableDrinks.getValue() == null
-                || cbAvailableSnacks.getValue() == null
                 || cbLongName.getValue() == null;
+    }
+
+    public boolean nullInputsFood() {
+        return cbAvailableMeals.getValue() == null
+                && cbAvailableDrinks.getValue() == null
+                && cbAvailableSnacks.getValue() == null;
     }
 
     @Override
