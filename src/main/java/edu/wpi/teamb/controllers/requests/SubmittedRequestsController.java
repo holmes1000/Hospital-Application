@@ -113,6 +113,11 @@ public class SubmittedRequestsController {
                     if(fullFurnitureRequest == null){continue;}
                     Objects.requireNonNull(requestInfoCardController).sendRequest(fullFurnitureRequest);
                     break;
+                case "Translation":
+                    IFull fullTranslationRequest = allRequestsE.getTranslationRequest(listOfRequests.get(i).getId());
+                    if(fullTranslationRequest == null){continue;}
+                    Objects.requireNonNull(requestInfoCardController).sendRequest(fullTranslationRequest);
+                    break;
                 default:
                     //continue statement to skip any unrecognized types of request to avoid occurrence of empty cards
                     continue;

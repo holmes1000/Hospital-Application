@@ -68,5 +68,10 @@ public class ETranslationRequest extends RequestImpl {
     public void updateTranslationRequest(FullTranslationRequest fullTranslationRequest) {
         Repository.getRepository().updateTranslationRequest(fullTranslationRequest);
     }
-}
+
+    public void deleteTranslationRequest(FullTranslationRequest fullTranslationRequest) {
+        Repository.getRepository().deleteTranslationRequest(fullTranslationRequest);
+    }
+
+
 }

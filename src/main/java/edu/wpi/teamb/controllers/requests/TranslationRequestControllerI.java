@@ -3,6 +3,7 @@ package edu.wpi.teamb.controllers.requests;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.Full.FullFlowerRequest;
+import edu.wpi.teamb.DBAccess.Full.FullTranslationRequest;
 import edu.wpi.teamb.controllers.components.InfoCardController;
 import edu.wpi.teamb.entities.requests.EFlowerRequest;
 import edu.wpi.teamb.entities.requests.IRequest;
@@ -42,7 +43,9 @@ public class TranslationRequestControllerI implements IRequestController {
 
     private final edu.wpi.teamb.entities.requests.ETranslationRequest ETranslationRequest; // ETranslationRequest object to be submitted
 
-    public TranslationRequestControllerI() {this.ETranslationRequest = new ETranslationRequest();}
+    public TranslationRequestControllerI() {
+        this.ETranslationRequest = new edu.wpi.teamb.entities.requests.ETranslationRequest();
+    }
 
     @FXML
     public void initialize() throws IOException, SQLException {
@@ -192,14 +195,14 @@ public class TranslationRequestControllerI implements IRequestController {
     }
 
     //functions for editable stage in InfoCardController
-    public void enterFlowerRequestEditableMode(FullFlowerRequest fullFlowerRequest, InfoCardController currentInfoCardController) {
+    public void enterFlowerRequestEditableMode(FullTranslationRequest fullTranslationRequest, InfoCardController currentInfoCardController) {
         //set the editable fields to the values of the request
-        cbLanguageSelect.getSelectionModel().selectItem(fullFlowerRequest.getFlowerType());
-        cdMedicalInfo.getSelectionModel().selectItem(fullFlowerRequest.getColor());
-        txtFldMessage.setText(fullFlowerRequest.getMessage());
-        txtFldNotes.setText(fullFlowerRequest.getNotes());
-        cbEmployeesToAssign.getSelectionModel().selectItem(fullFlowerRequest.getEmployee());
-        cbLongName.getSelectionModel().selectItem(fullFlowerRequest.getLocationName());
+        cbLanguageSelect.getSelectionModel().selectItem(fullTranslationRequest.getLanguageType());
+        cdMedicalInfo.getSelectionModel().selectItem(fullTranslationRequest.getMedical());
+        txtFldMessage.setText(fullTranslationRequest.getMessage());
+        txtFldNotes.setText(fullTranslationRequest.getNotes());
+        cbEmployeesToAssign.getSelectionModel().selectItem(fullTranslationRequest.getEmployee());
+        cbLongName.getSelectionModel().selectItem(fullTranslationRequest.getLocationName());
 
         //set the submit button to say update
         btnSubmit.setText("Update");
@@ -208,12 +211,12 @@ public class TranslationRequestControllerI implements IRequestController {
         //add a new onAction event
         btnSubmit.setOnAction(e -> {
             //set the request fields to the new values
-            fullFlowerRequest.setFlowerType(cbLanguageSelect.getValue());
-            fullFlowerRequest.setColor(cdMedicalInfo.getValue());
-            fullFlowerRequest.setMessage(txtFldMessage.getText());
-            fullFlowerRequest.setNotes(txtFldNotes.getText());
-            fullFlowerRequest.setEmployee(cbEmployeesToAssign.getValue());
-            fullFlowerRequest.setLocationName(cbLongName.getValue());
+            fullTranslationRequest.setLanguageType(cbLanguageSelect.getValue());
+            fullTranslationRequest.setMedical(cdMedicalInfo.getValue());
+            fullTranslationRequest.setMessage(txtFldMessage.getText());
+            fullTranslationRequest.setNotes(txtFldNotes.getText());
+            fullTranslationRequest.setEmployee(cbEmployeesToAssign.getValue());
+            fullTranslationRequest.setLocationName(cbLongName.getValue());
 
             //update the request
             ETranslationRequest.updateTranslationRequest(fullTranslationRequest);

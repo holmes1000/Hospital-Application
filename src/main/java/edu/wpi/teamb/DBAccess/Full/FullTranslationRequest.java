@@ -178,4 +178,11 @@ public class FullTranslationRequest implements IFull {
     }
 
 
+    public String getLanguageType() {
+        return languageType;
+    }
+
+    public void setLanguageType(String languageType) {
+        this.languageType = languageType;
+    }
 }

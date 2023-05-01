@@ -31,6 +31,7 @@ public class Repository {
             officeRequestDAO = new OfficeRequestDAOImpl();
             alertDAO = new AlertDAOImpl();
             signDAO = new SignDAOImpl();
+            translationRequestDAO = new TranslationRequestDAOImpl();
         } catch (SQLException e) {
             System.out.println("ERROR: Repository failed to initialize");
             throw new RuntimeException(e);
@@ -57,6 +58,7 @@ public class Repository {
     private final MealRequestDAOImpl mealRequestDAO;
     private final FurnitureRequestDAOImpl furnitureRequestDAO;
     private final OfficeRequestDAOImpl officeRequestDAO;
+    private final TranslationRequestDAOImpl translationRequestDAO;
     private final AlertDAOImpl alertDAO;
     private final SignDAOImpl signDAO;
     private final DBconnection dbConnection;
@@ -1720,6 +1722,50 @@ public class Repository {
         dbConnection.forceClose();
         return fcr;
     }
+
+public void updateOfficeRequest(OfficeRequest or) {
+        officeRequestDAO.update(or);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    public void addTranslationRequest(String[] tr) {
+        translationRequestDAO.add(tr);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    public void deleteTranslationRequest(TranslationRequest tr) {
+        translationRequestDAO.delete(tr);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    public void deleteTranslationRequest(FullTranslationRequest tr) {
+        translationRequestDAO.delete(tr);
+    }
+
+    public FullTranslationRequest getTranslationRequest(int id) {
+        FullTranslationRequest ftr = (FullTranslationRequest) translationRequestDAO.get(id);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return ftr;
+    }
+
+    public ArrayList<FullTranslationRequest> getAllTranslationRequests() {
+        ArrayList<FullTranslationRequest> ftr = translationRequestDAO.getAll();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return ftr;
+    }
+
+    public void updateTranslationRequest(FullTranslationRequest ftr) {
+        translationRequestDAO.update(ftr);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+
 
     public Connection getConnection() {
         return dbConnection.getConnection();

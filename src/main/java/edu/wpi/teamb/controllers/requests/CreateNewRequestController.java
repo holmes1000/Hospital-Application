@@ -210,10 +210,23 @@ public class CreateNewRequestController {
             e.printStackTrace();
         }
     }
+
+    public void loadPage7() {
+        requestVbox.getChildren().clear();
+//        toggleBtns("icon4");
+        try {
+            FXMLLoader loader =
+                    new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/requests/TranslationRequest.fxml"));
+            Pane pane = loader.load();
+            requestVbox.getChildren().addAll(pane);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public void initializeFields() {
 
         ObservableList<String> locations = FXCollections.observableArrayList("Meal Delivery", "Conference Room",
-                "Flower Delivery", "Furniture Delivery", "Office Supplies");
+                "Flower Delivery", "Furniture Delivery", "Office Supplies", "Translation Request");
         // TODO: only add thise if the user is an admin
         if (adminTest == ELogin.PermissionLevel.ADMIN) {
             ObservableList<String> AdminOnly = FXCollections.observableArrayList("Move");
