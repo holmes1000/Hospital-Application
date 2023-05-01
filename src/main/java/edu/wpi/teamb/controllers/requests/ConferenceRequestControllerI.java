@@ -3,6 +3,7 @@ package edu.wpi.teamb.controllers.requests;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.Full.FullConferenceRequest;
+import edu.wpi.teamb.DBAccess.ORMs.Alert;
 import edu.wpi.teamb.controllers.components.InfoCardController;
 import edu.wpi.teamb.entities.requests.EConferenceRequest;
 import edu.wpi.teamb.entities.requests.IRequest;
@@ -141,7 +142,7 @@ public class ConferenceRequestControllerI implements IRequestController{
                 FXCollections.observableArrayList();
         employees.addAll(EConferenceRequest.getUsernames());
         Collections.sort(employees);
-        employees.add(0, "Unassigned");
+        employees.add(0, "unassigned");
         cbEmployeesToAssign.setItems(employees);
         cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
 
@@ -225,10 +226,24 @@ public class ConferenceRequestControllerI implements IRequestController{
                 };
 
                 EConferenceRequest.submitRequest(output);
+                alertEmployee(cbEmployeesToAssign.getValue());
                 handleReset();
             }
             submissionAlert();
         }
+    }
+
+    /**
+     * Grabs the current employee that is referred to in the newly made request and alerts them of this
+     * @param employee
+     */
+    public void alertEmployee(String employee){
+        Alert newAlert = new Alert();
+        newAlert.setTitle("New Task Assigned");
+        newAlert.setDescription("Conference request assigned.");
+        newAlert.setEmployee(employee);
+        newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
+        Repository.getRepository().addAlert(newAlert);
     }
 
     @Override
@@ -318,7 +333,6 @@ public class ConferenceRequestControllerI implements IRequestController{
         } else {
             minutes = "" + fullConferenceRequest.getDateRequested().toLocalDateTime().getMinute();
         }
-
         //set the submit button to say update
         btnSubmit.setText("Update");
         //remove the current onAction event
@@ -331,7 +345,6 @@ public class ConferenceRequestControllerI implements IRequestController{
             fullConferenceRequest.setNotes(tfNotes.getText());
             fullConferenceRequest.setEventName(eventNameTextField.getText());
             fullConferenceRequest.setBookingReason(bookingReasonTextField.getText());
-            fullConferenceRequest.setDateRequested(Timestamp.valueOf(dateToReserve.getValue() + " " + reservationHour.getValue() + ":00"));
             fullConferenceRequest.setDuration(calcDuration(reservationHour.getText(), cbDuration.getValue()));
             String startHour = reservationHour.getValue().substring(0, reservationHour.getValue().indexOf(":"));
             String startMinute = reservationHour.getValue().substring(reservationHour.getValue().indexOf(":") + 1, reservationHour.getValue().indexOf(" "));
@@ -391,19 +404,26 @@ public class ConferenceRequestControllerI implements IRequestController{
             int endHour = startHour;
             int endMinute = startMinute + duration;
             if (endMinute >= 60) {
-                endHour++;
-                endMinute -= 60;
+                endHour = endMinute / 60;
+                endMinute = endMinute % 60;
             }
             if (endHour >= 24) {
                 endHour -= 24;
-            }
-            if (endHour > 12) {
+            } else if (endHour > 12) {
                 endHour -= 12;
                 if (startAmPm == "AM") {
                     startAmPm = "PM";
                 } else {
                     startAmPm = "AM";
                 }
+            } else if (endHour == 12) {
+                if (startAmPm == "AM") {
+                    startAmPm = "PM";
+                } else {
+                    startAmPm = "AM";
+                }
+            } else if (endHour == 0) {
+                endHour = 12;
             }
             if (endMinute < 10) {
                 time = endHour + ":0" + endMinute + " " + startAmPm;

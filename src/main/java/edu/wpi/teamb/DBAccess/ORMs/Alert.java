@@ -84,4 +84,13 @@ public class Alert {
     public void setEmployee(String employee) {
         this.employee = employee;
     }
+
+    @Override
+    public String toString() {
+        return "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", createdAt=" + createdAt +
+                ", employee='" + employee + '\'';
+    }
 }

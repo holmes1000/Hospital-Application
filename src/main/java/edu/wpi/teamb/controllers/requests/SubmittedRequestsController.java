@@ -150,7 +150,7 @@ public class SubmittedRequestsController {
                         .collect(Collectors.toCollection(ArrayList::new));
             }
         } else if (filterCategory.equals("employee")) {
-            if (filterOption.equals("Unassigned")) {
+            if (filterOption.equals("unassigned")) {
                 filteredListOfRequests = listOfRequests.stream()
                         .filter(request -> request.getEmployee().equals(filterOption))
                         .collect(Collectors.toCollection(ArrayList::new));
@@ -341,7 +341,7 @@ public class SubmittedRequestsController {
                         cbFilterOptions.getItems().clear();
                         //set the button to not be visible
                         cbFilterOptions.setVisible(false);
-                        loadRequestsIntoContainer("employee", "Unassigned");
+                        loadRequestsIntoContainer("employee", "unassigned");
                     } else if (!newValue.equals("")) {
                         //set cbFilterOptions to visible
                         cbFilterOptions.setVisible(true);

@@ -1391,6 +1391,13 @@ public class Repository {
         return fcr;
     }
 
+    public ArrayList<ConferenceRequest> getConferenceRequests() {
+        ArrayList<ConferenceRequest> cr = conferenceRequestDAO.getAllHelper1();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return cr;
+    }
+
     public void updateConferenceRequest(ConferenceRequest cr) {
         conferenceRequestDAO.update(cr);
         dbConnection.closeDBconnection();
