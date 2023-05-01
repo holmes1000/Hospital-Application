@@ -2,6 +2,7 @@ package edu.wpi.teamb.controllers;
 
 import com.jfoenix.controls.JFXButton;
 import edu.wpi.teamb.Bapp;
+import edu.wpi.teamb.entities.DefaultStart;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import javafx.fxml.FXML;
@@ -42,8 +43,9 @@ public class NavDrawerController {
 
   @FXML
   void clickPathfinder() {
-    btnPathfinder.setOnMouseClicked(event -> Navigation.navigate(Screen.PATHFINDER));
+    btnPathfinder.setOnMouseClicked(event -> pathfinder());
   }
+  private void pathfinder(){DefaultStart.getInstance().setDefault_start("15 Lobby Entrance Floor 2"); Navigation.navigate(Screen.PATHFINDER);}
 
   @FXML
   void clickRequests() {
