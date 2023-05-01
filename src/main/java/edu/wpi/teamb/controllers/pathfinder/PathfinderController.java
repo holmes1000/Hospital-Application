@@ -586,6 +586,11 @@ public class PathfinderController {
         btnEditMap.setTooltip(new Tooltip("Click to edit the map"));
         btnEditMap.setOnMouseClicked(event -> Navigation.navigate(Screen.MAP_EDITOR));
         toggleAvoidStairs.setTooltip(new Tooltip("Click to toggle Avoid Stairs"));
+        toggleAvoidStairs.setOnMouseClicked(event -> {
+            if(toggleAvoidStairs.isSelected()) {
+                algorithmDropdown.setText("AStar");
+            }
+        });
         
         btnClearPath.setOnMouseClicked(event -> handleClearPath());
     }
