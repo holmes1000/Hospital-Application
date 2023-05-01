@@ -243,7 +243,11 @@ public class OfficeRequestControllerI implements IRequestController {
 
     @Override
     public boolean nullInputs(){
-        return cbEmployeesToAssign.getValue() == null || cbSupplyItems.getValue() == null || cbSupplyType.getValue() == null || tbSupplyQuantities.getText().isEmpty() || cbLongName.getValue() == null;
+        return cbEmployeesToAssign.getValue() == null
+                || cbSupplyItems.getValue() == null
+                || cbSupplyType.getValue() == null
+                || tbSupplyQuantities.getText().isEmpty()
+                || cbLongName.getValue() == null;
     }
 
     @Override

@@ -153,7 +153,7 @@ public class SubmittedRequestsController {
                         .collect(Collectors.toCollection(ArrayList::new));
             }
         } else if (filterCategory.equals("employee")) {
-            if (filterOption.equals("Unassigned")) {
+            if (filterOption.equals("unassigned")) {
                 filteredListOfRequests = listOfRequests.stream()
                         .filter(request -> request.getEmployee().equals(filterOption))
                         .collect(Collectors.toCollection(ArrayList::new));
@@ -332,7 +332,7 @@ public class SubmittedRequestsController {
                         //if selection is null
                         loadRequestsIntoContainer();
                     } else if (newValue.equals("Unassigned Task")) {
-                        loadRequestsIntoContainer("employee", "Unassigned");
+                        loadRequestsIntoContainer("employee", "unassigned");
                     } else if (!newValue.equals("")) {
                         //set cbFilterOptions to visible
                         cbFilterOptions.setVisible(true);
