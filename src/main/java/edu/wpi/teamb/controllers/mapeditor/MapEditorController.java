@@ -121,8 +121,6 @@ public class MapEditorController {
   @FXML
   private VBox vboxAddNode;
   private ArrayList<Node> floorNodes = new ArrayList<>();
-  public boolean boolEditingNode = false;
-  public boolean boolSubmittedDetails = false;
   private Pane menuPane;
   private boolean editingNode = false; // Used for the submitting details button
   @FXML
@@ -579,18 +577,11 @@ public class MapEditorController {
     nodeGroup.getChildren().clear();
     edgeGroup.getChildren().clear();
     nameGroup.getChildren().clear();
-    // Redraw the map
-//    try {
-//      if (mapEditorContext.getState() != editState) {
     PathFinding.ASTAR.force_init();
-//      }
-    //nodeList = Repository.getRepository().getAllNodes();
     fullNodesList = Repository.getRepository().getAllFullNodes();
     draw(currentFloor);
+    drawMoveMap(currentFloor);
     System.out.println("Refreshing map for floor " + currentFloor + "...");
-//    } catch (SQLException e) {
-//      e.printStackTrace();
-//    }
   }
 
   private void handleAddNode() {
@@ -744,6 +735,7 @@ public class MapEditorController {
         System.out.println("Node: " + nodeID + " is draggable");
       }
     }
+    determineState();
   }
 
 
@@ -809,6 +801,8 @@ public class MapEditorController {
           node.setFill(Color.RED);
           node.setRadius(5);
           pane.gestureEnabledProperty().set(true);
+          mapEditorContext.setState(new ViewState());
+          determineState();
         } catch (IOException e) {
           throw new RuntimeException(e);
         }
@@ -882,6 +876,8 @@ public class MapEditorController {
 
     // Add the move to the database
     Repository.getRepository().addMove(move);
+
+    submissionAlert("Move submitted successfully");
 
     // Hide the submit button and date picker
     btnSubmitMove.setVisible(false);
