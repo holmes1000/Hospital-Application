@@ -148,7 +148,7 @@ public class HomeController {
 //        AlertCardController  alertCardController = new AlertCardController();
         ArrayList<Alert> allAlerts = Repository.getRepository().getAllAlerts();
         for(Alert alert : allAlerts){
-            if(alert.getEmployee().equals(username) || alert.getEmployee().equals("Unassigned")) {
+            if(alert.getEmployee().equals(username) || alert.getEmployee().equals("unassigned")) {
                 FXMLLoader loader = null;
                 AnchorPane alertCardRoot = null;
                 AlertCardController alertCardController = null;

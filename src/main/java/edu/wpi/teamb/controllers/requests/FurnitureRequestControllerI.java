@@ -136,7 +136,7 @@ public class FurnitureRequestControllerI implements IRequestController{
                 FXCollections.observableArrayList();
         employees.addAll(EFurnitureRequest.getUsernames());
         Collections.sort(employees);
-        employees.add(0, "Unassigned");
+        employees.add(0, "unassigned");
         cbEmployeesToAssign.setItems(employees);
         cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
         initComboBoxChangeListeners();
@@ -245,7 +245,6 @@ public class FurnitureRequestControllerI implements IRequestController{
         return cbAvailableFurniture.getValue() == null
                 || cdAvailableModels.getValue() == null
                 || cdAssembly.getValue() == null
-                || txtFldNotes.getText().isEmpty()
                 || cbEmployeesToAssign.getValue() == null
                 || cbLongName.getValue() == null;
     }

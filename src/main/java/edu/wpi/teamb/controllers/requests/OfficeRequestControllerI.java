@@ -116,7 +116,7 @@ public class OfficeRequestControllerI implements IRequestController {
         //DROPDOWN INITIALIZATION
         ObservableList<String> employees = FXCollections.observableArrayList(EOfficeRequest.getUsernames());
         Collections.sort(employees);
-        employees.add(0, "Unassigned");
+        employees.add(0, "unassigned");
         cbEmployeesToAssign.setItems(employees);
         cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
 
@@ -228,7 +228,11 @@ public class OfficeRequestControllerI implements IRequestController {
 
     @Override
     public boolean nullInputs(){
-        return cbEmployeesToAssign.getValue() == null || cbSupplyItems.getValue() == null || cbSupplyType.getValue() == null || tbSupplyQuantities.getText().isEmpty() || cbLongName.getValue() == null;
+        return cbEmployeesToAssign.getValue() == null
+                || cbSupplyItems.getValue() == null
+                || cbSupplyType.getValue() == null
+                || tbSupplyQuantities.getText().isEmpty()
+                || cbLongName.getValue() == null;
     }
 
     @Override
