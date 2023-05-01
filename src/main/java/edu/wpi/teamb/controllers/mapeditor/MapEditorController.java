@@ -130,6 +130,8 @@ public class MapEditorController {
   @FXML
   private MFXButton btnAlignNodes;
 
+  @FXML private MFXButton btnPathfinder;
+
   // New States
   MapEditorState addNodeState = new AddNodeState();
   MapEditorState editNodeState = new EditNodeState();
@@ -836,6 +838,7 @@ public class MapEditorController {
     btnSubmitMove.setOnMouseClicked(event -> handleSubmitMove());
     btnRefresh.setOnMouseClicked(event -> refreshMap());
     btnFindPath.setOnMouseClicked(event -> handleFindPath());
+    btnPathfinder.setOnMouseClicked(event -> Navigation.navigate(Screen.PATHFINDER));
   }
 
   private void handleToggleMoves() {
