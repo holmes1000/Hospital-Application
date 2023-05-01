@@ -12,6 +12,7 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -48,10 +49,12 @@ public class EditAlertsController {
     @FXML private MFXFilterComboBox<String> cbEmployees;
 
     @FXML private MFXButton btnAddAlert;
+    @FXML private SplitPane spAdd;
     @FXML private MFXButton btnDeleteAlert;
     @FXML private MFXButton btnEditAlert;
     @FXML private MFXButton btnRefresh;
     @FXML private MFXButton btnReset;
+    @FXML private SplitPane spReset;
     @FXML private Pane navPane;
     @FXML private MFXButton btnBack;
     @FXML private TableView<edu.wpi.teamb.DBAccess.ORMs.Alert> tbAlerts;
@@ -67,8 +70,7 @@ public class EditAlertsController {
         initNavBar();
         initializeFields();
         navLoaded = false;
-        activateNav();
-        deactivateNav();
+        initializeNavGates();
 
     }
 
@@ -82,7 +84,7 @@ public class EditAlertsController {
             usernames.add(users.get(i).getUsername());
         }
         Collections.sort(usernames);
-        usernames.add(0, "Unassigned");
+        usernames.add(0, "unassigned");
         cbEmployees.getItems().addAll(usernames);
 
         alertTable();
@@ -92,6 +94,21 @@ public class EditAlertsController {
 
     public void initButtons() {
         btnAddAlert.setTooltip(new Tooltip("Click to add alert"));
+        BooleanBinding bb = new BooleanBinding() {
+            {
+                super.bind(textTitle.textProperty(),
+                        textDescription.textProperty(),
+                        cbEmployees.valueProperty());
+            }
+
+            @Override
+            protected boolean computeValue() {
+                return (textTitle.getText().isEmpty()
+                        || textDescription.getText().isEmpty()
+                        || cbEmployees.getValue() == null);
+            }
+        };
+        btnAddAlert.disableProperty().bind(bb);
         btnEditAlert.setTooltip(new Tooltip("Click to edit alert"));
         btnRefresh.setTooltip(new Tooltip("Click to refresh table"));
         btnDeleteAlert.setTooltip(new Tooltip("Click to delete alert"));
@@ -166,10 +183,10 @@ public class EditAlertsController {
     private void handleAddAlert() {
         edu.wpi.teamb.DBAccess.ORMs.Alert newAlert = new edu.wpi.teamb.DBAccess.ORMs.Alert();
         newAlert.setTitle(textTitle.getText());
-        newAlert.setDescription(textDescription.getText().toLowerCase());
+        newAlert.setDescription(textDescription.getText());
         newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
         if(cbEmployees.getValue() == null){
-            newAlert.setEmployee("Unassigned");
+            newAlert.setEmployee("unassigned");
         } else {
             newAlert.setEmployee(cbEmployees.getValue());
         }
@@ -263,6 +280,18 @@ public class EditAlertsController {
     }
 
 
+    /**
+     * For some reason there are occasions when the nav-bar gates for toggling its handling does not start correctly
+     * This fixes this issue
+     */
+    public void initializeNavGates(){
+        activateNav();
+        deactivateNav();
+        navPane.setMouseTransparent(true);
+        vboxActivateNav.setDisable(false);
+        navLoaded = false;
+        vboxActivateNav1.setDisable(true);
+    }
 
     /**
      * Utilizes a gate to swap between handling the navdrawer and the rest of the page

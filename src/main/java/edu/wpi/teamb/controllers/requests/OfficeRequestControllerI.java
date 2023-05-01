@@ -3,6 +3,7 @@ package edu.wpi.teamb.controllers.requests;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.Full.FullOfficeRequest;
+import edu.wpi.teamb.DBAccess.ORMs.Alert;
 import edu.wpi.teamb.controllers.components.InfoCardController;
 import edu.wpi.teamb.entities.requests.EOfficeRequest;
 import edu.wpi.teamb.entities.requests.IRequest;
@@ -13,6 +14,7 @@ import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -93,6 +95,16 @@ public class OfficeRequestControllerI implements IRequestController {
         btnReset.setTooltip(new Tooltip("Click to reset all fields"));
         btnReset.setOnAction(e -> handleReset());
         helpIcon.setOnMouseClicked(e -> handleHelp());
+        btnReset.setDisable(true);
+        ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
+            btnReset.setDisable(false);
+        };
+        cbEmployeesToAssign.textProperty().addListener(changeListener);
+        cbLongName.textProperty().addListener(changeListener);
+        cbSupplyItems.textProperty().addListener(changeListener);
+        cbSupplyType.textProperty().addListener(changeListener);
+        tbSupplyQuantities.textProperty().addListener(changeListener);
+        txtFldNotes.textProperty().addListener(changeListener);
     }
 
     @Override
@@ -105,7 +117,7 @@ public class OfficeRequestControllerI implements IRequestController {
         //DROPDOWN INITIALIZATION
         ObservableList<String> employees = FXCollections.observableArrayList(EOfficeRequest.getUsernames());
         Collections.sort(employees);
-        employees.add(0, "Unassigned");
+        employees.add(0, "unassigned");
         cbEmployeesToAssign.setItems(employees);
         cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
 
@@ -158,7 +170,7 @@ public class OfficeRequestControllerI implements IRequestController {
     public void handleSubmit() {
         if (nullInputs()) {
             showPopOver();
-        } else if(tbSupplyQuantities.getText().replaceAll("[a-zA-Z]", "").length() != 0){
+        }else if(tbSupplyQuantities.getText().replaceAll("[a-zA-Z]", "").length() != 0){
             // Get the standard request fields
             EOfficeRequest.setEmployee(cbEmployeesToAssign.getValue());
             EOfficeRequest.setLocationName(cbLongName.getValue());
@@ -181,10 +193,27 @@ public class OfficeRequestControllerI implements IRequestController {
                         Integer.toString(EOfficeRequest.getQuantity())
                 };
                 EOfficeRequest.submitRequest(output);
+                alertEmployee(cbEmployeesToAssign.getValue());
                 handleReset();
             }
             submissionAlert();
+        } else {
+            tbSupplyQuantities.clear();
+            tbSupplyQuantities.setTooltip(new Tooltip("Please only enter integer values"));
         }
+    }
+
+    /**
+     * Grabs the current employee that is referred to in the newly made request and alerts them of this
+     * @param employee
+     */
+    public void alertEmployee(String employee){
+        Alert newAlert = new Alert();
+        newAlert.setTitle("New Task Assigned");
+        newAlert.setDescription("You have been assigned a new office request to complete.");
+        newAlert.setEmployee(employee);
+        newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
+        Repository.getRepository().addAlert(newAlert);
     }
 
     @Override
@@ -214,7 +243,11 @@ public class OfficeRequestControllerI implements IRequestController {
 
     @Override
     public boolean nullInputs(){
-        return cbEmployeesToAssign.getValue() == null || cbSupplyItems.getValue() == null || cbSupplyType.getValue() == null || tbSupplyQuantities.getText().isEmpty() || cbLongName.getValue() == null;
+        return cbEmployeesToAssign.getValue() == null
+                || cbSupplyItems.getValue() == null
+                || cbSupplyType.getValue() == null
+                || tbSupplyQuantities.getText().isEmpty()
+                || cbLongName.getValue() == null;
     }
 
     @Override

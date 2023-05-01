@@ -3,6 +3,7 @@ package edu.wpi.teamb.controllers.requests;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.Full.FullConferenceRequest;
+import edu.wpi.teamb.DBAccess.ORMs.Alert;
 import edu.wpi.teamb.controllers.components.InfoCardController;
 import edu.wpi.teamb.entities.requests.EConferenceRequest;
 import edu.wpi.teamb.entities.requests.IRequest;
@@ -11,11 +12,16 @@ import edu.wpi.teamb.navigation.Screen;
 import edu.wpi.teamb.utils.TimeFormattingHelpers;
 import io.github.palexdev.materialfx.beans.NumberRange;
 import io.github.palexdev.materialfx.controls.*;
+import javafx.beans.InvalidationListener;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
@@ -27,15 +33,18 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.Date;
 
 
 public class ConferenceRequestControllerI implements IRequestController{
 
     @FXML private MFXFilterComboBox<String> reservationHour;
-    @FXML private MFXDatePicker datePicker;
+   // @FXML private MFXDatePicker datePicker;
+    @FXML private DatePicker dateToReserve;
     @FXML private MFXFilterComboBox<String> cbEmployeesToAssign;
     @FXML private MFXTextField eventNameTextField;
     @FXML private MFXTextField bookingReasonTextField;
@@ -56,9 +65,17 @@ public class ConferenceRequestControllerI implements IRequestController{
     public void initialize() throws IOException, SQLException {
         initBtns();
         initializeFields();
-        datePicker.setStartingYearMonth(YearMonth.from(datePicker.getCurrentDate()));
-        NumberRange<Integer> range = new NumberRange<>(datePicker.getCurrentDate().getYear(), datePicker.getCurrentDate().getYear() + 1);
-        datePicker.setYearsRange(range);
+//        datePicker.setStartingYearMonth(YearMonth.from(datePicker.getCurrentDate()));
+//        NumberRange<Integer> range = new NumberRange<>(datePicker.getCurrentDate().getYear(), datePicker.getCurrentDate().getYear() + 1);
+//        datePicker.setYearsRange(range);
+        dateToReserve.setDayCellFactory(picker -> new DateCell() {
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                LocalDate today = LocalDate.now();
+
+                setDisable(empty || date.compareTo(today) < 0 );
+            }
+        });
     }
 
     @Override
@@ -67,7 +84,7 @@ public class ConferenceRequestControllerI implements IRequestController{
         BooleanBinding bb = new BooleanBinding() {
             {
                 super.bind(reservationHour.valueProperty(),
-                        datePicker.valueProperty(),
+                        dateToReserve.valueProperty(),
                         cbEmployeesToAssign.valueProperty(),
                         eventNameTextField.textProperty(),
                         bookingReasonTextField.textProperty(),
@@ -78,7 +95,7 @@ public class ConferenceRequestControllerI implements IRequestController{
             @Override
             protected boolean computeValue() {
                 return (reservationHour.getValue() == null ||
-                        datePicker.getValue() == null ||
+                        dateToReserve.getValue() == null ||
                         cbEmployeesToAssign.getValue() == null ||
                         eventNameTextField.getText().isEmpty() ||
                         bookingReasonTextField.getText().isEmpty() ||
@@ -92,7 +109,23 @@ public class ConferenceRequestControllerI implements IRequestController{
         btnSubmit.setOnAction(e -> handleSubmit());
         resetBtn.setTooltip(new Tooltip("Click to reset all fields"));
         resetBtn.setOnAction(e -> handleReset());
+        resetBtn.setDisable(true);
+        ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
+            resetBtn.setDisable(false);
+        };
+        reservationHour.textProperty().addListener(changeListener);
+        cbEmployeesToAssign.textProperty().addListener(changeListener);
+        cbLongName.textProperty().addListener(changeListener);
+        eventNameTextField.textProperty().addListener(changeListener);
+        bookingReasonTextField.textProperty().addListener(changeListener);
+        cbDuration.textProperty().addListener(changeListener);
         helpIcon.setOnMouseClicked(e -> handleHelp());
+        dateToReserve.valueProperty().addListener(new ChangeListener<LocalDate>() {
+            @Override
+            public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) {
+                resetBtn.setDisable(false);
+            }
+        });
     }
 
     @Override
@@ -109,7 +142,7 @@ public class ConferenceRequestControllerI implements IRequestController{
                 FXCollections.observableArrayList();
         employees.addAll(EConferenceRequest.getUsernames());
         Collections.sort(employees);
-        employees.add(0, "Unassigned");
+        employees.add(0, "unassigned");
         cbEmployeesToAssign.setItems(employees);
         cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
 
@@ -164,7 +197,7 @@ public class ConferenceRequestControllerI implements IRequestController{
                 int hour = Integer.parseInt(startHour) + 12;
                 timerequestedFormatted = "" + startHour + ":" + startMinute + ":00";
             }
-            String daterequested = datePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));;
+            String daterequested = dateToReserve.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));;
             String timeStamp = daterequested + " " + timerequestedFormatted;
 
             // Get the standard request fields
@@ -193,16 +226,30 @@ public class ConferenceRequestControllerI implements IRequestController{
                 };
 
                 EConferenceRequest.submitRequest(output);
+                alertEmployee(cbEmployeesToAssign.getValue());
                 handleReset();
             }
             submissionAlert();
         }
     }
 
+    /**
+     * Grabs the current employee that is referred to in the newly made request and alerts them of this
+     * @param employee
+     */
+    public void alertEmployee(String employee){
+        Alert newAlert = new Alert();
+        newAlert.setTitle("New Task Assigned");
+        newAlert.setDescription("Conference request assigned.");
+        newAlert.setEmployee(employee);
+        newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
+        Repository.getRepository().addAlert(newAlert);
+    }
+
     @Override
     public void handleReset() {
-        datePicker.clear();
-        reservationHour.setValue("12:00 AM");
+        dateToReserve.getEditor().clear();
+//        reservationHour.setValue("12:00 AM");
         cbDuration.clear();
         eventNameTextField.clear();
         bookingReasonTextField.clear();
@@ -234,7 +281,7 @@ public class ConferenceRequestControllerI implements IRequestController{
                 || bookingReasonTextField.getText().isEmpty()
                 || cbDuration.getValue() == null
                 || reservationHour.getValue() == null
-                || datePicker.getValue() == null;
+                || dateToReserve.getValue() == null;
     }
 
     @Override
@@ -261,15 +308,31 @@ public class ConferenceRequestControllerI implements IRequestController{
         eventNameTextField.setText(fullConferenceRequest.getEventName());
         bookingReasonTextField.setText(fullConferenceRequest.getBookingReason());
         cbDuration.getSelectionModel().selectItem(calcTime(fullConferenceRequest.getDuration(), fullConferenceRequest.getDateRequested().toLocalDateTime().getHour(), fullConferenceRequest.getDateRequested().toLocalDateTime().getMinute()));
-        datePicker.setValue(fullConferenceRequest.getDateRequested().toLocalDateTime().toLocalDate());
-        reservationHour.getSelectionModel().selectItem("" + TimeFormattingHelpers.get24to12Hour(fullConferenceRequest.getDateRequested().toLocalDateTime().getHour()) + TimeFormattingHelpers.get24to12Hour(fullConferenceRequest.getDateRequested().toLocalDateTime().getMinute()));
+        dateToReserve.setValue(fullConferenceRequest.getDateRequested().toLocalDateTime().toLocalDate());
+        int hour1 = fullConferenceRequest.getDateRequested().toLocalDateTime().getHour();
+        int minute1 = fullConferenceRequest.getDateRequested().toLocalDateTime().getMinute();
+        String am_pm = "AM";
+        if (hour1 > 12) {
+            hour1 -= 12;
+            am_pm = "PM";
+        } else if (hour1 == 12) {
+            am_pm = "PM";
+        } else if (hour1 == 0) {
+            hour1 = 12;
+        }
+        if (minute1 < 10) {
+            reservationHour.getSelectionModel().selectItem(String.valueOf(hour1) + ":" + "0" + String.valueOf(minute1) + " " + am_pm);
+        } else {
+            reservationHour.getSelectionModel().selectItem(String.valueOf(hour1) + ":" + String.valueOf(minute1) + " " + am_pm);
+        }
+        //String time = (String.valueOf(TimeFormattingHelpers.get24to12Hour(hour1)) + ":" + String.valueOf(fullConferenceRequest.getDateRequested().toLocalDateTime().getMinute()));
+        //reservationHour.getSelectionModel().selectItem(time);
         String minutes;
         if (fullConferenceRequest.getDateRequested().toLocalDateTime().getMinute() < 10) {
             minutes = "0" + fullConferenceRequest.getDateRequested().toLocalDateTime().getMinute();
         } else {
             minutes = "" + fullConferenceRequest.getDateRequested().toLocalDateTime().getMinute();
         }
-
         //set the submit button to say update
         btnSubmit.setText("Update");
         //remove the current onAction event
@@ -297,7 +360,7 @@ public class ConferenceRequestControllerI implements IRequestController{
                 int hour = Integer.parseInt(startHour) + 12;
                 timerequestedFormatted = "" + hour + ":" + startMinute + ":00";
             }
-            String daterequested = datePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));;
+            String daterequested = dateToReserve.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));;
             String timeStamp = daterequested + " " + timerequestedFormatted;
 
             fullConferenceRequest.setDateRequested(Timestamp.valueOf(timeStamp));
@@ -341,19 +404,26 @@ public class ConferenceRequestControllerI implements IRequestController{
             int endHour = startHour;
             int endMinute = startMinute + duration;
             if (endMinute >= 60) {
-                endHour++;
-                endMinute -= 60;
+                endHour = endMinute / 60;
+                endMinute = endMinute % 60;
             }
             if (endHour >= 24) {
                 endHour -= 24;
-            }
-            if (endHour > 12) {
+            } else if (endHour > 12) {
                 endHour -= 12;
                 if (startAmPm == "AM") {
                     startAmPm = "PM";
                 } else {
                     startAmPm = "AM";
                 }
+            } else if (endHour == 12) {
+                if (startAmPm == "AM") {
+                    startAmPm = "PM";
+                } else {
+                    startAmPm = "AM";
+                }
+            } else if (endHour == 0) {
+                endHour = 12;
             }
             if (endMinute < 10) {
                 time = endHour + ":0" + endMinute + " " + startAmPm;

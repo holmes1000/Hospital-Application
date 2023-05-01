@@ -4,6 +4,7 @@
 <?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
@@ -36,7 +37,7 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </MFXButton>
-            <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="1028.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="1028.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../img/helpicon.png" />
                </image>
@@ -71,6 +72,7 @@
                   <Image url="@../../img/furtniture-request.jpg" />
                </image>
             </ImageView>
+            <Separator layoutX="20.0" layoutY="62.0" prefWidth="450.0" />
          </children>
       </AnchorPane>
    </center>

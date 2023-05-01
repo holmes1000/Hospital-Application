@@ -18,7 +18,7 @@
 <?import javafx.scene.text.Text?>
 <?import net.kurobako.gesturefx.GesturePane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #272523;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.signage.SignageController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #5f7ca4;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.signage.SignageController">
     <center>
     <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER">
         <children>
@@ -30,7 +30,7 @@
                     <Image url="@../../img/bwh-background.jpg" />
                 </image>
             </ImageView>
-            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#739cb9" height="586.0" layoutX="-23.0" layoutY="84.0" stroke="#0000004e" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeWidth="2.0" width="1100.0" />
+            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#5f7ca4" height="586.0" layoutX="-23.0" layoutY="84.0" stroke="TRANSPARENT" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeWidth="2.0" width="1100.0" />
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#012d5a" height="50.0" layoutX="-162.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1347.0" />
             <Text fill="WHITE" layoutX="-21.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Signage" textAlignment="CENTER" wrappingWidth="1164.103515625">
                 <font>
@@ -39,7 +39,7 @@
             </Text>
             <VBox alignment="TOP_CENTER" layoutX="-22.0" layoutY="117.0" prefHeight="40.0" prefWidth="673.0">
                <children>
-                  <MFXComboBox fx:id="cbLocation" floatingText="Choose sign" onAction="#clickCbLocation" prefHeight="40.0" prefWidth="588.0" style="-fx-border-color: #000000;" />
+                  <MFXComboBox fx:id="cbLocation" floatingText="Choose sign" onAction="#clickCbLocation" prefHeight="40.0" prefWidth="588.0" style="-fx-border-color: transparent;" />
                </children></VBox>
             <VBox fx:id="signVbox" layoutX="24.0" layoutY="203.0" prefHeight="434.0" prefWidth="586.0" />
             <Separator layoutX="644.0" layoutY="117.0" orientation="VERTICAL" prefHeight="518.0" prefWidth="22.0" />

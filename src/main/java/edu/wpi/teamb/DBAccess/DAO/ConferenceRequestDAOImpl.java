@@ -79,7 +79,25 @@ public class ConferenceRequestDAOImpl implements IDAO {
         return (ArrayList<FullConferenceRequest>) conf.listFullRequests(crs);
     }
 
-    /**
+    public ArrayList<ConferenceRequest> getAllHelper1() {
+        FullFactory ff = new FullFactory();
+        IFull conf = ff.getFullRequest("Conference");
+        ArrayList<ConferenceRequest> crs = new ArrayList<ConferenceRequest>();
+        try {
+            ResultSet rs = getDBRowAllRequests();
+            while (rs.next()) {
+                crs.add(new ConferenceRequest(rs));
+            }
+            return crs;
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'ConferenceRequestDAOImpl.getAllHelper1': " + e.getMessage());
+        }
+        DBconnection.getDBconnection().closeDBconnection();
+        DBconnection.getDBconnection().forceClose();
+        return crs;
+    }
+
+        /**
      * Adds a ConferenceRequest to the both the database and the local list
      *
      * @param request the ConferenceRequest to add

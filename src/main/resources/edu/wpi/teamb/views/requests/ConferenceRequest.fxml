@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
 <?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
@@ -23,7 +24,6 @@
                         <Font name="System Bold" size="36.0" />
                     </font>
                 </Text>
-                <MFXDatePicker fx:id="datePicker" floatMode="INLINE" floatingText="Date To Reserve" layoutX="20.0" layoutY="80.0" prefHeight="45.0" prefWidth="450.0" promptText="MM/DD/YYYY" />
                 <MFXButton fx:id="resetBtn" defaultButton="true" layoutX="20.0" layoutY="480.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Reset" textFill="#f1f1f1">
                     <font>
                         <Font name="System Bold" size="18.0" />
@@ -67,6 +67,8 @@
                   </MFXButton>
                </items>
             </SplitPane>
+            <DatePicker fx:id="dateToReserve" layoutX="20.0" layoutY="80.0" prefHeight="45.0" prefWidth="450.0" promptText="MM/DD/YYYY" style="-fx-background-color: transparent;" />
+            <Separator layoutX="20.0" layoutY="62.0" prefWidth="450.0" />
             </children>
         </AnchorPane>
     </center>

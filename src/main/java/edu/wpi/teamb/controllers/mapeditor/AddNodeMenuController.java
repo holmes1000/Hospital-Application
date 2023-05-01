@@ -7,9 +7,11 @@ import edu.wpi.teamb.pathfinding.PathFinding;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 
@@ -35,13 +37,12 @@ public class AddNodeMenuController {
 
     static Node currentNode = null;
     static String currentFloor = null;
-
-    MapEditorController mapEditorController = new MapEditorController();
+    private static MapEditorController mapEditorController;
 
     public AddNodeMenuController() throws SQLException {
     }
 
-    public static void setCurrentFloor(String currentFloor) {
+    public void setCurrentFloor(String currentFloor) {
         AddNodeMenuController.currentFloor = currentFloor;
     }
 
@@ -69,14 +70,38 @@ public class AddNodeMenuController {
         tfYCoord.setTooltip(new Tooltip("Change the y coordinate of the node if needed"));
     }
 
+    public void setMapEditorController(MapEditorController mapEditorController) {
+        AddNodeMenuController.mapEditorController = mapEditorController;
+    }
+
     public void initButtons() {
+        BooleanBinding bb = new BooleanBinding() {
+            {
+                super.bind(tfNodeId.textProperty(),
+                        tfLongName.textProperty(),
+                        tfShortName.textProperty(),
+                        tfXCoord.textProperty(),
+                        tfYCoord.textProperty(),
+                        cbNodeType.valueProperty());
+            }
+
+            @Override
+            protected boolean computeValue() {
+                return (tfNodeId.getText().isEmpty() ||
+                        tfLongName.getText().isEmpty() ||
+                        tfShortName.getText().isEmpty() ||
+                        tfXCoord.getText().isEmpty() ||
+                        tfYCoord.getText().isEmpty() ||
+                        cbNodeType.getValue() == null);
+            }
+        };
+        btnSubmitNodeDetails.disableProperty().bind(bb);
         btnSubmitNodeDetails.setOnMouseClicked(event -> handleSubmitNodeDetails());
         btnSubmitNodeDetails.setTooltip(new Tooltip("Click to submit the node details"));
     }
 
     private void handleSubmitNodeDetails() {
         submitNode();
-        mapEditorController.refreshMap();
     }
 
     private void submitNode() {
@@ -93,6 +118,8 @@ public class AddNodeMenuController {
             System.out.println("Adding a new node with nodeID: " + newNode.getNodeID());
         }
 
+        submissionAlert("Node added successfully! Refreshing the map.");
+        mapEditorController.refreshMap();
         // Close the window
         Stage stage = (Stage) btnSubmitNodeDetails.getScene().getWindow();
         stage.close();
@@ -133,7 +160,16 @@ public class AddNodeMenuController {
     }
 
 
-    public static void setCurrentNode(Node currentNode) {
+    public void setCurrentNode(Node currentNode) {
         AddNodeMenuController.currentNode = currentNode;
+    }
+
+    void submissionAlert(String message) {
+        // Create an alert
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Submission Successful");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

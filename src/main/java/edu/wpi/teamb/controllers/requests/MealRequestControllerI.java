@@ -3,6 +3,7 @@ package edu.wpi.teamb.controllers.requests;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.Full.FullMealRequest;
+import edu.wpi.teamb.DBAccess.ORMs.Alert;
 import edu.wpi.teamb.controllers.components.InfoCardController;
 import edu.wpi.teamb.entities.requests.EMealRequest;
 import edu.wpi.teamb.entities.requests.IRequest;
@@ -13,6 +14,7 @@ import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -77,6 +79,18 @@ public class MealRequestControllerI implements IRequestController{
         btnReset.setTooltip(new Tooltip("Click to reset the form"));
         btnReset.setOnAction(e -> handleReset());
         helpIcon.setOnMouseClicked(e -> handleHelp());
+        btnReset.setDisable(true);
+        ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
+            btnReset.setDisable(false);
+        };
+        cbEmployeesToAssign.textProperty().addListener(changeListener);
+        cbLongName.textProperty().addListener(changeListener);
+        cbOrderLocation.textProperty().addListener(changeListener);
+        cbAvailableDrinks.textProperty().addListener(changeListener);
+        cbAvailableMeals.textProperty().addListener(changeListener);
+        cbAvailableSnacks.textProperty().addListener(changeListener);
+        txtFldNotes.textProperty().addListener(changeListener);
+
     }
 
     @Override
@@ -99,7 +113,7 @@ public class MealRequestControllerI implements IRequestController{
                 FXCollections.observableArrayList();
         employees.addAll(EMealRequest.getUsernames());
         Collections.sort(employees);
-        employees.add(0, "Unassigned");
+        employees.add(0, "unassigned");
         cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
         cbEmployeesToAssign.setItems(employees);
 
@@ -129,7 +143,7 @@ public class MealRequestControllerI implements IRequestController{
 
     @Override
     public void handleSubmit() {
-        if (nullInputs())
+        if (nullInputs() || nullInputsFood())
             showPopOver();
         else {
             // Get the standard request fields
@@ -158,10 +172,24 @@ public class MealRequestControllerI implements IRequestController{
                         EMealRequest.getSnack()
                 };
                 EMealRequest.submitRequest(output);
+                alertEmployee(cbEmployeesToAssign.getValue());
                 handleReset();
             }
             submissionAlert();
         }
+    }
+
+    /**
+     * Grabs the current employee that is referred to in the newly made request and alerts them of this
+     * @param employee
+     */
+    public void alertEmployee(String employee){
+        Alert newAlert = new Alert();
+        newAlert.setTitle("New Task Assigned");
+        newAlert.setDescription("You have been assigned a new meal request to complete.");
+        newAlert.setEmployee(employee);
+        newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
+        Repository.getRepository().addAlert(newAlert);
     }
 
     @Override
@@ -200,10 +228,13 @@ public class MealRequestControllerI implements IRequestController{
     public boolean nullInputs() {
         return cbOrderLocation.getValue() == null
                 || cbEmployeesToAssign.getValue() == null
-                || cbAvailableMeals.getValue() == null
-                || cbAvailableDrinks.getValue() == null
-                || cbAvailableSnacks.getValue() == null
                 || cbLongName.getValue() == null;
+    }
+
+    public boolean nullInputsFood() {
+        return cbAvailableMeals.getValue() == null
+                && cbAvailableDrinks.getValue() == null
+                && cbAvailableSnacks.getValue() == null;
     }
 
     @Override

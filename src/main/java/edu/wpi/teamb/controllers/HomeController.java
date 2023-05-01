@@ -6,7 +6,9 @@ import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.ORMs.Alert;
+import edu.wpi.teamb.DBAccess.ORMs.Request;
 import edu.wpi.teamb.DBAccess.ORMs.User;
+import edu.wpi.teamb.controllers.components.AlertCardController;
 import edu.wpi.teamb.entities.ELogin;
 import edu.wpi.teamb.entities.EHome;
 import edu.wpi.teamb.navigation.Navigation;
@@ -17,7 +19,9 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -27,6 +31,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
@@ -57,9 +62,11 @@ public class HomeController {
     @FXML private MFXButton btnCredits;
     @FXML private  MFXButton btnSecret;
     @FXML private MFXButton btnClear;
-    @FXML private MFXButton viewUserRequestButton;
-    @FXML private TableView<Alert> alertsTable;
-    @FXML private VBox vboxWelcomeBack;
+    @FXML private VBox vboxAlerts;
+    @FXML private VBox vboxRequests;
+    @FXML private VBox vboxPathfinder;
+    @FXML private HBox hboxWelcomeBack;
+
     private MFXButton pathfinderImgBtn = new MFXButton();
     private boolean navLoaded;
 
@@ -80,6 +87,7 @@ public class HomeController {
         initPathfinderBtn();
         initializeBtns();
         loadAlerts();
+        handleUserRequests();
         homeE = new EHome();
         bounds = homePane.getBoundsInLocal();
 
@@ -93,10 +101,11 @@ public class HomeController {
         Text welcomeBack = new Text();
         welcomeBack.setFill(Color.WHITE);
         welcomeBack.setFont(Font.font("System", FontWeight.BOLD, 36));
-        welcomeBack.setText("Welcome " + user + ", the time is: " + timeMessage);
+        welcomeBack.setText("Welcome " + user + ". The time is: " + timeMessage + ".");
+        hboxWelcomeBack.getChildren().clear();
+//        hboxWelcomeBack.setAlignment(Pos.CENTER_LEFT);
+        hboxWelcomeBack.getChildren().add(welcomeBack);
         welcomeBack.toFront();
-        vboxWelcomeBack.getChildren().clear();
-        vboxWelcomeBack.getChildren().add(welcomeBack);
     }
 
     private void handleDateTime(){
@@ -128,48 +137,45 @@ public class HomeController {
     }
 
     private void initPathfinderBtn() {
-        pathfinderImgBtn.setOnMouseClicked(e -> onPathfinderImgClick());
+        vboxPathfinder.setOnMouseClicked(e -> onPathfinderImgClick());
         Image mapImg = Bapp.getHospitalListOfFloors().get(0);
         ImageView imageView = new ImageView(mapImg);
-        imageView.setFitHeight(200);
+        imageView.setFitHeight(260);
         imageView.setPreserveRatio(true);
-        pathfinderImgBtn.setPrefSize(200, 200);
-        pathfinderImgBtn.setLayoutX(700);
-        pathfinderImgBtn.setLayoutY(200);
-        pathfinderImgBtn.setGraphic(imageView);
-        homePane.getChildren().add(pathfinderImgBtn);
+        vboxPathfinder.getChildren().clear();
+        vboxPathfinder.getChildren().add(imageView);
+
+//        imageView.setFitHeight(200);
+//        imageView.setPreserveRatio(true);
+//        pathfinderImgBtn.setPrefSize(200, 200);
+//        pathfinderImgBtn.setLayoutX(700);
+//        pathfinderImgBtn.setLayoutY(200);
+//        pathfinderImgBtn.setGraphic(imageView);
+//        homePane.getChildren().add(pathfinderImgBtn);
     }
 
     public void loadAlerts(){
+//        AlertCardController  alertCardController = new AlertCardController();
         ArrayList<Alert> allAlerts = Repository.getRepository().getAllAlerts();
-        alertsTable.setEditable(false);
-        TableColumn<Alert, String> titles = new TableColumn<>("Subject");
-        titles.setMinWidth(100);
-        titles.setStyle("-fx-alignment: CENTER;");
-        titles.setCellValueFactory(new PropertyValueFactory<>("title"));
-
-        TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, String> descriptions = new TableColumn<>("Description");
-        descriptions.setStyle("-fx-alignment: CENTER;");
-        descriptions.setMinWidth(220);
-        descriptions.setCellValueFactory(new PropertyValueFactory<>("description"));
-
-
-        TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, Timestamp> time = new TableColumn<>("Created at");
-        time.setStyle("-fx-alignment: CENTER;");
-        time.setCellValueFactory((new PropertyValueFactory<>("createdAt")));
-        alertsTable.getColumns().addAll(titles, descriptions, time);
-        time.setSortType(TableColumn.SortType.DESCENDING);
-        alertsTable.getSortOrder().setAll(time);
-
-
-        for(Alert alert : allAlerts){
+        ArrayList<Alert> orderedAlerts = new ArrayList<>();
+        orderedAlerts = allAlerts.stream().sorted(Comparator.comparing(Alert::getCreatedAt).reversed()).collect(Collectors.toCollection(ArrayList::new));
+        for(Alert alert : orderedAlerts){
             if(alert.getEmployee().equals(username) || alert.getEmployee().equals("unassigned")) {
-                alertsTable.getItems().add(alert);
+                FXMLLoader loader = null;
+                AnchorPane alertCardRoot = null;
+                AlertCardController alertCardController = null;
+                try{
+                    loader = new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/components/AlertCard.fxml"));
+                    alertCardRoot = loader.load();
+                    alertCardController = loader.getController();
+                } catch (IOException e){
+                    System.out.println("IOException in loadAlerts of HomeController: " + e.getMessage());
+                }
+                alertCardController.setLabels(alert);
+
+                vboxAlerts.getChildren().add(alertCardRoot);
             }
         }
-
-        alertsTable.getSortOrder().setAll(alertsTable.getColumns().get(2));
-        time.setVisible(false);
 
     }
 
@@ -200,10 +206,10 @@ public class HomeController {
                 secretView.setY(secretView.getY() + deltaY);
 
 //                System.out.println(bounds);
-                boolean rightBorder = secretView.getX() >= (bounds.getMaxX());
-                boolean leftBorder = secretView.getX() <= (bounds.getMinX());
-                boolean bottomBorder = secretView.getY() >= (bounds.getMaxY());
-                boolean topBorder = secretView.getY() <= (bounds.getMinY());
+                boolean rightBorder = secretView.getX() >= (1010);
+                boolean leftBorder = secretView.getX() <= (-80);
+                boolean bottomBorder = secretView.getY() >= (575);
+                boolean topBorder = secretView.getY() <= (0);
 
                 if (rightBorder || leftBorder) {
                     deltaX *= -1;
@@ -241,12 +247,10 @@ public class HomeController {
         btnAbout.setTooltip(new Tooltip("Click to view the creators of the page"));
         btnSecret.setTooltip(new Tooltip("Click to view a secret feature"));
         btnClear.setTooltip(new Tooltip("Click to close the secret feature"));
-        viewUserRequestButton.setTooltip(new Tooltip("Click to view your current requests"));
         btnCredits.setOnMouseClicked(e -> handleCredits());
         btnAbout.setOnMouseClicked(e -> handleAbout());
         btnSecret.setOnMouseClicked(e -> secret(true));
         btnClear.setOnMouseClicked(e -> secret(false));
-        viewUserRequestButton.setOnMouseClicked(e -> handleUserRequests());
     }
 
     private void handleUserRequests() {
@@ -264,13 +268,8 @@ public class HomeController {
             System.out.println("IOException in loadRequestsIntoContainer of AllRequestsController: " + e.getMessage());
         }
         //open the AnchorPane in a new window
-        Stage stage = new Stage();
-        stage.setTitle("My Requests");
-        stage.setScene(new Scene(userRequestsPage));
-        stage.initStyle(StageStyle.UTILITY);
-        //set the resizable to false
-        stage.setResizable(false);
-        stage.show();
+        vboxRequests.getChildren().clear();
+        vboxRequests.getChildren().add(userRequestsPage);
     }
 
     private void handleAbout() {

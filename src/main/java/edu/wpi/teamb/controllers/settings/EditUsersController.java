@@ -13,6 +13,8 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -68,6 +70,7 @@ public class EditUsersController {
         initNavBar();
         initializeFields();
         initButtons();
+        initializeNavGates();
     }
 
     //EditUserController editUserController = new EditUserController();
@@ -112,6 +115,34 @@ public class EditUsersController {
         btnDeleteUser.setDisable(true);
         btnBack.setOnMouseClicked(event -> Navigation.navigate(Screen.SETTINGS));
         btnReset.setOnMouseClicked(event -> handleReset());
+        BooleanBinding bb = new BooleanBinding() {
+            {
+                super.bind(textUsername.textProperty(),
+                        textPassword.textProperty(),
+                        textEmail.textProperty(),
+                        textName.textProperty(),
+                        cbPermissionLevel.valueProperty());
+            }
+
+            @Override
+            protected boolean computeValue() {
+                return (textUsername.getText().isEmpty()
+                        || textPassword.getText().isEmpty()
+                        || textEmail.getText().isEmpty()
+                        || textName.getText().isEmpty()
+                        || cbPermissionLevel.getValue() == null);
+            }
+        };
+        btnAddUser.disableProperty().bind(bb);
+
+        ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
+            btnReset.setDisable(false);
+        };
+        textUsername.textProperty().addListener(changeListener);
+        textPassword.textProperty().addListener(changeListener);
+        textEmail.textProperty().addListener(changeListener);
+        textName.textProperty().addListener(changeListener);
+        cbPermissionLevel.valueProperty().addListener(changeListener);
     }
 
     private void handleDeleteUser() {
@@ -126,6 +157,8 @@ public class EditUsersController {
             updateTable();
             createAlert("User Deleted", "User Deleted Successfully");
         }
+        btnEditUser.setDisable(true);
+        btnDeleteUser.setDisable(true);
     }
 
     private void handleEditUser() throws IOException {
@@ -133,6 +166,8 @@ public class EditUsersController {
         System.out.println("Edit user button");
         showEditMenu(user);
         tbUsers.refresh(); // Refresh the table
+        btnDeleteUser.setDisable(true);
+        btnEditUser.setDisable(true);
     }
 
     private void showEditMenu(User user) throws IOException {
@@ -298,6 +333,20 @@ public class EditUsersController {
         }
         else
             return "Error"; // Error
+    }
+
+
+    /**
+     * For some reason there are occasions when the nav-bar gates for toggling its handling does not start correctly
+     * This fixes this issue
+     */
+    public void initializeNavGates(){
+        activateNav();
+        deactivateNav();
+        navPane.setMouseTransparent(true);
+        vboxActivateNav.setDisable(false);
+        navLoaded = false;
+        vboxActivateNav1.setDisable(true);
     }
 
     /**

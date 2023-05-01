@@ -36,6 +36,6 @@ id,employee,dateSubmitted,requestStatus,requestType,locationName,notes
 233,holmes1000,2023-04-20 22:47:57.715465,Pending,Conference,15 Francis Security Desk Floor 2,lukyjtfhd
 237,alisha123,2023-04-21 15:22:17.39383,Pending,Meal,15 Lobby Entrance Floor 2,hgasjfchkbjnlk
 238,holmes1000,2023-04-21 15:30:55.198201,Pending,Flower,Ambulance Parking Exit Floor 1,aljnlakcna
-239,Unassigned,2023-04-21 16:07:29.467542,Pending,Meal,15 Lobby Entrance Floor 2,hgfds
+239,unassigned,2023-04-21 16:07:29.467542,Pending,Meal,15 Lobby Entrance Floor 2,hgfds
 240,admin,2023-04-21 16:57:02.362487,Pending,Meal,15 Lobby Entrance Floor 2,hello
 241,staff,2023-04-21 17:48:03.234147,Pending,Meal,75 Lobby Valet Cashier,

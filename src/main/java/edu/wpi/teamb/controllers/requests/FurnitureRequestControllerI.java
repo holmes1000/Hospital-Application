@@ -3,6 +3,7 @@ package edu.wpi.teamb.controllers.requests;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.Full.FullFurnitureRequest;
+import edu.wpi.teamb.DBAccess.ORMs.Alert;
 import edu.wpi.teamb.controllers.components.InfoCardController;
 import edu.wpi.teamb.entities.requests.EFurnitureRequest;
 import edu.wpi.teamb.entities.requests.IRequest;
@@ -13,6 +14,7 @@ import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -93,6 +95,15 @@ public class FurnitureRequestControllerI implements IRequestController{
         btnReset.setTooltip(new Tooltip("Click to reset fields"));
         btnReset.setOnAction(e -> handleReset());
         helpIcon.setOnMouseClicked(e -> handleHelp());
+        btnReset.setDisable(true);
+        ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
+            btnReset.setDisable(false);
+        };
+        cbEmployeesToAssign.textProperty().addListener(changeListener);
+        cbLongName.textProperty().addListener(changeListener);
+        cbAvailableFurniture.textProperty().addListener(changeListener);
+        cdAvailableModels.textProperty().addListener(changeListener);
+        cdAssembly.textProperty().addListener(changeListener);
     }
 
     @Override
@@ -126,7 +137,7 @@ public class FurnitureRequestControllerI implements IRequestController{
                 FXCollections.observableArrayList();
         employees.addAll(EFurnitureRequest.getUsernames());
         Collections.sort(employees);
-        employees.add(0, "Unassigned");
+        employees.add(0, "unassigned");
         cbEmployeesToAssign.setItems(employees);
         cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
         initComboBoxChangeListeners();
@@ -195,8 +206,23 @@ public class FurnitureRequestControllerI implements IRequestController{
                 handleReset();
             }
             submissionAlert();
+            alertEmployee(EFurnitureRequest.getEmployee());
         }
     }
+
+    /**
+     * Grabs the current employee that is referred to in the newly made request and alerts them of this
+     * @param employee
+     */
+    public void alertEmployee(String employee){
+        Alert newAlert = new Alert();
+        newAlert.setTitle("New Task Assigned");
+        newAlert.setDescription("You have been assigned a new furniture request to complete.");
+        newAlert.setEmployee(employee);
+        newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
+        Repository.getRepository().addAlert(newAlert);
+    }
+
 
     @Override
     public void handleReset() {
@@ -235,7 +261,6 @@ public class FurnitureRequestControllerI implements IRequestController{
         return cbAvailableFurniture.getValue() == null
                 || cdAvailableModels.getValue() == null
                 || cdAssembly.getValue() == null
-                || txtFldNotes.getText().isEmpty()
                 || cbEmployeesToAssign.getValue() == null
                 || cbLongName.getValue() == null;
     }
