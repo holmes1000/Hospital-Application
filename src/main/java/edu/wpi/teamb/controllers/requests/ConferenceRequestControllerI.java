@@ -318,7 +318,6 @@ public class ConferenceRequestControllerI implements IRequestController{
         } else {
             minutes = "" + fullConferenceRequest.getDateRequested().toLocalDateTime().getMinute();
         }
-
         //set the submit button to say update
         btnSubmit.setText("Update");
         //remove the current onAction event
@@ -331,7 +330,6 @@ public class ConferenceRequestControllerI implements IRequestController{
             fullConferenceRequest.setNotes(tfNotes.getText());
             fullConferenceRequest.setEventName(eventNameTextField.getText());
             fullConferenceRequest.setBookingReason(bookingReasonTextField.getText());
-            fullConferenceRequest.setDateRequested(Timestamp.valueOf(dateToReserve.getValue() + " " + reservationHour.getValue() + ":00"));
             fullConferenceRequest.setDuration(calcDuration(reservationHour.getText(), cbDuration.getValue()));
             String startHour = reservationHour.getValue().substring(0, reservationHour.getValue().indexOf(":"));
             String startMinute = reservationHour.getValue().substring(reservationHour.getValue().indexOf(":") + 1, reservationHour.getValue().indexOf(" "));
@@ -391,19 +389,26 @@ public class ConferenceRequestControllerI implements IRequestController{
             int endHour = startHour;
             int endMinute = startMinute + duration;
             if (endMinute >= 60) {
-                endHour++;
-                endMinute -= 60;
+                endHour = endMinute / 60;
+                endMinute = endMinute % 60;
             }
             if (endHour >= 24) {
                 endHour -= 24;
-            }
-            if (endHour > 12) {
+            } else if (endHour > 12) {
                 endHour -= 12;
                 if (startAmPm == "AM") {
                     startAmPm = "PM";
                 } else {
                     startAmPm = "AM";
                 }
+            } else if (endHour == 12) {
+                if (startAmPm == "AM") {
+                    startAmPm = "PM";
+                } else {
+                    startAmPm = "AM";
+                }
+            } else if (endHour == 0) {
+                endHour = 12;
             }
             if (endMinute < 10) {
                 time = endHour + ":0" + endMinute + " " + startAmPm;
