@@ -132,12 +132,12 @@ public class MoveMap {
                 animateLine(line);
                 Circle c = new Circle(originalX, originalY, 5, RED);
                 Circle finalC = c;
-                c.setOnMouseEntered(event -> {
-                    if (nameToolTip.getText().isBlank() || nameToolTip.getText().contains(nameToolTip.getText())) {nameToolTip.setText(display_move_info(move));}
-                                else {nameToolTip.setText(display_move_info(move) + "\n" + nameToolTip.getText());}
-                                nameToolTip.setShowDelay(Duration.millis(1));
-                                nameToolTip.hideDelayProperty().set(Duration.seconds(.5));
-                                Tooltip.install(finalC, nameToolTip);
+                line.setOnMouseEntered(event -> {
+                    nameToolTip = new Tooltip();
+                    nameToolTip.setText(display_move_info(move));
+                    nameToolTip.setShowDelay(Duration.millis(1));
+                    nameToolTip.hideDelayProperty().set(Duration.seconds(.5));
+                    Tooltip.install(line, nameToolTip);
                         });
                 pathGroup.getChildren().add(c);
                 Boolean exists = false;
