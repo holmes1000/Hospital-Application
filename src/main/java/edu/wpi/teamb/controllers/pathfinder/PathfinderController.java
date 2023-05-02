@@ -860,6 +860,7 @@ public class PathfinderController {
                       alert.setContentText(alert_message);
                       alert.showAndWait();
                   }
+                  if (floorsTraversed.size() == 1) {nextFloor.setDisable(true);}
 
               } catch (SQLException e) {
                   throw new RuntimeException(e);
