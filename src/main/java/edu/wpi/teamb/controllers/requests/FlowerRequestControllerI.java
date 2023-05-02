@@ -226,12 +226,14 @@ public class FlowerRequestControllerI implements IRequestController {
      * @param employee
      */
     public void alertEmployee(String employee){
-        Alert newAlert = new Alert();
-        newAlert.setTitle("New Task Assigned");
-        newAlert.setDescription("You have been assigned a new flower request to complete.");
-        newAlert.setEmployee(employee);
-        newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
-        Repository.getRepository().addAlert(newAlert);
+        if(!employee.equals("unassigned")) {
+            Alert newAlert = new Alert();
+            newAlert.setTitle("New Task Assigned");
+            newAlert.setDescription("You have been assigned a new flower request to complete.");
+            newAlert.setEmployee(employee);
+            newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
+            Repository.getRepository().addAlert(newAlert);
+        }
     }
 
     @Override
@@ -274,6 +276,7 @@ public class FlowerRequestControllerI implements IRequestController {
     public void enterFlowerRequestEditableMode(FullFlowerRequest fullFlowerRequest, InfoCardController currentInfoCardController) {
         //set the editable fields to the values of the request
         cbAvailableFlowers.getSelectionModel().selectItem(fullFlowerRequest.getFlowerType());
+        String oldEmployee = fullFlowerRequest.getEmployee();
         //loads the correct color options for the selected flower type so edit page does not crash
         cdAvailableColor.getItems().clear();
         if (cbAvailableFlowers.getSelectionModel().getSelectedItem().equals("Rose")) {
@@ -344,6 +347,10 @@ public class FlowerRequestControllerI implements IRequestController {
             EFlowerRequest.updateFlowerRequest(fullFlowerRequest);
             //send the fullConferenceRequest to the info card controller
             currentInfoCardController.sendRequest(fullFlowerRequest);
+            //Update new user
+            if(!oldEmployee.equals(cbEmployeesToAssign.getValue())){
+                alertEmployee(cbEmployeesToAssign.getValue());
+            }
             //close the stage
             ((Stage) btnSubmit.getScene().getWindow()).close();
         });

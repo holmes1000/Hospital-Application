@@ -212,12 +212,14 @@ public class OfficeRequestControllerI implements IRequestController {
      * @param employee
      */
     public void alertEmployee(String employee){
-        Alert newAlert = new Alert();
-        newAlert.setTitle("New Task Assigned");
-        newAlert.setDescription("You have been assigned a new office request to complete.");
-        newAlert.setEmployee(employee);
-        newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
-        Repository.getRepository().addAlert(newAlert);
+        if(!employee.equals("unassigned")) {
+            Alert newAlert = new Alert();
+            newAlert.setTitle("New Task Assigned");
+            newAlert.setDescription("You have been assigned a new office request to complete.");
+            newAlert.setEmployee(employee);
+            newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
+            Repository.getRepository().addAlert(newAlert);
+        }
     }
 
     @Override
@@ -259,6 +261,7 @@ public class OfficeRequestControllerI implements IRequestController {
     public void enterOfficeRequestsEditableMode(FullOfficeRequest fullOfficeRequest, InfoCardController currentInfoCardController) {
         //set the editable fields to the values of the request
         cbEmployeesToAssign.getSelectionModel().selectItem(fullOfficeRequest.getEmployee());
+        String oldEmployee = fullOfficeRequest.getEmployee();
         System.out.println(fullOfficeRequest.getId() + " " + fullOfficeRequest.getItem());
         cbSupplyType.getSelectionModel().selectItem(fullOfficeRequest.getType());
         //loads the following supply types so edit page does not crash
@@ -312,6 +315,10 @@ public class OfficeRequestControllerI implements IRequestController {
             EOfficeRequest.updateOfficeReqeust(fullOfficeRequest);
             //send the fullOfficeRequest to the info card controller
             currentInfoCardController.sendRequest(fullOfficeRequest);
+            //Alert new user?
+            if(!oldEmployee.equals(cbEmployeesToAssign.getValue())){
+                alertEmployee(cbEmployeesToAssign.getValue());
+            }
             //close the stage
             ((Stage) btnSubmit.getScene().getWindow()).close();
         });
