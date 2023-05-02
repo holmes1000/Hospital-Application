@@ -119,6 +119,9 @@ public class MoveMap {
 
     public void displayMoves(String currentFloor){
         moveInfo.getChildren().clear();
+        pathGroup.getChildren().clear();
+        getMoveMap();
+        handle_move();
         for (Move move : upcoming_moves) {
             if (fullNodesByID.get(move.getNodeID()).getNodeID() != fullNodesByLongname.get(move.getLongName()).getNodeID() && Objects.equals(currentFloor, fullNodesByID.get(move.getNodeID()).getFloor())) {
                 int originalX = fullNodesByLongname.get(move.getLongName()).getxCoord();
