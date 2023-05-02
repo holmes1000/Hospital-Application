@@ -59,4 +59,12 @@ public class ESignage {
         }
         return n;
     }
+
+    public ArrayList<String> getLongNamesAlphabetical() {
+        return Repository.getRepository().getLongNamesAlphebeticalOrder();
+    }
+
+    public void addSign(Sign s) {
+        Repository.getRepository().addSign(s);
+    }
 }
