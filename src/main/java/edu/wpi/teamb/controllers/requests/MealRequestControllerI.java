@@ -189,12 +189,14 @@ public class MealRequestControllerI implements IRequestController{
      * @param employee
      */
     public void alertEmployee(String employee){
-        Alert newAlert = new Alert();
-        newAlert.setTitle("New Task Assigned");
-        newAlert.setDescription("You have been assigned a new meal request to complete.");
-        newAlert.setEmployee(employee);
-        newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
-        Repository.getRepository().addAlert(newAlert);
+        if(!employee.equals("unassigned")) {
+            Alert newAlert = new Alert();
+            newAlert.setTitle("New Task Assigned");
+            newAlert.setDescription("You have been assigned a new meal request to complete.");
+            newAlert.setEmployee(employee);
+            newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
+            Repository.getRepository().addAlert(newAlert);
+        }
     }
 
     @Override
@@ -241,6 +243,7 @@ public class MealRequestControllerI implements IRequestController{
 
     //functions for editable stage in InfoCardController
     public void enterMealRequestEditableMode(FullMealRequest fullMealRequest, InfoCardController currentInfoCardController) {
+        String oldEmployee = fullMealRequest.getEmployee();
         cbOrderLocation.getSelectionModel().selectItem(fullMealRequest.getOrderFrom());
         cbEmployeesToAssign.getSelectionModel().selectItem(fullMealRequest.getEmployee());
         cbAvailableMeals.getSelectionModel().selectItem(fullMealRequest.getFood());
@@ -266,6 +269,10 @@ public class MealRequestControllerI implements IRequestController{
             fullMealRequest.setRequestStatus(cbChangeStatus.getValue());
             //update the database
             EMealRequest.updateMealRequests(fullMealRequest);
+            //Alert new user?
+            if(!oldEmployee.equals(cbEmployeesToAssign.getValue())){
+                alertEmployee(cbEmployeesToAssign.getValue());
+            }
             //close the window
             Stage stage = (Stage) btnSubmit.getScene().getWindow();
             stage.close();

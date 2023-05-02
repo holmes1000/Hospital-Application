@@ -388,7 +388,7 @@ public class InfoCardController {
           //make the labels and set the styling
           Label languageLabel = new Label("Language: " + ((FullTranslationRequest) fullRequest).getLanguage());
           languageLabel.setStyle(commonCSStyles);
-          Label isDirectlyHealthcareRelatedLabel = new Label("Quantity: " + ((FullTranslationRequest) fullRequest).getMedical());
+          Label isDirectlyHealthcareRelatedLabel = new Label("Is health related: " + ((FullTranslationRequest) fullRequest).getMedical());
           isDirectlyHealthcareRelatedLabel.setStyle(commonCSStyles);
           //set the office specific fields
           subComponentContainer.getChildren().add(languageLabel);
