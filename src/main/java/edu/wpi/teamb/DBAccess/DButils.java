@@ -217,9 +217,15 @@ public class DButils {
     public static String strArray2InsertFormat(String[] arr) {
         String formattedStr = "'";
         for (int i = 0; i < arr.length; i++) {
+            if (arr[i].equals("null")) {
+                formattedStr += "null";
+                formattedStr += ",'";
+                continue;
+            }
             formattedStr += arr[i];
             if (i != arr.length - 1) {
-                formattedStr += "','";
+                if (arr[i+1].equals("null")) formattedStr += "',";
+                else formattedStr += "','";
             } else {
                 formattedStr += "'";
             }

@@ -19,7 +19,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class SignageFormController {
+public class EditSignageFormController {
     @FXML MFXFilterComboBox<String> locationBox;
     @FXML MFXButton btnClose;
     @FXML MFXButton submit;
@@ -102,7 +102,6 @@ public class SignageFormController {
             sign.setSignageGroup(signageGroupBox.getValue());
             sign.setStartDate(Date.valueOf(startDatePicker.getValue()));
             sign.setStartDate(Date.valueOf(endDatePicker.getValue()));
-            sign.setSingleBlock(false);
 
             Repository.getRepository().addSign(sign);
 

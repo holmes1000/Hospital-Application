@@ -154,7 +154,7 @@ public class PathfinderController {
       activateNav();
       deactivateNav();
       defaultStart = DefaultStart.getInstance().getDefault_start();
-      if (defaultStart.equals("")) {DefaultStart.getInstance().setDefault_start("15 Lobby Entrance Floor 2");}
+      if (defaultStart.equals("")) {DefaultStart.getInstance().setDefault_start(DefaultStart.getInstance().getTrue_default_start());}
       defaultStart = DefaultStart.getInstance().getDefault_start();
       defaultEnd = DefaultStart.getInstance().getDefault_end();
 
@@ -257,6 +257,8 @@ public class PathfinderController {
           }
       });
 
+      //Toggle node names off
+      handleToggleShowNames();
 
   }
 
@@ -586,7 +588,7 @@ public class PathfinderController {
         nextFloor.setTooltip(new Tooltip("Click to go to Next Floor"));
         nextFloor.setVisible(false);
         toggleShowNames.setTooltip(new Tooltip("Click to toggle Location Names"));
-        toggleShowNames.setSelected(true);
+        toggleShowNames.setSelected(false);
         toggleShowNames.setOnMouseClicked(event->{handleToggleShowNames();});
         btnEditMap.setTooltip(new Tooltip("Click to edit the map"));
         btnEditMap.setOnMouseClicked(event -> Navigation.navigate(Screen.MAP_EDITOR));
