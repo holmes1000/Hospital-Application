@@ -112,6 +112,11 @@ public class SubmittedRequestsController {
                     if(fullFurnitureRequest == null){continue;}
                     Objects.requireNonNull(requestInfoCardController).sendRequest(fullFurnitureRequest);
                     break;
+                case "Translation":
+                    IFull fullTranslationRequest = allRequestsE.getTranslationRequest(listOfRequests.get(i).getId());
+                    if(fullTranslationRequest == null){continue;}
+                    Objects.requireNonNull(requestInfoCardController).sendRequest(fullTranslationRequest);
+                    break;
                 default:
                     //continue statement to skip any unrecognized types of request to avoid occurrence of empty cards
                     continue;
@@ -200,6 +205,11 @@ public class SubmittedRequestsController {
                     IFull fullFurnitureRequest = allRequestsE.getFurnitureRequest(filteredListOfRequests.get(i).getId());
                     if(fullFurnitureRequest == null){continue;}
                     Objects.requireNonNull(requestInfoCardController).sendRequest(fullFurnitureRequest);
+                    break;
+                case "Translation":
+                    IFull fullTranslationRequest = allRequestsE.getTranslationRequest(filteredListOfRequests.get(i).getId());
+                    if(fullTranslationRequest == null){continue;}
+                    Objects.requireNonNull(requestInfoCardController).sendRequest(fullTranslationRequest);
                     break;
                 default:
                     //continue statement to skip any unrecognized types of request to avoid occurrence of empty cards
@@ -361,7 +371,8 @@ public class SubmittedRequestsController {
                                         RequestType.CONFERENCE.getType(),
                                         RequestType.FLOWER.getType(),
                                         RequestType.OFFICE.getType(),
-                                        RequestType.FURNITURE.getType()));
+                                        RequestType.FURNITURE.getType(),
+                                        RequestType.TRANSLATION.getType()));
                                 //sort requestTypeList in alphabetical order
                                 Collections.sort(requestTypeList);
                                 cbFilterOptions.getItems().addAll(requestTypeList);
@@ -425,7 +436,8 @@ public class SubmittedRequestsController {
         CONFERENCE("Conference"),
         FLOWER("Flower"),
         OFFICE("Office"),
-        FURNITURE("Furniture");
+        FURNITURE("Furniture"),
+        TRANSLATION("Translation");
         private final String type;
 
         RequestType(String type) {

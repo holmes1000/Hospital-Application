@@ -32,5 +32,9 @@ public class EHome {
         return Repository.getRepository().getFurnitureRequest(id);
     }
 
+    public FullTranslationRequest getTranslationRequest(int id) {
+        return Repository.getRepository().getTranslationRequest(id);
+    }
+
     public ArrayList<Alert> getAllAlerts() {return Repository.getRepository().getAllAlerts();}
 }

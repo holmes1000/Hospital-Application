@@ -11,6 +11,7 @@ public class FullFactory {
             case "Flower" -> new FullFlowerRequest();
             case "Office" -> new FullOfficeRequest();
             case "Furniture" -> new FullFurnitureRequest();
+            case "Translation" -> new FullTranslationRequest();
             default -> null;
         };
     }

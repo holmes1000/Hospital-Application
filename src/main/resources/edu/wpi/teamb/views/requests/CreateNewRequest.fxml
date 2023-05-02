@@ -43,7 +43,8 @@
             <VBox fx:id="back3" layoutX="144.0" layoutY="47.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 10; -fx-background-color: #5f7ca4;" />
             <VBox fx:id="back4" layoutX="235.0" layoutY="47.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 10; -fx-background-color: #5f7ca4;" />
             <VBox fx:id="back5" layoutX="325.0" layoutY="47.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 10; -fx-background-color: #5f7ca4;" />
-            <HBox layoutX="-34.0" layoutY="51.0" prefHeight="77.0" prefWidth="471.0" style="-fx-spacing: 41;">
+                <VBox fx:id="back6" layoutX="415.0" layoutY="47.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 10; -fx-background-color: #5f7ca4;" />
+                <HBox layoutX="-34.0" layoutY="51.0" prefHeight="77.0" prefWidth="471.0" style="-fx-spacing: 41;">
                <children>
                   <ImageView fx:id="icon1" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -70,6 +71,11 @@
                         <Image url="@../../img/workspace.png" />
                      </image>
                   </ImageView>
+                   <ImageView fx:id="icon6" fitHeight="64.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                       <image>
+                           <Image url="@../../img/translation.png" />
+                       </image>
+                   </ImageView>
                </children>
             </HBox>
                 <VBox fx:id="vboxActivateNav" layoutX="-150.0" prefHeight="720.0" prefWidth="70.0" />

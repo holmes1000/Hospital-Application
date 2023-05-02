@@ -34,6 +34,8 @@ public class EInfoCard {
             case "Furniture":
                 Repository.getRepository().deleteFurnitureRequest((FullFurnitureRequest) fullRequest);
                 break;
+            case "Translation":
+                Repository.getRepository().deleteTranslationRequest((FullTranslationRequest) fullRequest);
         }
     }
 
@@ -54,6 +56,8 @@ public class EInfoCard {
             case "Furniture":
                 Repository.getRepository().updateFurnitureRequest((FullFurnitureRequest) fullRequest);
                 break;
+            case "Translation":
+                Repository.getRepository().updateTranslationRequest((FullTranslationRequest) fullRequest);
         }
     }
 }
