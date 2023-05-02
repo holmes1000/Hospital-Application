@@ -187,8 +187,6 @@ public class MapEditorController {
   private MenuButton btnMenuBackup;
   @FXML
   private CustomMenuItem itemResetFromBackup = new CustomMenuItem();
-  @FXML
-  private CustomMenuItem itemSaveToBackup = new CustomMenuItem();
   private MoveMap moveMap;
   private EditNodeMenuController editNodeMenuController;
   private AddNodeMenuController addNodeMenuController;
@@ -889,6 +887,12 @@ public class MapEditorController {
     // Add the move to the database
     Repository.getRepository().addMove(move);
 
+    // Add move to the local list
+    moveMap.addToMoveMap(move);
+
+    // Redraw the movemap
+    drawMoveMap(currentFloor);
+
     submissionAlert("Move submitted successfully");
 
     // Hide the submit button and date picker
@@ -898,6 +902,7 @@ public class MapEditorController {
 
     // Refresh the map
     refreshMap();
+
   }
 
   private void handleAddMove(Circle c1, Circle c2) {
@@ -1043,10 +1048,9 @@ public class MapEditorController {
     setMenuItemTooltip(btnMenuEdge, itemDeleteEdge, "Delete Edge", "Click an edge on the map to delete it");
 
     setMenuItemTooltip(btnMenuTools, itemAlign, "Align Nodes", "Click on the map where you would like to add a node");
-    setMenuItemTooltip(btnMenuTools, itemSetDefault, "Set default position", "Click a node on the map to set a default location");
+    setMenuItemTooltip(btnMenuTools, itemSetDefault, "Set Default Position", "Click a node on the map to set a default location");
 
     setMenuItemTooltip(btnMenuBackup, itemResetFromBackup, "Reset from Backup", "Click to reset the nodes/edges from the database");
-    setMenuItemTooltip(btnMenuBackup, itemSaveToBackup, "Save to Backup", "Click to save the current map configuration to the database");
 
     setMenuItemTooltip(btnMenuMove, itemAddMove, "Add Move", "Click a node you'd like to move, then a node where it should move to");
 

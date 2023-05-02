@@ -195,6 +195,16 @@ public class MoveMap {
         return text;
     }
 
+    public void addToMoveMap(Move moveToAdd) {
+        if (move_map.containsKey(moveToAdd.getNodeID())) {
+            move_map.get(moveToAdd.getNodeID()).add(moveToAdd);
+        } else {
+            ArrayList<Move> moves = new ArrayList<>();
+            moves.add(moveToAdd);
+            move_map.put(moveToAdd.getNodeID(), moves);
+        }
+    }
+
     public String getCurrentFloor() {
         return currentFloor;
     }
