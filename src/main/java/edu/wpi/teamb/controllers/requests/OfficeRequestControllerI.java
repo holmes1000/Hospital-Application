@@ -52,6 +52,7 @@ public class OfficeRequestControllerI implements IRequestController {
     private MFXFilterComboBox<String> cbEmployeesToAssign;
     @FXML
     private MFXFilterComboBox<String> cbLongName;
+    @FXML private MFXFilterComboBox<String> cbChangeStatus;
 
     private final EOfficeRequest EOfficeRequest;
 
@@ -75,7 +76,8 @@ public class OfficeRequestControllerI implements IRequestController {
                         tbSupplyQuantities.textProperty(),
                         txtFldNotes.textProperty(),
                         cbEmployeesToAssign.valueProperty(),
-                        cbLongName.valueProperty());
+                        cbLongName.valueProperty(),
+                        cbChangeStatus.valueProperty());
             }
 
             @Override
@@ -85,7 +87,8 @@ public class OfficeRequestControllerI implements IRequestController {
                         || tbSupplyQuantities.getText().isEmpty()
                         || txtFldNotes.getText().isEmpty()
                         || cbEmployeesToAssign.getValue() == null
-                        || cbLongName.getValue() == null);
+                        || cbLongName.getValue() == null
+                        || cbChangeStatus.getValue() == null);
             }
         };
         btnSubmit.disableProperty().bind(bb);
@@ -130,6 +133,10 @@ public class OfficeRequestControllerI implements IRequestController {
         Collections.sort(supplyType);
         //cbSupplyType.setItems(supplyType);
         initComboBoxChangeListeners();
+
+        ObservableList<String> status = FXCollections.observableArrayList("Pending", "In-Progress", "Completed");
+        Collections.sort(status);
+        cbChangeStatus.setItems(status);
     }
 
 
@@ -285,6 +292,8 @@ public class OfficeRequestControllerI implements IRequestController {
         tbSupplyQuantities.setText(Integer.toString(fullOfficeRequest.getQuantity()));
         txtFldNotes.setText(fullOfficeRequest.getNotes());
         cbLongName.getSelectionModel().selectItem(fullOfficeRequest.getLocationName());
+        cbChangeStatus.setVisible(true);
+        cbChangeStatus.getSelectionModel().selectItem(fullOfficeRequest.getRequestStatus());
 
         //set the submit button to say update
         btnSubmit.setText("Update");
@@ -299,6 +308,7 @@ public class OfficeRequestControllerI implements IRequestController {
             fullOfficeRequest.setQuantity(Integer.parseInt(tbSupplyQuantities.getText()));
             fullOfficeRequest.setNotes(txtFldNotes.getText());
             fullOfficeRequest.setLocationName(cbLongName.getValue());
+            fullOfficeRequest.setRequestStatus(cbChangeStatus.getValue());
 
             //update the request
             EOfficeRequest.updateOfficeReqeust(fullOfficeRequest);
