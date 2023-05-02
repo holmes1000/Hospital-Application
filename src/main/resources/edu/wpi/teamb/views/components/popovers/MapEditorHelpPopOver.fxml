@@ -1,20 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="180.0" prefWidth="380.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.components.popovers.MapEditorHelpPopOverController">
+<AnchorPane prefHeight="222.0" prefWidth="495.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.components.popovers.MapEditorHelpPopOverController">
     <children>
-        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#5f7ca4" height="170.0" layoutX="5.0" layoutY="5.0" stroke="BLACK" strokeType="INSIDE" width="373.0" />
-        <Text fx:id="text2" fill="WHITE" layoutX="10.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select a state button (View, Edit, Delete, Add)" wrappingWidth="364.9999999046322" />
-      <Text fx:id="text3" fill="WHITE" layoutX="10.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select a object button (Node or Edge)" wrappingWidth="364.9999999046322" />
-        <Text fx:id="text4" fill="WHITE" layoutX="10.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To delete an edge/node: click the edge/node" wrappingWidth="364.9999999046322" />
-      <Text fx:id="text5" fill="WHITE" layoutX="8.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To add a node: click anywhere and submit the node details (click the mapeditor on the navbar to refresh)" wrappingWidth="364.9999999046322" />
-        <Text fill="WHITE" layoutX="13.0" layoutY="154.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="373.33673095703125" />
-      <Text fx:id="text7" fill="WHITE" layoutX="11.0" layoutY="170.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Use reset from backup to restore the default node setup" wrappingWidth="364.9999999046322" />
-      <Text fx:id="text61" fill="WHITE" layoutX="10.0" layoutY="103.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To add an edge, click any two nodes" wrappingWidth="364.9999999046322" />
-      <Text fx:id="text611" fill="WHITE" layoutX="10.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To edit a node, select the node, drag it, click on it twice, submit" wrappingWidth="364.9999999046322" />
-      <Text fx:id="text6111" fill="WHITE" layoutX="11.0" layoutY="137.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To align nodes, select ONLY the edit state, then click the nodes, then hit the align button" wrappingWidth="364.9999999046322" />
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#5f7ca4" height="275.0" layoutX="5.0" layoutY="5.0" stroke="BLACK" strokeType="INSIDE" width="485.0" />
+      <VBox layoutX="8.0" layoutY="7.05078125">
+         <children>
+              <Text fx:id="text2" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Add a node : click 'Node', 'Add Node', then a location on the map, fill in the details, submit" wrappingWidth="485.0">
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Text>
+            <Text fx:id="text3" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit a node: click 'Node', click 'Edit Node', click the node to edit, drag it, double click it, submit" wrappingWidth="475.9999999046322">
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Text>
+              <Text fx:id="text4" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Delete a node: click 'Node', click 'Delete Node', select node to delete, confirm" wrappingWidth="460.9999999046322">
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Text>
+            <Text fx:id="text5" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Add an edge: click 'Edge', click 'Add Edge', select two nodes" wrappingWidth="364.9999999046322">
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Text>
+            <Text fx:id="text61" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Delete an edge: click 'Edge', click 'Delete Edge', select the edge to delete" wrappingWidth="465.9999999046322">
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Text>
+            <Text fx:id="text611" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Add a move: click 'Move', click 'Add Move', select two nodes, select a date, submit" wrappingWidth="472.9999999046322">
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Text>
+            <Text fx:id="text6112" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Find a path between the move: follow the above instructions to add a move, after submitting, click 'Find Move Path'" wrappingWidth="472.9999999046322">
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Text>
+            <Text fx:id="text6111" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Align nodes: click 'Align Nodes', select nodes to align (at least 2), click 'Align Nodes'" wrappingWidth="453.9999999046322">
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Text>
+            <Text fx:id="text7" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Reset from Backup: click 'Backup', click 'Reset From Backup'" wrappingWidth="364.9999999046322">
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Text>
+         </children>
+      </VBox>
     </children>
 </AnchorPane>
