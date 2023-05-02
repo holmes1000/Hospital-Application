@@ -59,6 +59,7 @@
                </image>
             </ImageView>
             <Separator layoutX="20.0" layoutY="64.0" prefWidth="450.0" />
+            <MFXFilterComboBox fx:id="cbChangeStatus" floatingText="Request Status" layoutX="762.0" layoutY="19.0" prefHeight="40.0" prefWidth="300.0" visible="false" />
             </children>
         </AnchorPane>
     </left>

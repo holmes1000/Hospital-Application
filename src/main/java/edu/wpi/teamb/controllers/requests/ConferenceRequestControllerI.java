@@ -55,6 +55,7 @@ public class ConferenceRequestControllerI implements IRequestController{
     @FXML private MFXButton btnSubmit;
     @FXML private SplitPane spSubmit;
     @FXML private ImageView helpIcon;
+    @FXML private MFXFilterComboBox<String> cbChangeStatus;
 
     private final EConferenceRequest EConferenceRequest;
 
@@ -89,7 +90,8 @@ public class ConferenceRequestControllerI implements IRequestController{
                         eventNameTextField.textProperty(),
                         bookingReasonTextField.textProperty(),
                         cbDuration.valueProperty(),
-                        cbLongName.valueProperty());
+                        cbLongName.valueProperty(),
+                        tfNotes.textProperty());
             }
 
             @Override
@@ -173,6 +175,12 @@ public class ConferenceRequestControllerI implements IRequestController{
         eventNameTextField.textLimitProperty().set(100);
         bookingReasonTextField.textLimitProperty().set(250);
         reservationHour.clear();
+
+        //Dropdown for status change
+        ObservableList<String> status =
+                FXCollections.observableArrayList("Pending", "In-Progress", "Completed");
+        Collections.sort(status);
+        cbChangeStatus.setItems(status);
     }
 
     @Override
@@ -295,6 +303,8 @@ public class ConferenceRequestControllerI implements IRequestController{
         bookingReasonTextField.setText(fullConferenceRequest.getBookingReason());
         cbDuration.getSelectionModel().selectItem(calcTime(fullConferenceRequest.getDuration(), fullConferenceRequest.getDateRequested().toLocalDateTime().getHour(), fullConferenceRequest.getDateRequested().toLocalDateTime().getMinute()));
         dateToReserve.setValue(fullConferenceRequest.getDateRequested().toLocalDateTime().toLocalDate());
+        cbChangeStatus.setVisible(true);
+        cbChangeStatus.getSelectionModel().selectItem(fullConferenceRequest.getRequestStatus().toString());
         int hour1 = fullConferenceRequest.getDateRequested().toLocalDateTime().getHour();
         int minute1 = fullConferenceRequest.getDateRequested().toLocalDateTime().getMinute();
         String am_pm = "AM";
@@ -332,6 +342,7 @@ public class ConferenceRequestControllerI implements IRequestController{
             fullConferenceRequest.setEventName(eventNameTextField.getText());
             fullConferenceRequest.setBookingReason(bookingReasonTextField.getText());
             fullConferenceRequest.setDuration(calcDuration(reservationHour.getText(), cbDuration.getValue()));
+            fullConferenceRequest.setRequestStatus(cbChangeStatus.getValue());
             String startHour = reservationHour.getValue().substring(0, reservationHour.getValue().indexOf(":"));
             String startMinute = reservationHour.getValue().substring(reservationHour.getValue().indexOf(":") + 1, reservationHour.getValue().indexOf(" "));
             String startAmPm = reservationHour.getValue().substring(reservationHour.getValue().indexOf(" ") + 1);
