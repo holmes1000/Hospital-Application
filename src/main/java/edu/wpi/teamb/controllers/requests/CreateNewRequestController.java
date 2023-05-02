@@ -103,13 +103,13 @@ public class CreateNewRequestController {
         Tooltip.install(icon4, tooltip4);
         icon4.setOnMouseClicked(event->{
             toggleBtns("icon4");
-            loadPage5();
+            loadPage6();
         });
         Tooltip tooltip5 = new Tooltip("Office Supplies Request");
         Tooltip.install(icon5, tooltip5);
         icon5.setOnMouseClicked(event->{
             toggleBtns("icon5");
-            loadPage6();
+            loadPage5();
         });
         Tooltip tooltip6 = new Tooltip("Translation Request");
         Tooltip.install(icon6, tooltip6);

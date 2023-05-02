@@ -161,7 +161,7 @@ public class TranslationRequestControllerI implements IRequestController {
         if(!employee.equals("unassigned")) {
             Alert newAlert = new Alert();
             newAlert.setTitle("New Task Assigned");
-            newAlert.setDescription("You have been assigned a new furniture request to complete.");
+            newAlert.setDescription("You have been assigned a new translation request to complete.");
             newAlert.setEmployee(employee);
             newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
             Repository.getRepository().addAlert(newAlert);
