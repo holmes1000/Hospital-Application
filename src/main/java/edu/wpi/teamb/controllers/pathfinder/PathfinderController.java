@@ -153,6 +153,7 @@ public class PathfinderController {
       directionPane.setVisible(false);
       activateNav();
       deactivateNav();
+      defaultStart = DefaultStart.getInstance().getDefault_start();
       if (defaultStart.equals("")) {DefaultStart.getInstance().setDefault_start("15 Lobby Entrance Floor 2");}
       defaultStart = DefaultStart.getInstance().getDefault_start();
       defaultEnd = DefaultStart.getInstance().getDefault_end();
@@ -754,6 +755,8 @@ public class PathfinderController {
     }
 
   public void clickFindPath() throws SQLException {
+      nextFloor.setDisable(false);
+      previousFloor.setDisable(false);
       btnClearPath.setVisible(true);
       btnFindPath.setTooltip(new Tooltip("Click to find path"));
       btnFindPath.setOnMouseClicked(event-> {
