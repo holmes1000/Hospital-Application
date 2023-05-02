@@ -113,6 +113,7 @@ public class PathfinderController {
     Group nameGroup;
     Pane locationCanvas;
     private String defaultStart = "";
+    private String defaultEnd = "";
     ELogin.PermissionLevel adminTest;
     ArrayList<String> keysList;
 
@@ -155,6 +156,7 @@ public class PathfinderController {
       defaultStart = DefaultStart.getInstance().getDefault_start();
       if (defaultStart.equals("")) {DefaultStart.getInstance().setDefault_start("15 Lobby Entrance Floor 2");}
       defaultStart = DefaultStart.getInstance().getDefault_start();
+      defaultEnd = DefaultStart.getInstance().getDefault_end();
 
 
       for (Integer id : PathFinding.ASTAR.getFullNodesByID().keySet()) {
@@ -204,7 +206,8 @@ public class PathfinderController {
       startNode.getSearchText();
       endNode.getSearchText();
       handleDate();
-      startNode.getSelectionModel().selectItem(defaultStart); // not sure about this
+      startNode.getSelectionModel().selectItem(defaultStart);
+      if (!defaultEnd.equals("")) {endNode.getSelectionModel().selectItem(defaultEnd);}
       changeButtonColor(currentFloor);
       algorithmDropdown.selectFirst();
       spFindPath.setTooltip(new Tooltip("Select an ending location to find a path"));
@@ -349,6 +352,8 @@ public class PathfinderController {
       update_nodes_from_moves(nodes_to_update);
       ObservableList<String> nodes = FXCollections.observableArrayList();
       nodes.addAll(getFilteredLongnames());
+      if (!nodes.contains(defaultEnd)) {nodes.add(defaultEnd);}
+      if (!nodes.contains(defaultStart)) {nodes.add(defaultStart);}
       startNode.setItems(nodes);
       endNode.setItems(nodes);
 //      System.out.println("handled");

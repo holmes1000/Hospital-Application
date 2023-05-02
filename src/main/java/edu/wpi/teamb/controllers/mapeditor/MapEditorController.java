@@ -11,6 +11,7 @@ import edu.wpi.teamb.DBAccess.ORMs.Edge;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 import edu.wpi.teamb.DBAccess.ORMs.Move;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
+import edu.wpi.teamb.entities.DefaultStart;
 import edu.wpi.teamb.entities.EMapEditor;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
@@ -43,6 +44,7 @@ import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import lombok.Builder;
 import net.kurobako.gesturefx.GesturePane;
 import org.controlsfx.control.PopOver;
 import org.w3c.dom.NodeList;
@@ -121,8 +123,6 @@ public class MapEditorController {
   @FXML
   private VBox vboxAddNode;
   private ArrayList<Node> floorNodes = new ArrayList<>();
-  public boolean boolEditingNode = false;
-  public boolean boolSubmittedDetails = false;
   private Pane menuPane;
   private boolean editingNode = false; // Used for the submitting details button
   @FXML
@@ -579,18 +579,11 @@ public class MapEditorController {
     nodeGroup.getChildren().clear();
     edgeGroup.getChildren().clear();
     nameGroup.getChildren().clear();
-    // Redraw the map
-//    try {
-//      if (mapEditorContext.getState() != editState) {
     PathFinding.ASTAR.force_init();
-//      }
-    //nodeList = Repository.getRepository().getAllNodes();
     fullNodesList = Repository.getRepository().getAllFullNodes();
     draw(currentFloor);
+    drawMoveMap(currentFloor);
     System.out.println("Refreshing map for floor " + currentFloor + "...");
-//    } catch (SQLException e) {
-//      e.printStackTrace();
-//    }
   }
 
   private void handleAddNode() {
@@ -744,6 +737,7 @@ public class MapEditorController {
         System.out.println("Node: " + nodeID + " is draggable");
       }
     }
+    determineState();
   }
 
 
@@ -809,6 +803,8 @@ public class MapEditorController {
           node.setFill(Color.RED);
           node.setRadius(5);
           pane.gestureEnabledProperty().set(true);
+          mapEditorContext.setState(new ViewState());
+          determineState();
         } catch (IOException e) {
           throw new RuntimeException(e);
         }
@@ -863,6 +859,8 @@ public class MapEditorController {
   }
 
   private void handleFindPath() {
+    DefaultStart.getInstance().setDefault_start(""); //Whatever you want the start to be
+    DefaultStart.getInstance().setDefault_end(""); //Whatever you want the end to be
     Navigation.navigate(Screen.PATHFINDER);
   }
 
@@ -882,6 +880,8 @@ public class MapEditorController {
 
     // Add the move to the database
     Repository.getRepository().addMove(move);
+
+    submissionAlert("Move submitted successfully");
 
     // Hide the submit button and date picker
     btnSubmitMove.setVisible(false);
