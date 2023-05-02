@@ -91,7 +91,7 @@ public class ConferenceRequestControllerI implements IRequestController{
                         bookingReasonTextField.textProperty(),
                         cbDuration.valueProperty(),
                         cbLongName.valueProperty(),
-                        cbChangeStatus.valueProperty());
+                        tfNotes.textProperty());
             }
 
             @Override

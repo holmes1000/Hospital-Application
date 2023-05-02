@@ -253,8 +253,7 @@ public class FurnitureRequestControllerI implements IRequestController{
                 || cdAvailableModels.getValue() == null
                 || cdAssembly.getValue() == null
                 || cbEmployeesToAssign.getValue() == null
-                || cbLongName.getValue() == null
-                || cbChangeStatus.getSelectionModel() == null;
+                || cbLongName.getValue() == null;
     }
 
     @Override

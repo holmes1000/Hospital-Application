@@ -74,10 +74,9 @@ public class OfficeRequestControllerI implements IRequestController {
                 super.bind(cbSupplyItems.valueProperty(),
                         cbSupplyType.valueProperty(),
                         tbSupplyQuantities.textProperty(),
-                        txtFldNotes.textProperty(),
+//                        txtFldNotes.textProperty(),
                         cbEmployeesToAssign.valueProperty(),
-                        cbLongName.valueProperty(),
-                        cbChangeStatus.valueProperty());
+                        cbLongName.valueProperty());
             }
 
             @Override
@@ -85,10 +84,9 @@ public class OfficeRequestControllerI implements IRequestController {
                 return (cbSupplyItems.getValue() == null
                         || cbSupplyType.getValue() == null
                         || tbSupplyQuantities.getText().isEmpty()
-                        || txtFldNotes.getText().isEmpty()
+//                        || txtFldNotes.getText().isEmpty()
                         || cbEmployeesToAssign.getValue() == null
-                        || cbLongName.getValue() == null
-                        || cbChangeStatus.getValue() == null);
+                        || cbLongName.getValue() == null);
             }
         };
         btnSubmit.disableProperty().bind(bb);

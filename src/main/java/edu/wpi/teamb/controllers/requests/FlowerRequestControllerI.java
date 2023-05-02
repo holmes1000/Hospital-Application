@@ -68,8 +68,7 @@ public class FlowerRequestControllerI implements IRequestController {
                         cdAvailableColor.valueProperty(),
                         cdAvailableType.valueProperty(),
                         cbLongName.valueProperty(),
-                        cbEmployeesToAssign.valueProperty(),
-                        cbChangeStatus.valueProperty());
+                        cbEmployeesToAssign.valueProperty());
             }
 
             @Override
@@ -78,8 +77,7 @@ public class FlowerRequestControllerI implements IRequestController {
                         cdAvailableColor.getValue() == null ||
                         cdAvailableType.getValue() == null ||
                         cbLongName.getValue() == null ||
-                        cbEmployeesToAssign.getValue() == null ||
-                        cbChangeStatus.getValue() == null);
+                        cbEmployeesToAssign.getValue() == null);
             }
         };
         btnSubmit.disableProperty().bind(bb);
