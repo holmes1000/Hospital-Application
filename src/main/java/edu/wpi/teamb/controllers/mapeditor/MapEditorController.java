@@ -441,6 +441,7 @@ public class MapEditorController {
 
   private void handleDefaultNode(FullNode n) {
     DefaultStart.getInstance().setDefault_start(n.getLongName());
+    DefaultStart.getInstance().setTrue_default_start(n.getLongName());
     submissionAlert("Set default start to be " + n.getLongName());
     selectingDefault = false;
   }

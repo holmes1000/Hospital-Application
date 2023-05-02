@@ -154,7 +154,7 @@ public class PathfinderController {
       activateNav();
       deactivateNav();
       defaultStart = DefaultStart.getInstance().getDefault_start();
-      if (defaultStart.equals("")) {DefaultStart.getInstance().setDefault_start("15 Lobby Entrance Floor 2");}
+      if (defaultStart.equals("")) {DefaultStart.getInstance().setDefault_start(DefaultStart.getInstance().getTrue_default_start());}
       defaultStart = DefaultStart.getInstance().getDefault_start();
       defaultEnd = DefaultStart.getInstance().getDefault_end();
 

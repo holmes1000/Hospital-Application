@@ -9,6 +9,7 @@ import edu.wpi.teamb.DBAccess.ORMs.Alert;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 import edu.wpi.teamb.DBAccess.ORMs.User;
 import edu.wpi.teamb.controllers.components.AlertCardController;
+import edu.wpi.teamb.entities.DefaultStart;
 import edu.wpi.teamb.entities.ELogin;
 import edu.wpi.teamb.entities.EHome;
 import edu.wpi.teamb.navigation.Navigation;
@@ -344,6 +345,8 @@ public class HomeController {
 
     @FXML
     void onPathfinderImgClick() {
+        DefaultStart.getInstance().setDefault_start(DefaultStart.getInstance().getTrue_default_start());
+        DefaultStart.getInstance().setDefault_end("");
         Navigation.navigate(Screen.PATHFINDER);
     }
 
