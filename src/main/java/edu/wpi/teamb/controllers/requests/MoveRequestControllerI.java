@@ -59,7 +59,7 @@ public class MoveRequestControllerI implements IRequestController{
     @FXML
     public void initialize() throws IOException, SQLException {
         ObservableList<String> longNames = FXCollections.observableArrayList();
-        longNames.addAll(Repository.getRepository().getPracticalLongNames());
+        longNames.addAll(Repository.getRepository().getAllLongNames());
         cdRoomToMove.setItems(longNames);
 
         ObservableList<Integer> NodeID = FXCollections.observableArrayList();
