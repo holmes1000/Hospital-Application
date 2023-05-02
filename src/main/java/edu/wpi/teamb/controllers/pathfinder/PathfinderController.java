@@ -894,11 +894,34 @@ public class PathfinderController {
               //floorsMap = new LinkedHashMap<>();
 
               for (String item : string_path) {
-                  String floorNum = fullNodesByID.get(fullNodesByLongname.get(item).getNodeID()).getFloor();
+                  FullNode node = fullNodesByID.get(fullNodesByLongname.get(item).getNodeID());
+                  String floorNum = node.getFloor();
                   //String floorNum = fullNodesByLongname.get(item).getNodeID();
                   //System.out.println(floorNum);
                   ObservableList<String> floorItems = floorsMap.getOrDefault(floorNum, FXCollections.observableArrayList());
-                  floorItems.add(item);
+                  String prefix = "";
+                  if(item.equals(string_path.get(0))) { // first item
+                      prefix = "Start at";
+                  } else if(item.equals(string_path.get(string_path.size() - 1))) { // last item
+                      prefix = "Arrive at";
+                  } else if(floorItems.isEmpty()) { // first item on subsequent floors
+                      prefix = "Continue from";
+                  } else {
+                      // get angle lmfao
+                      FullNode lastNode = fullNodesByID.get(fullNodesByLongname.get(string_path.get(string_path.indexOf(item) - 1)).getNodeID());
+                      FullNode nextNode = fullNodesByID.get(fullNodesByLongname.get(string_path.get(string_path.indexOf(item) + 1)).getNodeID());
+                      double angle1 = Math.atan2(lastNode.getyCoord() - node.getyCoord(), lastNode.getxCoord() - node.getxCoord());
+                      double angle2 = Math.atan2(node.getyCoord() - nextNode.getyCoord(), node.getxCoord() - nextNode.getxCoord());
+                      double angle = angle1 - angle2;
+                      if(Math.abs(angle) < Math.toRadians(48)) {
+                          prefix = "Go straight to";
+                      } else if(angle > 0 && angle < Math.toRadians(180)) {
+                          prefix = "Turn left to";
+                      } else {
+                          prefix = "Turn right to";
+                      }
+                  }
+                  floorItems.add(prefix + " " + item);
                   floorsMap.put(floorNum, floorItems);
               }
 
