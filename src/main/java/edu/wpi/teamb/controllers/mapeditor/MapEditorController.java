@@ -192,6 +192,7 @@ public class MapEditorController {
   private MoveMap moveMap;
   private EditNodeMenuController editNodeMenuController;
   private AddNodeMenuController addNodeMenuController;
+  private boolean selectingDefault = false;
 
   public MapEditorController() throws SQLException {
     this.editor = new EMapEditor();
@@ -325,6 +326,8 @@ public class MapEditorController {
     } else if (mapEditorContext.getState() == alignNodesState) {
       System.out.println("Selecting nodes");
       tfState.setText("Selecting Nodes");
+    } else if (selectingDefault) {
+      tfState.setText("Select a node default");
     }
     else
       tfState.setText("Viewing");
@@ -420,6 +423,9 @@ public class MapEditorController {
         if (mapEditorContext.getState() == deleteNodeState) {
           handleDeleteNode(event, n);
         }
+        if (selectingDefault) {
+          handleDefaultNode(n);
+        }
         System.out.println("Node " + n.getNodeID() + " clicked");
       } catch (SQLException | IOException e) {
         throw new RuntimeException(e);
@@ -431,6 +437,12 @@ public class MapEditorController {
     floorList.add(n);
     nodeGroup.getChildren().add(c);
     nodeGroup.toFront();
+  }
+
+  private void handleDefaultNode(FullNode n) {
+    DefaultStart.getInstance().setDefault_start(n.getLongName());
+    submissionAlert("Set default start to be " + n.getLongName());
+    selectingDefault = false;
   }
 
 
@@ -1095,6 +1107,10 @@ public class MapEditorController {
     itemAlign.setOnAction(event -> {
       mapEditorContext.setState(alignNodesState);
       mapEditorContext.getState().printStatus();
+      determineState();
+    });
+    itemSetDefault.setOnAction(event -> {
+      selectingDefault = true;
       determineState();
     });
   }
