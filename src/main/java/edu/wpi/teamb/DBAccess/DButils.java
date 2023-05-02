@@ -120,9 +120,22 @@ public class DButils {
         }
         String ret = "";
         for (int i = 0; i < length - 1; i++) {
+            if (value[i] == null) {
+                ret += cols[i] + " = " + "null" + ",";
+                continue;
+            } else if (value[i].equals("null")) {
+                ret += cols[i] + " = " + value[i] + ",";
+                continue;
+            }
             ret += cols[i] + " = '" + value[i] + "',";
         }
-        ret += cols[length - 1] + " = '" + value[length - 1] + "'";
+        if (value[length - 1] == null) {
+            ret += cols[length - 1] + " = " + "null";
+            return ret;
+        } else if (value[length - 1].equals("null")) {
+            ret += cols[length - 1] + " = " + value[length - 1];
+            return ret;
+        } else ret += cols[length - 1] + " = '" + value[length - 1] + "'";
 
         return ret;
     }
