@@ -31,7 +31,6 @@ public class TranslationRequestControllerI implements IRequestController {
     private MFXButton btnSubmit;
     @FXML private SplitPane spSubmit;
     @FXML private MFXButton btnReset;
-    @FXML private ImageView helpIcon;
     @FXML private MFXFilterComboBox<String> cbLanguageSelect;
     @FXML private MFXFilterComboBox<String> cdMedicalInfo;
     @FXML private MFXTextField txtFldNotes;
@@ -76,7 +75,6 @@ public class TranslationRequestControllerI implements IRequestController {
         btnSubmit.setOnAction(e -> handleSubmit());
         btnReset.setTooltip(new Tooltip("Click to reset the form"));
         btnReset.setOnAction(e -> handleReset());
-        helpIcon.setOnMouseClicked(e -> handleHelp());
     }
 
     @Override
@@ -155,19 +153,6 @@ public class TranslationRequestControllerI implements IRequestController {
         cbLongName.clear();
     }
 
-    @Override
-    public void handleHelp() {
-        final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/TranslationRequestHelpPopOver.fxml"));
-        PopOver popOver = new PopOver();
-        popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_RIGHT);
-        popOver.setArrowSize(0.0);
-        try {
-            popOver.setContentNode(popupLoader.load());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        popOver.show(helpIcon);
-    }
 
     @Override
     public boolean nullInputs() {
