@@ -102,6 +102,13 @@ public class EditUsersController {
         btnDeleteUser.setTooltip(new Tooltip("Click to delete a user"));
         btnReset.setTooltip(new Tooltip("Click to reset the fields"));
         btnBack.setTooltip(new Tooltip("Click to go back to the settings"));
+        textEmail.setTooltip(new Tooltip("Enter a valid email address"));
+        textUsername.setTooltip(new Tooltip("Enter a username (this cannot be changed later)"));
+        textName.setTooltip(new Tooltip("Enter a first and last name"));
+        textPassword.setTooltip(new Tooltip("Enter a password (at least 8 characters)"));
+        cbPermissionLevel.setTooltip(new Tooltip("Select a permission level"));
+        tbUsers.setTooltip(new Tooltip("Double click a user to edit or delete"));
+
         btnAddUser.setOnMouseClicked(event -> handleAddUser());
         btnEditUser.setOnMouseClicked(event -> {
             try {
