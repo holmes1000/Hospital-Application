@@ -87,6 +87,19 @@ public class CreditsController {
     @FXML private Label sofa;
     @FXML private Label street;
     @FXML private Label workspace;
+    @FXML private Label conferenceRoom;
+
+    @FXML private Label flowerVase;
+    @FXML private Label furnitureRequest;
+    @FXML private Label mealRequest;
+    @FXML private Label meeting;
+    @FXML private Label officeSupplies;
+    @FXML private Label edge;
+    @FXML private Label move;
+    @FXML private Label node;
+    @FXML private Label reset;
+    @FXML private Label tools;
+
 
     @FXML private ImageView popup;
 
@@ -119,7 +132,7 @@ public class CreditsController {
             popup.setImage(new Image(getClass().getResource("edu/wpi/teamb/img/breakfast.png").toExternalForm()));
         });
         BWH_Background.setOnMouseClicked(e->{
-            popup.setImage(new Image(getClass().getResource("edu/wpi/teamb/img/BrighamWomens-background-img.webp").toExternalForm()));
+            popup.setImage(new Image(getClass().getResource("edu/wpi/teamb/img/bwh-background.jpg").toExternalForm()));
         });
         BWH_Logo.setOnMouseClicked(e->{
             popup.setImage(new Image(getClass().getResource("edu/wpi/teamb/img/bwh-logo.jpg").toExternalForm()));
@@ -172,6 +185,40 @@ public class CreditsController {
         workspace.setOnMouseClicked(e->{
             popup.setImage(new Image(getClass().getResource("edu/wpi/teamb/img/workspace.png").toExternalForm()));
         });
+        conferenceRoom.setOnMouseClicked(e -> {
+            popup.setImage(new Image("edu/wpi/teamb/img/conference-room.jpg"));
+        });
+        flowerVase.setOnMouseClicked(e -> {
+            popup.setImage(new Image("edu/wpi/teamb/img/flower-vase2.jpg"));
+        });
+        furnitureRequest.setOnMouseClicked(e -> {
+            popup.setImage(new Image("edu/wpi/teamb/img/furtniture-request.jpg"));
+        });
+        mealRequest.setOnMouseClicked(e -> {
+            popup.setImage(new Image("edu/wpi/teamb/img/meal-request.png"));
+        });
+        meeting.setOnMouseClicked(e -> {
+            popup.setImage(new Image("edu/wpi/teamb/img/meeting.png"));
+        });
+        officeSupplies.setOnMouseClicked(e -> {
+            popup.setImage(new Image("edu/wpi/teamb/img/Office-Supplies.jpg"));
+        });
+        edge.setOnMouseClicked(e -> {
+            popup.setImage(new Image("edu/wpi/teamb/img/icons/edge.png"));
+        });
+        move.setOnMouseClicked(e -> {
+            popup.setImage(new Image("edu/wpi/teamb/img/icons/move.png"));
+        });
+        node.setOnMouseClicked(e -> {
+            popup.setImage(new Image("edu/wpi/teamb/img/icons/node.png"));
+        });
+        reset.setOnMouseClicked(e -> {
+            popup.setImage(new Image("edu/wpi/teamb/img/icons/reset.png"));
+        });
+        tools.setOnMouseClicked(e -> {
+            popup.setImage(new Image("edu/wpi/teamb/img/icons/tools.png"));
+        });
+
 
         // create a popup to show the image
 //        Image image = new Image("path/to/image.png"); // replace with the actual path to the image
