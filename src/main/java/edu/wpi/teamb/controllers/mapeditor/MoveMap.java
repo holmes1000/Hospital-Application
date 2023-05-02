@@ -132,7 +132,7 @@ public class MoveMap {
                 animateLine(line);
                 line.setOnMouseEntered(event -> {
                     nameToolTip = new Tooltip();
-                    nameToolTip.setText(display_move_info(move));
+                    nameToolTip.setText(display_move_info(move, fullNodesByID.get(move.getNodeID()).getLongName()));
                     nameToolTip.setShowDelay(Duration.millis(1));
                     nameToolTip.hideDelayProperty().set(Duration.seconds(.5));
                     Tooltip.install(line, nameToolTip);
@@ -183,9 +183,19 @@ public class MoveMap {
         timeline.play();
     }
 
-    public String display_move_info(Move move){
-        String text = move.getLongName() + " will be moving to node " + move.getNodeID() + " on " + move.getDate();
+    public String display_move_info(Move move, String previous){
+        String text = move.getLongName() + " will be moving to node " + move.getNodeID() + " (" + previous + ") on " + move.getDate();
         return text;
+    }
+
+    public void addToMoveMap(Move moveToAdd) {
+        if (move_map.containsKey(moveToAdd.getNodeID())) {
+            move_map.get(moveToAdd.getNodeID()).add(moveToAdd);
+        } else {
+            ArrayList<Move> moves = new ArrayList<>();
+            moves.add(moveToAdd);
+            move_map.put(moveToAdd.getNodeID(), moves);
+        }
     }
 
     public String getCurrentFloor() {
