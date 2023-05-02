@@ -8,6 +8,8 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+import java.net.URL;
+
 public class Gapp extends Application {
 
     private static Stage primaryStage;
@@ -39,8 +41,12 @@ public class Gapp extends Application {
 
         Gapp.primaryStage = primaryStage;
         primaryStage.setResizable(false);
+        URL a = Gapp.class.getResource("./rsc/Screens/StartScn.fxml");
 
-        FXMLLoader loader = new FXMLLoader(Gapp.class.getResource("./rsc/Screens/StartScn.fxml"));
+       // add to a's path : rsc/Screens/StartScn.fxm
+
+        FXMLLoader loader = new FXMLLoader(a);
+        //loader.setLocation(c);
         BorderPane root = loader.load();
 
         Gapp.rootPane = root;
