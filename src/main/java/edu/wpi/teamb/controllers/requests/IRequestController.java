@@ -42,10 +42,6 @@ public interface IRequestController {
         Navigation.navigate(Screen.HOME);
     };
 
-    /**
-     * Handles the help button
-     */
-    void handleHelp();
 
     default void submissionAlert() {
         // Create an alert

@@ -74,4 +74,13 @@ public class FlowerRequest {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    @Override
+    public String toString() {
+        return "id=" + id +
+                ", flowerType='" + flowerType + '\'' +
+                ", color='" + color + '\'' +
+                ", size='" + size + '\'' +
+                ", message='" + message + '\'';
+    }
 }

@@ -3,6 +3,7 @@ package edu.wpi.teamb.controllers.requests;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.Full.FullMealRequest;
+import edu.wpi.teamb.DBAccess.ORMs.Alert;
 import edu.wpi.teamb.controllers.components.InfoCardController;
 import edu.wpi.teamb.entities.requests.EMealRequest;
 import edu.wpi.teamb.entities.requests.IRequest;
@@ -77,7 +78,6 @@ public class MealRequestControllerI implements IRequestController{
         btnSubmit.setOnAction(e -> handleSubmit());
         btnReset.setTooltip(new Tooltip("Click to reset the form"));
         btnReset.setOnAction(e -> handleReset());
-        helpIcon.setOnMouseClicked(e -> handleHelp());
         btnReset.setDisable(true);
         ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
             btnReset.setDisable(false);
@@ -112,7 +112,7 @@ public class MealRequestControllerI implements IRequestController{
                 FXCollections.observableArrayList();
         employees.addAll(EMealRequest.getUsernames());
         Collections.sort(employees);
-        employees.add(0, "Unassigned");
+        employees.add(0, "unassigned");
         cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
         cbEmployeesToAssign.setItems(employees);
 
@@ -142,7 +142,7 @@ public class MealRequestControllerI implements IRequestController{
 
     @Override
     public void handleSubmit() {
-        if (nullInputs())
+        if (nullInputs() || nullInputsFood())
             showPopOver();
         else {
             // Get the standard request fields
@@ -171,10 +171,24 @@ public class MealRequestControllerI implements IRequestController{
                         EMealRequest.getSnack()
                 };
                 EMealRequest.submitRequest(output);
+                alertEmployee(cbEmployeesToAssign.getValue());
                 handleReset();
             }
             submissionAlert();
         }
+    }
+
+    /**
+     * Grabs the current employee that is referred to in the newly made request and alerts them of this
+     * @param employee
+     */
+    public void alertEmployee(String employee){
+        Alert newAlert = new Alert();
+        newAlert.setTitle("New Task Assigned");
+        newAlert.setDescription("You have been assigned a new meal request to complete.");
+        newAlert.setEmployee(employee);
+        newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
+        Repository.getRepository().addAlert(newAlert);
     }
 
     @Override
@@ -190,33 +204,18 @@ public class MealRequestControllerI implements IRequestController{
         txtFldNotes.clear();
     }
 
-    @Override
-    public void handleHelp() {
-        //Load the FXML component
-        final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/MealRequestHelpPopOver.fxml"));
-
-        //Create a new popover with no arrow and orient it to appear above the help button
-        PopOver popOver = new PopOver();
-        popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_RIGHT);
-        popOver.setArrowSize(0.0);
-
-        //Load FXML into the popOver
-        try {
-            popOver.setContentNode(popupLoader.load());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        popOver.show(helpIcon);
-    }
 
     @Override
     public boolean nullInputs() {
         return cbOrderLocation.getValue() == null
                 || cbEmployeesToAssign.getValue() == null
-                || cbAvailableMeals.getValue() == null
-                || cbAvailableDrinks.getValue() == null
-                || cbAvailableSnacks.getValue() == null
                 || cbLongName.getValue() == null;
+    }
+
+    public boolean nullInputsFood() {
+        return cbAvailableMeals.getValue() == null
+                && cbAvailableDrinks.getValue() == null
+                && cbAvailableSnacks.getValue() == null;
     }
 
     @Override

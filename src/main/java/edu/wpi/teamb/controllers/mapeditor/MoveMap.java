@@ -130,25 +130,18 @@ public class MoveMap {
                 Line line = new Line(originalX, originalY, newX, newY);
                 line.setStrokeWidth(4);
                 animateLine(line);
-                Circle c = new Circle(originalX, originalY, 5, RED);
-                Circle finalC = c;
-                c.setOnMouseEntered(event -> {
-                    if (nameToolTip.getText().isBlank() || nameToolTip.getText().contains(nameToolTip.getText())) {nameToolTip.setText(display_move_info(move));}
-                                else {nameToolTip.setText(display_move_info(move) + "\n" + nameToolTip.getText());}
-                                nameToolTip.setShowDelay(Duration.millis(1));
-                                nameToolTip.hideDelayProperty().set(Duration.seconds(.5));
-                                Tooltip.install(finalC, nameToolTip);
+                line.setOnMouseEntered(event -> {
+                    nameToolTip = new Tooltip();
+                    nameToolTip.setText(display_move_info(move, fullNodesByID.get(move.getNodeID()).getLongName()));
+                    nameToolTip.setShowDelay(Duration.millis(1));
+                    nameToolTip.hideDelayProperty().set(Duration.seconds(.5));
+                    Tooltip.install(line, nameToolTip);
                         });
-                pathGroup.getChildren().add(c);
                 Boolean exists = false;
                 for (Node child : pathGroup.getChildren()) {
                     if (child.contains(newX,newY)) {
                         exists = true;
                     }
-                }
-                if (!exists) {
-                    c = new Circle(newX, newY, 5, PURPLE);
-                    pathGroup.getChildren().add(c);
                 }
                 pathGroup.getChildren().add(line);
             }
@@ -190,9 +183,19 @@ public class MoveMap {
         timeline.play();
     }
 
-    public String display_move_info(Move move){
-        String text = move.getLongName() + " will be moving to node " + move.getNodeID() + " on " + move.getDate();
+    public String display_move_info(Move move, String previous){
+        String text = move.getLongName() + " will be moving to node " + move.getNodeID() + " (" + previous + ") on " + move.getDate();
         return text;
+    }
+
+    public void addToMoveMap(Move moveToAdd) {
+        if (move_map.containsKey(moveToAdd.getNodeID())) {
+            move_map.get(moveToAdd.getNodeID()).add(moveToAdd);
+        } else {
+            ArrayList<Move> moves = new ArrayList<>();
+            moves.add(moveToAdd);
+            move_map.put(moveToAdd.getNodeID(), moves);
+        }
     }
 
     public String getCurrentFloor() {

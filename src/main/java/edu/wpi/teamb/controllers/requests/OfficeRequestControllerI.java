@@ -3,6 +3,7 @@ package edu.wpi.teamb.controllers.requests;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.Full.FullOfficeRequest;
+import edu.wpi.teamb.DBAccess.ORMs.Alert;
 import edu.wpi.teamb.controllers.components.InfoCardController;
 import edu.wpi.teamb.entities.requests.EOfficeRequest;
 import edu.wpi.teamb.entities.requests.IRequest;
@@ -59,7 +60,7 @@ public class OfficeRequestControllerI implements IRequestController {
     }
 
     @FXML
-    public void initialize() throws IOException, SQLException {
+    public void initialize() {
         initBtns();
         initializeFields();
     }
@@ -93,7 +94,6 @@ public class OfficeRequestControllerI implements IRequestController {
         btnSubmit.setOnAction(e -> handleSubmit());
         btnReset.setTooltip(new Tooltip("Click to reset all fields"));
         btnReset.setOnAction(e -> handleReset());
-        helpIcon.setOnMouseClicked(e -> handleHelp());
         btnReset.setDisable(true);
         ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
             btnReset.setDisable(false);
@@ -107,7 +107,7 @@ public class OfficeRequestControllerI implements IRequestController {
     }
 
     @Override
-    public void initializeFields() throws SQLException {
+    public void initializeFields() {
         ObservableList<String> longNames = FXCollections.observableArrayList();
         longNames.addAll(Repository.getRepository().getPracticalLongNames());
         Collections.sort(longNames);
@@ -116,7 +116,7 @@ public class OfficeRequestControllerI implements IRequestController {
         //DROPDOWN INITIALIZATION
         ObservableList<String> employees = FXCollections.observableArrayList(EOfficeRequest.getUsernames());
         Collections.sort(employees);
-        employees.add(0, "Unassigned");
+        employees.add(0, "unassigned");
         cbEmployeesToAssign.setItems(employees);
         cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
 
@@ -192,6 +192,7 @@ public class OfficeRequestControllerI implements IRequestController {
                         Integer.toString(EOfficeRequest.getQuantity())
                 };
                 EOfficeRequest.submitRequest(output);
+                alertEmployee(cbEmployeesToAssign.getValue());
                 handleReset();
             }
             submissionAlert();
@@ -199,6 +200,19 @@ public class OfficeRequestControllerI implements IRequestController {
             tbSupplyQuantities.clear();
             tbSupplyQuantities.setTooltip(new Tooltip("Please only enter integer values"));
         }
+    }
+
+    /**
+     * Grabs the current employee that is referred to in the newly made request and alerts them of this
+     * @param employee
+     */
+    public void alertEmployee(String employee){
+        Alert newAlert = new Alert();
+        newAlert.setTitle("New Task Assigned");
+        newAlert.setDescription("You have been assigned a new office request to complete.");
+        newAlert.setEmployee(employee);
+        newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
+        Repository.getRepository().addAlert(newAlert);
     }
 
     @Override
@@ -211,24 +225,14 @@ public class OfficeRequestControllerI implements IRequestController {
         cbLongName.clear();
     }
 
-    @Override
-    public void handleHelp() {
-        final FXMLLoader popupLoader =
-                new FXMLLoader(Bapp.class.getResource("views/components/OfficeRequestHelpPopover.fxml"));
-        PopOver popOver = new PopOver();
-        popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_RIGHT);
-        popOver.setArrowSize(0.0);
-        try {
-            popOver.setContentNode(popupLoader.load());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        popOver.show(helpIcon);
-    }
 
     @Override
     public boolean nullInputs(){
-        return cbEmployeesToAssign.getValue() == null || cbSupplyItems.getValue() == null || cbSupplyType.getValue() == null || tbSupplyQuantities.getText().isEmpty() || cbLongName.getValue() == null;
+        return cbEmployeesToAssign.getValue() == null
+                || cbSupplyItems.getValue() == null
+                || cbSupplyType.getValue() == null
+                || tbSupplyQuantities.getText().isEmpty()
+                || cbLongName.getValue() == null;
     }
 
     @Override
@@ -251,8 +255,33 @@ public class OfficeRequestControllerI implements IRequestController {
         //set the editable fields to the values of the request
         cbEmployeesToAssign.getSelectionModel().selectItem(fullOfficeRequest.getEmployee());
         System.out.println(fullOfficeRequest.getId() + " " + fullOfficeRequest.getItem());
-        cbSupplyItems.getSelectionModel().selectItem(fullOfficeRequest.getItem());
         cbSupplyType.getSelectionModel().selectItem(fullOfficeRequest.getType());
+        //loads the following supply types so edit page does not crash
+        if (cbSupplyType.getSelectionModel().getSelectedItem().equals("Office Supplies")) {
+            cbSupplyItems.getItems().clear();
+            ObservableList<String> officeSupplies = FXCollections.observableArrayList("Pencils", "Pens", "Paper", "Stapler", "Staples", "Tape", "Scissors", "Glue", "Markers", "Highlighters", "Post-It Notes", "Paper Clips", "Binder Clips", "Folders", "Envelopes", "Printer Paper");
+            Collections.sort(officeSupplies);
+            cbSupplyItems.getItems().addAll(officeSupplies);
+//                        cbSupplyItems.setVisible(true);
+        } else if (cbSupplyType.getSelectionModel().getSelectedItem().equals("Cleaning Supplies")) {
+            cbSupplyItems.getItems().clear();
+            ObservableList<String> cleaningSupplies = FXCollections.observableArrayList("Bleach", "Disinfectant Wipes", "Hand Sanitizer", "Soap", "Toilet Paper", "Paper Towels", "Trash Bags", "Dish Soap", "Sponges", "Dishwasher Detergent", "Laundry Detergent", "Fabric Softener", "Dryer Sheets", "Broom", "Mop", "Vacuum", "Duster", "Dustpan", "Trash Can", "Trash Can Liners", "Air Freshener", "Glass Cleaner", "All-Purpose Cleaner", "Furniture Polish", "Squeegee", "Toilet Brush", "Plunger", "Rubber Gloves", "Bucket");
+            Collections.sort(cleaningSupplies);
+            cbSupplyItems.getItems().addAll(cleaningSupplies);
+//                        cbSupplyItems.setVisible(true);
+        } else if (cbSupplyType.getSelectionModel().getSelectedItem().equals("Electronics Supplies")){
+            cbSupplyItems.getItems().clear();
+            ObservableList<String> electronicSupplies = FXCollections.observableArrayList("Batteries", "Light Bulbs", "Extension Cords", "Power Strips", "Surge Protectors", "Ethernet Cables", "HDMI Cables", "USB Cables", "Phone Chargers", "Laptop Chargers", "Headphones", "Earbuds", "Speakers", "Microphone", "Webcam", "Printer Ink", "Printer Toner", "Printer Paper");
+            Collections.sort(electronicSupplies);
+            cbSupplyItems.getItems().addAll(electronicSupplies);
+        } else {
+            cbSupplyItems.getItems().clear();
+//                        cbSupplyItems.setVisible(false);
+        }
+        //continue setting the editable fields to the values of the request
+        cbSupplyItems.selectItem(fullOfficeRequest.getItem());
+        cbSupplyItems.setText(fullOfficeRequest.getItem());
+        cbSupplyItems.setValue(fullOfficeRequest.getItem());
         tbSupplyQuantities.setText(Integer.toString(fullOfficeRequest.getQuantity()));
         txtFldNotes.setText(fullOfficeRequest.getNotes());
         cbLongName.getSelectionModel().selectItem(fullOfficeRequest.getLocationName());

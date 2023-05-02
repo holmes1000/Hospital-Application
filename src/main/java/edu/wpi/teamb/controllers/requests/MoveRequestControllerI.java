@@ -2,6 +2,7 @@ package edu.wpi.teamb.controllers.requests;
 
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
+import edu.wpi.teamb.DBAccess.ORMs.Alert;
 import edu.wpi.teamb.DBAccess.ORMs.Move;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 import edu.wpi.teamb.entities.requests.EMoveRequest;
@@ -27,6 +28,7 @@ import org.controlsfx.control.PopOver;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -57,7 +59,7 @@ public class MoveRequestControllerI implements IRequestController{
     @FXML
     public void initialize() throws IOException, SQLException {
         ObservableList<String> longNames = FXCollections.observableArrayList();
-        longNames.addAll(Repository.getRepository().getPracticalLongNames());
+        longNames.addAll(Repository.getRepository().getAllLongNames());
         cdRoomToMove.setItems(longNames);
 
         ObservableList<Integer> NodeID = FXCollections.observableArrayList();
@@ -106,7 +108,6 @@ public class MoveRequestControllerI implements IRequestController{
         btnSubmit.setOnAction(e -> handleSubmit());
         btnReset.setTooltip(new Tooltip("Click to reset fields"));
         btnReset.setOnAction(e -> handleReset());
-        helpIcon.setOnMouseClicked(e -> handleHelp());
         btnRemoveMove.setTooltip(new Tooltip("Click to remove selected move"));
         btnRemoveMove.setOnMouseClicked(e -> handleRemoveMove());
         btnEditRequest.setTooltip(new Tooltip("Click to edit selected move"));
@@ -156,6 +157,7 @@ public class MoveRequestControllerI implements IRequestController{
                     if (when.after(new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24))) {
                         String[] output = {where.toString(), what, when.toString()};
                         EMoveRequest.submitRequest(output);
+                        alertEmployee("unassigned", what, cdWheretoMove.getSelectedItem().toString(), when.toString());
                         handleReset();
 
                         updateTable();
@@ -172,6 +174,19 @@ public class MoveRequestControllerI implements IRequestController{
         }
     }
 
+    /**
+     * Grabs the current employee that is referred to in the newly made request and alerts them of this
+     * @param employee
+     */
+    public void alertEmployee(String employee, String roomMoving, String moveTo, String when){
+        edu.wpi.teamb.DBAccess.ORMs.Alert newAlert = new Alert();
+        newAlert.setTitle("Move Alert");
+        newAlert.setDescription("The room " + roomMoving + " will be moving to " + moveTo + " on " + when);
+        newAlert.setEmployee(employee);
+        newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
+        Repository.getRepository().addAlert(newAlert);
+    }
+
     @Override
     public void handleReset() {
         cdRoomToMove.clear();
@@ -185,21 +200,6 @@ public class MoveRequestControllerI implements IRequestController{
         updateTable();
     }
 
-    @Override
-    public void handleHelp() {
-        final FXMLLoader popupLoader = new FXMLLoader(
-                // TODO: add Move request help popup
-                Bapp.class.getResource("views/components/MealRequestHelpPopOver.fxml"));
-        PopOver popOver = new PopOver();
-        popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_RIGHT);
-        popOver.setArrowSize(0.0);
-        try {
-            popOver.setContentNode(popupLoader.load());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        popOver.show(helpIcon);
-    }
 
     @Override
     public void showPopOver() {

@@ -79,6 +79,24 @@ public class FlowerRequestDAOImpl implements IDAO {
         return (ArrayList<FullFlowerRequest>) flower.listFullRequests(frs);
     }
 
+    public ArrayList<FlowerRequest> getAllHelper1() {
+        FullFactory ff = new FullFactory();
+        IFull flower = ff.getFullRequest("Flower");
+        ArrayList<FlowerRequest> frs = new ArrayList<FlowerRequest>();
+        try {
+            ResultSet rs = getDBRowAllRequests();
+            while (rs.next()) {
+                frs.add(new FlowerRequest(rs));
+            }
+            return frs;
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'FlowerRequestDAOImpl.getAllHelper': " + e.getMessage());
+        }
+        DBconnection.getDBconnection().closeDBconnection();
+        DBconnection.getDBconnection().forceClose();
+        return frs;
+    }
+
     /**
      * Adds a FlowerRequest object to the both the database and local list
      *

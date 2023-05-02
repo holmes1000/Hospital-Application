@@ -84,7 +84,7 @@ public class EditAlertsController {
             usernames.add(users.get(i).getUsername());
         }
         Collections.sort(usernames);
-        usernames.add(0, "Unassigned");
+        usernames.add(0, "unassigned");
         cbEmployees.getItems().addAll(usernames);
 
         alertTable();
@@ -183,10 +183,10 @@ public class EditAlertsController {
     private void handleAddAlert() {
         edu.wpi.teamb.DBAccess.ORMs.Alert newAlert = new edu.wpi.teamb.DBAccess.ORMs.Alert();
         newAlert.setTitle(textTitle.getText());
-        newAlert.setDescription(textDescription.getText().toLowerCase());
+        newAlert.setDescription(textDescription.getText());
         newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
         if(cbEmployees.getValue() == null){
-            newAlert.setEmployee("Unassigned");
+            newAlert.setEmployee("unassigned");
         } else {
             newAlert.setEmployee(cbEmployees.getValue());
         }

@@ -75,6 +75,24 @@ public class OfficeRequestDAOImpl implements IDAO {
         return (ArrayList<FullOfficeRequest>) or.listFullRequests(ors);
     }
 
+    public ArrayList<OfficeRequest> getAllHelper1() {
+        FullFactory ff = new FullFactory();
+        IFull or = ff.getFullRequest("Office");
+        ArrayList<OfficeRequest> ors = new ArrayList<OfficeRequest>();
+        try {
+            ResultSet rs = getDBRowAllRequests();
+            while (rs.next()) {
+                ors.add(new OfficeRequest(rs));
+            }
+            return ors;
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'OfficeRequestDAOImpl.getAllHelper': " + e.getMessage());
+        }
+        DBconnection.getDBconnection().closeDBconnection();
+        DBconnection.getDBconnection().forceClose();
+        return ors;
+    }
+
     /**
      * Adds an OfficeRequest to the both the database and the local list
      *

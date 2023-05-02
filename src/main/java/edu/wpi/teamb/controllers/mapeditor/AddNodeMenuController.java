@@ -37,13 +37,12 @@ public class AddNodeMenuController {
 
     static Node currentNode = null;
     static String currentFloor = null;
-
-    MapEditorController mapEditorController = new MapEditorController();
+    private static MapEditorController mapEditorController;
 
     public AddNodeMenuController() throws SQLException {
     }
 
-    public static void setCurrentFloor(String currentFloor) {
+    public void setCurrentFloor(String currentFloor) {
         AddNodeMenuController.currentFloor = currentFloor;
     }
 
@@ -69,6 +68,10 @@ public class AddNodeMenuController {
         tfXCoord.setTooltip(new Tooltip("Change the x coordinate of the node if needed"));
         tfYCoord.setText(String.valueOf(currentNode.getyCoord()));
         tfYCoord.setTooltip(new Tooltip("Change the y coordinate of the node if needed"));
+    }
+
+    public void setMapEditorController(MapEditorController mapEditorController) {
+        AddNodeMenuController.mapEditorController = mapEditorController;
     }
 
     public void initButtons() {
@@ -99,7 +102,6 @@ public class AddNodeMenuController {
 
     private void handleSubmitNodeDetails() {
         submitNode();
-        submissionAlert("Node added successfully! Refresh the map.");
     }
 
     private void submitNode() {
@@ -116,6 +118,8 @@ public class AddNodeMenuController {
             System.out.println("Adding a new node with nodeID: " + newNode.getNodeID());
         }
 
+        submissionAlert("Node added successfully! Refreshing the map.");
+        mapEditorController.refreshMap();
         // Close the window
         Stage stage = (Stage) btnSubmitNodeDetails.getScene().getWindow();
         stage.close();
@@ -156,7 +160,7 @@ public class AddNodeMenuController {
     }
 
 
-    public static void setCurrentNode(Node currentNode) {
+    public void setCurrentNode(Node currentNode) {
         AddNodeMenuController.currentNode = currentNode;
     }
 

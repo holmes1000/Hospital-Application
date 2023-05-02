@@ -3,6 +3,7 @@ package edu.wpi.teamb.controllers.requests;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
+import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.Full.*;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 import edu.wpi.teamb.controllers.NavDrawerController;
@@ -13,10 +14,7 @@ import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
@@ -29,6 +27,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import org.controlsfx.control.PopOver;
 
 public class SubmittedRequestsController {
     @FXML private ImageView helpIcon;
@@ -55,7 +54,7 @@ public class SubmittedRequestsController {
         menuDrawer.setPickOnBounds(false);
         allRequestsE = new EAllRequests();
         initScrollPane();
-        hoverHelp();
+        helpIcon.setOnMouseClicked(e -> handleHelp());
         initComboBoxChangeListeners();
         loadRequestsIntoContainer();
         initializeNavGates();
@@ -153,7 +152,7 @@ public class SubmittedRequestsController {
                         .collect(Collectors.toCollection(ArrayList::new));
             }
         } else if (filterCategory.equals("employee")) {
-            if (filterOption.equals("Unassigned")) {
+            if (filterOption.equals("unassigned")) {
                 filteredListOfRequests = listOfRequests.stream()
                         .filter(request -> request.getEmployee().equals(filterOption))
                         .collect(Collectors.toCollection(ArrayList::new));
@@ -220,23 +219,17 @@ public class SubmittedRequestsController {
         Navigation.navigate(Screen.CREATE_NEW_REQUEST);
     }
 
-    @FXML
-    public void hoverHelp() {
-        helpIcon.setOnMouseEntered(
-                event -> {
-                    Tooltip helpTip =
-                            new Tooltip(
-                                    "On this page: Please use the filter to filter requests by \n"
-                                            + "request status, request type, date submitted (ascending or  + \n" +
-                                            "descending), or unassigned requests. The selected requests information \n" +
-                                            "is listed on the right. You can decide to edit, delete, or mark a request \n + " +
-                                            "as complete using the buttons on the side. \n");
-                    helpTip.setStyle("-fx-size: 18");
-                    helpTip.setShowDelay(Duration.millis(1));
-                    helpTip.hideDelayProperty().set(Duration.seconds(1.5));
-                    Tooltip.install(helpIcon, helpTip);
-                });
-        helpIcon.setOnMouseExited(event -> {});
+    public void handleHelp() {
+        final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/SubmittedRequestHandlingHelpPopover.fxml"));
+        PopOver popOver = new PopOver();
+        popOver.setArrowLocation(PopOver.ArrowLocation.TOP_RIGHT);
+        popOver.setArrowSize(0.0);
+        try {
+            popOver.setContentNode(popupLoader.load());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        popOver.show(helpIcon);
     }
 
     /**
@@ -323,8 +316,15 @@ public class SubmittedRequestsController {
         cbFilterOptions.setTooltip(new Tooltip("Select a filter option"));
         cbFilterOptions.setVisible(false);
         //add filtering options to cbFilterCategory
+        String[] filterCategories = {"", "Status", "Request Type", "Date Submitted", "Unassigned Task"};
+        //put filter categories in alphabetical order
+        Arrays.sort(filterCategories);
+        //add filter categories to cbFilterCategory
+        cbFilterCategory.getItems().addAll(filterCategories);
+
+        //set the tooltip for cbFilterCategory
         cbFilterCategory.setTooltip(new Tooltip("Select a filter category"));
-        cbFilterCategory.getItems().addAll("", "Status", "Request Type", "Date Submitted", "Unassigned Task");
+
         //add change listener to cbFilterCategory
         cbFilterCategory.valueProperty().addListener(
                 (observable, oldValue, newValue) -> {
@@ -332,7 +332,12 @@ public class SubmittedRequestsController {
                         //if selection is null
                         loadRequestsIntoContainer();
                     } else if (newValue.equals("Unassigned Task")) {
-                        loadRequestsIntoContainer("employee", "Unassigned");
+                        //clear cbFilterOptions current selection and items
+                        cbFilterOptions.getSelectionModel().clearSelection();
+                        cbFilterOptions.getItems().clear();
+                        //set the button to not be visible
+                        cbFilterOptions.setVisible(false);
+                        loadRequestsIntoContainer("employee", "unassigned");
                     } else if (!newValue.equals("")) {
                         //set cbFilterOptions to visible
                         cbFilterOptions.setVisible(true);
@@ -341,22 +346,34 @@ public class SubmittedRequestsController {
                         //add filtering options to cbFilterOptions based on filter category
                         switch (newValue) {
                             case "Status":
-                                cbFilterOptions.getItems().addAll("", RequestStatus.PENDING.getStatus(), RequestStatus.COMPLETED.getStatus());
+                                ArrayList<String> statusList = new ArrayList<>(Arrays.asList(
+                                        "",
+                                        RequestStatus.PENDING.getStatus(),
+                                        RequestStatus.COMPLETED.getStatus()));
+                                //sort statusList in alphabetical order
+                                Collections.sort(statusList);
+                                cbFilterOptions.getItems().addAll(statusList);
                                 break;
                             case "Request Type":
-                                cbFilterOptions.getItems().addAll(
+                                ArrayList<String> requestTypeList = new ArrayList<>(Arrays.asList(
                                         "",
                                         RequestType.MEAL.getType(),
                                         RequestType.CONFERENCE.getType(),
                                         RequestType.FLOWER.getType(),
                                         RequestType.OFFICE.getType(),
-                                        RequestType.FURNITURE.getType());
+                                        RequestType.FURNITURE.getType()));
+                                //sort requestTypeList in alphabetical order
+                                Collections.sort(requestTypeList);
+                                cbFilterOptions.getItems().addAll(requestTypeList);
                                 break;
                             case "Date Submitted":
-                                cbFilterOptions.getItems().addAll(
+                                ArrayList<String> dateSubmittedList = new ArrayList<>(Arrays.asList(
                                         "",
                                         AscendingDescending.ASCENDING.getAscendingDescending(),
-                                        AscendingDescending.DESCENDING.getAscendingDescending());
+                                        AscendingDescending.DESCENDING.getAscendingDescending()));
+                                //sort dateSubmittedList in alphabetical order
+                                Collections.sort(dateSubmittedList);
+                                cbFilterOptions.getItems().addAll(dateSubmittedList);
                                 break;
                         }
                     } else {

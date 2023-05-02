@@ -78,6 +78,24 @@ public class FurnitureRequestDAOImpl implements IDAO {
             return (ArrayList<FullFurnitureRequest>) furn.listFullRequests(frs);
         }
 
+    public ArrayList<FurnitureRequest> getAllHelper1() {
+        FullFactory ff = new FullFactory();
+        IFull furn = ff.getFullRequest("Furniture");
+        ArrayList<FurnitureRequest> frs = new ArrayList<FurnitureRequest>();
+        try {
+            ResultSet rs = getDBRowAllRequests();
+            while (rs.next()) {
+                frs.add(new FurnitureRequest(rs));
+            }
+            return frs;
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'FurnitureRequestDAOImpl.getAllHelper': " + e.getMessage());
+        }
+        DBconnection.getDBconnection().closeDBconnection();
+        DBconnection.getDBconnection().forceClose();
+        return frs;
+    }
+
         /**
          * Adds a FurnitureRequest object to the both the database and local list
          *

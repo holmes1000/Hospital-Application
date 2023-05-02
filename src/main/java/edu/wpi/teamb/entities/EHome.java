@@ -2,6 +2,7 @@ package edu.wpi.teamb.entities;
 
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.Full.*;
+import edu.wpi.teamb.DBAccess.ORMs.Alert;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 
 import java.util.ArrayList;
@@ -30,4 +31,6 @@ public class EHome {
     public FullFurnitureRequest getFurnitureRequest(int id) {
         return Repository.getRepository().getFurnitureRequest(id);
     }
+
+    public ArrayList<Alert> getAllAlerts() {return Repository.getRepository().getAllAlerts();}
 }

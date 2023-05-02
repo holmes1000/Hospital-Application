@@ -79,6 +79,25 @@ public class MealRequestDAOImpl implements IDAO {
         return (ArrayList<FullMealRequest>) mealRequest.listFullRequests(mrs);
     }
 
+
+    public ArrayList<MealRequest> getAllHelper1() {
+        FullFactory ff = new FullFactory();
+        IFull mealRequest = ff.getFullRequest("Meal");
+        ArrayList<MealRequest> mrs = new ArrayList<MealRequest>();
+        try {
+            ResultSet rs = getDBRowAllRequests();
+            while (rs.next()) {
+                mrs.add(new MealRequest(rs));
+            }
+            return mrs;
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'MealRequestDAOImpl.getAllHelper1': " + e.getMessage());
+        }
+        DBconnection.getDBconnection().closeDBconnection();
+        DBconnection.getDBconnection().forceClose();
+        return mrs;
+    }
+
     /**
      * Adds a MealRequest object to the both the database and local list
      *
