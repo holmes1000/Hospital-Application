@@ -37,18 +37,11 @@ public class RequestDAOImpl implements IDAO {
     @Override
     public IFull get(Object id) {
         int whichRequest = 0;
-        ResultSet rs = DButils.getRowCond("requests", "requesttype", "id = " + id);
+        //ResultSet rs = DButils.getRowCond("requests", "requesttype", "id = " + id);
         String requestType = null;
-        while (true) {
-            try {
-                if (!rs.next()) break;
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                requestType = rs.getString("requesttype");
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+        for (Request r : requests) {
+            if (r.getId() == (Integer) id) {
+                requestType = r.getRequestType();
             }
         }
         switch (requestType) {
@@ -368,7 +361,7 @@ public class RequestDAOImpl implements IDAO {
         for (int i = 0; i < requests.size(); i++) {
             if (requests.get(i).getEmployee().equals(username)) {
                 Request newRequest = requests.get(i);
-                newRequest.setEmployee("Unassigned");
+                newRequest.setEmployee("unassigned");
                 update(newRequest);
             }
         }

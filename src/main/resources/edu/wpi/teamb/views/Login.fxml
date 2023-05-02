@@ -2,7 +2,6 @@
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXPasswordField?>
-<?import io.github.palexdev.materialfx.controls.MFXRadioButton?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -27,7 +26,7 @@
    <center>
       <AnchorPane prefHeight="706.0" prefWidth="637.0" BorderPane.alignment="CENTER">
          <children>
-               <MFXButton id="button" fx:id="btnLogin" layoutX="114.0" layoutY="468.0" onAction="#clickLogin" prefHeight="50.0" prefWidth="460.0" style="-fx-background-color: #f6bd38;" text="Login">
+               <MFXButton id="button" fx:id="btnLogin" layoutX="114.0" layoutY="468.0" onAction="#clickLogin" prefHeight="50.0" prefWidth="460.0" style="-fx-background-color: #f6bd38;" text="Log In">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
@@ -43,7 +42,6 @@
                   <Font size="36.0" />
                </font>
             </Text>
-            <MFXRadioButton fx:id="radioRememberMe" layoutX="116.0" layoutY="409.0" style="-fx-text-fill: #f1f1f1;" text="Remember me" textFill="#f1f1f1" />
             <Text id="label" fill="#f1f1f1" layoutX="113.0" layoutY="229.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
                <font>
                   <Font size="18.0" />
@@ -54,13 +52,11 @@
                   <Font size="18.0" />
                </font>
             </Text>
-            <Text fx:id="errorMsg" fill="RED" layoutX="112.0" layoutY="204.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" />
-            <MFXButton fx:id="btnForgotPassword" layoutX="454.0" layoutY="405.0" onAction="#clickForgotPassword" prefHeight="26.0" prefWidth="120.0" rippleColor="WHITE" style="-fx-background-color: #465777;" text="Forgot password?" textFill="WHITE" />
-            <MFXButton fx:id="btnExit" layoutX="537.0" layoutY="672.0" onAction="#clickExit" prefHeight="25.0" prefWidth="61.0" style="-fx-background-color: #465777;" text="Exit" textFill="#f1f1f1">
+            <Text fx:id="errorMsg" fill="#c30000" layoutX="112.0" layoutY="204.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER">
                <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </MFXButton>
+                  <Font size="18.0" />
+               </font></Text>
+            <MFXButton fx:id="btnForgotPassword" layoutX="454.0" layoutY="405.0" onAction="#clickForgotPassword" prefHeight="26.0" prefWidth="120.0" rippleColor="WHITE" style="-fx-background-color: #465777;" text="Forgot password?" textFill="WHITE" />
          </children>
       </AnchorPane>
    </center>

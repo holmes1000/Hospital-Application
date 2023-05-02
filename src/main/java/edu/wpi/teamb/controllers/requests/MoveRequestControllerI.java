@@ -2,21 +2,24 @@ package edu.wpi.teamb.controllers.requests;
 
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
+import edu.wpi.teamb.DBAccess.ORMs.Alert;
 import edu.wpi.teamb.DBAccess.ORMs.Move;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 import edu.wpi.teamb.entities.requests.EMoveRequest;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
+import io.github.palexdev.materialfx.beans.NumberRange;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXRadioButton;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -25,19 +28,21 @@ import org.controlsfx.control.PopOver;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 
 public class MoveRequestControllerI implements IRequestController{
 
     @FXML private MFXButton btnSubmit;
-    @FXML private MFXButton btnCancel;
+    @FXML private SplitPane spSubmit;
     @FXML private MFXButton btnReset;
     @FXML private ImageView helpIcon;
     @FXML private VBox tableVbox;
-    @FXML private MFXComboBox<String> cdRoomToMove;
-    @FXML private MFXComboBox<Integer> cdWheretoMove;
-    @FXML private DatePicker dateOfMove;
+    @FXML private MFXFilterComboBox<String> cdRoomToMove;
+    @FXML private MFXFilterComboBox<Integer> cdWheretoMove;
+    @FXML private DatePicker dateMove;
     @FXML private TableView<Move> tbFutureMoves;
     @FXML private MFXButton btnRemoveMove;
     @FXML private MFXButton btnEditRequest;
@@ -74,23 +79,67 @@ public class MoveRequestControllerI implements IRequestController{
 
     @Override
     public void initBtns() {
+        spSubmit.setTooltip(new Tooltip("Enter all required fields to submit request"));
+        dateMove.setDayCellFactory(picker -> new DateCell() {
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                LocalDate today = LocalDate.now();
+
+                setDisable(empty || date.compareTo(today) < 0 );
+            }
+        });
+        BooleanBinding bb = new BooleanBinding() {
+            {
+                super.bind(cdRoomToMove.valueProperty(),
+                        cdWheretoMove.valueProperty(),
+                        dateMove.valueProperty());
+            }
+
+            @Override
+            protected boolean computeValue() {
+                return (cdRoomToMove.getValue() == null
+                        || cdWheretoMove.getValue() == null
+                        || dateMove.getValue() == null);
+            }
+        };
+        btnSubmit.disableProperty().bind(bb);
+
+        btnSubmit.setTooltip(new Tooltip("Click to submit request"));
         btnSubmit.setOnAction(e -> handleSubmit());
+        btnReset.setTooltip(new Tooltip("Click to reset fields"));
         btnReset.setOnAction(e -> handleReset());
-        btnCancel.setOnAction(e -> handleCancel());
         helpIcon.setOnMouseClicked(e -> handleHelp());
+        btnRemoveMove.setTooltip(new Tooltip("Click to remove selected move"));
         btnRemoveMove.setOnMouseClicked(e -> handleRemoveMove());
+        btnEditRequest.setTooltip(new Tooltip("Click to edit selected move"));
         btnEditRequest.setOnMouseClicked(e -> handleEditRequest());
+        btnReset.setDisable(true);
+        ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
+            btnReset.setDisable(false);
+        };
+        cdRoomToMove.valueProperty().addListener(changeListener);
+        cdWheretoMove.valueProperty().addListener(new ChangeListener<Integer>() {
+                                                      @Override
+                                                      public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
+                                                            btnReset.setDisable(false);
+                                                      }
+                                                  });
+                dateMove.valueProperty().addListener(new ChangeListener<LocalDate>() {
+                    @Override
+                    public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) {
+                        btnReset.setDisable(false);
+                    }
+                });
     }
 
     @Override
     public void initializeFields() throws SQLException {
-        cdRoomToMove.setValue("");
-        cdRoomToMove.setPromptText("Room to Move");
+        // initialize comboboxes
+        cdRoomToMove.setTooltip(new Tooltip("Select room to move"));
+        cdWheretoMove.setTooltip(new Tooltip("Select where to move selected room"));
         cdWheretoMove.setValue(-1);
-        cdWheretoMove.setPromptText("Where to Move");
-        dateOfMove.setValue(LocalDate.now());
-        // initialize date picker
-        dateOfMove.setPromptText("Date of Move");
+        dateMove.setTooltip(new Tooltip("Select date of move"));
+        dateMove.setValue(LocalDate.now());
     }
 
     @Override
@@ -100,7 +149,7 @@ public class MoveRequestControllerI implements IRequestController{
         else {
             String what = cdRoomToMove.getSelectedItem();
             Integer where = cdWheretoMove.getSelectedItem();
-            Date when = Date.valueOf(dateOfMove.getValue());
+            Date when = Date.valueOf(dateMove.getValue());
 
             // popup error when not all fields are filled or when date is before current
             // date or when the move is already in the table
@@ -109,6 +158,7 @@ public class MoveRequestControllerI implements IRequestController{
                     if (when.after(new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24))) {
                         String[] output = {where.toString(), what, when.toString()};
                         EMoveRequest.submitRequest(output);
+                        alertEmployee("unassigned", what, cdWheretoMove.getSelectedItem().toString(), when.toString());
                         handleReset();
 
                         updateTable();
@@ -125,13 +175,26 @@ public class MoveRequestControllerI implements IRequestController{
         }
     }
 
+    /**
+     * Grabs the current employee that is referred to in the newly made request and alerts them of this
+     * @param employee
+     */
+    public void alertEmployee(String employee, String roomMoving, String moveTo, String when){
+        edu.wpi.teamb.DBAccess.ORMs.Alert newAlert = new Alert();
+        newAlert.setTitle("Move Alert");
+        newAlert.setDescription("The room " + roomMoving + " will be moving to " + moveTo + " on " + when);
+        newAlert.setEmployee(employee);
+        newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
+        Repository.getRepository().addAlert(newAlert);
+    }
+
     @Override
     public void handleReset() {
         cdRoomToMove.clear();
         cdRoomToMove.replaceSelection("Room to Move");
         cdWheretoMove.clear();
         cdWheretoMove.replaceSelection("Where to Move");
-        dateOfMove.setValue(null);
+        dateMove.setValue(null);
         btnRemoveMove.setDisable(true);
         changeRequest = false;
         btnEditRequest.setDisable(true);
@@ -172,7 +235,7 @@ public class MoveRequestControllerI implements IRequestController{
     @Override
     public boolean nullInputs() {
         return cdRoomToMove.getSelectedItem() == null || cdWheretoMove.getSelectedItem() == null
-                || dateOfMove.getValue() == null;
+                || dateMove.getValue() == null;
     }
 
     private void moveTable() {
@@ -186,6 +249,7 @@ public class MoveRequestControllerI implements IRequestController{
         TableColumn<Move, Date> dates = new TableColumn<>("Dates");
         dates.setCellValueFactory(new PropertyValueFactory<Move, Date>("date"));
 
+        tbFutureMoves.setTooltip(new Tooltip("Table of future move requests"));
         tbFutureMoves.getColumns().addAll(ids, locs, dates);
 
         // ArrayList<Move> moves = Repository.getRepository().getAllMoves();
@@ -256,7 +320,7 @@ public class MoveRequestControllerI implements IRequestController{
                 // make wheretomove box empty
                 cdWheretoMove.selectItem(move.getNodeID());
                 // set date value
-                dateOfMove.setValue(LocalDate.parse(ymd2ymd2(move.getDate().toString())));
+                dateMove.setValue(LocalDate.parse(ymd2ymd2(move.getDate().toString())));
             }
         });
 
@@ -265,15 +329,15 @@ public class MoveRequestControllerI implements IRequestController{
     public void handleRemoveMove() {
         // when clicking on the remove button, the selected row is removed from the
         // table and the database
-            if (tbFutureMoves.getSelectionModel().getSelectedItem() != null) {
-                Move move = tbFutureMoves.getSelectionModel().getSelectedItem();
-                EMoveRequest = new EMoveRequest(move);
-                EMoveRequest.removeRequest();
-                tbFutureMoves.getItems().remove(move);
-                tableSize--;
-                handleReset();
+        if (tbFutureMoves.getSelectionModel().getSelectedItem() != null) {
+            Move move = tbFutureMoves.getSelectionModel().getSelectedItem();
+            EMoveRequest = new EMoveRequest(move);
+            EMoveRequest.removeRequest();
+            tbFutureMoves.getItems().remove(move);
+            tableSize--;
+            handleReset();
 
-            }
+        }
         btnRemoveMove.setDisable(true);
         handleReset();
     }
@@ -281,17 +345,17 @@ public class MoveRequestControllerI implements IRequestController{
     public void handleEditRequest() {
         // when clicking on the edit button, the selected row is removed from the table
         // and the database
-            if (tbFutureMoves.getSelectionModel().getSelectedItem() != null) {
-                Move move = tbFutureMoves.getSelectionModel().getSelectedItem();
-                tbFutureMoves.getItems().remove(move);
-                EMoveRequest = new EMoveRequest(move);
-                // set values of move request from form info
-                EMoveRequest.updateRequest();
+        if (tbFutureMoves.getSelectionModel().getSelectedItem() != null) {
+            Move move = tbFutureMoves.getSelectionModel().getSelectedItem();
+            tbFutureMoves.getItems().remove(move);
+            EMoveRequest = new EMoveRequest(move);
+            // set values of move request from form info
+            EMoveRequest.updateRequest();
 
-                EMoveRequest.updateRequest();
+            EMoveRequest.updateRequest();
 
-                tableSize--;
-                handleReset();
-            }
+            tableSize--;
+            handleReset();
+        }
     }
 }

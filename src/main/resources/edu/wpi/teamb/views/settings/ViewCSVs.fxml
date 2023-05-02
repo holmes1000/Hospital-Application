@@ -1,33 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXDrawer?>
+<?import com.jfoenix.controls.JFXHamburger?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXListView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #7089a2;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.settings.ViewCSVsController">
-   <children>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#012d5a" height="50.0" layoutX="-162.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1524.0" />
-      <Text fill="WHITE" layoutX="-21.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="View CSVs" textAlignment="CENTER" wrappingWidth="1164.103515625">
-         <font>
-            <Font name="System Bold" size="36.0" />
-         </font>
-      </Text>
-      <VBox fx:id="VboxNodes" layoutX="468.0" layoutY="123.0" prefHeight="534.0" prefWidth="394.0">
-         <children>
-            <MFXListView fx:id="NodeInfo" prefHeight="537.0" prefWidth="394.0" style="-fx-border-color: black;" />
-         </children>
-      </VBox>
-      <MFXComboBox fx:id="NodeSelector" alignment="TOP_CENTER" floatMode="DISABLED" layoutX="178.0" layoutY="125.0" onAction="#clickNodeSelector" prefHeight="24.0" prefWidth="138.0" style="-fx-border-color: #1C4EFE;" text="CSV Type">
-         <font>
-            <Font name="System Bold" size="18.0" />
-         </font>
-      </MFXComboBox>
-      <MFXButton fx:id="uploadBtn" layoutX="893.0" layoutY="117.0" style="-fx-background-color: #1C4EFE;" text="Upload" textFill="#f1f1f1" />
-      <MFXButton fx:id="exportBtn" layoutX="895.0" layoutY="152.0" style="-fx-background-color: #1C4EFE;" text="Export" textFill="#f1f1f1" />
-   </children>
-</Pane>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #5f7ca4;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.settings.ViewCSVsController">
+<center>
+   <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER">
+      <children>
+         <StackPane layoutX="-240.0" layoutY="1.0" prefHeight="698.0" prefWidth="1253.0" />
+         <ImageView fitHeight="733.0" fitWidth="1316.0" layoutX="-172.0" layoutY="-12.0" opacity="0.5" pickOnBounds="true" preserveRatio="false">
+            <image>
+               <Image url="@../../img/bwh-background.jpg" />
+            </image>
+         </ImageView>
+         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#5f7ca4" height="586.0" layoutX="-23.0" layoutY="84.0" stroke="#ffffff00" strokeType="INSIDE" width="1100.0" />
+         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#012d5a" height="50.0" layoutX="-162.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1347.0" />
+         <Text fill="WHITE" layoutX="-21.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="View CSV Files" textAlignment="CENTER" wrappingWidth="1164.103515625">
+            <font>
+               <Font name="System Bold" size="36.0" />
+            </font>
+         </Text>
+         <VBox fx:id="VboxNodes" layoutX="343.0" layoutY="117.0" prefHeight="530.0" prefWidth="700.0">
+            <children>
+               <MFXListView fx:id="NodeInfo" prefHeight="530.0" prefWidth="700.0" style="-fx-border-color: black;" />
+            </children>
+         </VBox>
+         <MFXFilterComboBox fx:id="NodeSelector" alignment="TOP_CENTER" floatMode="DISABLED" layoutX="14.0" layoutY="125.0" onAction="#clickNodeSelector" prefHeight="35.0" prefWidth="300.0" style="-fx-border-color: #012d5a;" text="CSV Type">
+            <font>
+               <Font name="System Bold" size="18.0" />
+            </font>
+         </MFXFilterComboBox>
+         <MFXButton fx:id="uploadBtn" layoutX="-1.0" layoutY="529.0" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #012d5a;" text="Upload CSV" textFill="#f1f1f1" />
+         <MFXButton fx:id="exportBtn" layoutX="163.0" layoutY="529.0" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #012d5a;" text="Export CSV" textFill="#f1f1f1" />
+         <MFXButton fx:id="btnBack" defaultButton="true" layoutY="614.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Back" textFill="#f1f1f1">
+            <font>
+               <Font name="System Bold" size="18.0" />
+            </font>
+         </MFXButton>
+         <VBox fx:id="vboxActivateNav" layoutX="-170.0" prefHeight="720.0" prefWidth="70.0" />
+            <VBox fx:id="vboxSpecs" layoutX="14.0" layoutY="211.0" prefHeight="0.0" prefWidth="300.0" style="-fx-background-color: #012d5a; -fx-spacing: 10;">
+               <padding>
+                  <Insets bottom="20.0" left="10.0" top="20.0" />
+               </padding></VBox>
+      </children>
+   </AnchorPane>
+</center>
+<left>
+   <Pane fx:id="navPane" prefHeight="720.0" prefWidth="200.0" style="-fx-background-color: transparent;">
+      <children>
+         <JFXDrawer fx:id="menuDrawer" prefHeight="720.0" prefWidth="200.0" style="-fx-background-color: transparent;" />
+         <JFXHamburger fx:id="menuBurger" layoutX="14.0" layoutY="14.0" style="-fx-background-color: transparent;">
+            <effect>
+               <ColorAdjust brightness="1.0" />
+            </effect></JFXHamburger>
+         <VBox fx:id="vboxActivateNav1" layoutX="70.0" onMouseEntered="#deactivateNav" prefHeight="720.0" prefWidth="1211.0" />
+      </children>
+   </Pane>
+</left>
+</BorderPane>

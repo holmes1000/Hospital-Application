@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXRadioButton?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
@@ -15,25 +17,24 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="1107.0" style="-fx-background-color: #7089a2;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.requests.MoveRequestControllerI">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="1107.0" style="-fx-background-color: #5f7ca4;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.requests.MoveRequestControllerI">
    <right>
       <AnchorPane prefHeight="720.0" prefWidth="1159.0" BorderPane.alignment="CENTER">
          <children>
-            <Text fill="#ffffff" layoutX="20.0" layoutY="64.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Move Room Request" textAlignment="CENTER">
+            <Text fill="#ffffff" layoutX="20.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Move Room Request" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="36.0" />
                </font>
             </Text>
-            <MFXButton fx:id="btnSubmit" defaultButton="true" layoutX="955.0" layoutY="481.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Submit" textFill="#f1f1f1">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </MFXButton>
-            <MFXButton fx:id="btnCancel" defaultButton="true" layoutX="170.0" layoutY="481.0" prefHeight="45.0" prefWidth="170.0" style="-fx-background-color: #012d5a;" text="Cancel" textFill="#f1f1f1">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </MFXButton>
+            <SplitPane fx:id="spSubmit" layoutX="955.0" layoutY="481.0" style="-fx-background-color: transparent;">
+               <items>
+                  <MFXButton fx:id="btnSubmit" defaultButton="true" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Submit" textFill="#f1f1f1">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </MFXButton>
+               </items>
+            </SplitPane>
             <MFXButton fx:id="btnReset" defaultButton="true" layoutX="20.0" layoutY="481.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Reset" textFill="#f1f1f1">
                <font>
                   <Font name="System Bold" size="18.0" />
@@ -47,44 +48,43 @@
                   <ColorAdjust brightness="1.0" />
                </effect>
             </ImageView>
-            <MFXComboBox fx:id="cdRoomToMove" floatMode="DISABLED" layoutX="219.0" layoutY="123.0" prefHeight="40.0" prefWidth="238.0">
+            <MFXFilterComboBox fx:id="cdRoomToMove" floatMode="DISABLED" layoutX="20.0" layoutY="123.0" prefHeight="40.0" prefWidth="250.0">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
-            </MFXComboBox>
-            <Text fill="#f1f1f1" layoutX="219.0" layoutY="116.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Room To Move:" textAlignment="CENTER">
+            </MFXFilterComboBox>
+            <Text fill="#f1f1f1" layoutX="20.0" layoutY="116.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Room To Move:" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Text>
-            <MFXComboBox fx:id="cdWheretoMove" floatMode="DISABLED" layoutX="219.0" layoutY="218.0" prefHeight="40.0" prefWidth="241.0">
+            <MFXFilterComboBox fx:id="cdWheretoMove" floatMode="DISABLED" layoutX="20.0" layoutY="218.0" prefHeight="40.0" prefWidth="250.0">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
-            </MFXComboBox>
-            <Text fill="#f1f1f1" layoutX="526.0" layoutY="115.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pending Move Requests">
+            </MFXFilterComboBox>
+            <Text fill="#f1f1f1" layoutX="369.0" layoutY="115.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pending Move Requests">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Text>
-            <Text fill="#f1f1f1" layoutX="219.0" layoutY="211.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Where to Move to:" textAlignment="CENTER">
+            <Text fill="#f1f1f1" layoutX="20.0" layoutY="211.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Where to Move to:" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Text>
-            <Text fill="#f1f1f1" layoutX="219.0" layoutY="295.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date of Move:" textAlignment="CENTER">
+            <Text fill="#f1f1f1" layoutX="20.0" layoutY="295.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date of Move:" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Text>
-            <DatePicker fx:id="dateOfMove" layoutX="219.0" layoutY="300.0" prefHeight="39.0" prefWidth="239.0" />
-            <VBox fx:id="tableVbox" layoutX="520.0" layoutY="135.0">
+            <VBox fx:id="tableVbox" layoutX="369.0" layoutY="134.0">
                <children>
             <TableView fx:id="tbFutureMoves" layoutX="613.0" layoutY="117.0" onMouseClicked="#tbSetAlter" prefHeight="331.0" prefWidth="369.0" />
                </children>
@@ -99,11 +99,13 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </MFXButton>
-            <MFXRadioButton fx:id="radPastMove" layoutX="761.0" layoutY="99.0" onAction="#viewMoves" text="View Past Moves" textFill="#f1f1f1">
+            <MFXRadioButton fx:id="radPastMove" layoutX="617.0" layoutY="99.0" onAction="#viewMoves" text="View Past Moves" textFill="#f1f1f1">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
             </MFXRadioButton>
+            <DatePicker fx:id="dateMove" layoutX="20.0" layoutY="308.0" prefHeight="43.0" prefWidth="241.0" style="-fx-background-color: transparent;" />
+            <Separator layoutX="20.0" layoutY="62.0" prefWidth="450.0" />
          </children>
       </AnchorPane>
    </right>

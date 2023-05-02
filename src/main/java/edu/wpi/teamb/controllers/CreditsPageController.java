@@ -5,6 +5,7 @@ import edu.wpi.teamb.Bapp;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
@@ -75,6 +76,7 @@ public class CreditsPageController {
     }
 
     private void initializeBtns() {
+        btnClose.setTooltip(new Tooltip("Click to return to home page"));
         btnClose.setOnMouseClicked(e -> handleClose());
         //groundFloor.setOnMouseClicked(e->{popup.setImage(Bapp.getHospitalListOfFloors().get(2));});
         //LL1.setOnMouseClicked(e->{popup.setImage(Bapp.getHospitalListOfFloors().get(0));});
@@ -143,7 +145,7 @@ public class CreditsPageController {
             popup.setImage(new Image("edu/wpi/teamb/img/meal-times.PNG"));
         });
         phoneCall.setOnMouseClicked(e -> {
-            popup.setImage(new Image("edu/wpi/teamb/img/phone-call.png"));
+            popup.setImage(new Image("edu/wpi/teamb/img/meeting.png"));
         });
         reject.setOnMouseClicked(e -> {
             popup.setImage(new Image("edu/wpi/teamb/img/reject.png"));

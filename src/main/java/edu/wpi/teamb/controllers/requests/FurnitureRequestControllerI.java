@@ -3,19 +3,24 @@ package edu.wpi.teamb.controllers.requests;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.Full.FullFurnitureRequest;
+import edu.wpi.teamb.DBAccess.ORMs.Alert;
 import edu.wpi.teamb.controllers.components.InfoCardController;
 import edu.wpi.teamb.entities.requests.EFurnitureRequest;
 import edu.wpi.teamb.entities.requests.IRequest;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
@@ -24,28 +29,29 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 
 public class FurnitureRequestControllerI implements IRequestController{
 
     @FXML
     private MFXButton btnSubmit;
     @FXML
-    private MFXButton btnCancel;
+    private SplitPane spSubmit;
     @FXML
     private MFXButton btnReset;
     @FXML
     private ImageView helpIcon;
     @FXML
-    private MFXComboBox<String> cbAvailableFurniture;
+    private MFXFilterComboBox<String> cbAvailableFurniture;
     @FXML
-    private MFXComboBox<String> cdAvailableModels;
+    private MFXFilterComboBox<String> cdAvailableModels;
     @FXML
-    private MFXComboBox<String> cdAssembly;
+    private MFXFilterComboBox<String> cdAssembly;
     @FXML
     private MFXTextField txtFldNotes;
 
     @FXML
-    private MFXComboBox<String> cbEmployeesToAssign;
+    private MFXFilterComboBox<String> cbEmployeesToAssign;
 
     @FXML private MFXFilterComboBox<String> cbLongName;
 
@@ -57,41 +63,117 @@ public class FurnitureRequestControllerI implements IRequestController{
 
     @FXML
     public void initialize() throws IOException, SQLException {
-        ObservableList<String> longNames = FXCollections.observableArrayList();
-        longNames.addAll(Repository.getRepository().getPracticalLongNames());
-        cbLongName.setItems(longNames);
         initializeFields();
         initBtns();
     }
 
     @Override
     public void initBtns() {
+        spSubmit.setTooltip(new Tooltip("Enter all required fields to submit request"));
+        BooleanBinding bb = new BooleanBinding() {
+            {
+                super.bind(cbAvailableFurniture.valueProperty(),
+                        cdAvailableModels.valueProperty(),
+                        cdAssembly.valueProperty(),
+                        cbLongName.valueProperty(),
+                        cbEmployeesToAssign.valueProperty());
+            }
+
+            @Override
+            protected boolean computeValue() {
+                return (cbAvailableFurniture.getValue() == null ||
+                        cdAvailableModels.getValue() == null ||
+                        cdAssembly.getValue() == null ||
+                        cbLongName.getValue() == null ||
+                        cbEmployeesToAssign.getValue() == null);
+            }
+        };
+        btnSubmit.disableProperty().bind(bb);
+
+        btnSubmit.setTooltip(new Tooltip("Click to submit request"));
         btnSubmit.setOnAction(e -> handleSubmit());
+        btnReset.setTooltip(new Tooltip("Click to reset fields"));
         btnReset.setOnAction(e -> handleReset());
-        btnCancel.setOnAction(e -> handleCancel());
         helpIcon.setOnMouseClicked(e -> handleHelp());
+        btnReset.setDisable(true);
+        ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
+            btnReset.setDisable(false);
+        };
+        cbEmployeesToAssign.textProperty().addListener(changeListener);
+        cbLongName.textProperty().addListener(changeListener);
+        cbAvailableFurniture.textProperty().addListener(changeListener);
+        cdAvailableModels.textProperty().addListener(changeListener);
+        cdAssembly.textProperty().addListener(changeListener);
     }
 
     @Override
     public void initializeFields() throws SQLException {
+        ObservableList<String> longNames = FXCollections.observableArrayList();
+        longNames.addAll(Repository.getRepository().getPracticalLongNames());
+        Collections.sort(longNames);
+        cbLongName.setItems(longNames);
+        cbLongName.setTooltip(new Tooltip("Select a location to direct the request to"));
+
         //Set list of furniture
-        ObservableList<String> furniture = FXCollections.observableArrayList("Chair", "Couch", "Table", "Desk", "Bed");
+        ObservableList<String> furniture = FXCollections.observableArrayList("Chair", "Table", "Bed");
+        Collections.sort(furniture);
         cbAvailableFurniture.setItems(furniture);
+        cbAvailableFurniture.setTooltip(new Tooltip("Select the type of furniture you want"));
 
         //Set list of models
-        ObservableList<String> models = FXCollections.observableArrayList("Huge", "Big", "Medium", "Small", "Tiny");
+        ObservableList<String> models = FXCollections.observableArrayList("Please select a type of furniture to view the available models.");
+        Collections.sort(models);
         cdAvailableModels.setItems(models);
+        cdAvailableModels.setTooltip(new Tooltip("Select the model of furniture you want"));
 
         //Set list of assembly options
         ObservableList<String> assembly = FXCollections.observableArrayList("No", "Yes");
+        Collections.sort(assembly);
         cdAssembly.setItems(assembly);
+        cdAssembly.setTooltip(new Tooltip("Select whether you want the furniture assembled"));
 
         //Set list of employees
         ObservableList<String> employees =
                 FXCollections.observableArrayList();
-        employees.add("Unassigned");
         employees.addAll(EFurnitureRequest.getUsernames());
+        Collections.sort(employees);
+        employees.add(0, "unassigned");
         cbEmployeesToAssign.setItems(employees);
+        cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
+        initComboBoxChangeListeners();
+
+        txtFldNotes.setTooltip(new Tooltip("Enter any special instructions"));
+    }
+
+    private void initComboBoxChangeListeners() {
+//        cdAvailableModels.setVisible(true);
+        ObservableList<String> furniture = FXCollections.observableArrayList("Chair", "Table", "Bed");
+        Collections.sort(furniture);
+        cbAvailableFurniture.getItems().clear();
+        cbAvailableFurniture.getItems().addAll(furniture);
+        cbAvailableFurniture.valueProperty().addListener(
+                ((observable, oldValue, newValue) -> {
+                    if (newValue.equals("Chair")) {
+                        cdAvailableModels.getItems().clear();
+                        ObservableList<String> models = FXCollections.observableArrayList("Sofa", "Armchair", "Recliner", "Desk Chair", "Stool");
+                        Collections.sort(models);
+                        cdAvailableModels.getItems().addAll(models);
+                        cdAvailableModels.setVisible(true);
+                    } else if (newValue.equals("Table")) {
+                        cdAvailableModels.getItems().clear();
+                        ObservableList<String> models = FXCollections.observableArrayList("Writing Desk", "Coffee Table", "Dining Table", "End Table", "Nightstand", "Computer Desk", "Dressing Table");
+                        Collections.sort(models);
+                        cdAvailableModels.getItems().addAll(models);
+                        cdAvailableModels.setVisible(true);
+                    } else if (newValue.equals("Bed")) {
+                        cdAvailableModels.getItems().clear();
+                        ObservableList<String> models = FXCollections.observableArrayList("Sofa Bed", "Futon", "Air Mattress", "Baby Cot", "Medical Bed", "Camp Bed");
+                        Collections.sort(models);
+                        cdAvailableModels.getItems().addAll(models);
+                        cdAvailableModels.setVisible(true);
+                    }
+                })
+        );
     }
 
     @Override
@@ -122,21 +204,34 @@ public class FurnitureRequestControllerI implements IRequestController{
                 };
                 EFurnitureRequest.submitRequest(output);
                 handleReset();
-                Navigation.navigate(Screen.CREATE_NEW_REQUEST);
             }
             submissionAlert();
+            alertEmployee(EFurnitureRequest.getEmployee());
         }
     }
 
+    /**
+     * Grabs the current employee that is referred to in the newly made request and alerts them of this
+     * @param employee
+     */
+    public void alertEmployee(String employee){
+        Alert newAlert = new Alert();
+        newAlert.setTitle("New Task Assigned");
+        newAlert.setDescription("You have been assigned a new furniture request to complete.");
+        newAlert.setEmployee(employee);
+        newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
+        Repository.getRepository().addAlert(newAlert);
+    }
+
+
     @Override
     public void handleReset() {
-        cbAvailableFurniture.getSelectionModel().clearSelection();
-        cdAvailableModels.getSelectionModel().clearSelection();
-        cdAssembly.getSelectionModel().clearSelection();
+        cbAvailableFurniture.clear();
+        cdAvailableModels.clear();
+        cdAssembly.clear();
         txtFldNotes.clear();
-        cbEmployeesToAssign.getSelectionModel().clearSelection();
+        cbEmployeesToAssign.clear();
         cbLongName.clear();
-        cbLongName.replaceSelection("All Room Names: ");
     }
 
     @Override
@@ -166,7 +261,6 @@ public class FurnitureRequestControllerI implements IRequestController{
         return cbAvailableFurniture.getValue() == null
                 || cdAvailableModels.getValue() == null
                 || cdAssembly.getValue() == null
-                || txtFldNotes.getText().isEmpty()
                 || cbEmployeesToAssign.getValue() == null
                 || cbLongName.getValue() == null;
     }
@@ -220,6 +314,5 @@ public class FurnitureRequestControllerI implements IRequestController{
 
         //set the reset and cancel buttons to not be visible
         btnReset.setVisible(false);
-        btnCancel.setVisible(false);
     }
 }

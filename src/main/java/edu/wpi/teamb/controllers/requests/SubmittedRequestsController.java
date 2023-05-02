@@ -19,7 +19,7 @@ import java.util.Comparator;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -31,7 +31,6 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 public class SubmittedRequestsController {
-    @FXML private MFXButton btnCancel;
     @FXML private ImageView helpIcon;
     @FXML private JFXHamburger menuBurger;
     @FXML private JFXDrawer menuDrawer;
@@ -40,8 +39,8 @@ public class SubmittedRequestsController {
     @FXML VBox vboxActivateNav;
     @FXML VBox vboxActivateNav1;
     @FXML private ScrollPane allRequestsScrollPane;
-    @FXML private MFXComboBox<String> cbFilterCategory;
-    @FXML private MFXComboBox<String> cbFilterOptions;
+    @FXML private MFXFilterComboBox<String> cbFilterCategory;
+    @FXML private MFXFilterComboBox<String> cbFilterOptions;
 
     //entity object of class that contains all the methods to get the requests
     private EAllRequests allRequestsE;
@@ -59,9 +58,7 @@ public class SubmittedRequestsController {
         hoverHelp();
         initComboBoxChangeListeners();
         loadRequestsIntoContainer();
-        navPane.setMouseTransparent(true);
-        activateNav();
-        deactivateNav();
+        initializeNavGates();
     }
 
     private void initScrollPane() {
@@ -156,7 +153,7 @@ public class SubmittedRequestsController {
                         .collect(Collectors.toCollection(ArrayList::new));
             }
         } else if (filterCategory.equals("employee")) {
-            if (filterOption.equals("Unassigned")) {
+            if (filterOption.equals("unassigned")) {
                 filteredListOfRequests = listOfRequests.stream()
                         .filter(request -> request.getEmployee().equals(filterOption))
                         .collect(Collectors.toCollection(ArrayList::new));
@@ -243,14 +240,25 @@ public class SubmittedRequestsController {
     }
 
     /**
+     * For some reason there are occasions when the nav-bar gates for toggling its handling does not start correctly
+     * This fixes this issue
+     */
+    public void initializeNavGates(){
+        activateNav();
+        deactivateNav();
+        navPane.setMouseTransparent(true);
+        vboxActivateNav.setDisable(false);
+        navLoaded = false;
+        vboxActivateNav1.setDisable(true);
+    }
+
+    /**
      * Utilizes a gate to swap between handling the navdrawer and the rest of the page
      * Swaps ownership of the strip to the navdraw
      */
     public void activateNav(){
         vboxActivateNav.setOnMouseEntered(event -> {
             if(!navLoaded) {
-                System.out.println("on");
-                navPane.setPickOnBounds(false);
                 navPane.setMouseTransparent(false);
                 navLoaded = true;
                 vboxActivateNav.setDisable(true);
@@ -267,7 +275,6 @@ public class SubmittedRequestsController {
     public void deactivateNav(){
         vboxActivateNav1.setOnMouseEntered(event -> {
             if(navLoaded){
-                System.out.println("off");
                 navPane.setMouseTransparent(true);
                 vboxActivateNav.setDisable(false);
                 navLoaded = false;
@@ -297,10 +304,11 @@ public class SubmittedRequestsController {
                     burgerOpen.setRate(burgerOpen.getRate() * -1);
                     burgerOpen.play();
                     if (menuDrawer.isOpened()) {
-                        menuDrawer.toFront();
                         menuDrawer.close();
+                        vboxActivateNav1.toFront();
                     } else {
                         menuDrawer.toFront();
+                        menuBurger.toFront();
                         menuDrawer.open();
                     }
                 });
@@ -312,8 +320,10 @@ public class SubmittedRequestsController {
      */
     private void initComboBoxChangeListeners() {
         //at the beginning set cbFilterOptions to invisible
+        cbFilterOptions.setTooltip(new Tooltip("Select a filter option"));
         cbFilterOptions.setVisible(false);
         //add filtering options to cbFilterCategory
+        cbFilterCategory.setTooltip(new Tooltip("Select a filter category"));
         cbFilterCategory.getItems().addAll("", "Status", "Request Type", "Date Submitted", "Unassigned Task");
         //add change listener to cbFilterCategory
         cbFilterCategory.valueProperty().addListener(
@@ -322,7 +332,7 @@ public class SubmittedRequestsController {
                         //if selection is null
                         loadRequestsIntoContainer();
                     } else if (newValue.equals("Unassigned Task")) {
-                        loadRequestsIntoContainer("employee", "Unassigned");
+                        loadRequestsIntoContainer("employee", "unassigned");
                     } else if (!newValue.equals("")) {
                         //set cbFilterOptions to visible
                         cbFilterOptions.setVisible(true);

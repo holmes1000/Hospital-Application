@@ -8,12 +8,13 @@ import edu.wpi.teamb.entities.ELogin;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -38,16 +39,11 @@ public class CreateNewRequestController {
     @FXML private ImageView icon3;
     @FXML private ImageView icon4;
     @FXML private ImageView icon5;
-    @FXML
-    private Rectangle back1;
-    @FXML
-    private Rectangle back2;
-    @FXML
-    private Rectangle back3;
-    @FXML
-    private Rectangle back4;
-    @FXML
-    private Rectangle back5;
+    @FXML private VBox back1;
+    @FXML private VBox back2;
+    @FXML private VBox back3;
+    @FXML private VBox back4;
+    @FXML private VBox back5;
 
     ELogin.PermissionLevel adminTest;
     private NavDrawerController navDrawerController;
@@ -61,66 +57,91 @@ public class CreateNewRequestController {
         adminTest = ELogin.getLogin().getPermissionLevel();
         initializeFields();
         initIcons();
+        btnAllRequests.setTooltip(new Tooltip("View all requests"));
+        btnMoveRequests.setTooltip(new Tooltip("Add and view move requests"));
         if (adminTest != ELogin.PermissionLevel.ADMIN) {
             btnAllRequests.setVisible(false);
             btnMoveRequests.setVisible(false);
         }
         requestVbox.getChildren().clear();
         loadPage2();
+        toggleBtns("icon2");
         navPane.setMouseTransparent(true);
+        initializeNavGates();
     }
 
     public void initIcons() {
-        back1 = new Rectangle();
         icon1.setOnMouseClicked(event->{
+            toggleBtns("icon1");
             loadPage1();}
         );
+        Tooltip tooltip1 = new Tooltip("Meal Request");
+        Tooltip.install(icon1, tooltip1);
         icon2.setOnMouseClicked(event->{
+            toggleBtns("icon2");
             loadPage2();}
         );
+        Tooltip tooltip2 = new Tooltip("Conference Request");
+        Tooltip.install(icon2, tooltip2);
         icon3.setOnMouseClicked(event->{
+            toggleBtns("icon3");
             loadPage3();}
         );
+        Tooltip tooltip3 = new Tooltip("Flower Request");
+        Tooltip.install(icon3, tooltip3);
         icon4.setOnMouseClicked(event->{
+            toggleBtns("icon4");
             loadPage6();}
         );
+        Tooltip tooltip4 = new Tooltip("Furniture Request");
+        Tooltip.install(icon4, tooltip4);
         icon5.setOnMouseClicked(event->{
+            toggleBtns("icon5");
             loadPage5();
         });
+        Tooltip tooltip5 = new Tooltip("Office Supplies Request");
+        Tooltip.install(icon5, tooltip5);
     }
 
-//    public void toggleBtns(String btn){
-//        switch(btn){
-//            case "icon1":
-//
-//
-//
-//                case "icon2":
-//                icon1.setDisable(false);
-//                icon2.setDisable(true);
-//                icon3.setDisable(false);
-//                icon4.setDisable(false);
-//                icon5.setDisable(false);
-//            case "icon3":
-//                icon1.setDisable(false);
-//                icon2.setDisable(false);
-//                icon3.setDisable(true);
-//                icon4.setDisable(false);
-//                icon5.setDisable(false);
-//            case "icon4":
-//                icon1.setDisable(false);
-//                icon2.setDisable(false);
-//                icon3.setDisable(false);
-//                icon4.setDisable(true);
-//                icon5.setDisable(false);
-//            case "icon5":
-//                icon1.setDisable(false);
-//                icon2.setDisable(false);
-//                icon3.setDisable(false);
-//                icon4.setDisable(false);
-//                icon5.setDisable(true);
-//        }
-//    }
+    public void toggleBtns(String btn){
+        switch(btn){
+            case "icon1" -> {
+                back1.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+                back2.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back3.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back4.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back5.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+            }
+            case "icon2" -> {
+                back1.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back2.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+                back3.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back4.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back5.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+            }
+            case "icon3" -> {
+                back1.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back2.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back3.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+                back4.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back5.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+            }
+            case "icon4" -> {
+                back1.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back2.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back3.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back4.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+                back5.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                }
+            case "icon5" -> {
+                back1.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back2.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back3.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back4.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back5.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+            }
+        }
+    }
 
     @FXML
     public void clickAllRequests() {
@@ -210,7 +231,7 @@ public class CreateNewRequestController {
     public void initializeFields() {
 
         ObservableList<String> locations = FXCollections.observableArrayList("Meal Delivery", "Conference Room",
-                "Flower Delivery", "Furniture Delivery", "Office Supplies", "Other");
+                "Flower Delivery", "Furniture Delivery", "Office Supplies");
         // TODO: only add thise if the user is an admin
         if (adminTest == ELogin.PermissionLevel.ADMIN) {
             ObservableList<String> AdminOnly = FXCollections.observableArrayList("Move");
@@ -224,6 +245,19 @@ public class CreateNewRequestController {
     }
 
     /**
+     * For some reason there are occasions when the nav-bar gates for toggling its handling does not start correctly
+     * This fixes this issue
+     */
+    public void initializeNavGates(){
+        activateNav();
+        deactivateNav();
+        navPane.setMouseTransparent(true);
+        vboxActivateNav.setDisable(false);
+        navLoaded = false;
+        vboxActivateNav1.setDisable(true);
+    }
+
+    /**
      * Utilizes a gate to swap between handling the navdrawer and the rest of the page
      * Swaps ownership of the strip to the navdraw
      */
@@ -231,8 +265,6 @@ public class CreateNewRequestController {
     public void activateNav(){
         vboxActivateNav.setOnMouseEntered(event -> {
             if(!navLoaded) {
-                System.out.println("on");
-                navPane.setPickOnBounds(false);
                 navPane.setMouseTransparent(false);
                 navLoaded = true;
                 vboxActivateNav.setDisable(true);
@@ -248,7 +280,6 @@ public class CreateNewRequestController {
     public void deactivateNav(){
         vboxActivateNav1.setOnMouseEntered(event -> {
             if(navLoaded){
-                System.out.println("off");
                 navPane.setMouseTransparent(true);
                 vboxActivateNav.setDisable(false);
                 navLoaded = false;
@@ -279,13 +310,13 @@ public class CreateNewRequestController {
                     burgerOpen.setRate(burgerOpen.getRate() * -1);
                     burgerOpen.play();
                     if (menuDrawer.isOpened()) {
-                        menuDrawer.toFront();
                         menuDrawer.close();
+                        vboxActivateNav1.toFront();
                     } else {
                         menuDrawer.toFront();
+                        menuBurger.toFront();
                         menuDrawer.open();
                     }
-//                    }
                 });
     }
 }

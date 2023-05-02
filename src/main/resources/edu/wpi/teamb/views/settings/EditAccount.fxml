@@ -3,6 +3,7 @@
 <?import com.jfoenix.controls.JFXDrawer?>
 <?import com.jfoenix.controls.JFXHamburger?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXPasswordField?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.effect.ColorAdjust?>
@@ -17,7 +18,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #272523;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.settings.EditAccountController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #5f7ca4;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.settings.EditAccountController">
     <center>
         <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER">
             <children>
@@ -27,14 +28,20 @@
                         <Image url="@../../img/bwh-background.jpg" />
                     </image>
                 </ImageView>
-                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#7089a2" height="586.0" layoutX="-23.0" layoutY="84.0" stroke="#ffffff00" strokeType="INSIDE" width="1100.0" />
+                <VBox fx:id="vboxActivateNav" layoutX="-150.0" prefHeight="720.0" prefWidth="70.0" />
+                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#5f7ca4" height="586.0" layoutX="-23.0" layoutY="84.0" stroke="#ffffff00" strokeType="INSIDE" width="1100.0" />
                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#012d5a" height="50.0" layoutX="-162.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1347.0" />
                 <Text fill="WHITE" layoutX="-21.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit Your Account" textAlignment="CENTER" wrappingWidth="1164.103515625">
                     <font>
                         <Font name="System Bold" size="36.0" />
                     </font>
                 </Text>
-                <VBox fx:id="vboxEditUser" layoutX="387.0" layoutY="177.0" prefHeight="401.0" prefWidth="376.0">
+                <MFXButton fx:id="btnBack" defaultButton="true" layoutY="614.0" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #012d5a;" text="Back" textFill="#f1f1f1">
+                    <font>
+                        <Font name="System Bold" size="18.0" />
+                    </font>
+                </MFXButton>
+                <VBox fx:id="vboxEditUser" alignment="CENTER" layoutX="387.0" layoutY="177.0" prefHeight="401.0" prefWidth="376.0">
                     <children>
                   <MFXTextField fx:id="tfName" floatingText="Name" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="362.0">
                      <opaqueInsets>
@@ -52,14 +59,11 @@
                                 <Insets bottom="10.0" />
                             </VBox.margin>
                         </MFXTextField>
-                        <MFXTextField fx:id="tfPassword" floatingText="Password" prefHeight="50.0" prefWidth="362.0">
-                            <opaqueInsets>
-                                <Insets />
-                            </opaqueInsets>
-                            <VBox.margin>
-                                <Insets bottom="10.0" />
-                            </VBox.margin>
-                        </MFXTextField>
+                  <MFXPasswordField fx:id="tfPassword" floatingText="Password" prefHeight="50.0" prefWidth="362.0">
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
+                  </MFXPasswordField>
                   <MFXTextField fx:id="tfEmail" floatingText="Email" layoutX="10.0" layoutY="70.0" prefHeight="50.0" prefWidth="362.0">
                      <opaqueInsets>
                         <Insets />
@@ -68,9 +72,9 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </MFXTextField>
-                        <MFXButton fx:id="btnSaveEdits" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #012d5a; -fx-border-color: #8CA6FE; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Save Edits" textFill="WHITE">
+                        <MFXButton fx:id="btnSaveEdits" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #012d5a; -fx-border-color: transparent; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Save" textFill="WHITE">
                             <font>
-                                <Font name="System Bold" size="12.0" />
+                                <Font name="System Bold" size="18.0" />
                             </font>
                         </MFXButton>
                     </children>
@@ -82,13 +86,14 @@
         </AnchorPane>
     </center>
     <left>
-        <Pane fx:id="navPane" prefHeight="720.0" prefWidth="200.0">
+        <Pane fx:id="navPane" prefHeight="720.0" prefWidth="200.0" style="-fx-background-color: transparent;">
             <children>
-                <JFXDrawer fx:id="menuDrawer" prefHeight="720.0" prefWidth="200.0" />
-                <JFXHamburger fx:id="menuBurger" layoutX="14.0" layoutY="14.0">
+                <JFXDrawer fx:id="menuDrawer" prefHeight="720.0" prefWidth="200.0" style="-fx-background-color: transparent;" />
+                <JFXHamburger fx:id="menuBurger" layoutX="14.0" layoutY="14.0" style="-fx-background-color: transparent;">
                     <effect>
                         <ColorAdjust brightness="1.0" />
                     </effect></JFXHamburger>
+                <VBox fx:id="vboxActivateNav1" layoutX="70.0" onMouseEntered="#deactivateNav" prefHeight="720.0" prefWidth="1211.0" />
             </children>
         </Pane>
     </left>

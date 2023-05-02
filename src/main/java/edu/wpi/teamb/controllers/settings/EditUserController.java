@@ -5,23 +5,26 @@ import edu.wpi.teamb.DBAccess.ORMs.User;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 
 public class EditUserController {
 
-    @FXML private MFXTextField tfPassword;
     @FXML private MFXTextField tfUsername;
     @FXML private MFXTextField tfName;
     @FXML private MFXTextField tfEmail;
-    @FXML private MFXComboBox<String> cbPermissionLevel;
+    @FXML private MFXFilterComboBox<String> cbPermissionLevel;
     @FXML private MFXButton btnSaveEdits;
     static User currentUser = null;
     @FXML
@@ -35,26 +38,36 @@ public class EditUserController {
         tfName.setText(currentUser.getName());
         tfUsername.setText(currentUser.getUsername());
         tfUsername.setEditable(false); // cannot change username
-        tfPassword.setText(currentUser.getPassword());
         tfEmail.setText(currentUser.getEmail());
-        cbPermissionLevel.setValue(permissionLevelToString(currentUser.getPermissionLevel()));
-
         // Init combo box
         ObservableList<String> permissionLevels = FXCollections.observableArrayList();
-        // Initialize the permission level combo boxes
+
         permissionLevels.add("ADMIN");
         permissionLevels.add("EMPLOYEE");
         cbPermissionLevel.setItems(permissionLevels);
+        cbPermissionLevel.selectItem(permissionLevelToString(currentUser.getPermissionLevel()));
+        cbPermissionLevel.setText(permissionLevelToString(currentUser.getPermissionLevel()));
+
+        // Sort the combo boxes
+        Collections.sort(permissionLevels);
+
     }
 
     public void initButtons() {
+        btnSaveEdits.setTooltip(new Tooltip("Click to save edits"));
         btnSaveEdits.setOnMouseClicked(event -> handleSaveEdits());
+        ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
+            btnSaveEdits.setDisable(false);
+        };
+        tfName.textProperty().addListener(changeListener);
+        tfUsername.textProperty().addListener(changeListener);
+        tfEmail.textProperty().addListener(changeListener);
+        cbPermissionLevel.valueProperty().addListener(changeListener);
     }
 
     private void handleSaveEdits() {
         currentUser.setName(tfName.getText());
         currentUser.setUsername(tfUsername.getText());
-        currentUser.setPassword(tfPassword.getText());
         currentUser.setEmail(tfEmail.getText());
         currentUser.setPermissionLevel(permissionLevelToInt(cbPermissionLevel.getValue()));
         Repository.getRepository().updateUser(currentUser);
@@ -92,6 +105,6 @@ public class EditUserController {
             return "EMPLOYEE";
         }
         else
-            return "Error"; // Error
+            return "EMPLOYEE"; // Error
     }
 }

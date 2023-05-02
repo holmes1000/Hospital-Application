@@ -6,6 +6,9 @@ import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.ORMs.Alert;
+import edu.wpi.teamb.DBAccess.ORMs.Request;
+import edu.wpi.teamb.DBAccess.ORMs.User;
+import edu.wpi.teamb.controllers.components.AlertCardController;
 import edu.wpi.teamb.entities.ELogin;
 import edu.wpi.teamb.entities.EHome;
 import edu.wpi.teamb.navigation.Navigation;
@@ -14,8 +17,11 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -25,15 +31,22 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
@@ -49,11 +62,18 @@ public class HomeController {
     @FXML private MFXButton btnCredits;
     @FXML private  MFXButton btnSecret;
     @FXML private MFXButton btnClear;
-    @FXML private MFXButton viewUserRequestButton;
-    @FXML private TableView<Alert> alertsTable;
+    @FXML private VBox vboxAlerts;
+    @FXML private VBox vboxRequests;
+    @FXML private VBox vboxPathfinder;
+    @FXML private HBox hboxWelcomeBack;
+
     private MFXButton pathfinderImgBtn = new MFXButton();
+    private boolean navLoaded;
 
     private String username;
+
+
+    private String timeMessage = "";
 
     Bounds bounds;
     private EHome homeE;
@@ -61,55 +81,101 @@ public class HomeController {
     @FXML
     public void initialize() throws IOException {
         username = ELogin.getLogin().getUsername();
+        handleDateTime();
+        initName();
         initNavBar();
         initPathfinderBtn();
         initializeBtns();
         loadAlerts();
+        handleUserRequests();
         homeE = new EHome();
         bounds = homePane.getBoundsInLocal();
+
+
+        initializeNavGates();
+    }
+
+    private void initName(){
+        User grabUser = Repository.getRepository().getUser(username);
+        String user = grabUser.getName();
+        Text welcomeBack = new Text();
+        welcomeBack.setFill(Color.WHITE);
+        welcomeBack.setFont(Font.font("System", FontWeight.BOLD, 36));
+        welcomeBack.setText("Welcome " + user + ". The time is: " + timeMessage + ".");
+        hboxWelcomeBack.getChildren().clear();
+//        hboxWelcomeBack.setAlignment(Pos.CENTER_LEFT);
+        hboxWelcomeBack.getChildren().add(welcomeBack);
+        welcomeBack.toFront();
+    }
+
+    private void handleDateTime(){
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), new EventHandler<ActionEvent>() {
+            LocalDateTime now = LocalDateTime.now();
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                now = LocalDateTime.now();
+                String am_pm = "";
+                Integer hour_int = now.getHour();
+                String minute = "";
+                int minute_int = now.getMinute();
+                if (minute_int < 10) {minute += "0" + minute_int;}
+                else {minute += minute_int;}
+                if (hour_int > 11) {am_pm = "PM";}
+                else {am_pm = "AM";}
+                if (hour_int > 12) {hour_int = hour_int - 12;}
+                if (hour_int == 0) {hour_int = 12;}
+                String hour = Integer.toString(hour_int);
+
+                timeMessage = hour + ":" + minute + " " + am_pm;
+                initName();
+            }
+
+        }));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
 
     }
 
     private void initPathfinderBtn() {
-        pathfinderImgBtn.setOnMouseClicked(e -> onPathfinderImgClick());
+        vboxPathfinder.setOnMouseClicked(e -> onPathfinderImgClick());
         Image mapImg = Bapp.getHospitalListOfFloors().get(0);
         ImageView imageView = new ImageView(mapImg);
-        imageView.setFitHeight(200);
+        imageView.setFitHeight(260);
         imageView.setPreserveRatio(true);
-        pathfinderImgBtn.setPrefSize(200, 200);
-        pathfinderImgBtn.setLayoutX(700);
-        pathfinderImgBtn.setLayoutY(200);
-        pathfinderImgBtn.setGraphic(imageView);
-        homePane.getChildren().add(pathfinderImgBtn);
+        vboxPathfinder.getChildren().clear();
+        vboxPathfinder.getChildren().add(imageView);
+
+//        imageView.setFitHeight(200);
+//        imageView.setPreserveRatio(true);
+//        pathfinderImgBtn.setPrefSize(200, 200);
+//        pathfinderImgBtn.setLayoutX(700);
+//        pathfinderImgBtn.setLayoutY(200);
+//        pathfinderImgBtn.setGraphic(imageView);
+//        homePane.getChildren().add(pathfinderImgBtn);
     }
 
     public void loadAlerts(){
+//        AlertCardController  alertCardController = new AlertCardController();
         ArrayList<Alert> allAlerts = Repository.getRepository().getAllAlerts();
-        alertsTable.setEditable(false);
-        TableColumn<Alert, String> titles = new TableColumn<>("Title");
-        titles.setMinWidth(100);
-        titles.setCellValueFactory(new PropertyValueFactory<>("title"));
-
-        TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, String> descriptions = new TableColumn<>("Description");
-        descriptions.setMinWidth(220);
-        descriptions.setCellValueFactory(new PropertyValueFactory<>("description"));
-
-
-        TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, Timestamp> time = new TableColumn<>("Created at");
-        time.setCellValueFactory((new PropertyValueFactory<>("createdAt")));
-        alertsTable.getColumns().addAll(titles, descriptions, time);
-        time.setSortType(TableColumn.SortType.DESCENDING);
-        alertsTable.getSortOrder().setAll(time);
-
-
-        for(Alert alert : allAlerts){
+        ArrayList<Alert> orderedAlerts = new ArrayList<>();
+        orderedAlerts = allAlerts.stream().sorted(Comparator.comparing(Alert::getCreatedAt).reversed()).collect(Collectors.toCollection(ArrayList::new));
+        for(Alert alert : orderedAlerts){
             if(alert.getEmployee().equals(username) || alert.getEmployee().equals("unassigned")) {
-                alertsTable.getItems().add(alert);
+                FXMLLoader loader = null;
+                AnchorPane alertCardRoot = null;
+                AlertCardController alertCardController = null;
+                try{
+                    loader = new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/components/AlertCard.fxml"));
+                    alertCardRoot = loader.load();
+                    alertCardController = loader.getController();
+                } catch (IOException e){
+                    System.out.println("IOException in loadAlerts of HomeController: " + e.getMessage());
+                }
+                alertCardController.setLabels(alert);
+
+                vboxAlerts.getChildren().add(alertCardRoot);
             }
         }
-
-        alertsTable.getSortOrder().setAll(alertsTable.getColumns().get(2));
-        time.setVisible(false);
 
     }
 
@@ -140,10 +206,10 @@ public class HomeController {
                 secretView.setY(secretView.getY() + deltaY);
 
 //                System.out.println(bounds);
-                boolean rightBorder = secretView.getX() >= (bounds.getMaxX());
-                boolean leftBorder = secretView.getX() <= (bounds.getMinX());
-                boolean bottomBorder = secretView.getY() >= (bounds.getMaxY());
-                boolean topBorder = secretView.getY() <= (bounds.getMinY());
+                boolean rightBorder = secretView.getX() >= (1010);
+                boolean leftBorder = secretView.getX() <= (-80);
+                boolean bottomBorder = secretView.getY() >= (575);
+                boolean topBorder = secretView.getY() <= (0);
 
                 if (rightBorder || leftBorder) {
                     deltaX *= -1;
@@ -177,11 +243,14 @@ public class HomeController {
     }
 
     private void initializeBtns() {
+        btnCredits.setTooltip(new Tooltip("Click to view the credits page"));
+        btnAbout.setTooltip(new Tooltip("Click to view the creators of the page"));
+        btnSecret.setTooltip(new Tooltip("Click to view a secret feature"));
+        btnClear.setTooltip(new Tooltip("Click to close the secret feature"));
         btnCredits.setOnMouseClicked(e -> handleCredits());
         btnAbout.setOnMouseClicked(e -> handleAbout());
         btnSecret.setOnMouseClicked(e -> secret(true));
         btnClear.setOnMouseClicked(e -> secret(false));
-        viewUserRequestButton.setOnMouseClicked(e -> handleUserRequests());
     }
 
     private void handleUserRequests() {
@@ -199,13 +268,8 @@ public class HomeController {
             System.out.println("IOException in loadRequestsIntoContainer of AllRequestsController: " + e.getMessage());
         }
         //open the AnchorPane in a new window
-        Stage stage = new Stage();
-        stage.setTitle("My Requests");
-        stage.setScene(new Scene(userRequestsPage));
-        stage.initStyle(StageStyle.UTILITY);
-        //set the resizable to false
-        stage.setResizable(false);
-        stage.show();
+        vboxRequests.getChildren().clear();
+        vboxRequests.getChildren().add(userRequestsPage);
     }
 
     private void handleAbout() {
@@ -236,24 +300,43 @@ public class HomeController {
         }
     }
 
+
     public void activateNav(){
         vboxActivateNav.setOnMouseEntered(event -> {
-//            if(!navLoaded) {
-            System.out.println("on");
-            navPane.setMouseTransparent(false);
-            navPane.setMouseTransparent(false);
-//                navLoaded = true;
-//            }
+            if(!navLoaded) {
+                navPane.setMouseTransparent(false);
+                navLoaded = true;
+                vboxActivateNav.setDisable(true);
+                vboxActivateNav1.setDisable(false);
+            }
         });
     }
 
+    /**
+     * For some reason there are occasions when the nav-bar gates for toggling its handling does not start correctly
+     * This fixes this issue
+     */
+    public void initializeNavGates(){
+        activateNav();
+        deactivateNav();
+        navPane.setMouseTransparent(true);
+        vboxActivateNav.setDisable(false);
+        navLoaded = false;
+        vboxActivateNav1.setDisable(true);
+    }
+
+    /**
+     * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+     * Swaps ownership of the strip to the page
+     */
     public void deactivateNav(){
-        navPane.setOnMouseClicked(event -> {
-//            if(!navLoaded) {
-                System.out.println("off");
+        vboxActivateNav1.setOnMouseEntered(event -> {
+            if(navLoaded){
                 navPane.setMouseTransparent(true);
-                vboxActivateNav1.setMouseTransparent(true);
-//            }
+                vboxActivateNav.setDisable(false);
+                navLoaded = false;
+                vboxActivateNav1.setDisable(true);
+            }
         });
     }
 
@@ -285,7 +368,10 @@ public class HomeController {
                     burgerOpen.play();
                     if (menuDrawer.isOpened()) {
                         menuDrawer.close();
+                        vboxActivateNav1.toFront();
                     } else {
+                        menuDrawer.toFront();
+                        menuBurger.toFront();
                         menuDrawer.open();
                     }
                 });

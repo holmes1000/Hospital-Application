@@ -4,26 +4,30 @@ import edu.wpi.teamb.DBAccess.DAO.AlertDAOImpl;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.ORMs.User;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.Array;
 import java.sql.Timestamp;
+import java.text.CollationElementIterator;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class EditAlertController {
 
     @FXML private MFXTextField tfTitle;
     @FXML private MFXTextField tfDescription;
-    @FXML private ComboBox<String> cbEmployees;
+    @FXML private MFXFilterComboBox<String> cbEmployees;
     @FXML private MFXButton btnSaveEdits;
     static edu.wpi.teamb.DBAccess.ORMs.Alert currentAlert = null;
     static edu.wpi.teamb.DBAccess.ORMs.Alert staticAlert = null;
@@ -37,17 +41,21 @@ public class EditAlertController {
         // Initialize the alert data
         tfTitle.setText(currentAlert.getTitle());
         tfDescription.setText(currentAlert.getDescription());
+        ObservableList<String> employees =
+                FXCollections.observableArrayList();
         ArrayList<User> users = Repository.getRepository().getAllUsers();
-        ArrayList<String> usernames = new ArrayList<>();
         for(int i = 0; i < users.size(); i++){
-            usernames.add(users.get(i).getUsername());
+            employees.add(users.get(i).getUsername());
         }
-        cbEmployees.getItems().addAll(usernames);
-        cbEmployees.setValue(currentAlert.getEmployee());
-        Repository.getRepository().deleteAlert(currentAlert);
+        Collections.sort(employees);
+        employees.add(0, "unassigned");
+        cbEmployees.getItems().addAll(employees);
+        cbEmployees.selectItem(currentAlert.getEmployee());
+        cbEmployees.setText(currentAlert.getEmployee());
     }
 
     public void initButtons() {
+        btnSaveEdits.setTooltip(new Tooltip("Click to save your edits"));
         btnSaveEdits.setOnMouseClicked(event -> handleSaveEdits());
     }
 
@@ -55,12 +63,10 @@ public class EditAlertController {
         currentAlert.setTitle(tfTitle.getText());
         currentAlert.setDescription(tfDescription.getText());
         currentAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
-        if(cbEmployees.getValue().equals("")){
-            currentAlert.setEmployee("unassigned");
-        } else {
+        if(cbEmployees.getValue() != null){
             currentAlert.setEmployee(cbEmployees.getValue());
         }
-        Repository.getRepository().addAlert(currentAlert);
+        Repository.getRepository().updateAlert(currentAlert);
 
         // Create an alert
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

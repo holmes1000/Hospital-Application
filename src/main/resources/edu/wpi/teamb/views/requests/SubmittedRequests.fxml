@@ -2,7 +2,7 @@
 
 <?import com.jfoenix.controls.JFXDrawer?>
 <?import com.jfoenix.controls.JFXHamburger?>
-<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -28,14 +28,17 @@
                   <Image url="@../../img/bwh-background.jpg" />
                </image>
             </ImageView>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#7089a2" height="667.0" layoutX="-66.0" layoutY="21.0" stroke="WHITE" strokeType="INSIDE" width="1136.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#5f7ca4" height="610.0" layoutY="68.0" stroke="#ffffff00" strokeType="INSIDE" width="1035.0" />
                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#012d5a" height="50.0" layoutX="-162.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1347.0" />
-                <Text fill="WHITE" layoutX="-21.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Request Handling" textAlignment="CENTER" wrappingWidth="1164.103515625">
+            <Separator layoutX="30.0" layoutY="134.0" prefWidth="988.0" />
+            <Separator layoutX="30.0" layoutY="135.0" orientation="VERTICAL" prefHeight="35.0" />
+            <Separator layoutX="1016.0" layoutY="135.0" orientation="VERTICAL" prefHeight="35.0" />
+                <Text fill="WHITE" layoutX="-60.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Request Handling" textAlignment="CENTER" wrappingWidth="1164.103515625">
                     <font>
                         <Font name="System Bold" size="36.0" />
                     </font>
                 </Text>
-                <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="997.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
+                <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="1066.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@../../img/helpicon.png" />
                     </image>
@@ -43,12 +46,12 @@
                         <ColorAdjust brightness="1.0" />
                     </effect>
                 </ImageView>
-            <ScrollPane fx:id="allRequestsScrollPane" layoutY="170.0">
+            <ScrollPane fx:id="allRequestsScrollPane" layoutX="30.0" layoutY="170.0" style="-fx-background-color: #5f7ca4;">
                <content>
-                  <VBox fx:id="allRequestsContainerVBox" layoutX="61.0" prefHeight="480.0" prefWidth="974.0" />
+                  <VBox fx:id="allRequestsContainerVBox" layoutX="61.0" prefHeight="480.0" prefWidth="974.0" style="-fx-background-color: #5f7ca4; -fx-border-color: #5f7ca4;" />
                </content>
             </ScrollPane>
-            <HBox layoutX="-1.0" layoutY="136.0" prefHeight="35.0" prefWidth="976.0">
+            <HBox layoutX="30.0" layoutY="136.0" prefHeight="35.0" prefWidth="986.0" style="-fx-background-color: #012d5a;">
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="35.0" prefWidth="85.0" text="Request ID" textFill="WHITE">
                      <font>
@@ -68,7 +71,7 @@
                      </font>
                   </Label>
                   <Separator orientation="VERTICAL" prefHeight="200.0" />
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="35.0" prefWidth="166.0" text="Employee Assigned " textFill="WHITE">
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="35.0" prefWidth="166.0" text="Employee" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
@@ -87,9 +90,9 @@
                   </Label>
                </children>
             </HBox>
-            <HBox layoutX="-1.0" layoutY="88.0" prefHeight="40.0" prefWidth="1078.0" spacing="20.0">
+            <HBox layoutX="30.0" layoutY="88.0" prefHeight="40.0" prefWidth="1078.0" spacing="20.0">
                <children>
-                  <Label text="Filter By: " textFill="WHITE">
+                  <Label layoutX="3.0" text="Filter By: " textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -97,12 +100,13 @@
                         <Insets right="-5.0" top="7.0" />
                      </HBox.margin>
                   </Label>
-                  <MFXComboBox fx:id="cbFilterCategory" prefHeight="40.0" prefWidth="214.0" promptText="Select Filter Category" />
-                  <MFXComboBox fx:id="cbFilterOptions" prefHeight="40.0" prefWidth="227.0" promptText="Select An Option" />
+                  <MFXFilterComboBox fx:id="cbFilterCategory" prefHeight="40.0" prefWidth="214.0" promptText="Select Filter Category" />
+                  <MFXFilterComboBox fx:id="cbFilterOptions" prefHeight="40.0" prefWidth="227.0" promptText="Select An Option" />
                </children>
             </HBox>
-            <VBox fx:id="vboxActivateNav" layoutX="-200.0" prefHeight="720.0" prefWidth="70.0" />
-<!--            <MFXButton fx:id="btnSubmit" defaultButton="true" layoutX="564.0" layoutY="633.0" onAction="#clickSubmitEdits" prefHeight="46.0" prefWidth="174.0" style="-fx-background-color: #1C4EFE;" text="Submit" textFill="#f1f1f1">-->
+            <VBox fx:id="vboxActivateNav" layoutX="-150.0" prefHeight="720.0" prefWidth="70.0" />
+            <Separator layoutX="30.0" layoutY="170.0" prefWidth="988.0" />
+<!--            <MFXButton fx:id="btnSubmit" defaultButton="true" layoutX="564.0" layoutY="633.0" onAction="#clickSubmitEdits" prefHeight="46.0" prefWidth="174.0" style="-fx-background-color: #012d5a;" text="Submit" textFill="#f1f1f1">-->
 <!--               <font>-->
 <!--                  <Font name="System Bold" size="18.0" />-->
 <!--               </font>-->
@@ -118,7 +122,7 @@
                     <effect>
                         <ColorAdjust brightness="1.0" />
                     </effect></JFXHamburger>
-            <VBox fx:id="vboxActivateNav1" layoutX="70.0" onMouseEntered="#deactivateNav" prefHeight="720.0" prefWidth="70.0" />
+            <VBox fx:id="vboxActivateNav1" layoutX="70.0" onMouseEntered="#deactivateNav" prefHeight="720.0" prefWidth="1211.0" />
             </children>
         </Pane>
     </left>

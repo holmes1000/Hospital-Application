@@ -9,8 +9,10 @@ import edu.wpi.teamb.controllers.NavDrawerController;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,7 +34,9 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
+import java.util.Optional;
 
 public class EditAlertsController {
     @FXML
@@ -42,13 +46,17 @@ public class EditAlertsController {
     @FXML private MFXTextField textTitle;
     @FXML private MFXTextField textDescription;
 
-    @FXML private ComboBox<String> cbEmployees;
+    @FXML private MFXFilterComboBox<String> cbEmployees;
 
     @FXML private MFXButton btnAddAlert;
+    @FXML private SplitPane spAdd;
     @FXML private MFXButton btnDeleteAlert;
     @FXML private MFXButton btnEditAlert;
     @FXML private MFXButton btnRefresh;
+    @FXML private MFXButton btnReset;
+    @FXML private SplitPane spReset;
     @FXML private Pane navPane;
+    @FXML private MFXButton btnBack;
     @FXML private TableView<edu.wpi.teamb.DBAccess.ORMs.Alert> tbAlerts;
     private int tableSize = 0;
 
@@ -62,8 +70,7 @@ public class EditAlertsController {
         initNavBar();
         initializeFields();
         navLoaded = false;
-        activateNav();
-        deactivateNav();
+        initializeNavGates();
 
     }
 
@@ -71,15 +78,13 @@ public class EditAlertsController {
 
     public void initializeFields() {
         ArrayList<edu.wpi.teamb.DBAccess.ORMs.Alert> listOfAlerts = Repository.getRepository().getAllAlerts();
-//        ObservableList<String> usernames = FXCollections.observableArrayList();
-//        ObservableList<String> permissionLevels = FXCollections.observableArrayList();
-
-
         ArrayList<User> users = Repository.getRepository().getAllUsers();
         ArrayList<String> usernames = new ArrayList<>();
         for(int i = 0; i < users.size(); i++){
             usernames.add(users.get(i).getUsername());
         }
+        Collections.sort(usernames);
+        usernames.add(0, "unassigned");
         cbEmployees.getItems().addAll(usernames);
 
         alertTable();
@@ -88,6 +93,27 @@ public class EditAlertsController {
     }
 
     public void initButtons() {
+        btnAddAlert.setTooltip(new Tooltip("Click to add alert"));
+        BooleanBinding bb = new BooleanBinding() {
+            {
+                super.bind(textTitle.textProperty(),
+                        textDescription.textProperty(),
+                        cbEmployees.valueProperty());
+            }
+
+            @Override
+            protected boolean computeValue() {
+                return (textTitle.getText().isEmpty()
+                        || textDescription.getText().isEmpty()
+                        || cbEmployees.getValue() == null);
+            }
+        };
+        btnAddAlert.disableProperty().bind(bb);
+        btnEditAlert.setTooltip(new Tooltip("Click to edit alert"));
+        btnRefresh.setTooltip(new Tooltip("Click to refresh table"));
+        btnDeleteAlert.setTooltip(new Tooltip("Click to delete alert"));
+        btnReset.setTooltip(new Tooltip("Click to reset fields"));
+        btnBack.setTooltip(new Tooltip("Click to go to settings"));
         btnAddAlert.setOnMouseClicked(event -> handleAddAlert());
         btnEditAlert.setOnMouseClicked(event -> {
             try {
@@ -103,14 +129,27 @@ public class EditAlertsController {
         btnDeleteAlert.setOnMouseClicked(event -> handleDeleteAlert());
         btnEditAlert.setDisable(true);
         btnDeleteAlert.setDisable(true);
+        btnBack.setOnMouseClicked(event -> Navigation.navigate(Screen.SETTINGS));
+        btnReset.setOnMouseClicked(event -> handleReset());
+    }
+
+    private void handleReset() {
+        textTitle.clear();
+        textDescription.clear();
+        cbEmployees.clear();
     }
 
     private void handleDeleteAlert() {
-        edu.wpi.teamb.DBAccess.ORMs.Alert alert = tbAlerts.getSelectionModel().getSelectedItem();
-        Repository.getRepository().deleteAlert(alert); // Delete the user
-        //tbUsers.refresh(); // Refresh the table
-        updateTable();
-        createAlert("Alert Deleted", "Alert Deleted Successfully");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete Edge");
+        alert.setContentText("Are you sure you want to delete this alert?");
+        Optional<ButtonType> action = alert.showAndWait();
+        if (action.get() == ButtonType.OK) {
+            edu.wpi.teamb.DBAccess.ORMs.Alert alert1 = tbAlerts.getSelectionModel().getSelectedItem();
+            Repository.getRepository().deleteAlert(alert1); // Delete the user
+            updateTable();
+            createAlert("Alert Deleted", "Alert Deleted Successfully");
+        }
     }
 
     private void handleEditAlert() throws IOException {
@@ -144,16 +183,26 @@ public class EditAlertsController {
     private void handleAddAlert() {
         edu.wpi.teamb.DBAccess.ORMs.Alert newAlert = new edu.wpi.teamb.DBAccess.ORMs.Alert();
         newAlert.setTitle(textTitle.getText());
-        newAlert.setDescription(textDescription.getText().toLowerCase());
+        newAlert.setDescription(textDescription.getText());
         newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
         if(cbEmployees.getValue() == null){
             newAlert.setEmployee("unassigned");
         } else {
             newAlert.setEmployee(cbEmployees.getValue());
         }
-        Repository.getRepository().addAlert(newAlert);
-        createAlert("Alert added", "Alert added successfully");
-        initializeFields(); // Refresh the combo box
+        if (!nullInputs()) {
+            createAlert("Alert added", "Alert added successfully");
+            Repository.getRepository().addAlert(newAlert);
+            handleReset();
+            tbAlerts.refresh();
+            updateTable();
+        }
+        else
+            createAlert("Alert not added", "Please fill out the required fields");
+    }
+
+    private boolean nullInputs() {
+        return textTitle.getText().isEmpty() || textDescription.getText().isEmpty();
     }
 
     private void createAlert(String title, String context) {
@@ -170,22 +219,26 @@ public class EditAlertsController {
         tbAlerts.setEditable(false);
         TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, String> titles = new TableColumn<>("Title");
         titles.setMinWidth(60);
+        titles.setStyle("-fx-alignment: CENTER;");
 //        titles.setMaxWidth(60);
         titles.setCellValueFactory(new PropertyValueFactory<edu.wpi.teamb.DBAccess.ORMs.Alert, String>("title"));
 
         TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, String> descriptions = new TableColumn<>("Description");
         descriptions.setMinWidth(260);
+        descriptions.setStyle("-fx-alignment: CENTER;");
 //        descriptions.setMaxWidth(260);
         descriptions.setCellValueFactory(new PropertyValueFactory<edu.wpi.teamb.DBAccess.ORMs.Alert, String>("description"));
 
 
         TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, Timestamp> time = new TableColumn<>("Created at");
+        time.setStyle("-fx-alignment: CENTER;");
         time.setCellValueFactory((new PropertyValueFactory<edu.wpi.teamb.DBAccess.ORMs.Alert, Timestamp>("createdAt")));
 
         TableColumn<edu.wpi.teamb.DBAccess.ORMs.Alert, String> employees = new TableColumn<>("Assigned employee");
         employees.setCellValueFactory((new PropertyValueFactory<edu.wpi.teamb.DBAccess.ORMs.Alert, String>("employee")));
         time.setMinWidth(150);
 //        time.setMaxWidth(150);
+        employees.setStyle("-fx-alignment: CENTER;");
         employees.setMinWidth(150);
 //        ObservableList<edu.wpi.teamb.DBAccess.ORMs.Alert> data = FXCollections.observableArrayList();
 
@@ -228,14 +281,26 @@ public class EditAlertsController {
 
 
     /**
+     * For some reason there are occasions when the nav-bar gates for toggling its handling does not start correctly
+     * This fixes this issue
+     */
+    public void initializeNavGates(){
+        activateNav();
+        deactivateNav();
+        navPane.setMouseTransparent(true);
+        vboxActivateNav.setDisable(false);
+        navLoaded = false;
+        vboxActivateNav1.setDisable(true);
+    }
+
+    /**
      * Utilizes a gate to swap between handling the navdrawer and the rest of the page
      * Swaps ownership of the strip to the navdraw
      */
+
     public void activateNav(){
         vboxActivateNav.setOnMouseEntered(event -> {
             if(!navLoaded) {
-                System.out.println("on");
-                navPane.setPickOnBounds(false);
                 navPane.setMouseTransparent(false);
                 navLoaded = true;
                 vboxActivateNav.setDisable(true);
@@ -251,7 +316,6 @@ public class EditAlertsController {
     public void deactivateNav(){
         vboxActivateNav1.setOnMouseEntered(event -> {
             if(navLoaded){
-                System.out.println("off");
                 navPane.setMouseTransparent(true);
                 vboxActivateNav.setDisable(false);
                 navLoaded = false;
@@ -288,10 +352,11 @@ public class EditAlertsController {
                     burgerOpen.setRate(burgerOpen.getRate() * -1);
                     burgerOpen.play();
                     if (menuDrawer.isOpened()) {
-                        menuDrawer.toFront();
                         menuDrawer.close();
+                        vboxActivateNav1.toFront();
                     } else {
                         menuDrawer.toFront();
+                        menuBurger.toFront();
                         menuDrawer.open();
                     }
                 });

@@ -10,8 +10,11 @@ import edu.wpi.teamb.controllers.NavDrawerController;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
+import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,9 +22,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -32,15 +33,17 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
+import java.util.Optional;
 
 public class EditUsersController {
     @FXML
     private JFXHamburger menuBurger;
     @FXML private JFXDrawer menuDrawer;
 
-    @FXML private MFXComboBox<String> cbPermissionLevel;
-    @FXML private MFXTextField textPassword;
+    @FXML private MFXFilterComboBox<String> cbPermissionLevel;
+    @FXML private MFXPasswordField textPassword;
     @FXML private MFXTextField textUsername;
     @FXML private MFXTextField textEmail;
     @FXML private MFXTextField textName;
@@ -48,6 +51,8 @@ public class EditUsersController {
     @FXML private MFXButton btnAddUser;
     @FXML private MFXButton btnDeleteUser;
     @FXML private MFXButton btnEditUser;
+    @FXML private MFXButton btnBack;
+    @FXML private MFXButton btnReset;
     @FXML private VBox vboxEditUser;
     @FXML private VBox tableVbox;
     @FXML private Pane navPane;
@@ -65,6 +70,7 @@ public class EditUsersController {
         initNavBar();
         initializeFields();
         initButtons();
+        initializeNavGates();
     }
 
     //EditUserController editUserController = new EditUserController();
@@ -85,9 +91,17 @@ public class EditUsersController {
         deactivateNav();
         // Hide the edit vbox
         //vboxEditUser.setVisible(false);
+
+        Collections.sort(permissionLevels);
+        Collections.sort(usernames);
     }
 
     public void initButtons() {
+        btnAddUser.setTooltip(new Tooltip("Click to add a new user"));
+        btnEditUser.setTooltip(new Tooltip("Click to edit a user's information"));
+        btnDeleteUser.setTooltip(new Tooltip("Click to delete a user"));
+        btnReset.setTooltip(new Tooltip("Click to reset the fields"));
+        btnBack.setTooltip(new Tooltip("Click to go back to the settings m"));
         btnAddUser.setOnMouseClicked(event -> handleAddUser());
         btnEditUser.setOnMouseClicked(event -> {
             try {
@@ -99,14 +113,52 @@ public class EditUsersController {
         btnDeleteUser.setOnMouseClicked(event -> handleDeleteUser());
         btnEditUser.setDisable(true);
         btnDeleteUser.setDisable(true);
+        btnBack.setOnMouseClicked(event -> Navigation.navigate(Screen.SETTINGS));
+        btnReset.setOnMouseClicked(event -> handleReset());
+        BooleanBinding bb = new BooleanBinding() {
+            {
+                super.bind(textUsername.textProperty(),
+                        textPassword.textProperty(),
+                        textEmail.textProperty(),
+                        textName.textProperty(),
+                        cbPermissionLevel.valueProperty());
+            }
+
+            @Override
+            protected boolean computeValue() {
+                return (textUsername.getText().isEmpty()
+                        || textPassword.getText().isEmpty()
+                        || textEmail.getText().isEmpty()
+                        || textName.getText().isEmpty()
+                        || cbPermissionLevel.getValue() == null);
+            }
+        };
+        btnAddUser.disableProperty().bind(bb);
+
+        ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
+            btnReset.setDisable(false);
+        };
+        textUsername.textProperty().addListener(changeListener);
+        textPassword.textProperty().addListener(changeListener);
+        textEmail.textProperty().addListener(changeListener);
+        textName.textProperty().addListener(changeListener);
+        cbPermissionLevel.valueProperty().addListener(changeListener);
     }
 
     private void handleDeleteUser() {
-        User user = tbUsers.getSelectionModel().getSelectedItem();
-        Repository.getRepository().deleteUser(user); // Delete the user
-        //tbUsers.refresh(); // Refresh the table
-        updateTable();
-        createAlert("User Deleted", "User Deleted Successfully");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete Edge");
+        alert.setContentText("Are you sure you want to delete this user?");
+        Optional<ButtonType> action = alert.showAndWait();
+        if (action.get() == ButtonType.OK) {
+            User user = tbUsers.getSelectionModel().getSelectedItem();
+            Repository.getRepository().deleteUser(user); // Delete the user
+            //tbUsers.refresh(); // Refresh the table
+            updateTable();
+            createAlert("User Deleted", "User Deleted Successfully");
+        }
+        btnEditUser.setDisable(true);
+        btnDeleteUser.setDisable(true);
     }
 
     private void handleEditUser() throws IOException {
@@ -114,6 +166,8 @@ public class EditUsersController {
         System.out.println("Edit user button");
         showEditMenu(user);
         tbUsers.refresh(); // Refresh the table
+        btnDeleteUser.setDisable(true);
+        btnEditUser.setDisable(true);
     }
 
     private void showEditMenu(User user) throws IOException {
@@ -132,19 +186,29 @@ public class EditUsersController {
         newUser.setUsername(textUsername.getText().toLowerCase());
         newUser.setPassword(textPassword.getText());
         newUser.setEmail(textEmail.getText().toLowerCase());
-        newUser.setPermissionLevel(permissionLevelToInt(cbPermissionLevel.getValue()));
+        if (cbPermissionLevel.getValue() != null)
+            newUser.setPermissionLevel(permissionLevelToInt(cbPermissionLevel.getValue()));
         if (usernameDoesNotExist(newUser) && emailDoesNotExist(newUser)) {
-            Repository.getRepository().addUser(newUser);
-            createAlert("User added", "User added successfully");
+            if (!nullInputs(newUser)) {
+                Repository.getRepository().addUser(newUser);
+                createAlert("User added", "User added successfully");
+            }
+            else {
+                createAlert("Empty fields", "Please enter all fields");
+            }
         }
         else if (!emailDoesNotExist(newUser)) {
             createAlert("Email already exists", "Please enter a different email");
         }
-        else
+        else if (!usernameDoesNotExist(newUser))
         {
             createAlert("Username already exists", "Please enter a different username");
         }
         initializeFields(); // Refresh the combo box
+    }
+
+    private boolean nullInputs(User user) {
+        return user.getName().equals("") || user.getUsername().equals("") || user.getPassword().equals("") || user.getEmail().equals("");
     }
 
 
@@ -178,15 +242,12 @@ public class EditUsersController {
         return true;
     }
 
-    private void handleSaveEdits() {
-        User user = new User();
-//        user.setUsername(textUsernameEdit.getText());
-//        user.setPassword(textPasswordEdit.getText());
-//        user.setPosition(textPositionEdit.getText());
-//        if (cbPermissionLevel != null)
-//            user.setPermissionLevel(getPermissionLevel(cbPermissionLevelEdit.getValue()));
-        Repository.getRepository().updateUser(user);
-        initializeFields(); // Refresh the combo box
+    private void handleReset() {
+        textName.clear();
+        textUsername.clear();
+        textPassword.clear();
+        textEmail.clear();
+        cbPermissionLevel.clear();
     }
 
     private void createAlert(String title, String context) {
@@ -217,21 +278,22 @@ public class EditUsersController {
         tbUsers.getColumns().clear();
         // add User attributes to the table (Name, Username, Password, Email, Permission Level)
         TableColumn<User, String> names = new TableColumn<>("Name");
+        names.setStyle("-fx-alignment: CENTER;");
         names.setCellValueFactory(new PropertyValueFactory<User, String>("name"));
 
         TableColumn<User, String> usernames = new TableColumn<>("Username");
+        usernames.setStyle("-fx-alignment: CENTER;");
         usernames.setCellValueFactory(new PropertyValueFactory<User, String>("username"));
 
-        TableColumn<User, String> passwords = new TableColumn<>("Password");
-        passwords.setCellValueFactory(new PropertyValueFactory<User, String>("password"));
-
         TableColumn<User, String> emails = new TableColumn<>("Email");
+        emails.setStyle("-fx-alignment: CENTER;");
         emails.setCellValueFactory(new PropertyValueFactory<User, String>("email"));
 
         TableColumn<User, Integer> permissions = new TableColumn<>("Permission Level");
+        permissions.setStyle("-fx-alignment: CENTER;");
         permissions.setCellValueFactory(new PropertyValueFactory<User, Integer>("permissionLevel"));
 
-        tbUsers.getColumns().addAll(names, usernames, passwords, emails, permissions);
+        tbUsers.getColumns().addAll(names, usernames, emails, permissions);
         updateTable();
     }
 
@@ -274,11 +336,27 @@ public class EditUsersController {
     }
 
 
+    /**
+     * For some reason there are occasions when the nav-bar gates for toggling its handling does not start correctly
+     * This fixes this issue
+     */
+    public void initializeNavGates(){
+        activateNav();
+        deactivateNav();
+        navPane.setMouseTransparent(true);
+        vboxActivateNav.setDisable(false);
+        navLoaded = false;
+        vboxActivateNav1.setDisable(true);
+    }
+
+    /**
+     * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+     * Swaps ownership of the strip to the navdraw
+     */
+
     public void activateNav(){
         vboxActivateNav.setOnMouseEntered(event -> {
             if(!navLoaded) {
-                System.out.println("on");
-                navPane.setPickOnBounds(false);
                 navPane.setMouseTransparent(false);
                 navLoaded = true;
                 vboxActivateNav.setDisable(true);
@@ -287,10 +365,13 @@ public class EditUsersController {
         });
     }
 
+    /**
+     * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+     * Swaps ownership of the strip to the page
+     */
     public void deactivateNav(){
         vboxActivateNav1.setOnMouseEntered(event -> {
             if(navLoaded){
-                System.out.println("off");
                 navPane.setMouseTransparent(true);
                 vboxActivateNav.setDisable(false);
                 navLoaded = false;
@@ -320,10 +401,11 @@ public class EditUsersController {
                     burgerOpen.setRate(burgerOpen.getRate() * -1);
                     burgerOpen.play();
                     if (menuDrawer.isOpened()) {
-                        menuDrawer.toFront();
                         menuDrawer.close();
+                        vboxActivateNav1.toFront();
                     } else {
                         menuDrawer.toFront();
+                        menuBurger.toFront();
                         menuDrawer.open();
                     }
                 });

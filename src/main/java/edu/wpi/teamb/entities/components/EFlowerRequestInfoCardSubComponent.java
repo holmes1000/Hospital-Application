@@ -25,7 +25,6 @@ public class EFlowerRequestInfoCardSubComponent {
         colors.add("White");
         colors.add("Black");
         colors.add("Brown");
-        colors.add("Other");
         return colors;
     }
 
@@ -34,7 +33,6 @@ public class EFlowerRequestInfoCardSubComponent {
         buschellTypes.add("Bouquet");
         buschellTypes.add("Single Flower");
         buschellTypes.add("Vase");
-        buschellTypes.add("Other");
         return buschellTypes;
     }
 }

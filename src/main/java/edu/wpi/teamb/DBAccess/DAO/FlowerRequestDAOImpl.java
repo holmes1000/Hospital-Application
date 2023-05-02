@@ -1,6 +1,7 @@
 package edu.wpi.teamb.DBAccess.DAO;
 
 import edu.wpi.teamb.DBAccess.DBconnection;
+import edu.wpi.teamb.DBAccess.Full.FullConferenceRequest;
 import edu.wpi.teamb.DBAccess.Full.FullFactory;
 import edu.wpi.teamb.DBAccess.Full.FullFlowerRequest;
 import edu.wpi.teamb.DBAccess.Full.IFull;
@@ -47,21 +48,12 @@ public class FlowerRequestDAOImpl implements IDAO {
      */
     @Override
     public FullFlowerRequest get(Object id) {
-        Integer idInt = (Integer) id;
-        FlowerRequest fr = null;
-        Request r = null;
-        try {
-            ResultSet rs = DButils.getRowCond("flowerrequests", "*", "id = " + idInt);
-            rs.next();
-            fr = new FlowerRequest(rs);
-            ResultSet rs1 = RequestDAOImpl.getDBRowID(idInt);
-            rs1.next();
-            r = new Request(rs1);
-        } catch (SQLException e) {
-            System.err.println("ERROR Query Failed in method 'FlowerRequestDAOImpl.get': " + e.getMessage());
-            return null;
-        }
-        return new FullFlowerRequest(r, fr);
+        int idInt = (Integer) id;
+        for (FullFlowerRequest fr : flowerRequests) {
+            if (fr.getId() == idInt) {
+                return fr;
+            }
+        } return null;
     }
 
     /**
@@ -87,6 +79,24 @@ public class FlowerRequestDAOImpl implements IDAO {
         return (ArrayList<FullFlowerRequest>) flower.listFullRequests(frs);
     }
 
+    public ArrayList<FlowerRequest> getAllHelper1() {
+        FullFactory ff = new FullFactory();
+        IFull flower = ff.getFullRequest("Flower");
+        ArrayList<FlowerRequest> frs = new ArrayList<FlowerRequest>();
+        try {
+            ResultSet rs = getDBRowAllRequests();
+            while (rs.next()) {
+                frs.add(new FlowerRequest(rs));
+            }
+            return frs;
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'FlowerRequestDAOImpl.getAllHelper': " + e.getMessage());
+        }
+        DBconnection.getDBconnection().closeDBconnection();
+        DBconnection.getDBconnection().forceClose();
+        return frs;
+    }
+
     /**
      * Adds a FlowerRequest object to the both the database and local list
      *
@@ -95,7 +105,6 @@ public class FlowerRequestDAOImpl implements IDAO {
     @Override
     public void add(Object request) {
         String[] flowerReq = (String[]) request;
-
         String[] values = {flowerReq[0], flowerReq[1], "Flower", flowerReq[2], flowerReq[3], flowerReq[4], flowerReq[5], flowerReq[6], flowerReq[7]};
         int id = insertDBRowNewFlowerRequest(values);
         ResultSet rs = DButils.getRowCond("requests", "dateSubmitted", "id = " + id);
@@ -106,8 +115,9 @@ public class FlowerRequestDAOImpl implements IDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        flowerRequests.add(new FullFlowerRequest(id, flowerReq[0], dateSubmitted, flowerReq[1], flowerReq[2], flowerReq[3], flowerReq[4], flowerReq[5], flowerReq[6], flowerReq[7]));
-        RequestDAOImpl.getRequestDaoImpl().getAll().add(new Request(id, flowerReq[0], dateSubmitted, flowerReq[1], "Flower", flowerReq[2], flowerReq[3]));
+        FullFlowerRequest ffr = new FullFlowerRequest(id, flowerReq[0], dateSubmitted, flowerReq[1], flowerReq[2], flowerReq[3], flowerReq[4], flowerReq[5], flowerReq[6], flowerReq[7]);
+        flowerRequests.add(ffr);
+        RequestDAOImpl.getRequestDaoImpl().getAll().add(new Request(ffr));
     }
 
     /**
@@ -121,7 +131,7 @@ public class FlowerRequestDAOImpl implements IDAO {
         DButils.deleteRow("flowerrequests", "id =" + ffr.getId() + "");
         DButils.deleteRow("requests", "id =" + ffr.getId() + "");
         flowerRequests.remove(ffr);
-        Request req = new Request(ffr.getId(), ffr.getEmployee(), ffr.getDateSubmitted(), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getLocationName(), ffr.getNotes());
+        Request req = new Request(ffr);
         RequestDAOImpl.getRequestDaoImpl().getAll().remove(req);
     }
 
@@ -144,7 +154,7 @@ public class FlowerRequestDAOImpl implements IDAO {
                 flowerRequests.set(i, ffr);
             }
         }
-        Request req = new Request(ffr.getId(), ffr.getEmployee(), ffr.getDateSubmitted(), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getLocationName(), ffr.getNotes());
+        Request req = new Request(ffr);
         RequestDAOImpl.getRequestDaoImpl().update(req);
     }
 

@@ -2,20 +2,19 @@ package edu.wpi.teamb.controllers;
 
 import com.jfoenix.controls.JFXButton;
 import edu.wpi.teamb.Bapp;
+import edu.wpi.teamb.entities.DefaultStart;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Tooltip;
 import org.controlsfx.control.PopOver;
 
 import java.io.IOException;
 
 public class NavDrawerController {
-  @FXML private JFXButton btnConferenceRequest;
-  @FXML private JFXButton btnHelp;
   @FXML private JFXButton btnHome;
   @FXML private JFXButton btnLogout;
-  @FXML private JFXButton btnMapEditor;
   @FXML private JFXButton btnPathfinder;
   @FXML private JFXButton btnRequests;
   @FXML private JFXButton btnSettings;
@@ -23,8 +22,13 @@ public class NavDrawerController {
   @FXML private JFXButton btnExit;
 
   @FXML
-  void clickHelp() {
-    System.out.println("Not yet implemented");
+  public void initialize() throws IOException {
+    btnHome.setTooltip(new Tooltip("Click to view the dashboard"));
+    btnLogout.setTooltip(new Tooltip("Click to log out"));
+    btnPathfinder.setTooltip(new Tooltip("Click to view the pathfinder"));
+    btnRequests.setTooltip(new Tooltip("Click to view the request forms"));
+    btnSettings.setTooltip(new Tooltip("Click to view the settings page"));
+    btnExit.setTooltip(new Tooltip("Click to exit the application"));
   }
 
   @FXML
@@ -39,8 +43,9 @@ public class NavDrawerController {
 
   @FXML
   void clickPathfinder() {
-    btnPathfinder.setOnMouseClicked(event -> Navigation.navigate(Screen.PATHFINDER));
+    btnPathfinder.setOnMouseClicked(event -> pathfinder());
   }
+  private void pathfinder(){DefaultStart.getInstance().setDefault_start("15 Lobby Entrance Floor 2"); Navigation.navigate(Screen.PATHFINDER);}
 
   @FXML
   void clickRequests() {

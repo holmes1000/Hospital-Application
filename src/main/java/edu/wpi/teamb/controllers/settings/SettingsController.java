@@ -14,6 +14,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Tooltip;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -30,6 +32,10 @@ public class SettingsController {
     @FXML private MFXButton btnEditAlerts;
     @FXML private MFXButton btnChangeServer;
     @FXML private MFXButton btnViewCSVs;
+    @FXML private Pane navPane;
+    @FXML private VBox vboxActivateNav;
+    @FXML private VBox vboxActivateNav1;
+    private boolean navLoaded;
 
     @FXML
     public void initialize() throws IOException {
@@ -40,29 +46,22 @@ public class SettingsController {
             btnEditUsers.setVisible(false);
             btnEditAlerts.setVisible(false);
             btnChangeServer.setVisible(false);
+            btnViewCSVs.setVisible(false);
         }
     }
 
     public void initButtons() {
+        btnEditAlerts.setTooltip(new Tooltip("Edit the alerts that are sent to users"));
+        btnEditAccount.setTooltip(new Tooltip("Edit your account information"));
+        btnEditUsers.setTooltip(new Tooltip("Edit the users in the database"));
+        btnChangeServer.setTooltip(new Tooltip("Change the database server"));
+        btnViewCSVs.setTooltip(new Tooltip("View the CSVs of the database"));
+        
         btnEditAlerts.setOnMouseClicked(event -> Navigation.navigate(Screen.EDIT_ALERTS));
         btnEditAccount.setOnMouseClicked(event -> Navigation.navigate(Screen.EDIT_ACCOUNT));
         btnEditUsers.setOnMouseClicked(event -> Navigation.navigate(Screen.EDIT_USERS));
         btnChangeServer.setOnMouseClicked(event -> changeServer());
-        btnViewCSVs.setOnMouseClicked(event -> handleCSVs());
-    }
-
-    private void handleCSVs() {
-        Parent root;
-        try {
-            root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("edu/wpi/teamb/views/settings/ViewCSVs.fxml")));
-            Stage stage = new Stage();
-            stage.setTitle("View CSVs");
-            stage.setScene(new Scene(root, 1280, 720));
-            stage.show();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+        btnViewCSVs.setOnMouseClicked(event -> Navigation.navigate(Screen.VIEW_CSVS));
     }
 
     private void changeServer() {
@@ -83,6 +82,44 @@ public class SettingsController {
         alert.showAndWait();
     }
 
+
+    /**
+     * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+     * Swaps ownership of the strip to the navdraw
+     */
+
+    public void activateNav(){
+        vboxActivateNav.setOnMouseEntered(event -> {
+            if(!navLoaded) {
+                System.out.println("on");
+                navPane.setMouseTransparent(false);
+                navLoaded = true;
+                vboxActivateNav.setDisable(true);
+                vboxActivateNav1.setDisable(false);
+            }
+        });
+    }
+
+    /**
+     * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+     * Swaps ownership of the strip to the page
+     */
+    public void deactivateNav(){
+        vboxActivateNav1.setOnMouseEntered(event -> {
+            if(navLoaded){
+                System.out.println("off");
+                navPane.setMouseTransparent(true);
+                vboxActivateNav.setDisable(false);
+                navLoaded = false;
+                vboxActivateNav1.setDisable(true);
+            }
+        });
+    }
+
+    /**
+     * Utilizes a gate to swap between handling the navdrawer and the rest of the page
+     * Swaps ownership of the strip to the navdraw
+     */
     public void initNavBar() {
         // https://github.com/afsalashyana/JavaFX-Tutorial-Codes/tree/master/JavaFX%20Navigation%20Drawer/src/genuinecoder
         try {
@@ -104,7 +141,10 @@ public class SettingsController {
                     burgerOpen.play();
                     if (menuDrawer.isOpened()) {
                         menuDrawer.close();
+                        vboxActivateNav1.toFront();
                     } else {
+                        menuDrawer.toFront();
+                        menuBurger.toFront();
                         menuDrawer.open();
                     }
                 });
