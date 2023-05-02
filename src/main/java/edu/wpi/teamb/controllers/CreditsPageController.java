@@ -4,6 +4,7 @@ import com.sun.glass.ui.ClipboardAssistance;
 import edu.wpi.teamb.Bapp;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
@@ -65,6 +66,18 @@ public class CreditsPageController {
     private Label street;
     @FXML
     private Label workspace;
+    @FXML private Label conferenceRoom;
+
+    @FXML private Label flowerVase;
+    @FXML private Label furnitureRequest;
+    @FXML private Label mealRequest;
+    @FXML private Label meeting;
+    @FXML private Label officeSupplies;
+    @FXML private Label edge;
+    @FXML private Label move;
+    @FXML private Label node;
+    @FXML private Label reset;
+    @FXML private Label tools;
 
     @FXML
     private ImageView popup;
@@ -78,6 +91,8 @@ public class CreditsPageController {
     private void initializeBtns() {
         btnClose.setTooltip(new Tooltip("Click to return to home page"));
         btnClose.setOnMouseClicked(e -> handleClose());
+        popup.setPreserveRatio(true);
+        //popup.setAlignment(Pos.CENTER);
         //groundFloor.setOnMouseClicked(e->{popup.setImage(Bapp.getHospitalListOfFloors().get(2));});
         //LL1.setOnMouseClicked(e->{popup.setImage(Bapp.getHospitalListOfFloors().get(0));});
         handleClick();
@@ -91,6 +106,7 @@ public class CreditsPageController {
     @FXML
     private void handleClick() {
         groundFloor.setOnMouseClicked(e -> {
+            popup.setPreserveRatio(true);
             popup.setImage(Bapp.getHospitalListOfFloors().get(2));
         });
         LL1.setOnMouseClicked(e -> {
@@ -112,7 +128,7 @@ public class CreditsPageController {
             popup.setImage(new Image("edu/wpi/teamb/img/breakfast.png"));
         });
         BWH_Background.setOnMouseClicked(e -> {
-            popup.setImage(new Image("edu/wpi/teamb/img/BrighamWomens-background-img.webp"));
+            popup.setImage(new Image("edu/wpi/teamb/img/bwh-background.jpg"));
         });
         BWH_Logo.setOnMouseClicked(e -> {
             popup.setImage(new Image("edu/wpi/teamb/img/bwh-logo.jpg"));
@@ -165,6 +181,41 @@ public class CreditsPageController {
         workspace.setOnMouseClicked(e -> {
             popup.setImage(new Image("edu/wpi/teamb/img/workspace.png"));
         });
+        conferenceRoom.setOnMouseClicked(e -> {
+            popup.setImage(new Image("edu/wpi/teamb/img/conference-room.jpg"));
+        });
+        flowerVase.setOnMouseClicked(e -> {
+            popup.setImage(new Image("edu/wpi/teamb/img/flower-vase2.jpg"));
+        });
+        furnitureRequest.setOnMouseClicked(e -> {
+            popup.setImage(new Image("edu/wpi/teamb/img/furtniture-request.jpg"));
+        });
+        mealRequest.setOnMouseClicked(e -> {
+            popup.setImage(new Image("edu/wpi/teamb/img/meal-request.png"));
+        });
+        meeting.setOnMouseClicked(e -> {
+            popup.setImage(new Image("edu/wpi/teamb/img/meeting.png"));
+        });
+        officeSupplies.setOnMouseClicked(e -> {
+            popup.setImage(new Image("edu/wpi/teamb/img/Office-Supplies.jpg"));
+        });
+        edge.setOnMouseClicked(e -> {
+            popup.setImage(new Image("edu/wpi/teamb/img/icons/edge.png"));
+        });
+        move.setOnMouseClicked(e -> {
+            popup.setImage(new Image("edu/wpi/teamb/img/icons/move.png"));
+        });
+        node.setOnMouseClicked(e -> {
+            popup.setImage(new Image("edu/wpi/teamb/img/icons/node.png"));
+        });
+        reset.setOnMouseClicked(e -> {
+            popup.setImage(new Image("edu/wpi/teamb/img/icons/reset.png"));
+        });
+        tools.setOnMouseClicked(e -> {
+            popup.setImage(new Image("edu/wpi/teamb/img/icons/tools.png"));
+
+        });
+
 
     }
 }

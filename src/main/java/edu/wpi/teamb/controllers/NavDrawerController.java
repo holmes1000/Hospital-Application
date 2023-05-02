@@ -46,7 +46,7 @@ public class NavDrawerController {
     btnPathfinder.setOnMouseClicked(event -> pathfinder());
   }
   private void pathfinder(){
-    DefaultStart.getInstance().setDefault_start("15 Lobby Entrance Floor 2");
+    DefaultStart.getInstance().setDefault_start(DefaultStart.getInstance().getTrue_default_start());
     DefaultStart.getInstance().setDefault_end("");
     Navigation.navigate(Screen.PATHFINDER);}
 

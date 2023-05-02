@@ -14,10 +14,7 @@ import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
@@ -115,6 +112,11 @@ public class SubmittedRequestsController {
                     if(fullFurnitureRequest == null){continue;}
                     Objects.requireNonNull(requestInfoCardController).sendRequest(fullFurnitureRequest);
                     break;
+                case "Translation":
+                    IFull fullTranslationRequest = allRequestsE.getTranslationRequest(listOfRequests.get(i).getId());
+                    if(fullTranslationRequest == null){continue;}
+                    Objects.requireNonNull(requestInfoCardController).sendRequest(fullTranslationRequest);
+                    break;
                 default:
                     //continue statement to skip any unrecognized types of request to avoid occurrence of empty cards
                     continue;
@@ -203,6 +205,11 @@ public class SubmittedRequestsController {
                     IFull fullFurnitureRequest = allRequestsE.getFurnitureRequest(filteredListOfRequests.get(i).getId());
                     if(fullFurnitureRequest == null){continue;}
                     Objects.requireNonNull(requestInfoCardController).sendRequest(fullFurnitureRequest);
+                    break;
+                case "Translation":
+                    IFull fullTranslationRequest = allRequestsE.getTranslationRequest(filteredListOfRequests.get(i).getId());
+                    if(fullTranslationRequest == null){continue;}
+                    Objects.requireNonNull(requestInfoCardController).sendRequest(fullTranslationRequest);
                     break;
                 default:
                     //continue statement to skip any unrecognized types of request to avoid occurrence of empty cards
@@ -319,8 +326,15 @@ public class SubmittedRequestsController {
         cbFilterOptions.setTooltip(new Tooltip("Select a filter option"));
         cbFilterOptions.setVisible(false);
         //add filtering options to cbFilterCategory
+        String[] filterCategories = {"", "Status", "Request Type", "Date Submitted", "Unassigned Task"};
+        //put filter categories in alphabetical order
+        Arrays.sort(filterCategories);
+        //add filter categories to cbFilterCategory
+        cbFilterCategory.getItems().addAll(filterCategories);
+
+        //set the tooltip for cbFilterCategory
         cbFilterCategory.setTooltip(new Tooltip("Select a filter category"));
-        cbFilterCategory.getItems().addAll("", "Status", "Request Type", "Date Submitted", "Unassigned Task");
+
         //add change listener to cbFilterCategory
         cbFilterCategory.valueProperty().addListener(
                 (observable, oldValue, newValue) -> {
@@ -328,6 +342,11 @@ public class SubmittedRequestsController {
                         //if selection is null
                         loadRequestsIntoContainer();
                     } else if (newValue.equals("Unassigned Task")) {
+                        //clear cbFilterOptions current selection and items
+                        cbFilterOptions.getSelectionModel().clearSelection();
+                        cbFilterOptions.getItems().clear();
+                        //set the button to not be visible
+                        cbFilterOptions.setVisible(false);
                         loadRequestsIntoContainer("employee", "unassigned");
                     } else if (!newValue.equals("")) {
                         //set cbFilterOptions to visible
@@ -337,22 +356,35 @@ public class SubmittedRequestsController {
                         //add filtering options to cbFilterOptions based on filter category
                         switch (newValue) {
                             case "Status":
-                                cbFilterOptions.getItems().addAll("", RequestStatus.PENDING.getStatus(), RequestStatus.COMPLETED.getStatus());
+                                ArrayList<String> statusList = new ArrayList<>(Arrays.asList(
+                                        "",
+                                        RequestStatus.PENDING.getStatus(),
+                                        RequestStatus.COMPLETED.getStatus()));
+                                //sort statusList in alphabetical order
+                                Collections.sort(statusList);
+                                cbFilterOptions.getItems().addAll(statusList);
                                 break;
                             case "Request Type":
-                                cbFilterOptions.getItems().addAll(
+                                ArrayList<String> requestTypeList = new ArrayList<>(Arrays.asList(
                                         "",
                                         RequestType.MEAL.getType(),
                                         RequestType.CONFERENCE.getType(),
                                         RequestType.FLOWER.getType(),
                                         RequestType.OFFICE.getType(),
-                                        RequestType.FURNITURE.getType());
+                                        RequestType.FURNITURE.getType(),
+                                        RequestType.TRANSLATION.getType()));
+                                //sort requestTypeList in alphabetical order
+                                Collections.sort(requestTypeList);
+                                cbFilterOptions.getItems().addAll(requestTypeList);
                                 break;
                             case "Date Submitted":
-                                cbFilterOptions.getItems().addAll(
+                                ArrayList<String> dateSubmittedList = new ArrayList<>(Arrays.asList(
                                         "",
                                         AscendingDescending.ASCENDING.getAscendingDescending(),
-                                        AscendingDescending.DESCENDING.getAscendingDescending());
+                                        AscendingDescending.DESCENDING.getAscendingDescending()));
+                                //sort dateSubmittedList in alphabetical order
+                                Collections.sort(dateSubmittedList);
+                                cbFilterOptions.getItems().addAll(dateSubmittedList);
                                 break;
                         }
                     } else {
@@ -404,7 +436,8 @@ public class SubmittedRequestsController {
         CONFERENCE("Conference"),
         FLOWER("Flower"),
         OFFICE("Office"),
-        FURNITURE("Furniture");
+        FURNITURE("Furniture"),
+        TRANSLATION("Translation");
         private final String type;
 
         RequestType(String type) {

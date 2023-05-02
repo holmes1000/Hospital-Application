@@ -81,8 +81,8 @@ public class SignDAOImpl implements IDAO {
     }
 
     public void insertSign(Sign s) {
-        String[] cols = { "signageGroup", "locationName", "direction", "startDate", "endDate", "singleBlock" };
-        String[] values = {s.getSignageGroup(), s.getLocationName(), s.getDirection(), String.valueOf(s.getStartDate()), String.valueOf(s.getEndDate()), String.valueOf(s.isSingleBlock())};
+        String[] cols = { "signageGroup", "locationName", "direction", "startDate", "endDate", "signLocation" };
+        String[] values = {s.getSignageGroup().replace("'",""), s.getLocationName().replace("'",""), s.getDirection(), String.valueOf(s.getStartDate()), String.valueOf(s.getEndDate()), s.getSignLocation()};
         DButils.insertRow("signs", cols, values);
     }
 
@@ -95,14 +95,14 @@ public class SignDAOImpl implements IDAO {
     }
 
     public void updateSign(Sign s) {
-        String[] cols = { "locationName", "direction", "startDate", "endDate" };
-        String[] values = {s.getLocationName(), s.getDirection(), String.valueOf(s.getStartDate()), String.valueOf(s.getEndDate())};
+        String[] cols = { "locationName", "direction", "startDate", "endDate", "signLocation" };
+        String[] values = {s.getLocationName(), s.getDirection(), String.valueOf(s.getStartDate()), String.valueOf(s.getEndDate()), s.getSignLocation()};
         DButils.updateRow("signs", cols, values, "signagegroup = '" + s.getSignageGroup() + "' AND locationName = '" + s.getLocationName() + "'");
     }
 
     public void updateSignageGroup(Sign s) {
-        String[] cols = { "singleBlock" };
-        String[] values = {String.valueOf(s.isSingleBlock())};
+        String[] cols = { "signLocation" };
+        String[] values = {s.getSignLocation()};
         DButils.updateRow("signs", cols, values, "signagegroup = '" + s.getSignageGroup() + "'");
     }
 

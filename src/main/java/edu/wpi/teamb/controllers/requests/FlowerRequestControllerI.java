@@ -28,6 +28,7 @@ import org.controlsfx.control.PopOver;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collections;
 
 public class FlowerRequestControllerI implements IRequestController {
@@ -43,6 +44,7 @@ public class FlowerRequestControllerI implements IRequestController {
     @FXML private MFXTextField txtFldMessage;
     @FXML private MFXFilterComboBox<String> cbEmployeesToAssign;
     @FXML private MFXFilterComboBox<String> cbLongName;
+    @FXML private MFXFilterComboBox<String> cbChangeStatus;
 
     private final EFlowerRequest EFlowerRequest;
 
@@ -130,6 +132,11 @@ public class FlowerRequestControllerI implements IRequestController {
         employees.add(0, "unassigned");
         cbEmployeesToAssign.setItems(employees);
         cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
+
+        //Set status
+        ObservableList<String> statuses = FXCollections.observableArrayList( "In-Progress", "Pending", "Completed");
+        Collections.sort(statuses);
+        cbChangeStatus.setItems(statuses);
     }
 
     private void initComboBoxChangeListeners() {
@@ -267,32 +274,55 @@ public class FlowerRequestControllerI implements IRequestController {
     public void enterFlowerRequestEditableMode(FullFlowerRequest fullFlowerRequest, InfoCardController currentInfoCardController) {
         //set the editable fields to the values of the request
         cbAvailableFlowers.getSelectionModel().selectItem(fullFlowerRequest.getFlowerType());
-        if(cbAvailableFlowers.getSelectedItem().equals("Rose")){
-            cdAvailableColor.getItems().addAll("Red", "Orange", "Yellow", "Pink", "Purple", "White", "Green");
-            cdAvailableColor.getSelectionModel().selectItem(fullFlowerRequest.getColor());
-            cdAvailableColor.setText(fullFlowerRequest.getColor());
-        } else if(cbAvailableFlowers.getSelectedItem().equals("Lily")){
-            cdAvailableColor.getItems().addAll("White", "Pink", "Red", "Orange", "Yellow");
-            cdAvailableColor.getSelectionModel().selectItem(fullFlowerRequest.getColor());
-            cdAvailableColor.setText(fullFlowerRequest.getColor());
-        } else if(cbAvailableFlowers.getSelectedItem().equals("Daisy")){
-            cdAvailableColor.getItems().addAll("White", "Pink", "Red", "Blue");
-            cdAvailableColor.getSelectionModel().selectItem(fullFlowerRequest.getColor());
-            cdAvailableColor.setText(fullFlowerRequest.getColor());
-        } else if(cbAvailableFlowers.getSelectedItem().equals("Tulip")){
-            cdAvailableColor.getItems().addAll("Yellow", "White", "Purple", "Pink", "Orange", "Red");
-            cdAvailableColor.getSelectionModel().selectItem(fullFlowerRequest.getColor());
-            cdAvailableColor.setText(fullFlowerRequest.getColor());
-        } else if(cbAvailableFlowers.getSelectedItem().equals("Sunflower")){
-            cdAvailableColor.getItems().addAll("Yellow", "Red", "Orange", "Pink", "Purple");
-            cdAvailableColor.getSelectionModel().selectItem(fullFlowerRequest.getColor());
-            cdAvailableColor.setText(fullFlowerRequest.getColor());
+        //loads the correct color options for the selected flower type so edit page does not crash
+        cdAvailableColor.getItems().clear();
+        if (cbAvailableFlowers.getSelectionModel().getSelectedItem().equals("Rose")) {
+            cdAvailableColor.getItems().clear();
+            cdAvailableColor.getSelectionModel().clearSelection();
+            ObservableList<String> roseColors = FXCollections.observableArrayList("Red", "Orange", "Yellow", "Pink", "Purple", "White", "Green");
+            Collections.sort(roseColors);
+            cdAvailableColor.getItems().addAll(roseColors);
+            cdAvailableColor.setVisible(true);
+        } else if (cbAvailableFlowers.getSelectionModel().equals("Tulip")) {
+            cdAvailableColor.getItems().clear();
+            cdAvailableColor.getSelectionModel().clearSelection();
+            ObservableList<String> tulipColors = FXCollections.observableArrayList("Yellow", "White", "Purple", "Pink", "Orange", "Red");
+            Collections.sort(tulipColors);
+            cdAvailableColor.getItems().addAll(tulipColors);
+            cdAvailableColor.setVisible(true);
+        } else if (cbAvailableFlowers.getSelectionModel().getSelectedItem().equals("Daisy")) {
+            cdAvailableColor.getItems().clear();
+            cdAvailableColor.getSelectionModel().clearSelection();
+            ObservableList<String> daisyColors = FXCollections.observableArrayList("White", "Pink", "Red", "Blue");
+            Collections.sort(daisyColors);
+            cdAvailableColor.getItems().addAll(daisyColors);
+            cdAvailableColor.setVisible(true);
+        } else if (cbAvailableFlowers.getSelectionModel().getSelectedItem().equals("Lily")) {
+            cdAvailableColor.getItems().clear();
+            cdAvailableColor.getSelectionModel().clearSelection();
+            ObservableList<String> lilyColors = FXCollections.observableArrayList("White", "Pink", "Red", "Orange", "Yellow");
+            Collections.sort(lilyColors);
+            cdAvailableColor.getItems().addAll(lilyColors);
+            cdAvailableColor.setVisible(true);
+        } else if (cbAvailableFlowers.getSelectionModel().getSelectedItem().equals("Sunflower")) {
+            cdAvailableColor.getItems().clear();
+            cdAvailableColor.getSelectionModel().clearSelection();
+            ObservableList<String> sunflowerColors = FXCollections.observableArrayList("Yellow", "Red", "Orange", "Pink", "Purple");
+            Collections.sort(sunflowerColors);
+            cdAvailableColor.getItems().addAll(sunflowerColors);
+            cdAvailableColor.setVisible(true);
         }
+        //continue setting the editable fields to the values of the request
+        cdAvailableColor.selectItem(fullFlowerRequest.getColor());
+        cdAvailableColor.setText(fullFlowerRequest.getColor());
+        cdAvailableColor.setValue(fullFlowerRequest.getColor());
         cdAvailableType.getSelectionModel().selectItem(fullFlowerRequest.getSize());
         txtFldMessage.setText(fullFlowerRequest.getMessage());
         txtFldNotes.setText(fullFlowerRequest.getNotes());
         cbEmployeesToAssign.getSelectionModel().selectItem(fullFlowerRequest.getEmployee());
         cbLongName.getSelectionModel().selectItem(fullFlowerRequest.getLocationName());
+        cbChangeStatus.setVisible(true);
+        cbChangeStatus.getSelectionModel().selectItem(fullFlowerRequest.getRequestStatus());
 
         //set the submit button to say update
         btnSubmit.setText("Update");
@@ -308,6 +338,7 @@ public class FlowerRequestControllerI implements IRequestController {
             fullFlowerRequest.setNotes(txtFldNotes.getText());
             fullFlowerRequest.setEmployee(cbEmployeesToAssign.getValue());
             fullFlowerRequest.setLocationName(cbLongName.getValue());
+            fullFlowerRequest.setRequestStatus(cbChangeStatus.getValue());
 
             //update the request
             EFlowerRequest.updateFlowerRequest(fullFlowerRequest);

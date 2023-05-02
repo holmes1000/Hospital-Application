@@ -60,6 +60,7 @@
             </SplitPane>
             <DatePicker fx:id="dateToReserve" layoutX="20.0" layoutY="80.0" prefHeight="45.0" prefWidth="450.0" promptText="MM/DD/YYYY" style="-fx-background-color: transparent;" />
             <Separator layoutX="20.0" layoutY="62.0" prefWidth="450.0" />
+            <MFXFilterComboBox fx:id="cbChangeStatus" floatingText="Request Status" layoutX="773.0" layoutY="19.0" prefHeight="40.0" prefWidth="300.0" visible="false" />
             </children>
         </AnchorPane>
     </center>

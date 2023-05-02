@@ -43,6 +43,7 @@ public class MealRequestControllerI implements IRequestController{
     @FXML private MFXFilterComboBox<String> cbOrderLocation;
     @FXML private MFXFilterComboBox<String> cbEmployeesToAssign;
     @FXML private MFXFilterComboBox<String> cbLongName;
+    @FXML private MFXFilterComboBox<String> cbChangeStatus;
     private EMealRequest EMealRequest;
 
     public MealRequestControllerI(){
@@ -138,6 +139,11 @@ public class MealRequestControllerI implements IRequestController{
 
         // TEXTFIELD INITIALIZATION
         txtFldNotes.setTooltip(new Tooltip("Enter any additional notes here"));
+
+        // Set the change status dropdown
+        ObservableList<String> status = FXCollections.observableArrayList("Pending", "In-Progress", "Completed");
+        Collections.sort(status);
+        cbChangeStatus.setItems(status);
     }
 
     @Override
@@ -242,6 +248,8 @@ public class MealRequestControllerI implements IRequestController{
         cbAvailableSnacks.getSelectionModel().selectItem(fullMealRequest.getSnack());
         cbLongName.getSelectionModel().selectItem(fullMealRequest.getLocationName());
         txtFldNotes.setText(fullMealRequest.getNotes());
+        cbChangeStatus.setVisible(true);
+        cbChangeStatus.getSelectionModel().selectItem(fullMealRequest.getRequestStatus().toString());
         btnSubmit.setText("Update");
         //remove the current onAction event
         btnSubmit.setOnAction(null);
@@ -255,6 +263,7 @@ public class MealRequestControllerI implements IRequestController{
             fullMealRequest.setSnack(cbAvailableSnacks.getValue());
             fullMealRequest.setLocationName(cbLongName.getValue());
             fullMealRequest.setNotes(txtFldNotes.getText());
+            fullMealRequest.setRequestStatus(cbChangeStatus.getValue());
             //update the database
             EMealRequest.updateMealRequests(fullMealRequest);
             //close the window

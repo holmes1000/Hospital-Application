@@ -111,6 +111,8 @@ public class MapEditorController {
   Group nameGroup = new Group();
   Pane locationCanvas;
   Pane fullNodeCanvas;
+  FullNode startNode;
+  FullNode endNode;
   //public static ArrayList<Node> nodeList = new ArrayList<>();
   public static ArrayList<FullNode> fullNodesList = new ArrayList<>();
   private ArrayList<FullNode> floorList = new ArrayList<>();
@@ -152,6 +154,7 @@ public class MapEditorController {
   Circle c1;
   Circle c2;
 
+
   // New menu buttons
   @FXML
   private MFXButton btnSubmitMove;
@@ -187,11 +190,10 @@ public class MapEditorController {
   private MenuButton btnMenuBackup;
   @FXML
   private CustomMenuItem itemResetFromBackup = new CustomMenuItem();
-  @FXML
-  private CustomMenuItem itemSaveToBackup = new CustomMenuItem();
   private MoveMap moveMap;
   private EditNodeMenuController editNodeMenuController;
   private AddNodeMenuController addNodeMenuController;
+  private boolean selectingDefault = false;
 
   public MapEditorController() throws SQLException {
     this.editor = new EMapEditor();
@@ -325,6 +327,8 @@ public class MapEditorController {
     } else if (mapEditorContext.getState() == alignNodesState) {
       System.out.println("Selecting nodes");
       tfState.setText("Selecting Nodes");
+    } else if (selectingDefault) {
+      tfState.setText("Select a node default");
     }
     else
       tfState.setText("Viewing");
@@ -364,7 +368,7 @@ public class MapEditorController {
    */
   public void drawEdge(FullNode n) {
     //Gets the full node of the current node, as well as the neighbors of this node
-    ArrayList<Integer> neighbors = PathFinding.ASTAR.get_node_map().get(n.getNodeID()).getNeighborIds(); // TODO this breaks reset from backup
+    ArrayList<Integer> neighbors = PathFinding.ASTAR.get_node_map().get(n.getNodeID()).getNeighborIds();
     if (neighbors != null) {
       for (int i = 0; i < neighbors.size(); i++) {
 
@@ -420,6 +424,9 @@ public class MapEditorController {
         if (mapEditorContext.getState() == deleteNodeState) {
           handleDeleteNode(event, n);
         }
+        if (selectingDefault) {
+          handleDefaultNode(n);
+        }
         System.out.println("Node " + n.getNodeID() + " clicked");
       } catch (SQLException | IOException e) {
         throw new RuntimeException(e);
@@ -431,6 +438,13 @@ public class MapEditorController {
     floorList.add(n);
     nodeGroup.getChildren().add(c);
     nodeGroup.toFront();
+  }
+
+  private void handleDefaultNode(FullNode n) {
+    DefaultStart.getInstance().setDefault_start(n.getLongName());
+    DefaultStart.getInstance().setTrue_default_start(n.getLongName());
+    submissionAlert("Set default start to be " + n.getLongName());
+    selectingDefault = false;
   }
 
 
@@ -546,8 +560,9 @@ public class MapEditorController {
    * Handles the reset from backup button click
    */
   void handleResetFromBackupBtn() {
-    Repository.getRepository().resetNodesFromBackup();
+    //Repository.getRepository().resetNodesFromBackup();
     //nodeList = Repository.getRepository().getAllNodes();
+    Repository.getRepository().resetMap();
     fullNodesList = Repository.getRepository().getAllFullNodes();
     submissionAlert("Reset from backup successful");
     // Refresh the map
@@ -820,9 +835,9 @@ public class MapEditorController {
     });
 
     // initialize the toggles
-    toggleEdges.setSelected(true);
+    toggleEdges.setSelected(false);
     toggleNodes.setSelected(true);
-    toggleLocationNames.setSelected(true);
+    toggleLocationNames.setSelected(false);
     toggleMoves.setSelected(false);
     
     toggleLocationNames.setOnMouseClicked(event -> {
@@ -838,11 +853,16 @@ public class MapEditorController {
       handleToggleMoves();
     });
 
+    handleToggleEdges();
+    handleToggleLocationNames();
+
     // Init new buttons
     btnAlignNodes.setOnMouseClicked(event -> alignNodes());
     btnSubmitMove.setOnMouseClicked(event -> handleSubmitMove());
     btnFindPath.setOnMouseClicked(event -> handleFindPath());
     btnPathfinder.setOnMouseClicked(event -> Navigation.navigate(Screen.PATHFINDER));
+
+
   }
 
   private void handleToggleMoves() {
@@ -858,9 +878,17 @@ public class MapEditorController {
     }
   }
 
+  /**
+   * Method to allow you to find the path between the most recent move nodes
+   */
   private void handleFindPath() {
-    DefaultStart.getInstance().setDefault_start(""); //Whatever you want the start to be
-    DefaultStart.getInstance().setDefault_end(""); //Whatever you want the end to be
+    FullNode startNode = Repository.getRepository().getFullNode(Integer.parseInt(c1.getId()));
+    FullNode endNode = Repository.getRepository().getFullNode(Integer.parseInt(c2.getId()));
+
+
+    DefaultStart.getInstance().setDefault_start(startNode.getLongName()); //Whatever you want the start to be
+    DefaultStart.getInstance().setDefault_end(endNode.getLongName()); //Whatever you want the end to be
+
     Navigation.navigate(Screen.PATHFINDER);
   }
 
@@ -869,17 +897,23 @@ public class MapEditorController {
     LocalDate date = dateToMove.getValue();
 
     // Get the nodes from the circle ids
-    FullNode startNode = Repository.getRepository().getFullNode(Integer.parseInt(c1.getId()));
-    FullNode endNode = Repository.getRepository().getFullNode(Integer.parseInt(c2.getId()));
+    this.startNode = Repository.getRepository().getFullNode(Integer.parseInt(c1.getId()));
+    this.endNode = Repository.getRepository().getFullNode(Integer.parseInt(c2.getId()));
 
     // Get the move data
     Move move = new Move();
-    move.setLongName(startNode.getLongName()); // Location name of the start node
-    move.setNodeID(endNode.getNodeID()); // ID of end node
+    move.setLongName(this.startNode.getLongName()); // Location name of the start node
+    move.setNodeID(this.endNode.getNodeID()); // ID of end node
     move.setDate(Date.valueOf(date));
+
+    Move move2 = new Move();
+    move2.setLongName(this.endNode.getLongName()); // Location name of the end node
+    move2.setNodeID(this.startNode.getNodeID()); // ID of start node
+    move2.setDate(Date.valueOf(date));
 
     // Add the move to the database
     Repository.getRepository().addMove(move);
+    Repository.getRepository().addMove(move2);
 
     submissionAlert("Move submitted successfully");
 
@@ -890,6 +924,12 @@ public class MapEditorController {
 
     // Refresh the map
     refreshMap();
+    moveMap = new MoveMap(); // Create move map
+    this.locationCanvas.getChildren().add(moveMap.getPathGroup());
+    this.locationCanvas.getChildren().add(moveMap.getMoveInfo());
+    moveMap.getPathGroup().setVisible(false);
+    moveMap.getMoveInfo().setVisible(false);
+    if (toggleMoves.isSelected()) {handleToggleMoves();}
   }
 
   private void handleAddMove(Circle c1, Circle c2) {
@@ -1035,10 +1075,9 @@ public class MapEditorController {
     setMenuItemTooltip(btnMenuEdge, itemDeleteEdge, "Delete Edge", "Click an edge on the map to delete it");
 
     setMenuItemTooltip(btnMenuTools, itemAlign, "Align Nodes", "Click on the map where you would like to add a node");
-    setMenuItemTooltip(btnMenuTools, itemSetDefault, "Set default position", "Click a node on the map to set a default location");
+    setMenuItemTooltip(btnMenuTools, itemSetDefault, "Set Default Position", "Click a node on the map to set a default location");
 
     setMenuItemTooltip(btnMenuBackup, itemResetFromBackup, "Reset from Backup", "Click to reset the nodes/edges from the database");
-    setMenuItemTooltip(btnMenuBackup, itemSaveToBackup, "Save to Backup", "Click to save the current map configuration to the database");
 
     setMenuItemTooltip(btnMenuMove, itemAddMove, "Add Move", "Click a node you'd like to move, then a node where it should move to");
 
@@ -1073,11 +1112,13 @@ public class MapEditorController {
       mapEditorContext.getState().printStatus();
       determineState();
     });
-//    Tooltip alignNodesTooltip = new Tooltip("Click at least 3 nodes to align them, the click the Align button");
-//    alignNodesTooltip.install(itemAlign.getContent(), alignNodesTooltip);
     itemAlign.setOnAction(event -> {
       mapEditorContext.setState(alignNodesState);
       mapEditorContext.getState().printStatus();
+      determineState();
+    });
+    itemSetDefault.setOnAction(event -> {
+      selectingDefault = true;
       determineState();
     });
   }

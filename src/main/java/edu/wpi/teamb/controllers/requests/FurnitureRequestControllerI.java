@@ -55,6 +55,8 @@ public class FurnitureRequestControllerI implements IRequestController{
 
     @FXML private MFXFilterComboBox<String> cbLongName;
 
+    @FXML private MFXFilterComboBox<String> cbChangeStatus;
+
     private edu.wpi.teamb.entities.requests.EFurnitureRequest EFurnitureRequest;
 
     public FurnitureRequestControllerI() {
@@ -142,6 +144,9 @@ public class FurnitureRequestControllerI implements IRequestController{
         initComboBoxChangeListeners();
 
         txtFldNotes.setTooltip(new Tooltip("Enter any special instructions"));
+        ObservableList<String> statuses = FXCollections.observableArrayList("In-Progress", "Pending", "Completed");
+        Collections.sort(statuses);
+        cbChangeStatus.setItems(statuses);
     }
 
     private void initComboBoxChangeListeners() {
@@ -270,11 +275,43 @@ public class FurnitureRequestControllerI implements IRequestController{
     public void enterFurnitureRequestEditableMode(FullFurnitureRequest fullFurnitureRequest, InfoCardController currentInfoCardController) {
         //set the editable fields to the values of the request
         cbAvailableFurniture.getSelectionModel().selectItem(fullFurnitureRequest.getType());
-        cdAvailableModels.getSelectionModel().selectItem(fullFurnitureRequest.getModel());
+        //set the furniture types so that edit page does not crash
+        if (cbAvailableFurniture.getSelectionModel().getSelectedItem().equals("Chair")) {
+            cdAvailableModels.getItems().clear();
+            cdAvailableModels.getSelectionModel().clearSelection();
+            ObservableList<String> models = FXCollections.observableArrayList("Sofa", "Armchair", "Recliner", "Desk Chair", "Stool");
+            Collections.sort(models);
+            cdAvailableModels.getItems().addAll(models);
+            cdAvailableModels.setVisible(true);
+        } else if (cbAvailableFurniture.getSelectionModel().getSelectedItem().equals("Table")) {
+            cdAvailableModels.getItems().clear();
+            cdAvailableModels.getSelectionModel().clearSelection();
+            ObservableList<String> models = FXCollections.observableArrayList("Writing Desk", "Coffee Table", "Dining Table", "End Table", "Nightstand", "Computer Desk", "Dressing Table");
+            Collections.sort(models);
+            cdAvailableModels.getItems().addAll(models);
+            cdAvailableModels.setVisible(true);
+        } else if (cbAvailableFurniture.getSelectionModel().getSelectedItem().equals("Bed")) {
+            cdAvailableModels.getItems().clear();
+            cdAvailableModels.getSelectionModel().clearSelection();
+            ObservableList<String> models = FXCollections.observableArrayList("Sofa Bed", "Futon", "Air Mattress", "Baby Cot", "Medical Bed", "Camp Bed");
+            Collections.sort(models);
+            cdAvailableModels.getItems().addAll(models);
+            cdAvailableModels.setVisible(true);
+        }
+        //continue setting the editable fields to the values of the request
+        // set the item selected of the cdAvailableModels to the model of the request
+        //cdAvailableModels.getSelectionModel().selectItem(fullFurnitureRequest.getModel());
+        cdAvailableModels.setValue(fullFurnitureRequest.getModel());
+        cdAvailableModels.setText(fullFurnitureRequest.getModel());
+        cdAvailableModels.selectItem(fullFurnitureRequest.getModel());
+        System.out.println("The model is: " + fullFurnitureRequest.getModel());
+        System.out.println("The selection model is: " + cdAvailableModels.getSelectionModel().getSelectedItem());
         cdAssembly.getSelectionModel().selectItem(fullFurnitureRequest.getAssembly() ? "Yes" : "No");
         txtFldNotes.setText(fullFurnitureRequest.getNotes());
         cbEmployeesToAssign.getSelectionModel().selectItem(fullFurnitureRequest.getEmployee());
         cbLongName.getSelectionModel().selectItem(fullFurnitureRequest.getLocationName());
+        cbChangeStatus.setVisible(true);
+        cbChangeStatus.getSelectionModel().selectItem(fullFurnitureRequest.getRequestStatus());
 
         //set the submit button to say update
         btnSubmit.setText("Update");
@@ -289,6 +326,7 @@ public class FurnitureRequestControllerI implements IRequestController{
             fullFurnitureRequest.setNotes(txtFldNotes.getText());
             fullFurnitureRequest.setEmployee(cbEmployeesToAssign.getValue());
             fullFurnitureRequest.setLocationName(cbLongName.getValue());
+            fullFurnitureRequest.setRequestStatus(cbChangeStatus.getValue());
 
             //update the request
             EFurnitureRequest.updateFurnitureRequest(fullFurnitureRequest);

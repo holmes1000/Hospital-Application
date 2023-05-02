@@ -72,6 +72,11 @@ public class NodeDAOImpl implements IDAO {
     public void setAll () { nodes = getAllHelper(); }
 
     /**
+     * Sets all FullNode objects using the database
+     */
+    public void setAllFullNodes () { fullNodes = getFullNodesHelper(); }
+
+    /**
      * Adds a Node object to the both the database and local list
      *
      * @param n the Node object to be added

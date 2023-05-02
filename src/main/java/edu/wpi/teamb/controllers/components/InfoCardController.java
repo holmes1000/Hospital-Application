@@ -45,58 +45,81 @@ public class InfoCardController {
 
   //object of the entity class that contains all the methods to get the requests
   private EInfoCard EInfoCard;
+  private boolean inViewCurrentUserRequestsMode;
 
 
-  @FXML public void initialize() throws IOException {
+  @FXML
+  public void initialize() throws IOException {
     EInfoCard = new EInfoCard();
     //set margin between buttons in VBox
     buttonContainerVBox.setSpacing(10);
     initBtns();
+    inViewCurrentUserRequestsMode = false;
   }
 
-    private void initBtns() {
-      completeButton.setTooltip(new Tooltip("Click to mark request as Completed"));
-        completeButton.setOnMouseClicked(e -> {
-            if (!fullRequest.getRequestStatus().equals("Completed")) {
-                //update fullRequest status
-                fullRequest.setRequestStatus("Completed");
-                //update the request in the database
-                EInfoCard.updateRequestStatus(fullRequest);
-                //update the status label
-                statusLabel.setText("Completed");
-                //window popup with request completed message
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Request Marked as Completed!");
-                alert.setHeaderText(null);
-                alert.setContentText("Request with ID: " + fullRequest.getId() + " has been marked as completed!");
-                //set the icons of the alert to the same as the icons of the parent page
-                alert.initOwner((Stage) requestInfoAnchorPane.getScene().getWindow());
+  private void initBtns() {
+    //setting the tooltip for the complete button
+    completeButton.setTooltip(new Tooltip("Click to mark request as Completed"));
+    //setting the onClickListeners for the buttons
+    //setting the onClickListener for the complete button
+    completeButton.setOnMouseClicked(e -> {
+      if (!fullRequest.getRequestStatus().equals("Completed")) {
+        //update fullRequest status
+        fullRequest.setRequestStatus("Completed");
+        //update the request in the database
+        EInfoCard.updateRequestStatus(fullRequest);
+        //update the status label
+        statusLabel.setText("Completed");
+        //window popup with request completed message
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Request Marked as Completed!");
+        alert.setHeaderText(null);
+        alert.setContentText("Request with Id: " + fullRequest.getId() + " has been marked as completed!");
+        //set the icons of the alert to the same as the icons of the parent page
+        alert.initOwner((Stage) requestInfoAnchorPane.getScene().getWindow());
 
-                // set the alert icon to be the same as the parent window
-                Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-                for (int i = 0; i < ((Stage) requestInfoAnchorPane.getScene().getWindow()).getIcons().size(); i++) {
-                    alertStage.getIcons().add(((Stage) requestInfoAnchorPane.getScene().getWindow()).getIcons().get(i));
-                }
-                //show the alert
-                alert.showAndWait();
-            }
-        });
-        deleteButton.setTooltip(new Tooltip("Click to delete request"));
+        // set the alert icon to be the same as the parent window
+        Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+        for (int i = 0; i < ((Stage) requestInfoAnchorPane.getScene().getWindow()).getIcons().size(); i++) {
+          alertStage.getIcons().add(((Stage) requestInfoAnchorPane.getScene().getWindow()).getIcons().get(i));
+        }
+        //show the alert
+        alert.showAndWait();
+        if (inViewCurrentUserRequestsMode) {
+          //remove the card from the user's list of requests
+          requestInfoAnchorPane.setVisible(false);
+          ((VBox) requestInfoAnchorPane.getParent()).getChildren().remove(requestInfoAnchorPane);
+        }
+        //hide the complete button
+        completeButton.setVisible(false);
+      }
+      //hide the complete button
+      completeButton.setVisible(false);
+    });
+
+    //setting the tooltip for the delete button
+    deleteButton.setTooltip(new Tooltip("Click to delete request"));
+
+    //setting the onClickListeners for the delete button
     deleteButton.setOnMouseClicked(
-        event -> {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Delete Edge");
-            alert.setContentText("Are you sure you want to delete this request?");
-            Optional<ButtonType> action = alert.showAndWait();
-            if (action.get() == ButtonType.OK) {
+            event -> {
+              Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+              alert.setTitle("Delete Request");
+              alert.setContentText("Are you sure you want to delete this request?");
+              Optional<ButtonType> action = alert.showAndWait();
+              if (action.get() == ButtonType.OK) {
                 //remove the request from the list of requests
                 requestInfoAnchorPane.setVisible(false);
                 ((VBox) requestInfoAnchorPane.getParent()).getChildren().remove(requestInfoAnchorPane);
                 //delete the request from the database
                 EInfoCard.deleteRequest(fullRequest);
-            }
-        });
+              }
+            });
+
+    //setting the tooltip for the edit button
     editButton.setTooltip(new Tooltip("Click to edit request"));
+
+    //setting the onClickListeners for the edit button
     editButton.setOnMouseClicked(event -> {
         FXMLLoader loader = null;
         Scene editPageScene = null;
@@ -124,6 +147,10 @@ public class InfoCardController {
             case "Furniture":
                 //load the furniture request form
                 loader = new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/requests/FurnitureRequest.fxml"));
+                break;
+            case "Translation":
+                //load into the transation request form
+                loader = new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/requests/TranslationRequest.fxml"));
                 break;
             default:
                 break;
@@ -157,6 +184,9 @@ public class InfoCardController {
                 //send the current furniture request information to the edit page
                 ((FurnitureRequestControllerI) controller).enterFurnitureRequestEditableMode((FullFurnitureRequest) fullRequest, this);
                 break;
+            case "Translation":
+                //send the current translation request information to the edit page
+                ((TranslationRequestControllerI) controller).enterTranslationRequestEditableMode((FullTranslationRequest) fullRequest, this);
             default:
                 break;
         }
@@ -195,8 +225,8 @@ public class InfoCardController {
         }
         setTimeSubmittedLabel(timeFormatted);
     } else {
-        setDateSubmittedLabel("Unavailable");
-        setTimeSubmittedLabel("Unavailable");
+      setDateSubmittedLabel("Unavailable");
+      setTimeSubmittedLabel("Unavailable");
     }
     setLocationNameLabel(fullRequest.getLocationName());
     setEmployeeAssignedLabel(fullRequest.getEmployee());
@@ -204,6 +234,15 @@ public class InfoCardController {
     requestTypeIconImageView.setImage(fullRequest.setRequestTypeIconImageView());
     requestTypeLabel.setText(fullRequest.getRequestType());
     fullRequest.setRequestType();
+    //set the visibility of the complete button
+    adjustCompleteButtonVisibility();
+  }
+
+  private void adjustCompleteButtonVisibility() {
+    //if the request is complete, hide the complete button
+    if (fullRequest.getRequestStatus().equals("Completed")) {
+      completeButton.setVisible(false);
+    }
   }
 
     void getSpecialFields(String requestType) {
@@ -244,6 +283,12 @@ public class InfoCardController {
             ((FullOfficeRequest) fullRequest).setQuantity(officeRequest.getQuantity());
             ((FullOfficeRequest) fullRequest).setItem(officeRequest.getItem());
             ((FullOfficeRequest) fullRequest).setType(officeRequest.getType());
+            fullRequest.setNotes(fullRequest.getNotes());
+        } else if(Objects.equals(requestType, "Translation")) {
+            FullTranslationRequest translationRequest = (FullTranslationRequest) fullRequest;
+            //set the translation specific fields
+            ((FullTranslationRequest) fullRequest).setLanguageType(translationRequest.getLanguageType());
+            ((FullTranslationRequest) fullRequest).setMedical(translationRequest.getMedical());
             fullRequest.setNotes(fullRequest.getNotes());
         }
         setSpecificFieldsOnCard();
@@ -339,6 +384,15 @@ public class InfoCardController {
           subComponentContainer.getChildren().add(quantityLabel);
           subComponentContainer.getChildren().add(typeLabel);
           subComponentContainer.getChildren().add(specialInstructionsLabel);
+      } else if (Objects.equals(requestType, "Translation")){
+          //make the labels and set the styling
+          Label languageLabel = new Label("Language: " + ((FullTranslationRequest) fullRequest).getLanguage());
+          languageLabel.setStyle(commonCSStyles);
+          Label isDirectlyHealthcareRelatedLabel = new Label("Quantity: " + ((FullTranslationRequest) fullRequest).getMedical());
+          isDirectlyHealthcareRelatedLabel.setStyle(commonCSStyles);
+          //set the office specific fields
+          subComponentContainer.getChildren().add(languageLabel);
+          subComponentContainer.getChildren().add(isDirectlyHealthcareRelatedLabel);
       }
   }
 
@@ -397,7 +451,9 @@ public class InfoCardController {
   }
 
   public void enterViewCurrentUserRequestsMode() {
-      //hide the edit button
+    //set inViewCurrentUserRequestsMode to true
+    inViewCurrentUserRequestsMode = true;
+    //hide the edit button
     editButton.setVisible(false);
     //hide the delete button
     deleteButton.setVisible(false);

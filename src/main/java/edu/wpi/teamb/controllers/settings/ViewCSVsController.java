@@ -277,7 +277,7 @@ public class ViewCSVsController {
                 ArrayList<?> items = Repository.getRepository().getAllAlerts();
                 ArrayList<String> temp = new ArrayList<>();
                 for(int i = 0; i < items.size(); i ++){
-                   temp.add(items.get(i).toString());
+                    temp.add(items.get(i).toString());
                 }
                 itemsList = temp;
                 infoImport.setText("Import info: Requires the additional importation of requests");

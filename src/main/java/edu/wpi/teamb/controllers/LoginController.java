@@ -121,6 +121,16 @@ public class LoginController {
     Node okButton = dialog.getDialogPane().lookupButton(ButtonType.OK);
     okButton.disableProperty().bind(validationSupport.invalidProperty());
 
+    //set an onkeypressed event to the textfield to automatically close the dialog if the right code has been entered
+    dialog.getEditor().setOnKeyTyped(e -> {
+      if (loginE.verify2FAVerificationCode(Integer.parseInt(dialog.getEditor().getText()))) {
+        //condition where 2-factor authentication code matched
+        errorMsg.setText("Logged in Successful!");
+        Navigation.navigate(Screen.HOME);
+        dialog.close();
+      }
+    });
+
     // Show the dialog and wait for the result
     Optional<String> result = dialog.showAndWait();
     if (result.isPresent()) {
