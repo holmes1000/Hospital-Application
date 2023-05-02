@@ -136,7 +136,7 @@ public class ConferenceRequestControllerI implements IRequestController{
         longNames.addAll(Repository.getRepository().getLongNameByType("CONF"));
         Collections.sort(longNames);
         cbLongName.setItems(longNames);
-        cbLongName.setTooltip(new Tooltip("Select a location to direct the request to"));
+        cbLongName.setTooltip(new Tooltip("Select a location to reserve"));
 
         //Dropdown for employee selection
         ObservableList<String> employees =
@@ -145,7 +145,7 @@ public class ConferenceRequestControllerI implements IRequestController{
         Collections.sort(employees);
         employees.add(0, "unassigned");
         cbEmployeesToAssign.setItems(employees);
-        cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
+        cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee who is reserving the room"));
 
         ObservableList<String> duration =
                 FXCollections.observableArrayList();

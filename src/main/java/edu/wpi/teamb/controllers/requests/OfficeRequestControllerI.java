@@ -113,7 +113,7 @@ public class OfficeRequestControllerI implements IRequestController {
         longNames.addAll(Repository.getRepository().getPracticalLongNames());
         Collections.sort(longNames);
         cbLongName.setItems(longNames);
-        cbLongName.setTooltip(new Tooltip("Select a location"));
+        cbLongName.setTooltip(new Tooltip("Select a location to direct the request to"));
         //DROPDOWN INITIALIZATION
         ObservableList<String> employees = FXCollections.observableArrayList(EOfficeRequest.getUsernames());
         Collections.sort(employees);
