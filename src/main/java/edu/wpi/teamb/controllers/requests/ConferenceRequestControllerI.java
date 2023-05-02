@@ -119,7 +119,6 @@ public class ConferenceRequestControllerI implements IRequestController{
         eventNameTextField.textProperty().addListener(changeListener);
         bookingReasonTextField.textProperty().addListener(changeListener);
         cbDuration.textProperty().addListener(changeListener);
-        helpIcon.setOnMouseClicked(e -> handleHelp());
         dateToReserve.valueProperty().addListener(new ChangeListener<LocalDate>() {
             @Override
             public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) {
@@ -258,20 +257,6 @@ public class ConferenceRequestControllerI implements IRequestController{
         cbLongName.clear();
     }
 
-    @Override
-    public void handleHelp() {
-        final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/ConferenceRequestHelpPopOver.fxml"));
-        PopOver popOver = new PopOver();
-        popOver.setDetachable(true);
-        popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_RIGHT);
-        popOver.setArrowSize(0.0);
-            try {
-            popOver.setContentNode(popupLoader.load());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        popOver.show(helpIcon);
-    }
 
     @Override
     public boolean nullInputs() {
@@ -303,6 +288,7 @@ public class ConferenceRequestControllerI implements IRequestController{
     public void enterConferenceRequestEditableMode(FullConferenceRequest fullConferenceRequest, InfoCardController currentInfoCardController) {
         //set the editable fields to the values of the request
         cbEmployeesToAssign.getSelectionModel().selectItem(fullConferenceRequest.getEmployee());
+        String oldEmployee = fullConferenceRequest.getEmployee();
         cbLongName.getSelectionModel().selectItem(fullConferenceRequest.getLocationName());
         tfNotes.setText(fullConferenceRequest.getNotes());
         eventNameTextField.setText(fullConferenceRequest.getEventName());
@@ -366,6 +352,12 @@ public class ConferenceRequestControllerI implements IRequestController{
             fullConferenceRequest.setDateRequested(Timestamp.valueOf(timeStamp));
             //update the database
             EConferenceRequest.updateConferenceRequest(fullConferenceRequest);
+
+            //Alert new user?
+            if(!oldEmployee.equals(cbEmployeesToAssign.getValue())){
+                alertEmployee(cbEmployeesToAssign.getValue());
+            }
+
             //close the window
             Stage stage = (Stage) btnSubmit.getScene().getWindow();
             stage.close();

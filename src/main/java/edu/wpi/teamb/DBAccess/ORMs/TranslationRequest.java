@@ -23,7 +23,7 @@ public class TranslationRequest {
         this(
                 rs.getInt("id"),
                 rs.getString("language"),
-                rs.getString("medical"));
+                rs.getString("medicalimportance"));
     }
 
     public int getId() {

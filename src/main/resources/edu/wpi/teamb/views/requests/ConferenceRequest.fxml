@@ -7,7 +7,6 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -34,14 +33,6 @@
                         <Font name="System Bold" size="14.0" />
                     </font>
                 </Text>
-                <ImageView fx:id="helpIcon" fitHeight="47.0" fitWidth="59.0" layoutX="1028.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true">
-                    <image>
-                        <Image url="@../../img/helpicon.png" />
-                    </image>
-                    <effect>
-                        <ColorAdjust brightness="1.0" />
-                    </effect>
-                </ImageView>
                 <MFXTextField fx:id="eventNameTextField" borderGap="0.0" floatingText="Specify an Event Name" graphicTextGap="0.0" layoutX="20.0" layoutY="295.0" maxHeight="50.0" measureUnitGap="0.0" prefHeight="50.0" prefWidth="450.0" textLimit="50" />
                 <MFXTextField fx:id="bookingReasonTextField" floatingText="Specify a Reason for Booking" layoutX="20.0" layoutY="355.0" maxHeight="45.0" prefHeight="45.0" prefWidth="450.0" textLimit="150" />
             <MFXFilterComboBox fx:id="cbEmployeesToAssign" floatingText="Specify Employee to Assign to Request" layoutX="20.0" layoutY="240.0" prefHeight="45.0" prefWidth="450.0">

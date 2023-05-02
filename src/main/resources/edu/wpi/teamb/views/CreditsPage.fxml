@@ -15,17 +15,14 @@
 <!--</AnchorPane>-->
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #7089a2;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.CreditsPageController">
-<?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import javafx.scene.shape.Rectangle?>
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #5f7ca4;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.CreditsPageController">
     <children>
-        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#012d5a" height="50.0" layoutX="-162.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1453.0" />
-        <Text fill="WHITE" layoutX="-21.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Credits" textAlignment="CENTER" wrappingWidth="1323.95654296875">
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#012d5a" height="50.0" layoutX="-162.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1444.0" />
+        <Text fill="WHITE" layoutX="168.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Credits" textAlignment="CENTER" wrappingWidth="942.103515625">
             <font>
                 <Font name="System Bold" size="36.0" />
             </font>
         </Text>
-        <VBox layoutX="27.0" layoutY="96.0" prefHeight="138.0" prefWidth="125.0">
+        <VBox layoutX="173.0" layoutY="82.0" prefHeight="138.0" prefWidth="125.0">
             <children>
                 <Text fill="#ffffff" strokeType="OUTSIDE" strokeWidth="0.0" text="Images" textAlignment="CENTER" wrappingWidth="119.0">
                     <font>
@@ -49,7 +46,7 @@
                 </VBox>
             </children>
         </VBox>
-        <VBox layoutX="26.0" layoutY="319.0" prefHeight="285.0" prefWidth="125.0">
+        <VBox layoutX="26.0" layoutY="82.0" prefHeight="285.0" prefWidth="125.0">
             <children>
                 <Text fill="#ffffff" strokeType="OUTSIDE" strokeWidth="0.0" text="Icons" textAlignment="CENTER" wrappingWidth="127.083984375">
                     <font>
@@ -73,13 +70,24 @@
                         <Label fx:id="sofa" alignment="CENTER" prefHeight="17.0" prefWidth="130.0" text="Sofa" textFill="#ffffff" />
                         <Label fx:id="street" alignment="CENTER" prefHeight="17.0" prefWidth="131.0" text="Street Sign" textFill="#ffffff" />
                         <Label fx:id="workspace" alignment="CENTER" prefHeight="17.0" prefWidth="132.0" text="Workspace" textFill="#ffffff" />
+                        <Label fx:id="conferenceRoom" alignment="CENTER" prefHeight="17.0" prefWidth="132.0" text="Conference Room" textFill="#ffffff" />
+                        <Label fx:id="flowerVase" alignment="CENTER" prefHeight="17.0" prefWidth="132.0" text="Flower Vase" textFill="#ffffff" />
+                        <Label fx:id="furnitureRequest" alignment="CENTER" prefHeight="17.0" prefWidth="132.0" text="Furniture Request" textFill="#ffffff" />
+                        <Label fx:id="mealRequest" alignment="CENTER" prefHeight="17.0" prefWidth="132.0" text="Meal Request" textFill="#ffffff" />
+                        <Label fx:id="meeting" alignment="CENTER" prefHeight="17.0" prefWidth="132.0" text="Meeting Room" textFill="#ffffff" />
+                        <Label fx:id="officeSupplies" alignment="CENTER" prefHeight="17.0" prefWidth="132.0" text="Office Supplies" textFill="#ffffff" />
+                        <Label fx:id="edge" alignment="CENTER" prefHeight="17.0" prefWidth="132.0" text="Edge" textFill="#ffffff" />
+                        <Label fx:id="move" alignment="CENTER" prefHeight="17.0" prefWidth="132.0" text="Move" textFill="#ffffff" />
+                        <Label fx:id="node" alignment="CENTER" prefHeight="17.0" prefWidth="132.0" text="Node" textFill="#ffffff" />
+                        <Label fx:id="reset" alignment="CENTER" prefHeight="17.0" prefWidth="132.0" text="Reset" textFill="#ffffff" />
+                        <Label fx:id="tools" alignment="CENTER" prefHeight="17.0" prefWidth="132.0" text="Tools" textFill="#ffffff" />
+
                     </children>
                 </VBox>
             </children>
         </VBox>
-        <Pane layoutX="218.0" layoutY="14.0" prefHeight="364.0" prefWidth="368.0" />
         <MFXButton fx:id="btnClose" layoutX="1163.0" layoutY="646.0" mnemonicParsing="false" text="Close" />
-        <ImageView fx:id="popup" fitHeight="617.0" fitWidth="828.0" layoutX="266.0" layoutY="55.0" pickOnBounds="true" preserveRatio="true" />
+        <ImageView fx:id="popup" fitHeight="617.0" fitWidth="726.0" layoutX="320.0" layoutY="55.0" pickOnBounds="true" preserveRatio="true" />
         <Text fill="#ffffff" layoutY="655.0" strokeType="OUTSIDE" strokeWidth="0.0" text="All Icon Images source from: https://www.flaticon.com/" textAlignment="CENTER" wrappingWidth="179.279296875">
             <font>
                 <Font name="System Bold" size="12.0" />
