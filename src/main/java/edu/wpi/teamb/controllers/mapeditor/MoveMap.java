@@ -130,8 +130,6 @@ public class MoveMap {
                 Line line = new Line(originalX, originalY, newX, newY);
                 line.setStrokeWidth(4);
                 animateLine(line);
-                Circle c = new Circle(originalX, originalY, 5, RED);
-                Circle finalC = c;
                 line.setOnMouseEntered(event -> {
                     nameToolTip = new Tooltip();
                     nameToolTip.setText(display_move_info(move));
@@ -139,16 +137,11 @@ public class MoveMap {
                     nameToolTip.hideDelayProperty().set(Duration.seconds(.5));
                     Tooltip.install(line, nameToolTip);
                         });
-                pathGroup.getChildren().add(c);
                 Boolean exists = false;
                 for (Node child : pathGroup.getChildren()) {
                     if (child.contains(newX,newY)) {
                         exists = true;
                     }
-                }
-                if (!exists) {
-                    c = new Circle(newX, newY, 5, PURPLE);
-                    pathGroup.getChildren().add(c);
                 }
                 pathGroup.getChildren().add(line);
             }
