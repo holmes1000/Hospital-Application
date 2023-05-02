@@ -859,6 +859,7 @@ public class MapEditorController {
   }
 
   private void handleFindPath() {
+    DefaultStart.getInstance().setDefault_start(""); //Whatever you want the start to be
     DefaultStart.getInstance().setDefault_end(""); //Whatever you want the end to be
     Navigation.navigate(Screen.PATHFINDER);
   }
