@@ -546,8 +546,9 @@ public class MapEditorController {
    * Handles the reset from backup button click
    */
   void handleResetFromBackupBtn() {
-    Repository.getRepository().resetNodesFromBackup();
+    //Repository.getRepository().resetNodesFromBackup();
     //nodeList = Repository.getRepository().getAllNodes();
+    Repository.getRepository().resetMap();
     fullNodesList = Repository.getRepository().getAllFullNodes();
     submissionAlert("Reset from backup successful");
     // Refresh the map

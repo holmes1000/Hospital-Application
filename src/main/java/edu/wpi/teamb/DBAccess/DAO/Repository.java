@@ -867,12 +867,6 @@ public class Repository {
         dbConnection.forceClose();
     }
 
-    public void updateBlock(Object object) {
-        signDAO.updateBlock(object);
-        dbConnection.closeDBconnection();
-        dbConnection.forceClose();
-    }
-
     public void insertSign(Sign s) {
         signDAO.insertSign(s);
         dbConnection.closeDBconnection();
@@ -893,12 +887,6 @@ public class Repository {
 
     public void updateSign(Sign s) {
         signDAO.updateSign(s);
-        dbConnection.closeDBconnection();
-        dbConnection.forceClose();
-    }
-
-    public void updateSignageGroup(Sign s) {
-        signDAO.updateSignageGroup(s);
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
     }
@@ -1927,5 +1915,9 @@ public class Repository {
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
         return edges;
+    }
+
+    public void resetMap() {
+        DButils.resetMap();
     }
 }
