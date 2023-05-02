@@ -9,7 +9,10 @@ import edu.wpi.teamb.DBAccess.Full.FullNode;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 import edu.wpi.teamb.DBAccess.ORMs.Sign;
 import edu.wpi.teamb.controllers.NavDrawerController;
+import edu.wpi.teamb.entities.DefaultStart;
 import edu.wpi.teamb.entities.ESignage;
+import edu.wpi.teamb.navigation.Navigation;
+import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import javafx.application.Platform;
@@ -48,6 +51,7 @@ public class SignageController {
   @FXML private MFXButton btnAddSignageForm;
   @FXML private MFXButton btnEditSigns;
   @FXML private MFXButton btnRemoveSign;
+  @FXML private  MFXButton btnGetDir;
   @FXML private VBox signVbox;
   public GesturePane pane = new GesturePane();
     Group nodeGroup = new Group();
@@ -124,6 +128,7 @@ public class SignageController {
         btnEditSigns.setOnMouseClicked(e -> handleEditSignageForm());
         btnRemoveSign.setTooltip(new Tooltip("Click to remove a sign"));
         btnRemoveSign.setOnMouseClicked(e -> handleRemoveSigns());
+        btnGetDir.setOnMouseClicked(e -> handleGetDirections());
     }
 
     public void clickCbLocation() {
@@ -384,5 +389,11 @@ public class SignageController {
         ObservableList<String> signageGroupsObservableList = FXCollections.observableArrayList(signageGroupsList);
         cbLocation.setItems(signageGroupsObservableList);
     }
+
+    public void handleGetDirections(){
+        DefaultStart.getInstance().setDefault_start(centerNode.getLongName());
+        Navigation.navigate(Screen.PATHFINDER);
+    }
+
 
 }
