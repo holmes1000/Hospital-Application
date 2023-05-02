@@ -3,6 +3,7 @@ package edu.wpi.teamb.controllers.requests;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
+import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.controllers.NavDrawerController;
 import edu.wpi.teamb.entities.ELogin;
 import edu.wpi.teamb.navigation.Navigation;
@@ -20,6 +21,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import org.controlsfx.control.PopOver;
 
 import java.awt.*;
 import java.io.IOException;
@@ -39,11 +41,14 @@ public class CreateNewRequestController {
     @FXML private ImageView icon3;
     @FXML private ImageView icon4;
     @FXML private ImageView icon5;
+    @FXML private ImageView icon6;
     @FXML private VBox back1;
     @FXML private VBox back2;
     @FXML private VBox back3;
     @FXML private VBox back4;
     @FXML private VBox back5;
+    @FXML private VBox back6;
+    @FXML private ImageView helpIcon;
 
     ELogin.PermissionLevel adminTest;
     private NavDrawerController navDrawerController;
@@ -68,77 +73,107 @@ public class CreateNewRequestController {
         toggleBtns("icon2");
         navPane.setMouseTransparent(true);
         initializeNavGates();
+        helpIcon.setOnMouseClicked(e -> {handleHelp();});
     }
 
     public void initIcons() {
+//        icon1.setOnMouseClicked(event->{
+//            toggleBtns("icon1");
+//            loadPage1();}
+//        );
+        Tooltip tooltip1 = new Tooltip("Meal Request");
+        Tooltip.install(icon1, tooltip1);
         icon1.setOnMouseClicked(event->{
             toggleBtns("icon1");
             loadPage1();}
         );
-        Tooltip tooltip1 = new Tooltip("Meal Request");
-        Tooltip.install(icon1, tooltip1);
+        Tooltip tooltip2 = new Tooltip("Conference Request");
+        Tooltip.install(icon2, tooltip2);
         icon2.setOnMouseClicked(event->{
             toggleBtns("icon2");
             loadPage2();}
         );
-        Tooltip tooltip2 = new Tooltip("Conference Request");
-        Tooltip.install(icon2, tooltip2);
+        Tooltip tooltip3 = new Tooltip("Flower Request");
+        Tooltip.install(icon3, tooltip3);
         icon3.setOnMouseClicked(event->{
             toggleBtns("icon3");
             loadPage3();}
         );
-        Tooltip tooltip3 = new Tooltip("Flower Request");
-        Tooltip.install(icon3, tooltip3);
-        icon4.setOnMouseClicked(event->{
-            toggleBtns("icon4");
-            loadPage6();}
-        );
         Tooltip tooltip4 = new Tooltip("Furniture Request");
         Tooltip.install(icon4, tooltip4);
-        icon5.setOnMouseClicked(event->{
-            toggleBtns("icon5");
+        icon4.setOnMouseClicked(event->{
+            toggleBtns("icon4");
             loadPage5();
         });
         Tooltip tooltip5 = new Tooltip("Office Supplies Request");
         Tooltip.install(icon5, tooltip5);
+        icon5.setOnMouseClicked(event->{
+            toggleBtns("icon5");
+            loadPage6();
+        });
+        Tooltip tooltip6 = new Tooltip("Translation Request");
+        Tooltip.install(icon6, tooltip6);
+        icon6.setOnMouseClicked(event->{
+            toggleBtns("icon6");
+            loadPage7();
+        });
     }
 
     public void toggleBtns(String btn){
         switch(btn){
+            // Meal Request
             case "icon1" -> {
                 back1.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
                 back2.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
                 back3.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
                 back4.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
                 back5.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back6.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
             }
+            // Conference request
             case "icon2" -> {
                 back1.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
                 back2.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
                 back3.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
                 back4.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
                 back5.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back6.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
             }
+            // Flower request
             case "icon3" -> {
                 back1.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
                 back2.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
                 back3.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
                 back4.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
                 back5.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back6.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
             }
+            // Furniture request
             case "icon4" -> {
                 back1.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
                 back2.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
                 back3.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
                 back4.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
                 back5.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back6.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
                 }
+            // Office Supplies request
             case "icon5" -> {
                 back1.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
                 back2.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
                 back3.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
                 back4.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
                 back5.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
+                back6.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+            }
+            // Translation request
+            case "icon6" -> {
+                back1.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back2.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back3.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back4.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back5.setStyle("-fx-background-radius: 10; -fx-background-color: #5f7ca4");
+                back6.setStyle("-fx-background-radius: 10; -fx-background-color: WHITE");
             }
         }
     }
@@ -179,7 +214,6 @@ public class CreateNewRequestController {
 
     public void loadPage3() {
         requestVbox.getChildren().clear();
-//        toggleBtns("icon3");
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/edu/wpi/teamb/views/requests/FlowerRequests.fxml"));
@@ -191,6 +225,7 @@ public class CreateNewRequestController {
 
     }
 
+    // MOVE
     public void loadPage4() {
         requestVbox.getChildren().clear();
         try {
@@ -205,7 +240,6 @@ public class CreateNewRequestController {
 
     public void loadPage5() {
         requestVbox.getChildren().clear();
-//        toggleBtns("icon5");
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/edu/wpi/teamb/views/requests/OfficeRequest.fxml"));
@@ -218,7 +252,6 @@ public class CreateNewRequestController {
 
     public void loadPage6() {
         requestVbox.getChildren().clear();
-//        toggleBtns("icon4");
         try {
             FXMLLoader loader =
                     new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/requests/FurnitureRequest.fxml"));
@@ -228,10 +261,22 @@ public class CreateNewRequestController {
             e.printStackTrace();
         }
     }
+
+    public void loadPage7() {
+        requestVbox.getChildren().clear();
+        try {
+            FXMLLoader loader =
+                    new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/requests/TranslationRequest.fxml"));
+            Pane pane = loader.load();
+            requestVbox.getChildren().addAll(pane);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public void initializeFields() {
 
         ObservableList<String> locations = FXCollections.observableArrayList("Meal Delivery", "Conference Room",
-                "Flower Delivery", "Furniture Delivery", "Office Supplies");
+                "Flower Delivery", "Furniture Delivery", "Office Supplies", "Translation Request");
         // TODO: only add thise if the user is an admin
         if (adminTest == ELogin.PermissionLevel.ADMIN) {
             ObservableList<String> AdminOnly = FXCollections.observableArrayList("Move");
@@ -242,6 +287,19 @@ public class CreateNewRequestController {
         navLoaded = false;
         activateNav();
         deactivateNav();
+    }
+
+    public void handleHelp() {
+        final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/RequestHelpPopover.fxml"));
+        PopOver popOver = new PopOver();
+        popOver.setArrowLocation(PopOver.ArrowLocation.TOP_RIGHT);
+        popOver.setArrowSize(0.0);
+        try {
+            popOver.setContentNode(popupLoader.load());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        popOver.show(helpIcon);
     }
 
     /**

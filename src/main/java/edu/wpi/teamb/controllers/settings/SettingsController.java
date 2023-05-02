@@ -46,6 +46,7 @@ public class SettingsController {
             btnEditUsers.setVisible(false);
             btnEditAlerts.setVisible(false);
             btnChangeServer.setVisible(false);
+            btnViewCSVs.setVisible(false);
         }
     }
 

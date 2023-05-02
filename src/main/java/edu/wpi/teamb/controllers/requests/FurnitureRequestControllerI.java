@@ -94,7 +94,6 @@ public class FurnitureRequestControllerI implements IRequestController{
         btnSubmit.setOnAction(e -> handleSubmit());
         btnReset.setTooltip(new Tooltip("Click to reset fields"));
         btnReset.setOnAction(e -> handleReset());
-        helpIcon.setOnMouseClicked(e -> handleHelp());
         btnReset.setDisable(true);
         ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
             btnReset.setDisable(false);
@@ -234,19 +233,6 @@ public class FurnitureRequestControllerI implements IRequestController{
         cbLongName.clear();
     }
 
-    @Override
-    public void handleHelp() {
-        final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/FurnitureRequestHelpPopOver.fxml"));
-        PopOver popOver = new PopOver();
-        popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_RIGHT);
-        popOver.setArrowSize(0.0);
-        try {
-            popOver.setContentNode(popupLoader.load());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        popOver.show(helpIcon);
-    }
 
     public boolean stringToBoolean(String assembly) {
         if (assembly.equals("Yes")) {
@@ -284,7 +270,37 @@ public class FurnitureRequestControllerI implements IRequestController{
     public void enterFurnitureRequestEditableMode(FullFurnitureRequest fullFurnitureRequest, InfoCardController currentInfoCardController) {
         //set the editable fields to the values of the request
         cbAvailableFurniture.getSelectionModel().selectItem(fullFurnitureRequest.getType());
-        cdAvailableModels.getSelectionModel().selectItem(fullFurnitureRequest.getModel());
+        //set the furniture types so that edit page does not crash
+        if (cbAvailableFurniture.getSelectionModel().getSelectedItem().equals("Chair")) {
+            cdAvailableModels.getItems().clear();
+            cdAvailableModels.getSelectionModel().clearSelection();
+            ObservableList<String> models = FXCollections.observableArrayList("Sofa", "Armchair", "Recliner", "Desk Chair", "Stool");
+            Collections.sort(models);
+            cdAvailableModels.getItems().addAll(models);
+            cdAvailableModels.setVisible(true);
+        } else if (cbAvailableFurniture.getSelectionModel().getSelectedItem().equals("Table")) {
+            cdAvailableModels.getItems().clear();
+            cdAvailableModels.getSelectionModel().clearSelection();
+            ObservableList<String> models = FXCollections.observableArrayList("Writing Desk", "Coffee Table", "Dining Table", "End Table", "Nightstand", "Computer Desk", "Dressing Table");
+            Collections.sort(models);
+            cdAvailableModels.getItems().addAll(models);
+            cdAvailableModels.setVisible(true);
+        } else if (cbAvailableFurniture.getSelectionModel().getSelectedItem().equals("Bed")) {
+            cdAvailableModels.getItems().clear();
+            cdAvailableModels.getSelectionModel().clearSelection();
+            ObservableList<String> models = FXCollections.observableArrayList("Sofa Bed", "Futon", "Air Mattress", "Baby Cot", "Medical Bed", "Camp Bed");
+            Collections.sort(models);
+            cdAvailableModels.getItems().addAll(models);
+            cdAvailableModels.setVisible(true);
+        }
+        //continue setting the editable fields to the values of the request
+        // set the item selected of the cdAvailableModels to the model of the request
+        //cdAvailableModels.getSelectionModel().selectItem(fullFurnitureRequest.getModel());
+        cdAvailableModels.setValue(fullFurnitureRequest.getModel());
+        cdAvailableModels.setText(fullFurnitureRequest.getModel());
+        cdAvailableModels.selectItem(fullFurnitureRequest.getModel());
+        System.out.println("The model is: " + fullFurnitureRequest.getModel());
+        System.out.println("The selection model is: " + cdAvailableModels.getSelectionModel().getSelectedItem());
         cdAssembly.getSelectionModel().selectItem(fullFurnitureRequest.getAssembly() ? "Yes" : "No");
         txtFldNotes.setText(fullFurnitureRequest.getNotes());
         cbEmployeesToAssign.getSelectionModel().selectItem(fullFurnitureRequest.getEmployee());

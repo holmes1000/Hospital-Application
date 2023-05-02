@@ -81,6 +81,10 @@ public class CurrentUserRequestsController {
                     if(fullFurnitureRequest == null){continue;}
                     Objects.requireNonNull(requestInfoCardController).sendRequest(fullFurnitureRequest);
                     break;
+                case "Translation":
+                    IFull fullTranslationRequest = homeE.getTranslationRequest(currentUserRequests.get(i).getId());
+                    if(fullTranslationRequest == null){continue;}
+                    Objects.requireNonNull(requestInfoCardController).sendRequest(fullTranslationRequest);
                 default:
                     //continue statement to skip any unrecognized types of request to avoid occurrence of empty cards
                     continue;
