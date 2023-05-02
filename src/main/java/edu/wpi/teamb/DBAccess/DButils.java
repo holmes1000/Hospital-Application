@@ -217,9 +217,15 @@ public class DButils {
     public static String strArray2InsertFormat(String[] arr) {
         String formattedStr = "'";
         for (int i = 0; i < arr.length; i++) {
+            if (arr[i].equals("null")) {
+                formattedStr += "null";
+                formattedStr += ",'";
+                continue;
+            }
             formattedStr += arr[i];
             if (i != arr.length - 1) {
-                formattedStr += "','";
+                if (arr[i+1].equals("null")) formattedStr += "',";
+                else formattedStr += "','";
             } else {
                 formattedStr += "'";
             }
@@ -280,6 +286,35 @@ public class DButils {
             e.printStackTrace();
         }
         return IDs;
+    }
+
+    public static ResultSet getTable(String table) {
+        ResultSet rs = null;
+        try {
+            Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
+            String query = "SELECT * FROM teamb." + table;
+            rs = stmt.executeQuery(query);
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'DButils.getTable': " + e.getMessage());
+        }
+        return rs;
+    }
+
+    public static void resetMap() {
+        try {
+            Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
+            String query = "DELETE FROM edges;\n" +
+                    "DELETE FROM moves;\n" +
+                    "DELETE FROM locationnames;\n" +
+                    "DELETE FROM nodes;\n" +
+                    "INSERT INTO edges (startnode, endnode) SELECT startnode, endnode FROM edgebackup;\n" +
+                    "INSERT INTO nodes (nodeid, xcoord, ycoord, floor, building) SELECT nodeid, xcoord, ycoord, floor, building FROM nodebackup;\n" +
+                    "INSERT INTO locationnames (longname, shortname, nodetype) SELECT longname, shortname, nodetype FROM locationnamebackup;\n" +
+                    "INSERT INTO moves (nodeid, longname, date) SELECT nodeid, longname, date FROM movebackup;";
+            stmt.executeUpdate(query);
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'DButils.resetMap': " + e.getMessage());
+        }
     }
 
     //Put master CSV export function here
