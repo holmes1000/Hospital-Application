@@ -840,7 +840,15 @@ public class MapEditorController {
 
     // Init new buttons
     btnAlignNodes.setOnMouseClicked(event -> alignNodes());
-    btnSubmitMove.setOnMouseClicked(event -> handleSubmitMove());
+    btnSubmitMove.setOnMouseClicked(event -> {
+      try {
+        handleSubmitMove();
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    });
     btnFindPath.setOnMouseClicked(event -> handleFindPath());
     btnPathfinder.setOnMouseClicked(event -> Navigation.navigate(Screen.PATHFINDER));
   }
@@ -864,7 +872,7 @@ public class MapEditorController {
     Navigation.navigate(Screen.PATHFINDER);
   }
 
-  private void handleSubmitMove() {
+  private void handleSubmitMove() throws SQLException, IOException {
     // Get the date from the date picker
     LocalDate date = dateToMove.getValue();
 
@@ -890,6 +898,9 @@ public class MapEditorController {
 
     // Refresh the map
     refreshMap();
+    initialize();
+    Platform.runLater(() -> toggleMoves.setSelected(true));
+    Platform.runLater(() -> handleToggleMoves());
   }
 
   private void handleAddMove(Circle c1, Circle c2) {
