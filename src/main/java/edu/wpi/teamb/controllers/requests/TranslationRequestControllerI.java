@@ -3,6 +3,7 @@ package edu.wpi.teamb.controllers.requests;
 import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.Full.FullTranslationRequest;
+import edu.wpi.teamb.DBAccess.ORMs.Alert;
 import edu.wpi.teamb.controllers.components.InfoCardController;
 import edu.wpi.teamb.entities.requests.IRequest;
 import edu.wpi.teamb.navigation.Navigation;
@@ -23,6 +24,7 @@ import org.controlsfx.control.PopOver;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Collections;
 
 
@@ -37,6 +39,7 @@ public class TranslationRequestControllerI implements IRequestController {
     @FXML private MFXTextField txtFldMessage;
     @FXML private MFXFilterComboBox<String> cbEmployeesToAssign;
     @FXML private MFXFilterComboBox<String> cbLongName;
+    @FXML private MFXFilterComboBox<String> cbChangeStatus;
 
     private final edu.wpi.teamb.entities.requests.ETranslationRequest ETranslationRequest; // ETranslationRequest object to be submitted
 
@@ -109,6 +112,12 @@ public class TranslationRequestControllerI implements IRequestController {
         employees.add(0, "unassigned");
         cbEmployeesToAssign.setItems(employees);
         cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
+
+        //Set list of statuses
+        ObservableList<String> statuses =
+                FXCollections.observableArrayList("Pending", "In-Progress", "Completed");
+        Collections.sort(statuses);
+        cbChangeStatus.setItems(statuses);
     }
 
     @Override
@@ -136,11 +145,26 @@ public class TranslationRequestControllerI implements IRequestController {
                         ETranslationRequest.getLanguageType(),
                         ETranslationRequest.getMedicalInNature(),
                 };
+                alertEmployee(ETranslationRequest.getEmployee());
                 ETranslationRequest.submitRequest(output);
                 handleReset();
-                Navigation.navigate(Screen.CREATE_NEW_REQUEST);
             }
             submissionAlert();
+        }
+    }
+
+    /**
+     * Grabs the current employee that is referred to in the newly made request and alerts them of this
+     * @param employee
+     */
+    public void alertEmployee(String employee){
+        if(!employee.equals("unassigned")) {
+            Alert newAlert = new Alert();
+            newAlert.setTitle("New Task Assigned");
+            newAlert.setDescription("You have been assigned a new furniture request to complete.");
+            newAlert.setEmployee(employee);
+            newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
+            Repository.getRepository().addAlert(newAlert);
         }
     }
 
@@ -181,10 +205,13 @@ public class TranslationRequestControllerI implements IRequestController {
     public void enterTranslationRequestEditableMode(FullTranslationRequest fullTranslationRequest, InfoCardController currentInfoCardController) {
         //set the editable fields to the values of the request
         cbLanguageSelect.getSelectionModel().selectItem(fullTranslationRequest.getLanguageType());
+        String oldEmployee = fullTranslationRequest.getEmployee();
         cdMedicalInfo.getSelectionModel().selectItem(fullTranslationRequest.getMedical());
         txtFldNotes.setText(fullTranslationRequest.getNotes());
         cbEmployeesToAssign.getSelectionModel().selectItem(fullTranslationRequest.getEmployee());
         cbLongName.getSelectionModel().selectItem(fullTranslationRequest.getLocationName());
+        cbChangeStatus.setVisible(true);
+        cbChangeStatus.getSelectionModel().selectItem(fullTranslationRequest.getRequestStatus());
 
         //set the submit button to say update
         btnSubmit.setText("Update");
@@ -198,11 +225,16 @@ public class TranslationRequestControllerI implements IRequestController {
             fullTranslationRequest.setNotes(txtFldNotes.getText());
             fullTranslationRequest.setEmployee(cbEmployeesToAssign.getValue());
             fullTranslationRequest.setLocationName(cbLongName.getValue());
+            fullTranslationRequest.setRequestStatus(cbChangeStatus.getValue());
 
             //update the request
             ETranslationRequest.updateTranslationRequest(fullTranslationRequest);
             //send the fullConferenceRequest to the info card controller
             currentInfoCardController.sendRequest(fullTranslationRequest);
+            //Alert new user?
+            if(!oldEmployee.equals(cbEmployeesToAssign.getValue())){
+                alertEmployee(cbEmployeesToAssign.getValue());
+            }
             //close the stage
             ((Stage) btnSubmit.getScene().getWindow()).close();
         });

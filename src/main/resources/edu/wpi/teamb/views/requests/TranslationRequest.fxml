@@ -36,12 +36,12 @@
                         <Font name="System Bold" size="18.0" />
                     </font>
                 </MFXButton>
-                <MFXFilterComboBox fx:id="cbLanguageSelect" floatingText="Language (idioma)" layoutX="20.0" layoutY="80.0" prefHeight="45.0" prefWidth="450.0">
+                <MFXFilterComboBox fx:id="cbLanguageSelect" floatingText="Language" layoutX="20.0" layoutY="80.0" prefHeight="45.0" prefWidth="450.0">
                     <cursor>
                         <Cursor fx:constant="DEFAULT" />
                     </cursor>
                 </MFXFilterComboBox>
-                <MFXFilterComboBox fx:id="cdMedicalInfo" floatingText="Directly Healthcare Related (relacionado con la salud)" layoutX="20.0" layoutY="132.0" prefHeight="45.0" prefWidth="450.0">
+                <MFXFilterComboBox fx:id="cdMedicalInfo" floatingText="Directly Healthcare Related" layoutX="20.0" layoutY="132.0" prefHeight="45.0" prefWidth="450.0">
                     <cursor>
                         <Cursor fx:constant="DEFAULT" />
                     </cursor>
@@ -59,6 +59,7 @@
                </image>
             </ImageView>
             <Separator layoutX="20.0" layoutY="64.0" prefWidth="450.0" />
+            <MFXFilterComboBox fx:id="cbChangeStatus" floatingText="Request Status" layoutX="762.0" layoutY="19.0" prefHeight="40.0" prefWidth="300.0" visible="false" />
             </children>
         </AnchorPane>
     </left>

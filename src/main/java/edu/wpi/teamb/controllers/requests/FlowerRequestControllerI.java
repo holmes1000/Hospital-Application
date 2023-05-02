@@ -44,6 +44,7 @@ public class FlowerRequestControllerI implements IRequestController {
     @FXML private MFXTextField txtFldMessage;
     @FXML private MFXFilterComboBox<String> cbEmployeesToAssign;
     @FXML private MFXFilterComboBox<String> cbLongName;
+    @FXML private MFXFilterComboBox<String> cbChangeStatus;
 
     private final EFlowerRequest EFlowerRequest;
 
@@ -131,6 +132,11 @@ public class FlowerRequestControllerI implements IRequestController {
         employees.add(0, "unassigned");
         cbEmployeesToAssign.setItems(employees);
         cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
+
+        //Set status
+        ObservableList<String> statuses = FXCollections.observableArrayList( "In-Progress", "Pending", "Completed");
+        Collections.sort(statuses);
+        cbChangeStatus.setItems(statuses);
     }
 
     private void initComboBoxChangeListeners() {
@@ -220,12 +226,14 @@ public class FlowerRequestControllerI implements IRequestController {
      * @param employee
      */
     public void alertEmployee(String employee){
-        Alert newAlert = new Alert();
-        newAlert.setTitle("New Task Assigned");
-        newAlert.setDescription("You have been assigned a new flower request to complete.");
-        newAlert.setEmployee(employee);
-        newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
-        Repository.getRepository().addAlert(newAlert);
+        if(!employee.equals("unassigned")) {
+            Alert newAlert = new Alert();
+            newAlert.setTitle("New Task Assigned");
+            newAlert.setDescription("You have been assigned a new flower request to complete.");
+            newAlert.setEmployee(employee);
+            newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
+            Repository.getRepository().addAlert(newAlert);
+        }
     }
 
     @Override
@@ -268,6 +276,7 @@ public class FlowerRequestControllerI implements IRequestController {
     public void enterFlowerRequestEditableMode(FullFlowerRequest fullFlowerRequest, InfoCardController currentInfoCardController) {
         //set the editable fields to the values of the request
         cbAvailableFlowers.getSelectionModel().selectItem(fullFlowerRequest.getFlowerType());
+        String oldEmployee = fullFlowerRequest.getEmployee();
         //loads the correct color options for the selected flower type so edit page does not crash
         cdAvailableColor.getItems().clear();
         if (cbAvailableFlowers.getSelectionModel().getSelectedItem().equals("Rose")) {
@@ -315,6 +324,8 @@ public class FlowerRequestControllerI implements IRequestController {
         txtFldNotes.setText(fullFlowerRequest.getNotes());
         cbEmployeesToAssign.getSelectionModel().selectItem(fullFlowerRequest.getEmployee());
         cbLongName.getSelectionModel().selectItem(fullFlowerRequest.getLocationName());
+        cbChangeStatus.setVisible(true);
+        cbChangeStatus.getSelectionModel().selectItem(fullFlowerRequest.getRequestStatus());
 
         //set the submit button to say update
         btnSubmit.setText("Update");
@@ -330,11 +341,16 @@ public class FlowerRequestControllerI implements IRequestController {
             fullFlowerRequest.setNotes(txtFldNotes.getText());
             fullFlowerRequest.setEmployee(cbEmployeesToAssign.getValue());
             fullFlowerRequest.setLocationName(cbLongName.getValue());
+            fullFlowerRequest.setRequestStatus(cbChangeStatus.getValue());
 
             //update the request
             EFlowerRequest.updateFlowerRequest(fullFlowerRequest);
             //send the fullConferenceRequest to the info card controller
             currentInfoCardController.sendRequest(fullFlowerRequest);
+            //Update new user
+            if(!oldEmployee.equals(cbEmployeesToAssign.getValue())){
+                alertEmployee(cbEmployeesToAssign.getValue());
+            }
             //close the stage
             ((Stage) btnSubmit.getScene().getWindow()).close();
         });
