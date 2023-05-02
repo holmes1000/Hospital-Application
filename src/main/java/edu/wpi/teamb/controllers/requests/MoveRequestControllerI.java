@@ -59,7 +59,7 @@ public class MoveRequestControllerI implements IRequestController{
     @FXML
     public void initialize() throws IOException, SQLException {
         ObservableList<String> longNames = FXCollections.observableArrayList();
-        longNames.addAll(Repository.getRepository().getPracticalLongNames());
+        longNames.addAll(Repository.getRepository().getAllLongNames());
         cdRoomToMove.setItems(longNames);
 
         ObservableList<Integer> NodeID = FXCollections.observableArrayList();
@@ -108,7 +108,6 @@ public class MoveRequestControllerI implements IRequestController{
         btnSubmit.setOnAction(e -> handleSubmit());
         btnReset.setTooltip(new Tooltip("Click to reset fields"));
         btnReset.setOnAction(e -> handleReset());
-        helpIcon.setOnMouseClicked(e -> handleHelp());
         btnRemoveMove.setTooltip(new Tooltip("Click to remove selected move"));
         btnRemoveMove.setOnMouseClicked(e -> handleRemoveMove());
         btnEditRequest.setTooltip(new Tooltip("Click to edit selected move"));
@@ -201,21 +200,6 @@ public class MoveRequestControllerI implements IRequestController{
         updateTable();
     }
 
-    @Override
-    public void handleHelp() {
-        final FXMLLoader popupLoader = new FXMLLoader(
-                // TODO: add Move request help popup
-                Bapp.class.getResource("views/components/MealRequestHelpPopOver.fxml"));
-        PopOver popOver = new PopOver();
-        popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_RIGHT);
-        popOver.setArrowSize(0.0);
-        try {
-            popOver.setContentNode(popupLoader.load());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        popOver.show(helpIcon);
-    }
 
     @Override
     public void showPopOver() {
