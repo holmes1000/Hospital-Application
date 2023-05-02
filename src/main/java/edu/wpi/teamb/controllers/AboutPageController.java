@@ -78,7 +78,7 @@ public class AboutPageController {
     }
 
     private void samara(){
-        Tooltip smaraText = new Tooltip("I've never been, are there trees in India?");
+        Tooltip smaraText = new Tooltip("My favorite season is fall");
         smaraText.setWrapText(true);
         smaraText.setMaxWidth(300);
         smaraText.setStyle("-fx-font-size: 20");
@@ -86,7 +86,7 @@ public class AboutPageController {
     }
 
     private void james(){
-        Tooltip jamesText = new Tooltip("I own a milwaukee portaband (M18 FUEL!)");
+        Tooltip jamesText = new Tooltip("Oldest member of the team and graduating senior");
         jamesText.setWrapText(true);
         jamesText.setMaxWidth(300);
         jamesText.setStyle("-fx-font-size: 20");
@@ -102,7 +102,7 @@ public class AboutPageController {
     }
 
     private void mahir(){
-        Tooltip mahirText = new Tooltip("Once made Ronit say: 'Will you let me FINISH WHAT I'M SAYING? I DON'T GIVE A FUCK ABOUT NOTABLE QOUTES RIGHT NOW!'");
+        Tooltip mahirText = new Tooltip("My favorite food is dark chocolate and my favorite soccer player is Lionel Messi");
         mahirText.setWrapText(true);
         mahirText.setMaxWidth(300);
         mahirText.setStyle("-fx-font-size: 20");
@@ -110,7 +110,7 @@ public class AboutPageController {
     }
 
     private void zimraan(){
-        Tooltip zimraanText = new Tooltip("Cheese pizza’s my favorite");
+        Tooltip zimraanText = new Tooltip("Cheese pizza's my favorite");
         zimraanText.setWrapText(true);
         zimraanText.setMaxWidth(300);
         zimraanText.setStyle("-fx-font-size: 20");
