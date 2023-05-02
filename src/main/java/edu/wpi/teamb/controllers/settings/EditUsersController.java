@@ -101,7 +101,14 @@ public class EditUsersController {
         btnEditUser.setTooltip(new Tooltip("Click to edit a user's information"));
         btnDeleteUser.setTooltip(new Tooltip("Click to delete a user"));
         btnReset.setTooltip(new Tooltip("Click to reset the fields"));
-        btnBack.setTooltip(new Tooltip("Click to go back to the settings m"));
+        btnBack.setTooltip(new Tooltip("Click to go back to the settings"));
+        textEmail.setTooltip(new Tooltip("Enter a valid email address"));
+        textUsername.setTooltip(new Tooltip("Enter a username (this cannot be changed later)"));
+        textName.setTooltip(new Tooltip("Enter a first and last name"));
+        textPassword.setTooltip(new Tooltip("Enter a password (at least 8 characters)"));
+        cbPermissionLevel.setTooltip(new Tooltip("Select a permission level"));
+        tbUsers.setTooltip(new Tooltip("Double click a user to edit or delete"));
+
         btnAddUser.setOnMouseClicked(event -> handleAddUser());
         btnEditUser.setOnMouseClicked(event -> {
             try {
@@ -147,7 +154,7 @@ public class EditUsersController {
 
     private void handleDeleteUser() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Delete Edge");
+        alert.setTitle("Delete User");
         alert.setContentText("Are you sure you want to delete this user?");
         Optional<ButtonType> action = alert.showAndWait();
         if (action.get() == ButtonType.OK) {

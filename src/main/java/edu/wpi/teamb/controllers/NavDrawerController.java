@@ -38,7 +38,16 @@ public class NavDrawerController {
 
   @FXML
   void clickLogout() {
-    btnLogout.setOnMouseClicked(event -> Navigation.navigate(Screen.LOGIN));
+    btnLogout.setOnMouseClicked(event -> {
+      final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/LogOutPopOver.fxml"));
+      PopOver popOver = new PopOver();
+      try {
+        popOver.setContentNode(popupLoader.load());
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+      popOver.show(btnLogout);
+    });
   }
 
   @FXML
@@ -66,7 +75,8 @@ public class NavDrawerController {
   }
 
   @FXML
-  void clickExit() { btnExit.setOnMouseClicked(event -> {
+  void clickExit() {
+    btnExit.setOnMouseClicked(event -> {
     final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/ExitPopOver.fxml"));
     PopOver popOver = new PopOver();
     try {
@@ -75,9 +85,6 @@ public class NavDrawerController {
       throw new RuntimeException(e);
     }
     popOver.show(btnExit);
-    //opOver.setFadeOutDuration(new Duration(5000));
-    //popOver.hide(new Duration(5000));
-    //System.exit(0);
   });
 
   }

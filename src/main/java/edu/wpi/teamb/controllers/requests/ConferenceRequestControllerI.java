@@ -136,7 +136,7 @@ public class ConferenceRequestControllerI implements IRequestController{
         longNames.addAll(Repository.getRepository().getLongNameByType("CONF"));
         Collections.sort(longNames);
         cbLongName.setItems(longNames);
-        cbLongName.setTooltip(new Tooltip("Select a location to direct the request to"));
+        cbLongName.setTooltip(new Tooltip("Select a location to reserve"));
 
         //Dropdown for employee selection
         ObservableList<String> employees =
@@ -145,7 +145,7 @@ public class ConferenceRequestControllerI implements IRequestController{
         Collections.sort(employees);
         employees.add(0, "unassigned");
         cbEmployeesToAssign.setItems(employees);
-        cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
+        cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee who is reserving the room"));
 
         ObservableList<String> duration =
                 FXCollections.observableArrayList();
@@ -245,12 +245,14 @@ public class ConferenceRequestControllerI implements IRequestController{
      * @param employee
      */
     public void alertEmployee(String employee){
-        Alert newAlert = new Alert();
-        newAlert.setTitle("New Task Assigned");
-        newAlert.setDescription("Conference request assigned.");
-        newAlert.setEmployee(employee);
-        newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
-        Repository.getRepository().addAlert(newAlert);
+        if(!employee.equals("unassigned")) {
+            Alert newAlert = new Alert();
+            newAlert.setTitle("New Task Assigned");
+            newAlert.setDescription("You have been assigned a new conference request to complete.");
+            newAlert.setEmployee(employee);
+            newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
+            Repository.getRepository().addAlert(newAlert);
+        }
     }
 
     @Override

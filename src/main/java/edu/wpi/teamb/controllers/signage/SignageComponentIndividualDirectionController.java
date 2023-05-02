@@ -1,14 +1,18 @@
 package edu.wpi.teamb.controllers.signage;
 
+import edu.wpi.teamb.Bapp;
 import javafx.fxml.FXML;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class SignageComponentIndividualDirectionController {
-    @FXML Text signageDirectionIconLeft;
-    @FXML Text signageDirectionIconRight;
+    @FXML ImageView signageDirectionIconLeft;
+    @FXML ImageView signageDirectionIconRight;
     @FXML Text signageLocationText;
 
 
@@ -22,24 +26,28 @@ public class SignageComponentIndividualDirectionController {
         String directionIcon = "";
         switch (text) {
             case "left":
-                directionIcon = "<";
+                directionIcon = "leftArrow";
                 break;
             case "right":
-                directionIcon = ">";
+                directionIcon = "rightArrow";
                 break;
             case "up":
-                directionIcon = "/\\";
+                directionIcon = "upArrow";
                 break;
             case "down":
-                directionIcon = "\\/";
+                directionIcon = "downArrow";
+                break;
+            case "stop here":
+                directionIcon = "stop";
                 break;
             default:
                 directionIcon = " ";
                 break;
         }
 
-        signageDirectionIconLeft.setText(directionIcon);
-        signageDirectionIconRight.setText(directionIcon);
+        Image arrow = new Image(Objects.requireNonNull(Bapp.class.getResourceAsStream("img/SignArrows/"+ directionIcon + ".png")));
+        signageDirectionIconLeft.setImage(arrow);
+        signageDirectionIconRight.setImage(arrow);
     }
 
     /**
