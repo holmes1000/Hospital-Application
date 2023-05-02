@@ -240,10 +240,9 @@ public class PathfinderController {
               if (!listView.getSelectionModel().getSelectedValues().isEmpty()) {
                   String selectedLongName = listView.getSelectionModel().getSelectedValues().get(0);
                   if(listView.getItems() != null){
-                      Integer index = listView.getItems().indexOf(selectedLongName);
+//                      Integer index = listView.getItems().indexOf(selectedLongName);
 //                  System.out.println(index);
-                      Node node = PathFinding.ASTAR.get_node_map().get(EPathfinder.getPath().get(index));
-                      FullNode n = fullNodesByID.get(node.getNodeID());
+                      FullNode n = fullNodesByLongname.get(selectedLongName);
                       String floor = n.getFloor();
                       if (!currentFloor.equals(floor)) {
                           switchFloor(floor);
@@ -865,6 +864,7 @@ public class PathfinderController {
                       alert.setContentText(alert_message);
                       alert.showAndWait();
                   }
+                  if (floorsTraversed.size() == 1) {nextFloor.setDisable(true);}
 
               } catch (SQLException e) {
                   throw new RuntimeException(e);

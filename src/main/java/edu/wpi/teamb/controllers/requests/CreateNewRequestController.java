@@ -3,6 +3,7 @@ package edu.wpi.teamb.controllers.requests;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
+import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.controllers.NavDrawerController;
 import edu.wpi.teamb.entities.ELogin;
 import edu.wpi.teamb.navigation.Navigation;
@@ -20,6 +21,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import org.controlsfx.control.PopOver;
 
 import java.awt.*;
 import java.io.IOException;
@@ -44,6 +46,7 @@ public class CreateNewRequestController {
     @FXML private VBox back3;
     @FXML private VBox back4;
     @FXML private VBox back5;
+    @FXML private ImageView helpIcon;
 
     ELogin.PermissionLevel adminTest;
     private NavDrawerController navDrawerController;
@@ -68,6 +71,7 @@ public class CreateNewRequestController {
         toggleBtns("icon2");
         navPane.setMouseTransparent(true);
         initializeNavGates();
+        helpIcon.setOnMouseClicked(e -> {handleHelp();});
     }
 
     public void initIcons() {
@@ -242,6 +246,19 @@ public class CreateNewRequestController {
         navLoaded = false;
         activateNav();
         deactivateNav();
+    }
+
+    public void handleHelp() {
+        final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/RequestHelpPopover.fxml"));
+        PopOver popOver = new PopOver();
+        popOver.setArrowLocation(PopOver.ArrowLocation.TOP_RIGHT);
+        popOver.setArrowSize(0.0);
+        try {
+            popOver.setContentNode(popupLoader.load());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        popOver.show(helpIcon);
     }
 
     /**
