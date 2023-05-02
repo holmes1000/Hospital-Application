@@ -910,6 +910,12 @@ public class Repository {
         dbConnection.forceClose();
     }
 
+    public void transferSign(String oldName, Sign s) {
+        signDAO.transferSign(oldName, s);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
     public HashSet<String> getSignageGroupsFromDB() {
         HashSet<String> hset = signDAO.getSignageGroupsFromDB();
         dbConnection.closeDBconnection();
@@ -936,6 +942,27 @@ public class Repository {
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
         return names;
+    }
+
+    public ArrayList<String> getCorrespondingDirections(String signageGroup, ArrayList<String> locationNames) {
+        ArrayList<String> directions = signDAO.getCorrespondingDirections(signageGroup, locationNames);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return directions;
+    }
+
+    public Date getStartDate(String signageGroup, String locationName) {
+        Date date = signDAO.getStartDate(signageGroup, locationName);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return date;
+    }
+
+    public Date getEndDate(String signageGroup, String locationName) {
+        Date date = signDAO.getEndDate(signageGroup, locationName);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return date;
     }
 
     //TODO DBinput methods

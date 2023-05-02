@@ -21,6 +21,8 @@ public class RemoveSignageController {
     @FXML MFXButton btnClose;
     private ESignage signageE;
 
+    private static SignageController signageController;
+
     public void initialize(){
         signageE = new ESignage();
         init_table();
@@ -73,7 +75,11 @@ public class RemoveSignageController {
 
     private void handleClose() {
         Stage stage = (Stage) btnClose.getScene().getWindow();
+        signageController.refresh();
         stage.close();
     }
 
+    void setSignageController(SignageController signageController) {
+        RemoveSignageController.signageController = signageController;
+    }
 }

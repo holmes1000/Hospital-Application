@@ -51,7 +51,7 @@
             <VBox fx:id="vboxActivateNav" layoutX="-150.0" onMouseEntered="#activateNav" prefHeight="720.0" prefWidth="70.0" />
             <MFXButton fx:id="btnAddSignageForm" layoutX="24.0" layoutY="164.0" text="Add Sign" />
             <MFXButton fx:id="btnRemoveSign" layoutX="194.0" layoutY="164.0" text="Remove Signs" />
-            <MFXButton fx:id="btnEditSigns" layoutX="106.0" layoutY="164.0" text="Edit Signs" />
+            <MFXButton fx:id="btnEditSigns" layoutX="106.0" layoutY="164.0" text="Edit Sign" />
             <MFXButton fx:id="btnGetDir" layoutX="457.0" layoutY="165.0" prefHeight="26.0" prefWidth="152.0" style="-fx-background-color: #012d5a;" text="GET DIRECTIONS" textAlignment="RIGHT" textFill="WHITE" />
         </children>
     </AnchorPane>

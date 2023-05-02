@@ -11,19 +11,19 @@
 <!--    -->
 <!--</AnchorPane>-->
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="374.0" prefWidth="821.0" style="-fx-background-color: #5f7ca4;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.signage.RemoveSignageController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #5f7ca4;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.signage.RemoveSignageController">
     <children>
-        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#012d5a" height="50.0" layoutX="-162.0" stroke="TRANSPARENT" strokeType="INSIDE" width="984.0" />
-        <Text fill="WHITE" layoutX="6.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit Signage Information" textAlignment="CENTER" wrappingWidth="831.7034616470337">
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#012d5a" height="50.0" layoutX="-162.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1163.0" />
+        <Text fill="WHITE" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Delete Signage Information" textAlignment="CENTER" wrappingWidth="1000.0">
             <font>
                 <Font name="System Bold" size="36.0" />
             </font>
         </Text>
-        <Pane layoutX="103.0" layoutY="62.0" prefHeight="265.0" prefWidth="616.0">
+        <Pane layoutX="5.0" layoutY="59.0" prefHeight="450.0" prefWidth="990.0">
          <children>
-            <MFXButton fx:id="btnSubmit" layoutX="495.0" layoutY="269.0" text="Remove Selected" />
-              <MFXButton fx:id="btnClose" layoutX="27.0" layoutY="269.0" mnemonicParsing="false" text="Close" />
-            <TableView fx:id="tableView" layoutX="-85.0" layoutY="-3.0" prefHeight="265.0" prefWidth="782.0" />
+            <TableView fx:id="tableView" layoutX="9.0" prefHeight="442.0" prefWidth="973.0" />
          </children></Pane>
+        <MFXButton fx:id="btnClose" layoutX="419.0" layoutY="523.0" mnemonicParsing="false" text="Close" />
+      <MFXButton fx:id="btnSubmit" layoutX="529.0" layoutY="523.0" text="Remove Selected" />
     </children>
 </Pane>

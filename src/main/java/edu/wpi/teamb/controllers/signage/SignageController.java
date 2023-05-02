@@ -37,9 +37,7 @@ import javafx.stage.Stage;
 import net.kurobako.gesturefx.GesturePane;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Objects;
+import java.util.*;
 
 import static javafx.scene.paint.Color.RED;
 
@@ -162,13 +160,6 @@ public class SignageController {
               //set the location of the sign
               controller.setSignageLocationText(s.getLocationName());
               //set the direction of the sign
-              if(s.getDirection().equals("stop here") && index== 0){
-                  index++;
-                  Label label = new Label();
-                  label.setText("Stop Here");
-                  label.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
-                  signVbox.getChildren().add(0, label);
-              }
               controller.setSignageDirectionIcons(s.getDirection());
               signVbox.getChildren().addAll(pane);
           } catch (IOException e) {
@@ -253,6 +244,7 @@ public class SignageController {
 
   public void initializeFields() {
       ObservableList<String> locations = FXCollections.observableArrayList(signageE.getSignageGroups());
+      Collections.sort(locations);
       cbLocation.setItems(locations);
   }
 
@@ -347,12 +339,13 @@ public class SignageController {
     }
 
     private void handleEditSignageForm() {
+        ESignage.setCurrentSignageGroup(cbLocation.getValue());
         Parent root;
         try {
             root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("edu/wpi/teamb/views/signage/EditSignageForm.fxml")));
             Stage stage = new Stage();
-            stage.setTitle("Add Signage");
-            stage.setScene(new Scene(root, 800, 400));
+            stage.setTitle("Edit Signage");
+            stage.setScene(new Scene(root, 904, 550));
             stage.show();
         }
         catch (IOException e) {
@@ -395,5 +388,8 @@ public class SignageController {
         Navigation.navigate(Screen.PATHFINDER);
     }
 
+    public String getCurrentSignageGroup(){
+        return cbLocation.getValue();
+    }
 
 }
