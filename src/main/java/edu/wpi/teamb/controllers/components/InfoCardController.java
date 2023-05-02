@@ -125,6 +125,10 @@ public class InfoCardController {
                 //load the furniture request form
                 loader = new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/requests/FurnitureRequest.fxml"));
                 break;
+            case "Translation":
+                //load into the transation request form
+                loader = new FXMLLoader(getClass().getResource("/edu/wpi/teamb/views/requests/TranslationRequest.fxml"));
+                break;
             default:
                 break;
         }
@@ -157,6 +161,9 @@ public class InfoCardController {
                 //send the current furniture request information to the edit page
                 ((FurnitureRequestControllerI) controller).enterFurnitureRequestEditableMode((FullFurnitureRequest) fullRequest, this);
                 break;
+            case "Translation":
+                //send the current translation request information to the edit page
+                ((TranslationRequestControllerI) controller).enterTranslationRequestEditableMode((FullTranslationRequest) fullRequest, this);
             default:
                 break;
         }
@@ -244,6 +251,12 @@ public class InfoCardController {
             ((FullOfficeRequest) fullRequest).setQuantity(officeRequest.getQuantity());
             ((FullOfficeRequest) fullRequest).setItem(officeRequest.getItem());
             ((FullOfficeRequest) fullRequest).setType(officeRequest.getType());
+            fullRequest.setNotes(fullRequest.getNotes());
+        } else if(Objects.equals(requestType, "Translation")) {
+            FullTranslationRequest translationRequest = (FullTranslationRequest) fullRequest;
+            //set the translation specific fields
+            ((FullTranslationRequest) fullRequest).setLanguageType(translationRequest.getLanguageType());
+            ((FullTranslationRequest) fullRequest).setMedical(translationRequest.getMedical());
             fullRequest.setNotes(fullRequest.getNotes());
         }
         setSpecificFieldsOnCard();
@@ -339,6 +352,15 @@ public class InfoCardController {
           subComponentContainer.getChildren().add(quantityLabel);
           subComponentContainer.getChildren().add(typeLabel);
           subComponentContainer.getChildren().add(specialInstructionsLabel);
+      } else if (Objects.equals(requestType, "Translation")){
+          //make the labels and set the styling
+          Label languageLabel = new Label("Language: " + ((FullTranslationRequest) fullRequest).getLanguage());
+          languageLabel.setStyle(commonCSStyles);
+          Label isDirectlyHealthcareRelatedLabel = new Label("Quantity: " + ((FullTranslationRequest) fullRequest).getMedical());
+          isDirectlyHealthcareRelatedLabel.setStyle(commonCSStyles);
+          //set the office specific fields
+          subComponentContainer.getChildren().add(languageLabel);
+          subComponentContainer.getChildren().add(isDirectlyHealthcareRelatedLabel);
       }
   }
 
