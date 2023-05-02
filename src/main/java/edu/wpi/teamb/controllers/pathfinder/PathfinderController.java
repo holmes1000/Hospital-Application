@@ -353,6 +353,8 @@ public class PathfinderController {
       update_nodes_from_moves(nodes_to_update);
       ObservableList<String> nodes = FXCollections.observableArrayList();
       nodes.addAll(getFilteredLongnames());
+      if (!nodes.contains(defaultEnd)) {nodes.add(defaultEnd);}
+      if (!nodes.contains(defaultStart)) {nodes.add(defaultStart);}
       startNode.setItems(nodes);
       endNode.setItems(nodes);
 //      System.out.println("handled");
