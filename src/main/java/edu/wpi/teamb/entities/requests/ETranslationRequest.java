@@ -6,12 +6,10 @@ import edu.wpi.teamb.DBAccess.Full.FullTranslationRequest;
 public class ETranslationRequest extends RequestImpl {
     private String languageType;
     private String medicalInNature;
-    private String message;
 
-    public ETranslationRequest(String languageType, String medicalInNature, String message) {
+    public ETranslationRequest(String languageType, String medicalInNature) {
         this.languageType = languageType;
         this.medicalInNature = medicalInNature;
-        this.message = message;
     }
 
     public ETranslationRequest() {
@@ -32,23 +30,14 @@ public class ETranslationRequest extends RequestImpl {
     public void setMedicalInNature(String medicalInNature) {
         this.medicalInNature = medicalInNature;
     }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
     @Override
     public RequestType getRequestType() {
-        return RequestType.FlowerDelivery;
+        return RequestType.TranslationRequest;
     }
 
     @Override
     public void submitRequest(String[] inputs) {
-        Repository.getRepository().addFlowerRequest(inputs);
+        Repository.getRepository().addTranslationRequest(inputs);
     }
 
     @Override
@@ -62,7 +51,7 @@ public class ETranslationRequest extends RequestImpl {
     }
 
     public boolean checkSpecialRequestFields() {
-        return this.medicalInNature != null && this.languageType != null && this.message != null;
+        return this.medicalInNature != null && this.languageType != null;
     }
 
     public void updateTranslationRequest(FullTranslationRequest fullTranslationRequest) {

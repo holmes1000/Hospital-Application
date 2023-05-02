@@ -110,7 +110,7 @@ public class TranslationRequestDAOImpl implements IDAO {
     @Override
     public void add(Object request) {
         String[] translationReq = (String[]) request;
-        String[] values = {translationReq[0], translationReq[1], "Translation", translationReq[2], translationReq[3], translationReq[4], translationReq[5], translationReq[6]};
+        String[] values = {translationReq[0], translationReq[1], "Translation", translationReq[2], translationReq[3], translationReq[4], translationReq[5]};
         int id = insertDBRowNewTranslationRequest(values);
         ResultSet rs = DButils.getRowCond("requests", "dateSubmitted", "id = " + id);
         Timestamp dateSubmitted = null;
@@ -120,7 +120,7 @@ public class TranslationRequestDAOImpl implements IDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        FullTranslationRequest ffr = new FullTranslationRequest(id, translationReq[0], dateSubmitted, translationReq[1], translationReq[2], translationReq[3], translationReq[4], translationReq[5], translationReq[6]);
+        FullTranslationRequest ffr = new FullTranslationRequest(id, translationReq[0], dateSubmitted, translationReq[1], translationReq[2], translationReq[3], translationReq[4], translationReq[5]);
         translationRequests.add(ffr);
         RequestDAOImpl.getRequestDaoImpl().getAll().add(new Request(ffr));
     }
@@ -152,8 +152,8 @@ public class TranslationRequestDAOImpl implements IDAO {
         FullTranslationRequest ffr = (FullTranslationRequest) request;
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         //String[] values = {Integer.toString(ffr.getId()), ffr.getEmployee(), ffr.getFloor(), ffr.getRoomNumber(), ffr.getDateSubmitted().toString(), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getType(), ffr.getModel(), String.valueOf(ffr.isAssembly())};
-        String[] colsTranslation = {"type", "model", "assembly"};
-        String[] valuesTranslation = {ffr.getLanguage(), ffr.getMedical(), ffr.getMessage()};
+        String[] colsTranslation = {"language", "medicalimportance"};
+        String[] valuesTranslation = {ffr.getLanguage(), ffr.getMedical()};
         String[] colsReq = {"employee", "requeststatus", "requesttype", "locationname", "notes"};
         String[] valuesReq = {ffr.getEmployee(), ffr.getRequestStatus(), ffr.getRequestType(), ffr.getLocationName(), ffr.getNotes()};;
         DButils.updateRow("translationrequests", colsTranslation, valuesTranslation, "id = " + ffr.getId());
@@ -197,7 +197,7 @@ public class TranslationRequestDAOImpl implements IDAO {
      * @return the String representation of the FlowerRequest
      */
     public String toString(TranslationRequest request) {
-        return request.getId() + " " + request.getLanguage() + " " + request.getMedical() + " " + request.getMessage();
+        return request.getId() + " " + request.getLanguage() + " " + request.getMedical();
     }
 
 
@@ -208,11 +208,11 @@ public class TranslationRequestDAOImpl implements IDAO {
      * @return the id of the row that was inserted
      */
     public static int insertDBRowNewTranslationRequest(String[] values) {
-        String[] colsTranslation = {"id", "language", "medical", "message",};
+        String[] colsTranslation = {"id", "language", "medicalimportance",};
         String[] colsReq = {"employee", "requeststatus","requesttype", "locationname", "notes"};
         String[] valuesReq = {values[0], values[1], values[2], values[3], values[4]};
         int id = DButils.insertRowRequests("requests", colsReq, valuesReq);
-        String[] valuesTranslation = {Integer.toString(id), values[5], values[6], values[7]};
+        String[] valuesTranslation = {Integer.toString(id), values[5], values[6]};
         DButils.insertRow("translationrequests", colsTranslation, valuesTranslation);
         return id;
     }
@@ -320,16 +320,7 @@ public class TranslationRequestDAOImpl implements IDAO {
      * @param val the values to update the columns to
      */
     public void updateRowModel(String medical, String[] col, String[] val) {
-        updateRows(col, val, "medical = " + medical);
+        updateRows(col, val, "medicalimportance = " + medical);
     }
 
-    /**
-     * Updates the rows in the TranslationRequests table that match the given assembly
-     * @param message the assembly of the row to update
-     * @param col the columns to update
-     * @param val the values to update the columns to
-     */
-    public void updateRowMessage(String message, String[] col, String[] val) {
-        updateRows(col, val, "message = " + message);
-    }
 }

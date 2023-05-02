@@ -207,6 +207,11 @@ public class SubmittedRequestsController {
                     if(fullFurnitureRequest == null){continue;}
                     Objects.requireNonNull(requestInfoCardController).sendRequest(fullFurnitureRequest);
                     break;
+                case "Translation":
+                    IFull fullTranslationRequest = allRequestsE.getTranslationRequest(filteredListOfRequests.get(i).getId());
+                    if(fullTranslationRequest == null){continue;}
+                    Objects.requireNonNull(requestInfoCardController).sendRequest(fullTranslationRequest);
+                    break;
                 default:
                     //continue statement to skip any unrecognized types of request to avoid occurrence of empty cards
                     continue;
@@ -355,7 +360,8 @@ public class SubmittedRequestsController {
                                         RequestType.CONFERENCE.getType(),
                                         RequestType.FLOWER.getType(),
                                         RequestType.OFFICE.getType(),
-                                        RequestType.FURNITURE.getType());
+                                        RequestType.FURNITURE.getType(),
+                                        RequestType.TRANSLATION.getType());
                                 break;
                             case "Date Submitted":
                                 cbFilterOptions.getItems().addAll(
@@ -413,7 +419,8 @@ public class SubmittedRequestsController {
         CONFERENCE("Conference"),
         FLOWER("Flower"),
         OFFICE("Office"),
-        FURNITURE("Furniture");
+        FURNITURE("Furniture"),
+        TRANSLATION("Translation");
         private final String type;
 
         RequestType(String type) {

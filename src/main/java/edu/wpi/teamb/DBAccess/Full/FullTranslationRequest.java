@@ -25,10 +25,9 @@ public class FullTranslationRequest implements IFull {
     String notes;
     String languageType;
     String medical;
-    String message;
     String requestType = "Translation";
 
-    public FullTranslationRequest(int id, String employee, Timestamp dateSubmitted, String requestStatus, String locationName, String notes, String language, String medical, String message) {
+    public FullTranslationRequest(int id, String employee, Timestamp dateSubmitted, String requestStatus, String locationName, String notes, String language, String medical) {
         this.id = id;
         this.employee = employee;
         this.dateSubmitted = dateSubmitted;
@@ -37,7 +36,6 @@ public class FullTranslationRequest implements IFull {
         this.notes = notes;
         this.languageType = language;
         this.medical = medical;
-        this.message = message;
     }
     public FullTranslationRequest(Request request, TranslationRequest f) {
         this.id = request.getId();
@@ -48,7 +46,6 @@ public class FullTranslationRequest implements IFull {
         this.notes = request.getNotes();
         this.languageType = f.getLanguage();
         this.medical = f.getMedical();
-        this.message = f.getMessage();
     }
 
     public FullTranslationRequest() {
@@ -100,14 +97,6 @@ public class FullTranslationRequest implements IFull {
 
     public void setMedical(String color) {
         this.medical = medical;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     @Override
@@ -174,7 +163,7 @@ public class FullTranslationRequest implements IFull {
 
     @Override
     public Image setRequestTypeIconImageView() {
-        return new Image("/edu/wpi/teamb/img/flower.png");
+        return new Image("/edu/wpi/teamb/img/translation.png");
     }
 
 

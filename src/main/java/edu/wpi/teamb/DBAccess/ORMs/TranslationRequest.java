@@ -6,28 +6,24 @@ public class TranslationRequest {
     private int id;
     private String language;
     private String medical;
-    private String message;
 
     public TranslationRequest() {
         this.id = 0;
         this.language = "";
         this.medical = "";
-        this.message = "";
     }
 
-    public TranslationRequest(int id, String language, String medical, String message) {
+    public TranslationRequest(int id, String language, String medical) {
         this.id = id;
         this.language = language;
         this.medical = medical;
-        this.message = message;
     }
 
     public TranslationRequest(ResultSet rs) throws java.sql.SQLException {
         this(
                 rs.getInt("id"),
                 rs.getString("language"),
-                rs.getString("medical"),
-                rs.getString("message"));
+                rs.getString("medical"));
     }
 
     public int getId() {
@@ -52,13 +48,5 @@ public class TranslationRequest {
 
     public void setMedical(String medical) {
         this.medical = medical;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 }
