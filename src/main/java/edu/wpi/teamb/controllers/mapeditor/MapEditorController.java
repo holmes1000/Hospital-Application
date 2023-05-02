@@ -189,11 +189,10 @@ public class MapEditorController {
   private MenuButton btnMenuBackup;
   @FXML
   private CustomMenuItem itemResetFromBackup = new CustomMenuItem();
-  @FXML
-  private CustomMenuItem itemSaveToBackup = new CustomMenuItem();
   private MoveMap moveMap;
   private EditNodeMenuController editNodeMenuController;
   private AddNodeMenuController addNodeMenuController;
+  private boolean selectingDefault = false;
 
   public MapEditorController() throws SQLException {
     this.editor = new EMapEditor();
@@ -327,6 +326,8 @@ public class MapEditorController {
     } else if (mapEditorContext.getState() == alignNodesState) {
       System.out.println("Selecting nodes");
       tfState.setText("Selecting Nodes");
+    } else if (selectingDefault) {
+      tfState.setText("Select a node default");
     }
     else
       tfState.setText("Viewing");
@@ -366,7 +367,7 @@ public class MapEditorController {
    */
   public void drawEdge(FullNode n) {
     //Gets the full node of the current node, as well as the neighbors of this node
-    ArrayList<Integer> neighbors = PathFinding.ASTAR.get_node_map().get(n.getNodeID()).getNeighborIds(); // TODO this breaks reset from backup
+    ArrayList<Integer> neighbors = PathFinding.ASTAR.get_node_map().get(n.getNodeID()).getNeighborIds();
     if (neighbors != null) {
       for (int i = 0; i < neighbors.size(); i++) {
 
@@ -422,6 +423,9 @@ public class MapEditorController {
         if (mapEditorContext.getState() == deleteNodeState) {
           handleDeleteNode(event, n);
         }
+        if (selectingDefault) {
+          handleDefaultNode(n);
+        }
         System.out.println("Node " + n.getNodeID() + " clicked");
       } catch (SQLException | IOException e) {
         throw new RuntimeException(e);
@@ -433,6 +437,12 @@ public class MapEditorController {
     floorList.add(n);
     nodeGroup.getChildren().add(c);
     nodeGroup.toFront();
+  }
+
+  private void handleDefaultNode(FullNode n) {
+    DefaultStart.getInstance().setDefault_start(n.getLongName());
+    submissionAlert("Set default start to be " + n.getLongName());
+    selectingDefault = false;
   }
 
 
@@ -842,7 +852,7 @@ public class MapEditorController {
 
     // Init new buttons
     btnAlignNodes.setOnMouseClicked(event -> alignNodes());
-    btnSubmitMove.setOnMouseClicked(event -> {handleSubmitMove();});
+    btnSubmitMove.setOnMouseClicked(event -> handleSubmitMove());
     btnFindPath.setOnMouseClicked(event -> handleFindPath());
     btnPathfinder.setOnMouseClicked(event -> Navigation.navigate(Screen.PATHFINDER));
   }
@@ -860,9 +870,17 @@ public class MapEditorController {
     }
   }
 
+  /**
+   * Method to allow you to find the path between the most recent move nodes
+   */
   private void handleFindPath() {
+    FullNode startNode = Repository.getRepository().getFullNode(Integer.parseInt(c1.getId()));
+    FullNode endNode = Repository.getRepository().getFullNode(Integer.parseInt(c2.getId()));
+
+
     DefaultStart.getInstance().setDefault_start(startNode.getLongName()); //Whatever you want the start to be
     DefaultStart.getInstance().setDefault_end(endNode.getLongName()); //Whatever you want the end to be
+
     Navigation.navigate(Screen.PATHFINDER);
   }
 
@@ -1049,10 +1067,9 @@ public class MapEditorController {
     setMenuItemTooltip(btnMenuEdge, itemDeleteEdge, "Delete Edge", "Click an edge on the map to delete it");
 
     setMenuItemTooltip(btnMenuTools, itemAlign, "Align Nodes", "Click on the map where you would like to add a node");
-    setMenuItemTooltip(btnMenuTools, itemSetDefault, "Set default position", "Click a node on the map to set a default location");
+    setMenuItemTooltip(btnMenuTools, itemSetDefault, "Set Default Position", "Click a node on the map to set a default location");
 
     setMenuItemTooltip(btnMenuBackup, itemResetFromBackup, "Reset from Backup", "Click to reset the nodes/edges from the database");
-    setMenuItemTooltip(btnMenuBackup, itemSaveToBackup, "Save to Backup", "Click to save the current map configuration to the database");
 
     setMenuItemTooltip(btnMenuMove, itemAddMove, "Add Move", "Click a node you'd like to move, then a node where it should move to");
 
@@ -1087,11 +1104,13 @@ public class MapEditorController {
       mapEditorContext.getState().printStatus();
       determineState();
     });
-//    Tooltip alignNodesTooltip = new Tooltip("Click at least 3 nodes to align them, the click the Align button");
-//    alignNodesTooltip.install(itemAlign.getContent(), alignNodesTooltip);
     itemAlign.setOnAction(event -> {
       mapEditorContext.setState(alignNodesState);
       mapEditorContext.getState().printStatus();
+      determineState();
+    });
+    itemSetDefault.setOnAction(event -> {
+      selectingDefault = true;
       determineState();
     });
   }
