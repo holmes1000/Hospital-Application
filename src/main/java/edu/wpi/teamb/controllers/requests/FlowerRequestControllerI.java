@@ -44,6 +44,7 @@ public class FlowerRequestControllerI implements IRequestController {
     @FXML private MFXTextField txtFldMessage;
     @FXML private MFXFilterComboBox<String> cbEmployeesToAssign;
     @FXML private MFXFilterComboBox<String> cbLongName;
+    @FXML private MFXFilterComboBox<String> cbChangeStatus;
 
     private final EFlowerRequest EFlowerRequest;
 
@@ -67,7 +68,8 @@ public class FlowerRequestControllerI implements IRequestController {
                         cdAvailableColor.valueProperty(),
                         cdAvailableType.valueProperty(),
                         cbLongName.valueProperty(),
-                        cbEmployeesToAssign.valueProperty());
+                        cbEmployeesToAssign.valueProperty(),
+                        cbChangeStatus.valueProperty());
             }
 
             @Override
@@ -76,7 +78,8 @@ public class FlowerRequestControllerI implements IRequestController {
                         cdAvailableColor.getValue() == null ||
                         cdAvailableType.getValue() == null ||
                         cbLongName.getValue() == null ||
-                        cbEmployeesToAssign.getValue() == null);
+                        cbEmployeesToAssign.getValue() == null ||
+                        cbChangeStatus.getValue() == null);
             }
         };
         btnSubmit.disableProperty().bind(bb);
@@ -131,6 +134,11 @@ public class FlowerRequestControllerI implements IRequestController {
         employees.add(0, "unassigned");
         cbEmployeesToAssign.setItems(employees);
         cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
+
+        //Set status
+        ObservableList<String> statuses = FXCollections.observableArrayList( "In-Progress", "Pending", "Completed");
+        Collections.sort(statuses);
+        cbChangeStatus.setItems(statuses);
     }
 
     private void initComboBoxChangeListeners() {
@@ -315,6 +323,8 @@ public class FlowerRequestControllerI implements IRequestController {
         txtFldNotes.setText(fullFlowerRequest.getNotes());
         cbEmployeesToAssign.getSelectionModel().selectItem(fullFlowerRequest.getEmployee());
         cbLongName.getSelectionModel().selectItem(fullFlowerRequest.getLocationName());
+        cbChangeStatus.setVisible(true);
+        cbChangeStatus.getSelectionModel().selectItem(fullFlowerRequest.getRequestStatus());
 
         //set the submit button to say update
         btnSubmit.setText("Update");
@@ -330,6 +340,7 @@ public class FlowerRequestControllerI implements IRequestController {
             fullFlowerRequest.setNotes(txtFldNotes.getText());
             fullFlowerRequest.setEmployee(cbEmployeesToAssign.getValue());
             fullFlowerRequest.setLocationName(cbLongName.getValue());
+            fullFlowerRequest.setRequestStatus(cbChangeStatus.getValue());
 
             //update the request
             EFlowerRequest.updateFlowerRequest(fullFlowerRequest);
