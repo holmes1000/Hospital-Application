@@ -73,6 +73,7 @@ public class MoveRequestControllerI implements IRequestController{
         radPastMove.setSelected(false);
         btnRemoveMove.setDisable(true);
         btnEditRequest.setDisable(true);
+        btnEditRequest.setVisible(false); // hide edit button for now
         initializeFields();
         initBtns();
     }
