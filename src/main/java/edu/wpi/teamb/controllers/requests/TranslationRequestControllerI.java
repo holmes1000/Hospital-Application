@@ -37,6 +37,7 @@ public class TranslationRequestControllerI implements IRequestController {
     @FXML private MFXTextField txtFldMessage;
     @FXML private MFXFilterComboBox<String> cbEmployeesToAssign;
     @FXML private MFXFilterComboBox<String> cbLongName;
+    @FXML private MFXFilterComboBox<String> cbChangeStatus;
 
     private final edu.wpi.teamb.entities.requests.ETranslationRequest ETranslationRequest; // ETranslationRequest object to be submitted
 
@@ -109,6 +110,12 @@ public class TranslationRequestControllerI implements IRequestController {
         employees.add(0, "unassigned");
         cbEmployeesToAssign.setItems(employees);
         cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee to assign the request to"));
+
+        //Set list of statuses
+        ObservableList<String> statuses =
+                FXCollections.observableArrayList("Pending", "In-Progress", "Completed");
+        Collections.sort(statuses);
+        cbChangeStatus.setItems(statuses);
     }
 
     @Override
@@ -185,6 +192,8 @@ public class TranslationRequestControllerI implements IRequestController {
         txtFldNotes.setText(fullTranslationRequest.getNotes());
         cbEmployeesToAssign.getSelectionModel().selectItem(fullTranslationRequest.getEmployee());
         cbLongName.getSelectionModel().selectItem(fullTranslationRequest.getLocationName());
+        cbChangeStatus.setVisible(true);
+        cbChangeStatus.getSelectionModel().selectItem(fullTranslationRequest.getRequestStatus());
 
         //set the submit button to say update
         btnSubmit.setText("Update");
@@ -198,6 +207,7 @@ public class TranslationRequestControllerI implements IRequestController {
             fullTranslationRequest.setNotes(txtFldNotes.getText());
             fullTranslationRequest.setEmployee(cbEmployeesToAssign.getValue());
             fullTranslationRequest.setLocationName(cbLongName.getValue());
+            fullTranslationRequest.setRequestStatus(cbChangeStatus.getValue());
 
             //update the request
             ETranslationRequest.updateTranslationRequest(fullTranslationRequest);

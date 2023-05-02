@@ -301,6 +301,35 @@ public class DButils {
         return IDs;
     }
 
+    public static ResultSet getTable(String table) {
+        ResultSet rs = null;
+        try {
+            Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
+            String query = "SELECT * FROM teamb." + table;
+            rs = stmt.executeQuery(query);
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'DButils.getTable': " + e.getMessage());
+        }
+        return rs;
+    }
+
+    public static void resetMap() {
+        try {
+            Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
+            String query = "DELETE FROM edges;\n" +
+                    "DELETE FROM moves;\n" +
+                    "DELETE FROM locationnames;\n" +
+                    "DELETE FROM nodes;\n" +
+                    "INSERT INTO edges (startnode, endnode) SELECT startnode, endnode FROM edgebackup;\n" +
+                    "INSERT INTO nodes (nodeid, xcoord, ycoord, floor, building) SELECT nodeid, xcoord, ycoord, floor, building FROM nodebackup;\n" +
+                    "INSERT INTO locationnames (longname, shortname, nodetype) SELECT longname, shortname, nodetype FROM locationnamebackup;\n" +
+                    "INSERT INTO moves (nodeid, longname, date) SELECT nodeid, longname, date FROM movebackup;";
+            stmt.executeUpdate(query);
+        } catch (SQLException e) {
+            System.err.println("ERROR Query Failed in method 'DButils.resetMap': " + e.getMessage());
+        }
+    }
+
     //Put master CSV export function here
 
     //Put master CSV import function here

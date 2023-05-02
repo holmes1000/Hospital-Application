@@ -111,15 +111,25 @@ public class LoginController {
     TextFormatter<String> formatter = new TextFormatter<>(filter);
     dialog.getEditor().setTextFormatter(formatter);
 
-    dialog.getEditor().setOnKeyTyped(e -> {
-        if (loginE.verify2FAVerificationCode(Integer.parseInt(dialog.getEditor().getText()))) {
-          //condition where 2-factor authentication code matched
-          errorMsg.setText("Logged in Successful!");
-          Navigation.navigate(Screen.HOME);
-          dialog.close();
-        }
-    });
+    // create a validation support object to show error messages
+    ValidationSupport validationSupport = new ValidationSupport();
+    validationSupport.setErrorDecorationEnabled(true);
+    //validationSupport.registerValidator(dialog.getEditor(), Validator.createEmptyValidator("Please enter a number"));
+    validationSupport.registerValidator(dialog.getEditor(), Validator.createPredicateValidator((String s) -> s.length() == 6, "Please enter a 6 digit number"));
 
+    // Binding to disable the OK button until input is valid
+    Node okButton = dialog.getDialogPane().lookupButton(ButtonType.OK);
+    okButton.disableProperty().bind(validationSupport.invalidProperty());
+
+    //set an onkeypressed event to the textfield to automatically close the dialog if the right code has been entered
+    dialog.getEditor().setOnKeyTyped(e -> {
+      if (loginE.verify2FAVerificationCode(Integer.parseInt(dialog.getEditor().getText()))) {
+        //condition where 2-factor authentication code matched
+        errorMsg.setText("Logged in Successful!");
+        Navigation.navigate(Screen.HOME);
+        dialog.close();
+      }
+    });
 
     // Show the dialog and wait for the result
     Optional<String> result = dialog.showAndWait();

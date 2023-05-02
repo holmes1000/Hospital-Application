@@ -257,6 +257,8 @@ public class PathfinderController {
           }
       });
 
+      //Toggle node names off
+      handleToggleShowNames();
 
   }
 
@@ -586,7 +588,7 @@ public class PathfinderController {
         nextFloor.setTooltip(new Tooltip("Click to go to Next Floor"));
         nextFloor.setVisible(false);
         toggleShowNames.setTooltip(new Tooltip("Click to toggle Location Names"));
-        toggleShowNames.setSelected(true);
+        toggleShowNames.setSelected(false);
         toggleShowNames.setOnMouseClicked(event->{handleToggleShowNames();});
         btnEditMap.setTooltip(new Tooltip("Click to edit the map"));
         btnEditMap.setOnMouseClicked(event -> Navigation.navigate(Screen.MAP_EDITOR));

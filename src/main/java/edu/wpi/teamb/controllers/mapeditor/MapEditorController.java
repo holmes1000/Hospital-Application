@@ -154,6 +154,7 @@ public class MapEditorController {
   Circle c1;
   Circle c2;
 
+
   // New menu buttons
   @FXML
   private MFXButton btnSubmitMove;
@@ -559,8 +560,9 @@ public class MapEditorController {
    * Handles the reset from backup button click
    */
   void handleResetFromBackupBtn() {
-    Repository.getRepository().resetNodesFromBackup();
+    //Repository.getRepository().resetNodesFromBackup();
     //nodeList = Repository.getRepository().getAllNodes();
+    Repository.getRepository().resetMap();
     fullNodesList = Repository.getRepository().getAllFullNodes();
     submissionAlert("Reset from backup successful");
     // Refresh the map
@@ -833,9 +835,9 @@ public class MapEditorController {
     });
 
     // initialize the toggles
-    toggleEdges.setSelected(true);
+    toggleEdges.setSelected(false);
     toggleNodes.setSelected(true);
-    toggleLocationNames.setSelected(true);
+    toggleLocationNames.setSelected(false);
     toggleMoves.setSelected(false);
     
     toggleLocationNames.setOnMouseClicked(event -> {
@@ -851,11 +853,16 @@ public class MapEditorController {
       handleToggleMoves();
     });
 
+    handleToggleEdges();
+    handleToggleLocationNames();
+
     // Init new buttons
     btnAlignNodes.setOnMouseClicked(event -> alignNodes());
     btnSubmitMove.setOnMouseClicked(event -> handleSubmitMove());
     btnFindPath.setOnMouseClicked(event -> handleFindPath());
     btnPathfinder.setOnMouseClicked(event -> Navigation.navigate(Screen.PATHFINDER));
+
+
   }
 
   private void handleToggleMoves() {
