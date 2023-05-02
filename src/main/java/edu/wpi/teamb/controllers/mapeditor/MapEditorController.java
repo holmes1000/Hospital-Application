@@ -840,7 +840,7 @@ public class MapEditorController {
 
     // Init new buttons
     btnAlignNodes.setOnMouseClicked(event -> alignNodes());
-    btnSubmitMove.setOnMouseClicked(event -> handleSubmitMove());
+    btnSubmitMove.setOnMouseClicked(event -> {handleSubmitMove();});
     btnFindPath.setOnMouseClicked(event -> handleFindPath());
     btnPathfinder.setOnMouseClicked(event -> Navigation.navigate(Screen.PATHFINDER));
   }
@@ -890,6 +890,12 @@ public class MapEditorController {
 
     // Refresh the map
     refreshMap();
+    moveMap = new MoveMap(); // Create move map
+    this.locationCanvas.getChildren().add(moveMap.getPathGroup());
+    this.locationCanvas.getChildren().add(moveMap.getMoveInfo());
+    moveMap.getPathGroup().setVisible(false);
+    moveMap.getMoveInfo().setVisible(false);
+    if (toggleMoves.isSelected()) {handleToggleMoves();}
   }
 
   private void handleAddMove(Circle c1, Circle c2) {
