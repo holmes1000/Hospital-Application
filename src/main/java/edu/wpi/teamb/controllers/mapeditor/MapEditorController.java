@@ -364,7 +364,7 @@ public class MapEditorController {
    */
   public void drawEdge(FullNode n) {
     //Gets the full node of the current node, as well as the neighbors of this node
-    ArrayList<Integer> neighbors = PathFinding.ASTAR.get_node_map().get(n.getNodeID()).getNeighborIds(); // TODO this breaks reset from backup
+    ArrayList<Integer> neighbors = PathFinding.ASTAR.get_node_map().get(n.getNodeID()).getNeighborIds();
     if (neighbors != null) {
       for (int i = 0; i < neighbors.size(); i++) {
 
@@ -858,9 +858,17 @@ public class MapEditorController {
     }
   }
 
+  /**
+   * Method to allow you to find the path between the most recent move nodes
+   */
   private void handleFindPath() {
-    DefaultStart.getInstance().setDefault_start(""); //Whatever you want the start to be
-    DefaultStart.getInstance().setDefault_end(""); //Whatever you want the end to be
+    FullNode startNode = Repository.getRepository().getFullNode(Integer.parseInt(c1.getId()));
+    FullNode endNode = Repository.getRepository().getFullNode(Integer.parseInt(c2.getId()));
+
+
+    DefaultStart.getInstance().setDefault_start(startNode.getLongName()); //Whatever you want the start to be
+    DefaultStart.getInstance().setDefault_end(endNode.getLongName()); //Whatever you want the end to be
+
     Navigation.navigate(Screen.PATHFINDER);
   }
 
@@ -1073,8 +1081,6 @@ public class MapEditorController {
       mapEditorContext.getState().printStatus();
       determineState();
     });
-//    Tooltip alignNodesTooltip = new Tooltip("Click at least 3 nodes to align them, the click the Align button");
-//    alignNodesTooltip.install(itemAlign.getContent(), alignNodesTooltip);
     itemAlign.setOnAction(event -> {
       mapEditorContext.setState(alignNodesState);
       mapEditorContext.getState().printStatus();
