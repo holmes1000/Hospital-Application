@@ -92,7 +92,7 @@ public class patient {
     // used if their need is submitted corectly
     public void fufilled() {
         position = 0;
-        Game.timeController.addTime(patients);
+        Game.timeController.addTime(patients/2);
         Game.getPlayer().addScore(1);
         happy = true;
         dequeing = true;
@@ -101,7 +101,7 @@ public class patient {
     // used if their need is not submitted corectly
     public void unFufilled() {
         position = 0;
-        Game.timeController.subtractTime(patients);
+        Game.timeController.subtractTime(initPat/2);
         happy = false;
         dequeing = true;
 
@@ -136,7 +136,7 @@ public class patient {
     }
 
     public void decresePaditents(double amount) {
-        patients -= amount * 2 / position;
+        patients -= amount * 3 / position;
     }
 
     public void update(double time) {

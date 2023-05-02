@@ -33,6 +33,10 @@ public class Gapp extends Application {
             new Image(Gapp.class.getResourceAsStream("./rsc/images/Desk_nonSevere.png")),
     };
 
+    public static Stage getPrimaryStage()
+    {
+        return primaryStage;
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -94,10 +98,21 @@ public class Gapp extends Application {
     /**
      * runs the game thread
      */
-    public static void runGame() {
+    public static Thread runGame() {
         Game g = Game.newGame();
-        gameThread = new Thread(() -> g.start(Thread.currentThread()));
+        //make this thread synchrounous with gamehthread
+        
+        gameThread = new Thread()
+        {
+            public void run()
+            {
+                g.start(Thread.currentThread());
+            }
+        
+        };
+
         gameThread.start();
+        return gameThread;
     }
 
     /**

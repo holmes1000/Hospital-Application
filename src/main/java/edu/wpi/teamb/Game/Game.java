@@ -1,12 +1,20 @@
 package edu.wpi.teamb.Game;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
+
+import edu.wpi.teamb.Game.Contollers.GameScnController;
 import edu.wpi.teamb.Game.PatientThings.patient;
 import edu.wpi.teamb.Game.Player.Player;
 import edu.wpi.teamb.Game.Player.TimeController;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Font;
 
 public class Game {
     /* Game objects */
@@ -137,10 +145,29 @@ public class Game {
             // checkLose();
         }
         repaint(0);
-        System.out.println("-------------------END-------------------");
 
+        System.out.println("-------------------END-------------------");
+        finalPrint(gc);
     }
 
+    private void finalPrint(GraphicsContext gc)
+    {
+        //paint to the canvas a black box with rounded corners and a white border
+        gc.setFill(Colors.black);
+        gc.fillRoundRect(0, 0, canvas.getWidth(), canvas.getHeight(), 20, 20);
+        gc.setStroke(Colors.white);
+        gc.setLineWidth(5);
+        gc.strokeRoundRect(0, 0, canvas.getWidth(), canvas.getHeight(), 20, 20);
+        //Text in the Middle of the screen saying GAME OVER
+        gc.setFill(Colors.white);
+        gc.setFont(new Font("Arial", 50));
+        gc.fillText("GAME OVER", canvas.getWidth()/2-150, canvas.getHeight()/2);
+        //Text in the Middle of the screen saying Time Lasted: + seconds
+        gc.setFont(new Font("Arial", 30));
+        gc.fillText("Time Lasted: "+NumberFormat.getInstance().format(timeController.gettotalTime()/60)+" seconds", canvas.getWidth()/2-150, canvas.getHeight()/2+50);
+        //text under that saying now many poeple served (score)
+        gc.fillText("People Served: "+customersDone.size()+" people", canvas.getWidth()/2-150, canvas.getHeight()/2+100);
+    }
     /**
      * stops the game
      */
@@ -180,39 +207,32 @@ public class Game {
 
         }
 
-
-        //updates all in cD and when past screen, gets deleted
-        for (int i = 0; i <customersDone.size(); i++) {
+        // updates all in cD and when past screen, gets deleted
+        for (int i = 0; i < customersDone.size(); i++) {
             customersDone.get(i).update(delta);
-            if(customersDone.get(i).getX()>canvas.getWidth()+30)
-            {
+            if (customersDone.get(i).getX() > canvas.getWidth() + 30) {
                 customersDone.remove(customersDone.get(i));
                 i--;
             }
         }
-        if(customerQ.size()==0)
-        {
-            timeController.addTime(9999);
-        }
-
+    
 
     }
 
-    public void QueueStackSync()
-    {
+    public void QueueStackSync() {
         customerS = new LinkedList<>();
         for (int i = 0; i < customerQ.size(); i++) {
-            
+
             customerS.add(0, customerQ.get(i));
         }
     }
 
-    public static void rePosition()
-    {
+    public static void rePosition() {
         for (int i = 0; i < customerQ.size(); i++) {
-            customerQ.get(i).setPosition(i+1);
+            customerQ.get(i).setPosition(i + 1);
         }
     }
+
     /**
      * Repaints all the objects
      * 
@@ -223,14 +243,14 @@ public class Game {
         timeController.show(gc);
         player.show(gc);
 
-        //loop through sutomerS and customer done to show them
+        // loop through sutomerS and customer done to show them
         for (patient patient : customerS) {
             patient.show(gc);
         }
         for (patient patient : customersDone) {
-            //patient.dequeueing();
+            // patient.dequeueing();
             patient.show(gc);
-            
+
         }
     }
 

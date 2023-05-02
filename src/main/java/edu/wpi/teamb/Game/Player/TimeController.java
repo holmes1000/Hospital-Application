@@ -11,7 +11,7 @@ public class TimeController {
     double maxTime;
     double totalTime;
 
-    double patientTime = 3;
+    double patientTime = 2;
     double timeTilNewPatient;
 
     final double submitCooldownTime =0.5;
