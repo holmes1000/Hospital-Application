@@ -41,7 +41,7 @@ public class StartScnController {
     @FXML
     public void playGame()
     {
-        Gapp.changeScene("./rsc/Screens/GameScn.fxml");
+        Gapp.changeScene("./views/Game/rsc/Screens/GameScn.fxml");
         //create a new thread for the game to run
 
         Thread g = Gapp.runGame();
@@ -62,7 +62,7 @@ public class StartScnController {
     {
         //change scene to ./rsc/Screens/StartScn.fxml
             
-            Gapp.changeScene("./rsc/Screens/HowToPlay.fxml");
+            Gapp.changeScene("./views/Game/rsc/Screens/HowToPlay.fxml");
 
     
     }

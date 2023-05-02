@@ -32,7 +32,7 @@ public class HowToPlayController {
     public void showStartScene() {
 
 
-            Gapp.changeScene("./rsc/Screens/StartScn.fxml");
+            Gapp.changeScene("./views/Game/rsc/Screens/StartScn.fxml");
 
     }
 

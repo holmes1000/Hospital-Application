@@ -1,5 +1,6 @@
 package edu.wpi.teamb.Game;
 
+import edu.wpi.teamb.Bapp;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -16,21 +17,21 @@ public class Gapp extends Application {
     private static BorderPane rootPane;
 
     public static Image[] personImages = new Image[] {
-            new Image(Gapp.class.getResourceAsStream("./rsc/images/HappyCustomer.png")),
-            new Image(Gapp.class.getResourceAsStream("./rsc/images/MadCustomer.png")),
-            new Image(Gapp.class.getResourceAsStream("./rsc/images/VeryMadCustomer.png"))
+            new Image(Bapp.class.getResourceAsStream("./img/Game/rsc/images/HappyCustomer.png")),
+            new Image(Bapp.class.getResourceAsStream("./img/Game/rsc/images/MadCustomer.png")),
+            new Image(Bapp.class.getResourceAsStream("./img/Game/rsc/images/VeryMadCustomer.png"))
     };
     public static Image[] patientImages = new Image[] {
-            new Image(Gapp.class.getResourceAsStream("./rsc/images/heart.png")),
-            new Image(Gapp.class.getResourceAsStream("./rsc/images/brokenLimb.png")),
-            new Image(Gapp.class.getResourceAsStream("./rsc/images/hungry.png")),
-            new Image(Gapp.class.getResourceAsStream("./rsc/images/nonSevere.png")),
+            new Image(Bapp.class.getResourceAsStream("./img/Game/rsc/images/heart.png")),
+            new Image(Bapp.class.getResourceAsStream("./img/Game/rsc/images/brokenLimb.png")),
+            new Image(Bapp.class.getResourceAsStream("./img/Game/rsc/images/hungry.png")),
+            new Image(Bapp.class.getResourceAsStream("./img/Game/rsc/images/nonSevere.png")),
     };
     public static Image[] deskImages = new Image[] {
-            new Image(Gapp.class.getResourceAsStream("./rsc/images/Desk_heart.png")),
-            new Image(Gapp.class.getResourceAsStream("./rsc/images/Desk_brokenLimb.png")),
-            new Image(Gapp.class.getResourceAsStream("./rsc/images/Desk_hungry.png")),
-            new Image(Gapp.class.getResourceAsStream("./rsc/images/Desk_nonSevere.png")),
+            new Image(Bapp.class.getResourceAsStream("./img/Game/rsc/images/Desk_heart.png")),
+            new Image(Bapp.class.getResourceAsStream("./img/Game/rsc/images/Desk_brokenLimb.png")),
+            new Image(Bapp.class.getResourceAsStream("./img/Game/rsc/images/Desk_hungry.png")),
+            new Image(Bapp.class.getResourceAsStream("./img/Game/rsc/images/Desk_nonSevere.png")),
     };
 
     public static Stage getPrimaryStage()
@@ -45,7 +46,7 @@ public class Gapp extends Application {
 
         Gapp.primaryStage = primaryStage;
         primaryStage.setResizable(false);
-        URL a = Gapp.class.getResource("./rsc/Screens/StartScn.fxml");
+        URL a = Bapp.class.getResource("./views/Game/rsc/Screens/StartScn.fxml");
 
        // add to a's path : rsc/Screens/StartScn.fxm
 
@@ -71,7 +72,7 @@ public class Gapp extends Application {
      */
     public static void changeScene(String scenePath) {
         try {
-            BorderPane newroot = (new FXMLLoader(Gapp.class.getResource(scenePath))).load();
+            BorderPane newroot = (new FXMLLoader(Bapp.class.getResource(scenePath))).load();
             primaryStage.setScene(new Scene(newroot));
             ;
         } catch (Exception e) {
