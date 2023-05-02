@@ -11,6 +11,7 @@ import edu.wpi.teamb.DBAccess.ORMs.Edge;
 import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 import edu.wpi.teamb.DBAccess.ORMs.Move;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
+import edu.wpi.teamb.entities.DefaultStart;
 import edu.wpi.teamb.entities.EMapEditor;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
@@ -43,6 +44,7 @@ import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import lombok.Builder;
 import net.kurobako.gesturefx.GesturePane;
 import org.controlsfx.control.PopOver;
 import org.w3c.dom.NodeList;
@@ -857,6 +859,7 @@ public class MapEditorController {
   }
 
   private void handleFindPath() {
+    DefaultStart.getInstance().setDefault_end(""); //Whatever you want the end to be
     Navigation.navigate(Screen.PATHFINDER);
   }
 
