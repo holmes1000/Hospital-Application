@@ -3,6 +3,7 @@ package edu.wpi.teamb.controllers.requests;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
+import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.Full.*;
 import edu.wpi.teamb.DBAccess.ORMs.Request;
 import edu.wpi.teamb.controllers.NavDrawerController;
@@ -29,6 +30,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import org.controlsfx.control.PopOver;
 
 public class SubmittedRequestsController {
     @FXML private ImageView helpIcon;
@@ -55,7 +57,7 @@ public class SubmittedRequestsController {
         menuDrawer.setPickOnBounds(false);
         allRequestsE = new EAllRequests();
         initScrollPane();
-        hoverHelp();
+        helpIcon.setOnMouseClicked(e -> handleHelp());
         initComboBoxChangeListeners();
         loadRequestsIntoContainer();
         initializeNavGates();
@@ -220,23 +222,17 @@ public class SubmittedRequestsController {
         Navigation.navigate(Screen.CREATE_NEW_REQUEST);
     }
 
-    @FXML
-    public void hoverHelp() {
-        helpIcon.setOnMouseEntered(
-                event -> {
-                    Tooltip helpTip =
-                            new Tooltip(
-                                    "On this page: Please use the filter to filter requests by \n"
-                                            + "request status, request type, date submitted (ascending or  + \n" +
-                                            "descending), or unassigned requests. The selected requests information \n" +
-                                            "is listed on the right. You can decide to edit, delete, or mark a request \n + " +
-                                            "as complete using the buttons on the side. \n");
-                    helpTip.setStyle("-fx-size: 18");
-                    helpTip.setShowDelay(Duration.millis(1));
-                    helpTip.hideDelayProperty().set(Duration.seconds(1.5));
-                    Tooltip.install(helpIcon, helpTip);
-                });
-        helpIcon.setOnMouseExited(event -> {});
+    public void handleHelp() {
+        final FXMLLoader popupLoader = new FXMLLoader(Bapp.class.getResource("views/components/popovers/SubmittedRequestHandlingHelpPopover.fxml"));
+        PopOver popOver = new PopOver();
+        popOver.setArrowLocation(PopOver.ArrowLocation.TOP_RIGHT);
+        popOver.setArrowSize(0.0);
+        try {
+            popOver.setContentNode(popupLoader.load());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        popOver.show(helpIcon);
     }
 
     /**

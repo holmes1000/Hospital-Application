@@ -113,6 +113,7 @@ public class PathfinderController {
     Group nameGroup;
     Pane locationCanvas;
     private String defaultStart = "";
+    private String defaultEnd = "";
     ELogin.PermissionLevel adminTest;
     ArrayList<String> keysList;
 
@@ -155,6 +156,7 @@ public class PathfinderController {
       defaultStart = DefaultStart.getInstance().getDefault_start();
       if (defaultStart.equals("")) {DefaultStart.getInstance().setDefault_start("15 Lobby Entrance Floor 2");}
       defaultStart = DefaultStart.getInstance().getDefault_start();
+      defaultEnd = DefaultStart.getInstance().getDefault_end();
 
 
       for (Integer id : PathFinding.ASTAR.getFullNodesByID().keySet()) {
@@ -204,7 +206,8 @@ public class PathfinderController {
       startNode.getSearchText();
       endNode.getSearchText();
       handleDate();
-      startNode.getSelectionModel().selectItem(defaultStart); // not sure about this
+      startNode.getSelectionModel().selectItem(defaultStart);
+      if (!defaultEnd.equals("")) {endNode.getSelectionModel().selectItem(defaultEnd);}
       changeButtonColor(currentFloor);
       algorithmDropdown.selectFirst();
       spFindPath.setTooltip(new Tooltip("Select an ending location to find a path"));
@@ -237,10 +240,9 @@ public class PathfinderController {
               if (!listView.getSelectionModel().getSelectedValues().isEmpty()) {
                   String selectedLongName = listView.getSelectionModel().getSelectedValues().get(0);
                   if(listView.getItems() != null){
-                      Integer index = listView.getItems().indexOf(selectedLongName);
+//                      Integer index = listView.getItems().indexOf(selectedLongName);
 //                  System.out.println(index);
-                      Node node = PathFinding.ASTAR.get_node_map().get(EPathfinder.getPath().get(index));
-                      FullNode n = fullNodesByID.get(node.getNodeID());
+                      FullNode n = fullNodesByLongname.get(selectedLongName);
                       String floor = n.getFloor();
                       if (!currentFloor.equals(floor)) {
                           switchFloor(floor);
@@ -350,6 +352,8 @@ public class PathfinderController {
       update_nodes_from_moves(nodes_to_update);
       ObservableList<String> nodes = FXCollections.observableArrayList();
       nodes.addAll(getFilteredLongnames());
+      if (!nodes.contains(defaultEnd)) {nodes.add(defaultEnd);}
+      if (!nodes.contains(defaultStart)) {nodes.add(defaultStart);}
       startNode.setItems(nodes);
       endNode.setItems(nodes);
 //      System.out.println("handled");
@@ -860,6 +864,7 @@ public class PathfinderController {
                       alert.setContentText(alert_message);
                       alert.showAndWait();
                   }
+                  if (floorsTraversed.size() == 1) {nextFloor.setDisable(true);}
 
               } catch (SQLException e) {
                   throw new RuntimeException(e);
