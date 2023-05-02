@@ -294,7 +294,9 @@ public class OfficeRequestControllerI implements IRequestController {
 //                        cbSupplyItems.setVisible(false);
         }
         //continue setting the editable fields to the values of the request
-        cbSupplyItems.getSelectionModel().selectItem(fullOfficeRequest.getItem());
+        cbSupplyItems.selectItem(fullOfficeRequest.getItem());
+        cbSupplyItems.setText(fullOfficeRequest.getItem());
+        cbSupplyItems.setValue(fullOfficeRequest.getItem());
         tbSupplyQuantities.setText(Integer.toString(fullOfficeRequest.getQuantity()));
         txtFldNotes.setText(fullOfficeRequest.getNotes());
         cbLongName.getSelectionModel().selectItem(fullOfficeRequest.getLocationName());

@@ -28,6 +28,7 @@ import org.controlsfx.control.PopOver;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collections;
 
 public class FlowerRequestControllerI implements IRequestController {
@@ -282,38 +283,47 @@ public class FlowerRequestControllerI implements IRequestController {
         //set the editable fields to the values of the request
         cbAvailableFlowers.getSelectionModel().selectItem(fullFlowerRequest.getFlowerType());
         //loads the correct color options for the selected flower type so edit page does not crash
-        if (cbAvailableFlowers.equals("Rose")) {
+        cdAvailableColor.getItems().clear();
+        if (cbAvailableFlowers.getSelectionModel().getSelectedItem().equals("Rose")) {
             cdAvailableColor.getItems().clear();
+            cdAvailableColor.getSelectionModel().clearSelection();
             ObservableList<String> roseColors = FXCollections.observableArrayList("Red", "Orange", "Yellow", "Pink", "Purple", "White", "Green");
             Collections.sort(roseColors);
             cdAvailableColor.getItems().addAll(roseColors);
             cdAvailableColor.setVisible(true);
-        } else if (cbAvailableFlowers.equals("Tulip")) {
+        } else if (cbAvailableFlowers.getSelectionModel().equals("Tulip")) {
             cdAvailableColor.getItems().clear();
+            cdAvailableColor.getSelectionModel().clearSelection();
             ObservableList<String> tulipColors = FXCollections.observableArrayList("Yellow", "White", "Purple", "Pink", "Orange", "Red");
             Collections.sort(tulipColors);
             cdAvailableColor.getItems().addAll(tulipColors);
             cdAvailableColor.setVisible(true);
-        } else if (cbAvailableFlowers.equals("Daisy")) {
+        } else if (cbAvailableFlowers.getSelectionModel().getSelectedItem().equals("Daisy")) {
             cdAvailableColor.getItems().clear();
+            cdAvailableColor.getSelectionModel().clearSelection();
             ObservableList<String> daisyColors = FXCollections.observableArrayList("White", "Pink", "Red", "Blue");
             Collections.sort(daisyColors);
             cdAvailableColor.getItems().addAll(daisyColors);
             cdAvailableColor.setVisible(true);
-        } else if (cbAvailableFlowers.equals("Lily")) {
+        } else if (cbAvailableFlowers.getSelectionModel().getSelectedItem().equals("Lily")) {
             cdAvailableColor.getItems().clear();
+            cdAvailableColor.getSelectionModel().clearSelection();
             ObservableList<String> lilyColors = FXCollections.observableArrayList("White", "Pink", "Red", "Orange", "Yellow");
             Collections.sort(lilyColors);
             cdAvailableColor.getItems().addAll(lilyColors);
             cdAvailableColor.setVisible(true);
-        } else if (cbAvailableFlowers.equals("Sunflower")) {
+        } else if (cbAvailableFlowers.getSelectionModel().getSelectedItem().equals("Sunflower")) {
             cdAvailableColor.getItems().clear();
+            cdAvailableColor.getSelectionModel().clearSelection();
             ObservableList<String> sunflowerColors = FXCollections.observableArrayList("Yellow", "Red", "Orange", "Pink", "Purple");
             Collections.sort(sunflowerColors);
             cdAvailableColor.getItems().addAll(sunflowerColors);
             cdAvailableColor.setVisible(true);
         }
         //continue setting the editable fields to the values of the request
+        cdAvailableColor.selectItem(fullFlowerRequest.getColor());
+        cdAvailableColor.setText(fullFlowerRequest.getColor());
+        cdAvailableColor.setValue(fullFlowerRequest.getColor());
         cdAvailableType.getSelectionModel().selectItem(fullFlowerRequest.getSize());
         txtFldMessage.setText(fullFlowerRequest.getMessage());
         txtFldNotes.setText(fullFlowerRequest.getNotes());
