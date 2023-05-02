@@ -111,6 +111,8 @@ public class MapEditorController {
   Group nameGroup = new Group();
   Pane locationCanvas;
   Pane fullNodeCanvas;
+  FullNode startNode;
+  FullNode endNode;
   //public static ArrayList<Node> nodeList = new ArrayList<>();
   public static ArrayList<FullNode> fullNodesList = new ArrayList<>();
   private ArrayList<FullNode> floorList = new ArrayList<>();
@@ -875,23 +877,23 @@ public class MapEditorController {
     LocalDate date = dateToMove.getValue();
 
     // Get the nodes from the circle ids
-    FullNode startNode = Repository.getRepository().getFullNode(Integer.parseInt(c1.getId()));
-    FullNode endNode = Repository.getRepository().getFullNode(Integer.parseInt(c2.getId()));
+    this.startNode = Repository.getRepository().getFullNode(Integer.parseInt(c1.getId()));
+    this.endNode = Repository.getRepository().getFullNode(Integer.parseInt(c2.getId()));
 
     // Get the move data
     Move move = new Move();
-    move.setLongName(startNode.getLongName()); // Location name of the start node
-    move.setNodeID(endNode.getNodeID()); // ID of end node
+    move.setLongName(this.startNode.getLongName()); // Location name of the start node
+    move.setNodeID(this.endNode.getNodeID()); // ID of end node
     move.setDate(Date.valueOf(date));
+
+    Move move2 = new Move();
+    move2.setLongName(this.endNode.getLongName()); // Location name of the end node
+    move2.setNodeID(this.startNode.getNodeID()); // ID of start node
+    move2.setDate(Date.valueOf(date));
 
     // Add the move to the database
     Repository.getRepository().addMove(move);
-
-    // Add move to the local list
-    moveMap.addToMoveMap(move);
-
-    // Redraw the movemap
-    drawMoveMap(currentFloor);
+    Repository.getRepository().addMove(move2);
 
     submissionAlert("Move submitted successfully");
 
@@ -902,7 +904,12 @@ public class MapEditorController {
 
     // Refresh the map
     refreshMap();
-
+    moveMap = new MoveMap(); // Create move map
+    this.locationCanvas.getChildren().add(moveMap.getPathGroup());
+    this.locationCanvas.getChildren().add(moveMap.getMoveInfo());
+    moveMap.getPathGroup().setVisible(false);
+    moveMap.getMoveInfo().setVisible(false);
+    if (toggleMoves.isSelected()) {handleToggleMoves();}
   }
 
   private void handleAddMove(Circle c1, Circle c2) {
