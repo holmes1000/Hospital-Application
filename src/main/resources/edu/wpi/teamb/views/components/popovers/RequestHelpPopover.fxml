@@ -5,10 +5,10 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="180.0" prefWidth="380.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.components.popovers.FlowerRequestHelpPopOverController">
+<AnchorPane prefHeight="180.0" prefWidth="380.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.components.popovers.RequestHelpPopoverController">
     <children>
         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#5f7ca4" height="170.0" layoutX="5.0" layoutY="5.0" stroke="BLACK" strokeType="INSIDE" width="373.0" />
-        <Text fill="WHITE" layoutX="9.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Flower Request Help:                                                           Drag to Pop Out" wrappingWidth="365.33673095703125">
+        <Text fill="WHITE" layoutX="9.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Request Help:                                                                      Drag to Pop Out" wrappingWidth="365.33673095703125">
             <font>
                 <Font size="11.0" />
             </font></Text>
@@ -24,17 +24,7 @@
             <font>
                 <Font size="11.0" />
             </font></Text>
-      <Text fill="WHITE" layoutX="8.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select where to order from and to." wrappingWidth="365.33673095703125">
-         <font>
-            <Font size="11.0" />
-         </font>
-      </Text>
-      <Text fill="WHITE" layoutX="8.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select what kind of flower, color of flower, and amount of flower(s)." wrappingWidth="365.33673095703125">
-         <font>
-            <Font size="11.0" />
-         </font>
-      </Text>
-      <Text fill="WHITE" layoutX="8.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter any additional notes pretaining to the order." wrappingWidth="365.33673095703125">
+      <Text fill="WHITE" layoutX="8.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="In all requests, all fields but additional notes are required. An exception is meal request, where only one meal, drink, or snack is required. The submit button will be available when all required fields are submitted." wrappingWidth="365.33673095703125">
          <font>
             <Font size="11.0" />
          </font>

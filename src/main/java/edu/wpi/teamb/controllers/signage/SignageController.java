@@ -9,7 +9,11 @@ import edu.wpi.teamb.DBAccess.Full.FullNode;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 import edu.wpi.teamb.DBAccess.ORMs.Sign;
 import edu.wpi.teamb.controllers.NavDrawerController;
+import edu.wpi.teamb.entities.DefaultStart;
+import edu.wpi.teamb.entities.ELogin;
 import edu.wpi.teamb.entities.ESignage;
+import edu.wpi.teamb.navigation.Navigation;
+import edu.wpi.teamb.navigation.Screen;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import javafx.application.Platform;
@@ -47,11 +51,13 @@ public class SignageController {
   @FXML private MFXComboBox<String> cbLocation;
   @FXML private MFXButton btnSignageForm;
   @FXML private MFXButton btnRemoveSign;
+  @FXML private MFXButton btnGetDir;
   @FXML private VBox signVbox;
   public GesturePane pane = new GesturePane();
     Group nodeGroup = new Group();
     Pane locationCanvas;
     Pane nodeCanvas;
+    ELogin.PermissionLevel adminTest;
   private ESignage signageE;
     @FXML
     private StackPane stackPaneMapView;
@@ -118,6 +124,12 @@ public class SignageController {
         btnSignageForm.setOnMouseClicked(e -> handleSignageForm());
         btnRemoveSign.setTooltip(new Tooltip("Click to remove a sign"));
         btnRemoveSign.setOnMouseClicked(e -> handleRemoveSigns());
+        btnGetDir.setOnMouseClicked(e -> handleGetDirections());
+        adminTest = ELogin.getLogin().getPermissionLevel();
+        if (adminTest != ELogin.PermissionLevel.ADMIN) {
+            btnSignageForm.setVisible(false);
+            btnRemoveSign.setVisible(false);
+        }
     }
 
     public void clickCbLocation() {
@@ -130,6 +142,11 @@ public class SignageController {
         String item = cbLocation.getSelectedItem();
         loadPageBasedOnGroup(item);
         displayMap();
+    }
+
+    public void handleGetDirections(){
+        DefaultStart.getInstance().setDefault_start(centerNode.getLongName());
+        Navigation.navigate(Screen.PATHFINDER);
     }
 
   public void loadPageBasedOnGroup(String group) {

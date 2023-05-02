@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="150.0" prefWidth="380.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.components.popovers.SubmittedRequestHandlingHelpPopoverController">
+   <children>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#5f7ca4" height="140.0" layoutX="5.0" layoutY="5.0" stroke="BLACK" strokeType="INSIDE" width="373.0" />
+      <Text fill="WHITE" layoutX="8.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Submitted Request Handling Help:                         Drag to Pop Out" wrappingWidth="364.9999999046322" />
+      <Text fill="WHITE" layoutX="11.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="View all submitted requests." wrappingWidth="364.9999999046322" />
+      <Text fill="WHITE" layoutX="11.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Filter requests by status, type, date submitted, or if it is assigned." wrappingWidth="364.9999999046322" />
+      <Text fill="WHITE" layoutX="11.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select edit to edit a request's specifications." wrappingWidth="364.9999999046322" />
+      <Text fill="WHITE" layoutX="11.0" layoutY="86.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select delete to delete a request." wrappingWidth="364.9999999046322" />
+      <Text fill="WHITE" layoutX="11.0" layoutY="103.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Set as complete to mark the request as completed." wrappingWidth="364.9999999046322" />
+   </children>
+</AnchorPane>
