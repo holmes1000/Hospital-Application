@@ -1924,7 +1924,32 @@ public class Repository {
         return edges;
     }
 
+    public void setAllLocationNames() {
+        locationNameDAO.setAll();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    public void setAllMoves() {
+        moveDAO.setAll();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    public void setAllFullNodes() {
+        nodeDAO.setAllFullNodes();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
     public void resetMap() {
         DButils.resetMap();
+        Repository.getRepository().setAllNodes();
+        Repository.getRepository().setAllEdges();
+        Repository.getRepository().setAllLocationNames();
+        Repository.getRepository().setAllMoves();
+        Repository.getRepository().setAllFullNodes();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 }
