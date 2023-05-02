@@ -774,6 +774,13 @@ public class Repository {
         return id;
     }
 
+    public ArrayList<String> getLongNamesAlphebeticalOrder() {
+        ArrayList<String> names = locationNameDAO.getLongNamesAlphebeticalOrder();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return names;
+    }
+
     //TODO Move methods
 
 
