@@ -103,6 +103,10 @@ public class SignageController {
 
       AddNewSignageFormController addSignageFormController = new AddNewSignageFormController();
       addSignageFormController.setSignageController(this);
+      EditSignageFormController editSignageFormController = new EditSignageFormController();
+      editSignageFormController.setSignageController(this);
+      RemoveSignageController removeSignageFormController = new RemoveSignageController();
+      removeSignageFormController.setSignageController(this);
       displayMap();
 
   }

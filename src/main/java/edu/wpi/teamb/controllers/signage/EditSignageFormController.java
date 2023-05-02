@@ -61,6 +61,7 @@ public class EditSignageFormController {
         initialize_date_pickers();
         initializeSignLocationsAndDirections();
         initalizeLongNamesComboBox();
+
     }
 
     private void initializeSignName() {
