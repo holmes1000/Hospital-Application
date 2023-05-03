@@ -44,7 +44,7 @@ public class StartScnController {
         Gapp.changeScene("./views/Game/rsc/Screens/GameScn.fxml");
         //create a new thread for the game to run
 
-        Thread g = Gapp.runGame();
+        Gapp.runGame();
 
        
      

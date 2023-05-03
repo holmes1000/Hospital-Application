@@ -133,7 +133,7 @@ public class TimeController {
             timeTilNewPatient -= time;
         } else if(Game.customerQ.size()<=10){
 
-            timeTilNewPatient = patientTime/(Math.random()*(3+(Game.getCurDif().ordinal()))+1);
+            timeTilNewPatient = patientTime/(Math.random()*(5+(Game.getCurDif().ordinal()))+1);
             System.out.println(Game.getCurDif());
             patient p = patient.genRandPat(Game.customerQ.size()+1);
             Game.customerQ.add(p);

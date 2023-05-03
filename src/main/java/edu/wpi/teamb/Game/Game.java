@@ -4,16 +4,11 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import edu.wpi.teamb.Game.Contollers.GameScnController;
 import edu.wpi.teamb.Game.PatientThings.patient;
 import edu.wpi.teamb.Game.Player.Player;
 import edu.wpi.teamb.Game.Player.TimeController;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 
 public class Game {
@@ -59,7 +54,7 @@ public class Game {
     private Game() {
         int timeLeft = 50;
         player = new Player(0, timeLeft);
-        timeController = TimeController.newTimeController(20);
+        timeController = TimeController.newTimeController(25);
         gameSpeed = 1;
         customerQ = new LinkedList<>();
         customerS = new LinkedList<>();
@@ -122,18 +117,18 @@ public class Game {
                 if((int)(Math.random()*3)==1)
                 changeDif();
                 
-                //print position of every patiend in cQ and cS and cDone
-                for (patient patient : customerQ) {
-                    System.out.print(patient.getPosition()+" ");
-                }System.out.println("\t:"+customerQ.size());
-                for (patient patient : customerS) {
-                    System.out.print(patient.getPosition()+" ");
-                }System.out.println("\t:"+customerS.size());
-                for (patient patient : customersDone) {
-                    System.out.print(patient.getPosition()+ " ");
-                }System.out.println("\t:"+customersDone.size());
+                // //print position of every patiend in cQ and cS and cDone
+                // for (patient patient : customerQ) {
+                //     System.out.print(patient.getPosition()+" ");
+                // }System.out.println("\t:"+customerQ.size());
+                // for (patient patient : customerS) {
+                //     System.out.print(patient.getPosition()+" ");
+                // }System.out.println("\t:"+customerS.size());
+                // for (patient patient : customersDone) {
+                //     System.out.print(patient.getPosition()+ " ");
+                // }System.out.println("\t:"+customersDone.size());
                 
-                System.out.println("FPS: " + drawcount);
+                // System.out.println("FPS: " + drawcount);
                 drawcount = 0;
                 timer = 0;
                 // degub info
