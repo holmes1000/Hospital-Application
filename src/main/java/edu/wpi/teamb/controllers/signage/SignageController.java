@@ -10,7 +10,6 @@ import edu.wpi.teamb.DBAccess.ORMs.Node;
 import edu.wpi.teamb.DBAccess.ORMs.Sign;
 import edu.wpi.teamb.controllers.NavDrawerController;
 import edu.wpi.teamb.entities.DefaultStart;
-import edu.wpi.teamb.entities.ELogin;
 import edu.wpi.teamb.entities.ESignage;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
@@ -38,9 +37,7 @@ import javafx.stage.Stage;
 import net.kurobako.gesturefx.GesturePane;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Objects;
+import java.util.*;
 
 import static javafx.scene.paint.Color.RED;
 
@@ -48,17 +45,17 @@ public class SignageController {
 
   @FXML private JFXHamburger menuBurger;
   @FXML private JFXDrawer menuDrawer;
-  @FXML private MFXComboBox<String> cbLocation;
-  @FXML private MFXButton btnSignageForm;
+  @FXML MFXComboBox<String> cbLocation;
+  @FXML private MFXButton btnAddSignageForm;
+  @FXML private MFXButton btnEditSigns;
   @FXML private MFXButton btnRemoveSign;
-  @FXML private MFXButton btnGetDir;
+  @FXML private  MFXButton btnGetDir;
   @FXML private VBox signVbox;
   public GesturePane pane = new GesturePane();
     Group nodeGroup = new Group();
     Pane locationCanvas;
     Pane nodeCanvas;
-    ELogin.PermissionLevel adminTest;
-  private ESignage signageE;
+    private ESignage signageE;
     @FXML
     private StackPane stackPaneMapView;
     @FXML
@@ -103,6 +100,13 @@ public class SignageController {
       navPane.setMouseTransparent(true);
       initializeNavGates();
       cbLocation.selectFirst();
+
+      AddNewSignageFormController addSignageFormController = new AddNewSignageFormController();
+      addSignageFormController.setSignageController(this);
+      EditSignageFormController editSignageFormController = new EditSignageFormController();
+      editSignageFormController.setSignageController(this);
+      RemoveSignageController removeSignageFormController = new RemoveSignageController();
+      removeSignageFormController.setSignageController(this);
       displayMap();
 
   }
@@ -120,16 +124,13 @@ public class SignageController {
     }
 
     private void init_signage_form_btn(){
-      btnSignageForm.setTooltip(new Tooltip("Click to add a new sign"));
-        btnSignageForm.setOnMouseClicked(e -> handleSignageForm());
+        btnAddSignageForm.setTooltip(new Tooltip("Click to add a new sign"));
+        btnAddSignageForm.setOnMouseClicked(e -> handleAddSignageForm());
+        btnEditSigns.setTooltip(new Tooltip("Click to edit existing signs"));
+        btnEditSigns.setOnMouseClicked(e -> handleEditSignageForm());
         btnRemoveSign.setTooltip(new Tooltip("Click to remove a sign"));
         btnRemoveSign.setOnMouseClicked(e -> handleRemoveSigns());
         btnGetDir.setOnMouseClicked(e -> handleGetDirections());
-        adminTest = ELogin.getLogin().getPermissionLevel();
-        if (adminTest != ELogin.PermissionLevel.ADMIN) {
-            btnSignageForm.setVisible(false);
-            btnRemoveSign.setVisible(false);
-        }
     }
 
     public void clickCbLocation() {
@@ -142,11 +143,6 @@ public class SignageController {
         String item = cbLocation.getSelectedItem();
         loadPageBasedOnGroup(item);
         displayMap();
-    }
-
-    public void handleGetDirections(){
-        DefaultStart.getInstance().setDefault_start(centerNode.getLongName());
-        Navigation.navigate(Screen.PATHFINDER);
     }
 
   public void loadPageBasedOnGroup(String group) {
@@ -168,13 +164,6 @@ public class SignageController {
               //set the location of the sign
               controller.setSignageLocationText(s.getLocationName());
               //set the direction of the sign
-              if(s.getDirection().equals("stop here") && index== 0){
-                  index++;
-                  Label label = new Label();
-                  label.setText("Stop Here");
-                  label.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
-                  signVbox.getChildren().add(0, label);
-              }
               controller.setSignageDirectionIcons(s.getDirection());
               signVbox.getChildren().addAll(pane);
           } catch (IOException e) {
@@ -259,6 +248,7 @@ public class SignageController {
 
   public void initializeFields() {
       ObservableList<String> locations = FXCollections.observableArrayList(signageE.getSignageGroups());
+      Collections.sort(locations);
       cbLocation.setItems(locations);
   }
 
@@ -338,13 +328,28 @@ public class SignageController {
                 });
     }
 
-    private void handleSignageForm() {
+    private void handleAddSignageForm() {
         Parent root;
         try {
-            root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("edu/wpi/teamb/views/signage/SignageForm.fxml")));
+            root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("edu/wpi/teamb/views/signage/AddNewSignageForm.fxml")));
             Stage stage = new Stage();
             stage.setTitle("Add Signage");
-            stage.setScene(new Scene(root, 800, 400));
+            stage.setScene(new Scene(root, 904, 550));
+            stage.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleEditSignageForm() {
+        ESignage.setCurrentSignageGroup(cbLocation.getValue());
+        Parent root;
+        try {
+            root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("edu/wpi/teamb/views/signage/EditSignageForm.fxml")));
+            Stage stage = new Stage();
+            stage.setTitle("Edit Signage");
+            stage.setScene(new Scene(root, 904, 550));
             stage.show();
         }
         catch (IOException e) {
@@ -358,12 +363,37 @@ public class SignageController {
             root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("edu/wpi/teamb/views/signage/RemoveSignageForm.fxml")));
             Stage stage = new Stage();
             stage.setTitle("Remove Signage");
-            stage.setScene(new Scene(root, 800, 400));
+            stage.setScene(new Scene(root, 1000, 600));
             stage.show();
         }
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    void refresh() {
+        // clear out the items in the combo box
+        cbLocation.getItems().clear();
+        initializeFields();
+    }
+    void refreshComboBox() {
+        HashSet<String> signageGroups = signageE.getSignageGroups();
+        //convert the hashset to an arrayList
+        ArrayList<String> signageGroupsList = new ArrayList<String>();
+        for (String element : signageGroups) {
+            signageGroupsList.add(element);
+        }
+        ObservableList<String> signageGroupsObservableList = FXCollections.observableArrayList(signageGroupsList);
+        cbLocation.setItems(signageGroupsObservableList);
+    }
+
+    public void handleGetDirections(){
+        DefaultStart.getInstance().setDefault_start(centerNode.getLongName());
+        Navigation.navigate(Screen.PATHFINDER);
+    }
+
+    public String getCurrentSignageGroup(){
+        return cbLocation.getValue();
     }
 
 }

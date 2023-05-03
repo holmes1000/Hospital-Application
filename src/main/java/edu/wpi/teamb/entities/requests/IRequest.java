@@ -11,7 +11,8 @@ public interface IRequest {
     FlowerDelivery,
     Move,
     OfficeSupplies,
-    FurnitureDelivery
+    FurnitureDelivery,
+    TranslationRequest
   }
 
   enum RequestStatus {

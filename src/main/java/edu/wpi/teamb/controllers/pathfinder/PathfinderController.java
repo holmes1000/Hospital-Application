@@ -154,7 +154,7 @@ public class PathfinderController {
       activateNav();
       deactivateNav();
       defaultStart = DefaultStart.getInstance().getDefault_start();
-      if (defaultStart.equals("")) {DefaultStart.getInstance().setDefault_start("15 Lobby Entrance Floor 2");}
+      if (defaultStart.equals("")) {DefaultStart.getInstance().setDefault_start(DefaultStart.getInstance().getTrue_default_start());}
       defaultStart = DefaultStart.getInstance().getDefault_start();
       defaultEnd = DefaultStart.getInstance().getDefault_end();
 
@@ -254,6 +254,8 @@ public class PathfinderController {
           }
       });
 
+      //Toggle node names off
+      handleToggleShowNames();
 
   }
 
@@ -583,7 +585,7 @@ public class PathfinderController {
         nextFloor.setTooltip(new Tooltip("Click to go to Next Floor"));
         nextFloor.setVisible(false);
         toggleShowNames.setTooltip(new Tooltip("Click to toggle Location Names"));
-        toggleShowNames.setSelected(true);
+        toggleShowNames.setSelected(false);
         toggleShowNames.setOnMouseClicked(event->{handleToggleShowNames();});
         btnEditMap.setTooltip(new Tooltip("Click to edit the map"));
         btnEditMap.setOnMouseClicked(event -> Navigation.navigate(Screen.MAP_EDITOR));
@@ -891,11 +893,34 @@ public class PathfinderController {
               //floorsMap = new LinkedHashMap<>();
 
               for (String item : string_path) {
-                  String floorNum = fullNodesByID.get(fullNodesByLongname.get(item).getNodeID()).getFloor();
+                  FullNode node = fullNodesByID.get(fullNodesByLongname.get(item).getNodeID());
+                  String floorNum = node.getFloor();
                   //String floorNum = fullNodesByLongname.get(item).getNodeID();
                   //System.out.println(floorNum);
                   ObservableList<String> floorItems = floorsMap.getOrDefault(floorNum, FXCollections.observableArrayList());
-                  floorItems.add(item);
+                  String prefix = "";
+                  if(item.equals(string_path.get(0))) { // first item
+                      prefix = "Start at";
+                  } else if(item.equals(string_path.get(string_path.size() - 1))) { // last item
+                      prefix = "Arrive at";
+                  } else if(floorItems.isEmpty()) { // first item on subsequent floors
+                      prefix = "Continue from";
+                  } else {
+                      // get angle lmfao
+                      FullNode lastNode = fullNodesByID.get(fullNodesByLongname.get(string_path.get(string_path.indexOf(item) - 1)).getNodeID());
+                      FullNode nextNode = fullNodesByID.get(fullNodesByLongname.get(string_path.get(string_path.indexOf(item) + 1)).getNodeID());
+                      double angle1 = Math.atan2(lastNode.getyCoord() - node.getyCoord(), lastNode.getxCoord() - node.getxCoord());
+                      double angle2 = Math.atan2(node.getyCoord() - nextNode.getyCoord(), node.getxCoord() - nextNode.getxCoord());
+                      double angle = angle1 - angle2;
+                      if(Math.abs(angle) < Math.toRadians(48)) {
+                          prefix = "Go straight to";
+                      } else if(angle > 0 && angle < Math.toRadians(180)) {
+                          prefix = "Turn left to";
+                      } else {
+                          prefix = "Turn right to";
+                      }
+                  }
+                  floorItems.add(prefix + " " + item);
                   floorsMap.put(floorNum, floorItems);
               }
 

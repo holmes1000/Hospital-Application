@@ -43,6 +43,7 @@ public class MealRequestControllerI implements IRequestController{
     @FXML private MFXFilterComboBox<String> cbOrderLocation;
     @FXML private MFXFilterComboBox<String> cbEmployeesToAssign;
     @FXML private MFXFilterComboBox<String> cbLongName;
+    @FXML private MFXFilterComboBox<String> cbChangeStatus;
     private EMealRequest EMealRequest;
 
     public MealRequestControllerI(){
@@ -138,6 +139,11 @@ public class MealRequestControllerI implements IRequestController{
 
         // TEXTFIELD INITIALIZATION
         txtFldNotes.setTooltip(new Tooltip("Enter any additional notes here"));
+
+        // Set the change status dropdown
+        ObservableList<String> status = FXCollections.observableArrayList("Pending", "In-Progress", "Completed");
+        Collections.sort(status);
+        cbChangeStatus.setItems(status);
     }
 
     @Override
@@ -183,12 +189,14 @@ public class MealRequestControllerI implements IRequestController{
      * @param employee
      */
     public void alertEmployee(String employee){
-        Alert newAlert = new Alert();
-        newAlert.setTitle("New Task Assigned");
-        newAlert.setDescription("You have been assigned a new meal request to complete.");
-        newAlert.setEmployee(employee);
-        newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
-        Repository.getRepository().addAlert(newAlert);
+        if(!employee.equals("unassigned")) {
+            Alert newAlert = new Alert();
+            newAlert.setTitle("New Task Assigned");
+            newAlert.setDescription("You have been assigned a new meal request to complete.");
+            newAlert.setEmployee(employee);
+            newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
+            Repository.getRepository().addAlert(newAlert);
+        }
     }
 
     @Override
@@ -235,6 +243,7 @@ public class MealRequestControllerI implements IRequestController{
 
     //functions for editable stage in InfoCardController
     public void enterMealRequestEditableMode(FullMealRequest fullMealRequest, InfoCardController currentInfoCardController) {
+        String oldEmployee = fullMealRequest.getEmployee();
         cbOrderLocation.getSelectionModel().selectItem(fullMealRequest.getOrderFrom());
         cbEmployeesToAssign.getSelectionModel().selectItem(fullMealRequest.getEmployee());
         cbAvailableMeals.getSelectionModel().selectItem(fullMealRequest.getFood());
@@ -242,6 +251,8 @@ public class MealRequestControllerI implements IRequestController{
         cbAvailableSnacks.getSelectionModel().selectItem(fullMealRequest.getSnack());
         cbLongName.getSelectionModel().selectItem(fullMealRequest.getLocationName());
         txtFldNotes.setText(fullMealRequest.getNotes());
+        cbChangeStatus.setVisible(true);
+        cbChangeStatus.getSelectionModel().selectItem(fullMealRequest.getRequestStatus().toString());
         btnSubmit.setText("Update");
         //remove the current onAction event
         btnSubmit.setOnAction(null);
@@ -255,8 +266,13 @@ public class MealRequestControllerI implements IRequestController{
             fullMealRequest.setSnack(cbAvailableSnacks.getValue());
             fullMealRequest.setLocationName(cbLongName.getValue());
             fullMealRequest.setNotes(txtFldNotes.getText());
+            fullMealRequest.setRequestStatus(cbChangeStatus.getValue());
             //update the database
             EMealRequest.updateMealRequests(fullMealRequest);
+            //Alert new user?
+            if(!oldEmployee.equals(cbEmployeesToAssign.getValue())){
+                alertEmployee(cbEmployeesToAssign.getValue());
+            }
             //close the window
             Stage stage = (Stage) btnSubmit.getScene().getWindow();
             stage.close();

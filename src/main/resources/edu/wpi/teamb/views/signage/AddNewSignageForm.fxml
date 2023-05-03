@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
+<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<!--<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="edu.wpi.teamb.controllers.CreditsController" prefHeight="400.0" prefWidth="600.0">-->
+<!--    -->
+<!--</AnchorPane>-->
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="561.0" prefWidth="925.0" style="-fx-background-color: #5f7ca4;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.controllers.signage.AddNewSignageFormController">
+    <children>
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#012d5a" height="50.0" layoutX="-162.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1088.0" />
+        <Text fill="WHITE" layoutX="-4.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Submit New Signage Information" textAlignment="CENTER" wrappingWidth="932.5033884048462">
+            <font>
+                <Font name="System Bold" size="36.0" />
+            </font>
+        </Text>
+        <VBox layoutX="26.0" layoutY="319.0" prefHeight="285.0" prefWidth="125.0" />
+        <Pane layoutX="11.0" layoutY="62.0" prefHeight="489.0" prefWidth="904.0">
+            <children>
+                <MFXButton fx:id="btnSubmit" layoutX="637.0" layoutY="325.0" text="Create New Sign" />
+                <MFXDatePicker fx:id="startDatePicker" layoutX="558.0" layoutY="144.0" prefHeight="50.0" prefWidth="267.0" promptText="Start Date" />
+                <MFXDatePicker fx:id="endDatePicker" layoutX="558.0" layoutY="210.0" prefHeight="48.0" prefWidth="267.0" promptText="End Date (Optional)" />
+                <MFXButton fx:id="btnClose" layoutX="637.0" layoutY="362.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Cancel" />
+            <MFXTextField fx:id="signageNameBox" layoutX="27.0" layoutY="14.0" prefHeight="49.0" prefWidth="430.0" promptText="Enter new Sign/Kiosk name (just to organize things on your end)" />
+            <VBox layoutX="27.0" layoutY="79.0" prefHeight="390.0" prefWidth="299.0" spacing="15.0">
+               <children>
+                  <MFXTextField fx:id="location1Box" prefHeight="49.0" prefWidth="430.0" promptText="Location 1 (plus any descriptors)" />
+                  <MFXTextField fx:id="location2Box" prefHeight="49.0" prefWidth="430.0" promptText="Location 2 (plus any descriptors)" />
+                  <MFXTextField fx:id="location3Box" prefHeight="49.0" prefWidth="430.0" promptText="Location 3 (plus any descriptors)" />
+                  <MFXTextField fx:id="location4Box" prefHeight="49.0" prefWidth="430.0" promptText="Location 4 (plus any descriptors)" />
+                  <MFXTextField fx:id="location5Box" prefHeight="49.0" prefWidth="430.0" promptText="Location 5 (plus any descriptors)" />
+                  <MFXTextField fx:id="location6Box" prefHeight="49.0" prefWidth="430.0" promptText="Location 6 (plus any descriptors)" />
+               </children>
+            </VBox>
+            <MFXFilterComboBox fx:id="signLocationBox" layoutX="558.0" layoutY="80.0" prefHeight="49.0" prefWidth="267.0" promptText="Sign Kiosk Location" />
+            <MFXFilterComboBox fx:id="direction1Box" layoutX="338.0" layoutY="79.0" prefHeight="50.0" prefWidth="118.0" promptText="Direction" />
+            <MFXFilterComboBox fx:id="direction2Box" layoutX="338.0" layoutY="144.0" prefHeight="50.0" prefWidth="118.0" promptText="Direction" />
+            <MFXFilterComboBox fx:id="direction3Box" layoutX="338.0" layoutY="209.0" prefHeight="50.0" prefWidth="118.0" promptText="Direction" />
+            <MFXFilterComboBox fx:id="direction4Box" layoutX="338.0" layoutY="274.0" prefHeight="50.0" prefWidth="118.0" promptText="Direction" />
+            <MFXFilterComboBox fx:id="direction5Box" layoutX="338.0" layoutY="337.0" prefHeight="50.0" prefWidth="118.0" promptText="Direction" />
+            <MFXFilterComboBox fx:id="direction6Box" layoutX="338.0" layoutY="403.0" prefHeight="50.0" prefWidth="118.0" promptText="Direction" />
+            <Separator layoutX="486.0" layoutY="15.0" orientation="VERTICAL" prefHeight="439.0" prefWidth="0.0" />
+            </children></Pane>
+    </children>
+</Pane>

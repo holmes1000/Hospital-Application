@@ -31,6 +31,7 @@ public class Repository {
             officeRequestDAO = new OfficeRequestDAOImpl();
             alertDAO = new AlertDAOImpl();
             signDAO = new SignDAOImpl();
+            translationRequestDAO = new TranslationRequestDAOImpl();
         } catch (SQLException e) {
             System.out.println("ERROR: Repository failed to initialize");
             throw new RuntimeException(e);
@@ -57,6 +58,7 @@ public class Repository {
     private final MealRequestDAOImpl mealRequestDAO;
     private final FurnitureRequestDAOImpl furnitureRequestDAO;
     private final OfficeRequestDAOImpl officeRequestDAO;
+    private final TranslationRequestDAOImpl translationRequestDAO;
     private final AlertDAOImpl alertDAO;
     private final SignDAOImpl signDAO;
     private final DBconnection dbConnection;
@@ -774,6 +776,13 @@ public class Repository {
         return id;
     }
 
+    public ArrayList<String> getLongNamesAlphebeticalOrder() {
+        ArrayList<String> names = locationNameDAO.getLongNamesAlphebeticalOrder();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return names;
+    }
+
     //TODO Move methods
 
 
@@ -865,12 +874,6 @@ public class Repository {
         dbConnection.forceClose();
     }
 
-    public void updateBlock(Object object) {
-        signDAO.updateBlock(object);
-        dbConnection.closeDBconnection();
-        dbConnection.forceClose();
-    }
-
     public void insertSign(Sign s) {
         signDAO.insertSign(s);
         dbConnection.closeDBconnection();
@@ -895,8 +898,8 @@ public class Repository {
         dbConnection.forceClose();
     }
 
-    public void updateSignageGroup(Sign s) {
-        signDAO.updateSignageGroup(s);
+    public void transferSign(String oldName, Sign s) {
+        signDAO.transferSign(oldName, s);
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
     }
@@ -927,6 +930,27 @@ public class Repository {
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
         return names;
+    }
+
+    public ArrayList<String> getCorrespondingDirections(String signageGroup, ArrayList<String> locationNames) {
+        ArrayList<String> directions = signDAO.getCorrespondingDirections(signageGroup, locationNames);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return directions;
+    }
+
+    public Date getStartDate(String signageGroup, String locationName) {
+        Date date = signDAO.getStartDate(signageGroup, locationName);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return date;
+    }
+
+    public Date getEndDate(String signageGroup, String locationName) {
+        Date date = signDAO.getEndDate(signageGroup, locationName);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return date;
     }
 
     //TODO DBinput methods
@@ -1761,6 +1785,44 @@ public class Repository {
         dbConnection.forceClose();
         return or;
     }
+    public void updateOfficeRequest(OfficeRequest or) {
+        officeRequestDAO.update(or);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    public FullTranslationRequest getTranslationRequest(int id) {
+        FullTranslationRequest ftr = translationRequestDAO.get(id);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return ftr;
+    }
+    public void addTranslationRequest(String[] tr) {
+        translationRequestDAO.add(tr);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    public void deleteTranslationRequest(FullTranslationRequest ftr) {
+        translationRequestDAO.delete(ftr);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    public ArrayList<TranslationRequest> getTranslationRequests() {
+        ArrayList<TranslationRequest> tr = translationRequestDAO.getAllHelper1();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return tr;
+    }
+
+    public void updateTranslationRequest(FullTranslationRequest ftr) {
+        translationRequestDAO.update(ftr);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+
 
     public Connection getConnection() {
         return dbConnection.getConnection();
@@ -1887,5 +1949,34 @@ public class Repository {
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
         return edges;
+    }
+
+    public void setAllLocationNames() {
+        locationNameDAO.setAll();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    public void setAllMoves() {
+        moveDAO.setAll();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    public void setAllFullNodes() {
+        nodeDAO.setAllFullNodes();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    public void resetMap() {
+        DButils.resetMap();
+        Repository.getRepository().setAllNodes();
+        Repository.getRepository().setAllEdges();
+        Repository.getRepository().setAllLocationNames();
+        Repository.getRepository().setAllMoves();
+        Repository.getRepository().setAllFullNodes();
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
     }
 }

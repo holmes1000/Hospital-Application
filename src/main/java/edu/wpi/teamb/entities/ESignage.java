@@ -6,13 +6,24 @@ import edu.wpi.teamb.DBAccess.ORMs.LocationName;
 import edu.wpi.teamb.DBAccess.ORMs.Node;
 import edu.wpi.teamb.DBAccess.ORMs.Sign;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class ESignage {
 
+    private static String currentSignageGroup;
+
     public ESignage () {
 
+    }
+
+    public static void setCurrentSignageGroup(String signageGroup) {
+        currentSignageGroup = signageGroup;
+    }
+
+    public static String getCurrentSignageGroup() {
+        return currentSignageGroup;
     }
 
     public HashSet<String> getSignageGroups() {
@@ -58,5 +69,33 @@ public class ESignage {
             }
         }
         return n;
+    }
+
+    public ArrayList<String> getLongNamesAlphabetical() {
+        return Repository.getRepository().getLongNamesAlphebeticalOrder();
+    }
+
+    public void addSign(Sign s) {
+        Repository.getRepository().addSign(s);
+    }
+
+    public ArrayList<String> getDirectionsFromLocations(String signGroup, ArrayList<String> locations) {
+        return Repository.getRepository().getCorrespondingDirections(signGroup, locations);
+    }
+
+    public Date getStartDate(String signGroup, String locationName) {
+        return Repository.getRepository().getStartDate(signGroup, locationName);
+    }
+
+    public Date getEndDate(String signGroup, String locationName) {
+        return Repository.getRepository().getEndDate(signGroup, locationName);
+    }
+
+    public void updateSign(Sign s) {
+        Repository.getRepository().updateSign(s);
+    }
+
+    public void transferSign(String oldName, Sign s) {
+        Repository.getRepository().transferSign(oldName, s);
     }
 }

@@ -64,6 +64,10 @@ public class RequestDAOImpl implements IDAO {
             case "Office":
                 OfficeRequestDAOImpl or = null;
                 or = new OfficeRequestDAOImpl();
+            case "Translation":
+                TranslationRequestDAOImpl tr = null;
+                tr = new TranslationRequestDAOImpl();
+                return tr.get(id);
         }
         return null;
     }

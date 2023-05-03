@@ -101,7 +101,7 @@ public class EditUsersController {
         btnEditUser.setTooltip(new Tooltip("Click to edit a user's information"));
         btnDeleteUser.setTooltip(new Tooltip("Click to delete a user"));
         btnReset.setTooltip(new Tooltip("Click to reset the fields"));
-        btnBack.setTooltip(new Tooltip("Click to go back to the settings m"));
+        btnBack.setTooltip(new Tooltip("Click to go back to the settings"));
         btnAddUser.setOnMouseClicked(event -> handleAddUser());
         btnEditUser.setOnMouseClicked(event -> {
             try {
@@ -147,7 +147,7 @@ public class EditUsersController {
 
     private void handleDeleteUser() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Delete Edge");
+        alert.setTitle("Delete User");
         alert.setContentText("Are you sure you want to delete this user?");
         Optional<ButtonType> action = alert.showAndWait();
         if (action.get() == ButtonType.OK) {

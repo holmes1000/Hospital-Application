@@ -55,6 +55,8 @@ public class FurnitureRequestControllerI implements IRequestController{
 
     @FXML private MFXFilterComboBox<String> cbLongName;
 
+    @FXML private MFXFilterComboBox<String> cbChangeStatus;
+
     private edu.wpi.teamb.entities.requests.EFurnitureRequest EFurnitureRequest;
 
     public FurnitureRequestControllerI() {
@@ -142,6 +144,9 @@ public class FurnitureRequestControllerI implements IRequestController{
         initComboBoxChangeListeners();
 
         txtFldNotes.setTooltip(new Tooltip("Enter any special instructions"));
+        ObservableList<String> statuses = FXCollections.observableArrayList("In-Progress", "Pending", "Completed");
+        Collections.sort(statuses);
+        cbChangeStatus.setItems(statuses);
     }
 
     private void initComboBoxChangeListeners() {
@@ -214,12 +219,14 @@ public class FurnitureRequestControllerI implements IRequestController{
      * @param employee
      */
     public void alertEmployee(String employee){
-        Alert newAlert = new Alert();
-        newAlert.setTitle("New Task Assigned");
-        newAlert.setDescription("You have been assigned a new furniture request to complete.");
-        newAlert.setEmployee(employee);
-        newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
-        Repository.getRepository().addAlert(newAlert);
+        if(!employee.equals("unassigned")) {
+            Alert newAlert = new Alert();
+            newAlert.setTitle("New Task Assigned");
+            newAlert.setDescription("You have been assigned a new furniture request to complete.");
+            newAlert.setEmployee(employee);
+            newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
+            Repository.getRepository().addAlert(newAlert);
+        }
     }
 
 
@@ -270,6 +277,7 @@ public class FurnitureRequestControllerI implements IRequestController{
     public void enterFurnitureRequestEditableMode(FullFurnitureRequest fullFurnitureRequest, InfoCardController currentInfoCardController) {
         //set the editable fields to the values of the request
         cbAvailableFurniture.getSelectionModel().selectItem(fullFurnitureRequest.getType());
+        String oldEmployee = fullFurnitureRequest.getEmployee();
         //set the furniture types so that edit page does not crash
         if (cbAvailableFurniture.getSelectionModel().getSelectedItem().equals("Chair")) {
             cdAvailableModels.getItems().clear();
@@ -305,6 +313,8 @@ public class FurnitureRequestControllerI implements IRequestController{
         txtFldNotes.setText(fullFurnitureRequest.getNotes());
         cbEmployeesToAssign.getSelectionModel().selectItem(fullFurnitureRequest.getEmployee());
         cbLongName.getSelectionModel().selectItem(fullFurnitureRequest.getLocationName());
+        cbChangeStatus.setVisible(true);
+        cbChangeStatus.getSelectionModel().selectItem(fullFurnitureRequest.getRequestStatus());
 
         //set the submit button to say update
         btnSubmit.setText("Update");
@@ -319,11 +329,16 @@ public class FurnitureRequestControllerI implements IRequestController{
             fullFurnitureRequest.setNotes(txtFldNotes.getText());
             fullFurnitureRequest.setEmployee(cbEmployeesToAssign.getValue());
             fullFurnitureRequest.setLocationName(cbLongName.getValue());
+            fullFurnitureRequest.setRequestStatus(cbChangeStatus.getValue());
 
             //update the request
             EFurnitureRequest.updateFurnitureRequest(fullFurnitureRequest);
             //send the fullFurnitureRequest to the info card controller
             currentInfoCardController.sendRequest(fullFurnitureRequest);
+            //Alert new user?
+            if(!oldEmployee.equals(cbEmployeesToAssign.getValue())){
+                alertEmployee(cbEmployeesToAssign.getValue());
+            }
             //close the stage
             ((Stage) btnSubmit.getScene().getWindow()).close();
         });

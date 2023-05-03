@@ -21,6 +21,8 @@ public class RemoveSignageController {
     @FXML MFXButton btnClose;
     private ESignage signageE;
 
+    private static SignageController signageController;
+
     public void initialize(){
         signageE = new ESignage();
         init_table();
@@ -54,8 +56,8 @@ public class RemoveSignageController {
         TableColumn<Sign, Date> endDates = new TableColumn<>("End Date");
         endDates.setCellValueFactory(new PropertyValueFactory<Sign, Date>("endDate"));
 
-        TableColumn<Sign, Date> singleBlocks = new TableColumn<>("Single Block?");
-        singleBlocks.setCellValueFactory(new PropertyValueFactory<Sign, Date>("singleBlock"));
+        TableColumn<Sign, Date> singleBlocks = new TableColumn<>("Sign Location");
+        singleBlocks.setCellValueFactory(new PropertyValueFactory<Sign, Date>("signLocation"));
 
         tableView.getColumns().addAll(groups, locs, directions, startDates,endDates, singleBlocks);
 
@@ -68,13 +70,16 @@ public class RemoveSignageController {
             Sign sign = tableView.getSelectionModel().getSelectedItem();
             Repository.getRepository().deleteSign(sign);
             tableView.getItems().remove(sign);
-
         }
     }
 
     private void handleClose() {
         Stage stage = (Stage) btnClose.getScene().getWindow();
+        signageController.refresh();
         stage.close();
     }
 
+    void setSignageController(SignageController signageController) {
+        RemoveSignageController.signageController = signageController;
+    }
 }

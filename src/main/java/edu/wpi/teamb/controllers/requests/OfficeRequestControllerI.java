@@ -52,6 +52,7 @@ public class OfficeRequestControllerI implements IRequestController {
     private MFXFilterComboBox<String> cbEmployeesToAssign;
     @FXML
     private MFXFilterComboBox<String> cbLongName;
+    @FXML private MFXFilterComboBox<String> cbChangeStatus;
 
     private final EOfficeRequest EOfficeRequest;
 
@@ -73,7 +74,7 @@ public class OfficeRequestControllerI implements IRequestController {
                 super.bind(cbSupplyItems.valueProperty(),
                         cbSupplyType.valueProperty(),
                         tbSupplyQuantities.textProperty(),
-                        txtFldNotes.textProperty(),
+//                        txtFldNotes.textProperty(),
                         cbEmployeesToAssign.valueProperty(),
                         cbLongName.valueProperty());
             }
@@ -83,7 +84,7 @@ public class OfficeRequestControllerI implements IRequestController {
                 return (cbSupplyItems.getValue() == null
                         || cbSupplyType.getValue() == null
                         || tbSupplyQuantities.getText().isEmpty()
-                        || txtFldNotes.getText().isEmpty()
+//                        || txtFldNotes.getText().isEmpty()
                         || cbEmployeesToAssign.getValue() == null
                         || cbLongName.getValue() == null);
             }
@@ -112,7 +113,7 @@ public class OfficeRequestControllerI implements IRequestController {
         longNames.addAll(Repository.getRepository().getPracticalLongNames());
         Collections.sort(longNames);
         cbLongName.setItems(longNames);
-        cbLongName.setTooltip(new Tooltip("Select a location"));
+        cbLongName.setTooltip(new Tooltip("Select a location to direct the request to"));
         //DROPDOWN INITIALIZATION
         ObservableList<String> employees = FXCollections.observableArrayList(EOfficeRequest.getUsernames());
         Collections.sort(employees);
@@ -130,6 +131,10 @@ public class OfficeRequestControllerI implements IRequestController {
         Collections.sort(supplyType);
         //cbSupplyType.setItems(supplyType);
         initComboBoxChangeListeners();
+
+        ObservableList<String> status = FXCollections.observableArrayList("Pending", "In-Progress", "Completed");
+        Collections.sort(status);
+        cbChangeStatus.setItems(status);
     }
 
 
@@ -207,12 +212,14 @@ public class OfficeRequestControllerI implements IRequestController {
      * @param employee
      */
     public void alertEmployee(String employee){
-        Alert newAlert = new Alert();
-        newAlert.setTitle("New Task Assigned");
-        newAlert.setDescription("You have been assigned a new office request to complete.");
-        newAlert.setEmployee(employee);
-        newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
-        Repository.getRepository().addAlert(newAlert);
+        if(!employee.equals("unassigned")) {
+            Alert newAlert = new Alert();
+            newAlert.setTitle("New Task Assigned");
+            newAlert.setDescription("You have been assigned a new office request to complete.");
+            newAlert.setEmployee(employee);
+            newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
+            Repository.getRepository().addAlert(newAlert);
+        }
     }
 
     @Override
@@ -254,6 +261,7 @@ public class OfficeRequestControllerI implements IRequestController {
     public void enterOfficeRequestsEditableMode(FullOfficeRequest fullOfficeRequest, InfoCardController currentInfoCardController) {
         //set the editable fields to the values of the request
         cbEmployeesToAssign.getSelectionModel().selectItem(fullOfficeRequest.getEmployee());
+        String oldEmployee = fullOfficeRequest.getEmployee();
         System.out.println(fullOfficeRequest.getId() + " " + fullOfficeRequest.getItem());
         cbSupplyType.getSelectionModel().selectItem(fullOfficeRequest.getType());
         //loads the following supply types so edit page does not crash
@@ -285,6 +293,8 @@ public class OfficeRequestControllerI implements IRequestController {
         tbSupplyQuantities.setText(Integer.toString(fullOfficeRequest.getQuantity()));
         txtFldNotes.setText(fullOfficeRequest.getNotes());
         cbLongName.getSelectionModel().selectItem(fullOfficeRequest.getLocationName());
+        cbChangeStatus.setVisible(true);
+        cbChangeStatus.getSelectionModel().selectItem(fullOfficeRequest.getRequestStatus());
 
         //set the submit button to say update
         btnSubmit.setText("Update");
@@ -299,11 +309,16 @@ public class OfficeRequestControllerI implements IRequestController {
             fullOfficeRequest.setQuantity(Integer.parseInt(tbSupplyQuantities.getText()));
             fullOfficeRequest.setNotes(txtFldNotes.getText());
             fullOfficeRequest.setLocationName(cbLongName.getValue());
+            fullOfficeRequest.setRequestStatus(cbChangeStatus.getValue());
 
             //update the request
             EOfficeRequest.updateOfficeReqeust(fullOfficeRequest);
             //send the fullOfficeRequest to the info card controller
             currentInfoCardController.sendRequest(fullOfficeRequest);
+            //Alert new user?
+            if(!oldEmployee.equals(cbEmployeesToAssign.getValue())){
+                alertEmployee(cbEmployeesToAssign.getValue());
+            }
             //close the stage
             ((Stage) btnSubmit.getScene().getWindow()).close();
         });
