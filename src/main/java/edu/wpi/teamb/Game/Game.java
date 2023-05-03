@@ -117,18 +117,18 @@ public class Game {
                 if((int)(Math.random()*3)==1)
                 changeDif();
                 
-                //print position of every patiend in cQ and cS and cDone
-                for (patient patient : customerQ) {
-                    System.out.print(patient.getPosition()+" ");
-                }System.out.println("\t:"+customerQ.size());
-                for (patient patient : customerS) {
-                    System.out.print(patient.getPosition()+" ");
-                }System.out.println("\t:"+customerS.size());
-                for (patient patient : customersDone) {
-                    System.out.print(patient.getPosition()+ " ");
-                }System.out.println("\t:"+customersDone.size());
+                // //print position of every patiend in cQ and cS and cDone
+                // for (patient patient : customerQ) {
+                //     System.out.print(patient.getPosition()+" ");
+                // }System.out.println("\t:"+customerQ.size());
+                // for (patient patient : customerS) {
+                //     System.out.print(patient.getPosition()+" ");
+                // }System.out.println("\t:"+customerS.size());
+                // for (patient patient : customersDone) {
+                //     System.out.print(patient.getPosition()+ " ");
+                // }System.out.println("\t:"+customersDone.size());
                 
-                System.out.println("FPS: " + drawcount);
+                // System.out.println("FPS: " + drawcount);
                 drawcount = 0;
                 timer = 0;
                 // degub info
