@@ -330,8 +330,10 @@ public class MapEditorController {
     } else if (selectingDefault) {
       tfState.setText("Select a node default");
     }
-    else
+    else {
       tfState.setText("Viewing");
+      pane.gestureEnabledProperty().set(true);
+    }
   }
 
 
@@ -595,6 +597,7 @@ public class MapEditorController {
     edgeGroup.getChildren().clear();
     nameGroup.getChildren().clear();
     PathFinding.ASTAR.force_init();
+    Repository.getRepository().setAllFullNodes();
     fullNodesList = Repository.getRepository().getAllFullNodes();
     draw(currentFloor);
     drawMoveMap(currentFloor);
@@ -795,42 +798,68 @@ public class MapEditorController {
       dragDelta.y = me.getY();
       node.getScene().setCursor(Cursor.MOVE);
     });
-    node.setOnMouseReleased(me -> {
-      if (!me.isPrimaryButtonDown()) {
-        node.getScene().setCursor(Cursor.DEFAULT);
-      }
-    });
     node.setOnMouseDragged(me -> {
       node.setLayoutX(node.getLayoutX() + me.getX() - dragDelta.x);
       node.setLayoutY(node.getLayoutY() + me.getY() - dragDelta.y);
     });
-    node.setOnMouseClicked(me -> {
-      if (me.getButton() == MouseButton.PRIMARY && me.getClickCount() == 2) {
-        node.getScene().setCursor(Cursor.DEFAULT);
-        FullNode n = Repository.getRepository().getFullNode(Integer.parseInt(node.getId()));
-        //FullNode oldNode = n;
-        System.out.println("true x: " + n.getxCoord() );
-        System.out.println("dragged x: " + node.getLayoutX() );
-        System.out.println("true y: " + n.getyCoord() );
-        System.out.println("dragged y: " + node.getLayoutY() );
-        n.setxCoord((int) (n.getxCoord() + node.getLayoutX()));
-        n.setyCoord((int) (n.getyCoord() + node.getLayoutY()));
-        node.setLayoutX(oldNodeX);
-        node.setLayoutY(oldNodeY);
-        try {
-          showEditNodeMenu(n);
-          // set the colors back
-          node.setFill(Color.RED);
-          node.setRadius(5);
-          pane.gestureEnabledProperty().set(true);
-          mapEditorContext.setState(new ViewState());
-          determineState();
-        } catch (IOException e) {
-          throw new RuntimeException(e);
-        }
+    node.setOnMouseReleased(me -> {
+      node.getScene().setCursor(Cursor.DEFAULT);
+      FullNode n = Repository.getRepository().getFullNode(Integer.parseInt(node.getId()));
+      //FullNode oldNode = n;
+      System.out.println("true x: " + n.getxCoord() );
+      System.out.println("dragged x: " + node.getLayoutX() );
+      System.out.println("true y: " + n.getyCoord() );
+      System.out.println("dragged y: " + node.getLayoutY() );
+      n.setxCoord((int) (n.getxCoord() + node.getLayoutX()));
+      n.setyCoord((int) (n.getyCoord() + node.getLayoutY()));
+      node.setLayoutX(oldNodeX);
+      node.setLayoutY(oldNodeY);
+      try {
+        showEditNodeMenu(n);
+        // set the colors back
+        node.setFill(Color.RED);
+        node.setRadius(5);
+        mapEditorContext.setState(new ViewState());
+        determineState();
+        //refreshMap();
+      } catch (IOException e) {
+        throw new RuntimeException(e);
       }
     });
   }
+
+//  private void refreshNodeEvents(Circle c, Node n) {
+//    c.setOnMouseEntered(event -> {
+//      c.setFill(Color.GREEN);
+//      c.setRadius(10);
+//    });
+//    c.setOnMouseExited(event -> {
+//      c.setFill(Color.RED);
+//      c.setRadius(5);
+//    });
+//    c.setOnMouseClicked(event -> {
+//      try {
+//        selectedNodes.add(c); // Used for creating edges and moves
+//        nodesToAlign.add(c); // Used for aligning nodes
+//        checkSelectedNodes(); // Check if two circles are selected to create an edge
+//        checkNodesToAlign(); // Check if at least two circles are selected to align
+//
+//        // Set node click event handlers
+//        if (mapEditorContext.getState() == editNodeState) {
+//          handleEditNode(n);
+//        }
+//        if (mapEditorContext.getState() == deleteNodeState) {
+//          handleDeleteNode(event, n);
+//        }
+//        if (selectingDefault) {
+//          handleDefaultNode(n);
+//        }
+//        System.out.println("Node " + n.getNodeID() + " clicked");
+//      } catch (SQLException | IOException e) {
+//        throw new RuntimeException(e);
+//      }
+//    });
+//  }
 
 
   public void initButtons() {
