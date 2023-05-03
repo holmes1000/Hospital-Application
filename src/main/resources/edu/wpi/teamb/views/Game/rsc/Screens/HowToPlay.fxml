@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.teamb.Game.Contollers.HowToPlayController">
+   <center>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <AnchorPane prefHeight="400.0" prefWidth="600.0">
+               <children>
+                  <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../../../../img/Game/rsc/images/htp.png" />
+                     </image></ImageView>
+                  <MFXButton fx:id="btnBack" layoutX="250.0" layoutY="309.0" onAction="#showStartScene" prefHeight="47.0" prefWidth="100.0" text="BACK" />
+                  <AnchorPane depthTest="DISABLE" layoutX="155.0" layoutY="23.0" prefHeight="246.0" prefWidth="290.0" style="-fx-background-color: #00000088; -fx-border-radius: 20; -fx-border-color: #ffffff; -fx-border-width: 5; -fx-border-insets: -3; -fx-background-radius: 20;">
+                     <children>
+                        <Text fill="WHITE" layoutX="30.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="How To Play" textAlignment="CENTER" wrappingWidth="230.8033447265625">
+                           <font>
+                              <Font name="System Bold" size="24.0" />
+                           </font>
+                        </Text>
+                        <Text fill="WHITE" layoutX="9.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Periodically, PATIENS will appear and ask for help." wrappingWidth="275.47003173828125">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Text>
+                        <Text fill="WHITE" layoutX="7.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Match what they ask for with an Item on the desk" wrappingWidth="275.47003173828125">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Text>
+                        <Text fill="WHITE" layoutX="9.0" layoutY="113.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Be careful which item you give, becuase if it doesn't match, you will lose time" wrappingWidth="275.47003173828125">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Text>
+                        <Text fill="WHITE" layoutX="7.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Conversly, if you pick the correct Item, you will gain time" wrappingWidth="275.47003173828125">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Text>
+                        <Text fill="WHITE" layoutX="7.0" layoutY="183.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Try to help as many people as you can. " wrappingWidth="275.47003173828125">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Text>
+                        <Text fill="WHITE" layoutX="7.0" layoutY="212.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Remeber: The patients won't wait for long, so you need to be quick" wrappingWidth="275.47003173828125">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

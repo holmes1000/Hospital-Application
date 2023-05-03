@@ -63,6 +63,7 @@ public class HomeController {
     @FXML private MFXButton btnCredits;
     @FXML private  MFXButton btnSecret;
     @FXML private MFXButton btnClear;
+    @FXML private  MFXButton btnSecret1;
     @FXML private VBox vboxAlerts;
     @FXML private VBox vboxRequests;
     @FXML private VBox vboxPathfinder;
@@ -243,6 +244,11 @@ public class HomeController {
 
     }
 
+    public void secret2()
+    {
+        Bapp.runGapp();
+    }
+
     private void initializeBtns() {
         btnCredits.setTooltip(new Tooltip("Click to view the credits page"));
         btnAbout.setTooltip(new Tooltip("Click to view the creators of the page"));
@@ -252,6 +258,7 @@ public class HomeController {
         btnAbout.setOnMouseClicked(e -> handleAbout());
         btnSecret.setOnMouseClicked(e -> secret(true));
         btnClear.setOnMouseClicked(e -> secret(false));
+        btnSecret1.setOnMouseClicked(e -> {secret2();  });
     }
 
     private void handleUserRequests() {

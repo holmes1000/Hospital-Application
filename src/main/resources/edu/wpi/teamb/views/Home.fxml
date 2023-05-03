@@ -96,6 +96,11 @@
                </effect>
             </ImageView>
             <VBox fx:id="vboxActivateNav" layoutX="-150.0" onMouseEntered="#activateNav" prefHeight="720.0" prefWidth="70.0" />
+            <MFXButton fx:id="btnSecret1" layoutX="1067.0" layoutY="686.0" mnemonicParsing="false" text="Game">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </MFXButton>
          </children>
       </AnchorPane>
    </center>
