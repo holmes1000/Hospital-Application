@@ -67,7 +67,8 @@ public class Gapp extends Application {
 
     
     public static void Newstart(Stage primaryStage) throws Exception {
-
+        Game.stop();
+        Game.kill();
         primaryStage.setTitle("Hospital Help Desk");
 
         Gapp.primaryStage = primaryStage;
