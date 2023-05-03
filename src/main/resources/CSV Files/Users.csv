@@ -1,0 +1,17 @@
+name,username,password,email,permissionLevel
+User,user,user,user@wpi.edu,1
+Employee,employee,employee,employee@wpi.edu,1
+Alisha Peeriz,apeeriz,apeeriz,aapeeriz@wpi.edu,0
+Samara Holmes,sholmes,sholmes,sdholmes@wpi.edu,0
+Mahir Sowad,msowad,msowad,msowad@wpi.edu,0
+Ronit Banerjee,rbanerjee,rbanerjee,rbanerjee@wpi.edu,0
+Ella Dunne,edunne,edunne,esdunne@wpi.edu,0
+James Mitchell,jmitchell,jmitchell,jemitchell@wpi.edu,1
+Alexander Breiling,abreiling,abreiling,afbreiling@wpi.edu,1
+Brian Borghensani,bborghensani,bborghensani,bwborghensani@wpi.edu,1
+Jackson Balcazar,jbalcazar,jbalcazar,jmartinezbalcaza@wpi.edu,1
+Samara,holmes1000,holmes1000,holmes1000@wpi.edu,1
+Zimraan Ahmad,zahmad,zahmad,zaahmad@wpi.edu,1
+Unassigned,unassigned,Unassigned,unassigned,0
+Admin,admin,admin,admin@wpi.edu,0
+Staff,staff,staff,staff@staff.net,1

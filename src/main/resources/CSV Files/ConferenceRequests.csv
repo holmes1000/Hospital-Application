@@ -1,1 +1,8 @@
 id,dateRequested,eventName,bookingReason,duration
+13,2023-04-30,e,E,600
+25,2023-05-01,test,test,150
+9,2023-04-30,Morning Meeting,early morning meeting for updates,270
+48,2023-05-18,Scrum,Need updates,180
+30,2023-05-25,no,no,30
+7,2023-04-21,Soft Eng Cram Session,Cramming session needed,60
+51,2023-05-20,Lunch With Sponsors,Sponsors will talk about their programs,210

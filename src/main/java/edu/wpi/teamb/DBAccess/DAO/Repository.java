@@ -1134,6 +1134,21 @@ public class Repository {
     }
 
     /**
+     * Imports the translation requests from a CSV file into the database
+     *
+     * @param filename The name of the CSV file to be imported as a String
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
+     */
+    public void importTranslationRequestsFromCSV(String filename, int location) {
+        DBinput.importTranslationRequestsFromCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    /**
      * Imports the alerts from a CSV file into the database
      *
      * @param filename The name of the CSV file to be imported as a String
@@ -1350,6 +1365,21 @@ public class Repository {
      *                 int location can be 1 (root folder for program), 2 (custom location), or 3
      *                 (developer: CSV Files in package)
      */
+    public void exportTranslationRequestsToCSV(String filename, int location) {
+        DBoutput.exportTranslationRequestsToCSV(filename, location);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+    }
+
+    /**
+     * This method exports the SanitationRequests table into a CSV file
+     *
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program), 2 (custom location), or 3
+     *                 (developer: CSV Files in package)
+     */
     public void exportAlertsToCSV(String filename, int location) {
         DBoutput.exportAlertsToCSV(filename, location);
         dbConnection.closeDBconnection();
@@ -1370,6 +1400,31 @@ public class Repository {
         DBoutput.exportSignsToCSV(filename, location);
         dbConnection.closeDBconnection();
         dbConnection.forceClose();
+    }
+
+    /**
+     * This method exports all tables into CSV files at the desired location
+     *
+     * @param location The location of the CSV files to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
+     */
+    public void exportAllToCSVFiles(int location) {
+        DBoutput.exportNodesToCSV("Nodes", location);
+        DBoutput.exportEdgesToCSV("Edges", location);
+        DBoutput.exportLocationNamesToCSV("LocationNames", location);
+        DBoutput.exportMovesToCSV("Moves", location);
+        DBoutput.exportUsersToCSV("Users", location);
+        DBoutput.exportRequestsToCSV("Requests", location);
+        DBoutput.exportConferenceRequestsToCSV("ConferenceRequests", location);
+        DBoutput.exportFlowerRequestsToCSV("FlowerRequests", location);
+        DBoutput.exportFurnitureRequestsToCSV("FurnitureRequests", location);
+        DBoutput.exportMealRequestsToCSV("MealRequests", location);
+        DBoutput.exportOfficeRequestsToCSV("OfficeRequests", location);
+        DBoutput.exportTranslationRequestsToCSV("TranslationRequests", location);
+        DBoutput.exportAlertsToCSV("Alerts", location);
+        DBoutput.exportSignsToCSV("Signs", location);
     }
 
     //TODO Unorganized stuff below

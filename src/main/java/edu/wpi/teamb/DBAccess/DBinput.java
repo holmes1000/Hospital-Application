@@ -45,20 +45,20 @@ public class DBinput {
 
             Statement tableStmt = DBconnection.getDBconnection().getConnection().createStatement();
 
-            String dropMovesTable = "DROP TABLE IF EXISTS Moves";
-            int dropUpdateMoves = tableStmt.executeUpdate(dropMovesTable);
+            String emptyMovesTable = "TRUNCATE TABLE Moves";
+            int emptyUpdateMoves = tableStmt.executeUpdate(emptyMovesTable);
 
-            String dropNodesTable = "DROP TABLE IF EXISTS Nodes";
-            int dropUpdateNodes = tableStmt.executeUpdate(dropNodesTable);
+            String emptyNodesTable = "TRUNCATE TABLE Nodes";
+            int emptyUpdateNodes = tableStmt.executeUpdate(emptyNodesTable);
 
-            String createTableNodes = "CREATE TABLE Nodes (nodeID INT PRIMARY KEY, xCoord INT, yCoord INT, floor VARCHAR(255), building VARCHAR(255));";
-            int tableUpdateNodes = tableStmt.executeUpdate(createTableNodes);
-
-            String createTableMoves = "CREATE TABLE moves " +
-                    "(nodeID INT, longName VARCHAR(255), date VARCHAR(20), primary key (nodeID, longName, date)," +
-                    "constraint fk_nodeID foreign key(nodeID) references nodes(nodeID)," +
-                    "constraint fk_longName foreign key(longName) references locationNames(longName));";
-            int tableUpdateMoves = tableStmt.executeUpdate(createTableMoves);
+//            String createTableNodes = "CREATE TABLE Nodes (nodeID INT PRIMARY KEY, xCoord INT, yCoord INT, floor VARCHAR(255), building VARCHAR(255));";
+//            int tableUpdateNodes = tableStmt.executeUpdate(createTableNodes);
+//
+//            String createTableMoves = "CREATE TABLE moves " +
+//                    "(nodeID INT, longName VARCHAR(255), date VARCHAR(20), primary key (nodeID, longName, date)," +
+//                    "constraint fk_nodeID foreign key(nodeID) references nodes(nodeID)," +
+//                    "constraint fk_longName foreign key(longName) references locationNames(longName));";
+//            int tableUpdateMoves = tableStmt.executeUpdate(createTableMoves);
             importMovesFromCSV("Moves", 3);
 
             try {
@@ -131,10 +131,10 @@ public class DBinput {
             }
 
             Statement tableStmt = DBconnection.getDBconnection().getConnection().createStatement();
-            String dropEdgesTable = "DROP TABLE IF EXISTS Edges";
-            int dropUpdate = tableStmt.executeUpdate(dropEdgesTable);
-            String createTable = "CREATE TABLE edges (startNode INT, endNode INT, primary key (startNode, endNode));";
-            int tableUpdate = tableStmt.executeUpdate(createTable);
+            String emptyEdgesTable = "TRUNCATE TABLE Edges";
+            int emptyUpdate = tableStmt.executeUpdate(emptyEdgesTable);
+//            String createTable = "CREATE TABLE edges (startNode INT, endNode INT, primary key (startNode, endNode));";
+//            int tableUpdate = tableStmt.executeUpdate(createTable);
 
             try {
                 while (((line = br.readLine()) != null)) {
@@ -197,20 +197,22 @@ public class DBinput {
             }
 
             Statement tableStmt = DBconnection.getDBconnection().getConnection().createStatement();
-            String dropMovesTable = "DROP TABLE IF EXISTS moves";
-            int dropUpdateMoves = tableStmt.executeUpdate(dropMovesTable);
-            String dropLocationNamesTable = "DROP TABLE IF EXISTS locationNames";
-            int dropUpdateLocationNames = tableStmt.executeUpdate(dropLocationNamesTable);
+            String emptyMovesTable = "TRUNCATE TABLE moves";
+            int emptyUpdateMoves = tableStmt.executeUpdate(emptyMovesTable);
+//            String emptySignsTable = "TRUNCATE TABLE signs";
+//            int emptyUpdateSigns = tableStmt.executeUpdate(emptySignsTable);
+            String emptyLocationNamesTable = "TRUNCATE TABLE locationNames";
+            int emptyUpdateLocationNames = tableStmt.executeUpdate(emptyLocationNamesTable);
 
-            String createTableLocationNames = "CREATE TABLE locationNames " +
-                    "(longName VARCHAR(255), shortName VARCHAR(255), nodeType VARCHAR(20), primary key (longName));";
-            int tableUpdateLocationNames = tableStmt.executeUpdate(createTableLocationNames);
-
-            String createTableMoves = "CREATE TABLE moves " +
-                    "(nodeID INT, longName VARCHAR(255), date VARCHAR(20), primary key (nodeID, longName, date)," +
-                    "constraint fk_nodeID foreign key(nodeID) references nodes(nodeID)," +
-                    "constraint fk_longName foreign key(longName) references locationNames(longName));";
-            int tableUpdateMoves = tableStmt.executeUpdate(createTableMoves);
+//            String createTableLocationNames = "CREATE TABLE locationNames " +
+//                    "(longName VARCHAR(255), shortName VARCHAR(255), nodeType VARCHAR(20), primary key (longName));";
+//            int tableUpdateLocationNames = tableStmt.executeUpdate(createTableLocationNames);
+//
+//            String createTableMoves = "CREATE TABLE moves " +
+//                    "(nodeID INT, longName VARCHAR(255), date VARCHAR(20), primary key (nodeID, longName, date)," +
+//                    "constraint fk_nodeID foreign key(nodeID) references nodes(nodeID)," +
+//                    "constraint fk_longName foreign key(longName) references locationNames(longName));";
+//            int tableUpdateMoves = tableStmt.executeUpdate(createTableMoves);
             importMovesFromCSV("Moves", 3);
 
             try {
@@ -281,14 +283,14 @@ public class DBinput {
             }
 
             Statement tableStmt = DBconnection.getDBconnection().getConnection().createStatement();
-            String dropMovesTable = "DROP TABLE IF EXISTS moves";
-            int dropUpdate = tableStmt.executeUpdate(dropMovesTable);
+            String emptyMovesTable = "TRUNCATE TABLE moves";
+            int emptyUpdate = tableStmt.executeUpdate(emptyMovesTable);
 
-            String createTable = "CREATE TABLE moves " +
-                    "(nodeID INT, longName VARCHAR(255), date VARCHAR(20), primary key (nodeID, longName, date)," +
-                    "constraint fk_nodeID foreign key(nodeID) references nodes(nodeID)," +
-                    "constraint fk_longName foreign key(longName) references locationNames(longName));";
-            int tableUpdate = tableStmt.executeUpdate(createTable);
+//            String createTable = "CREATE TABLE moves " +
+//                    "(nodeID INT, longName VARCHAR(255), date VARCHAR(20), primary key (nodeID, longName, date)," +
+//                    "constraint fk_nodeID foreign key(nodeID) references nodes(nodeID)," +
+//                    "constraint fk_longName foreign key(longName) references locationNames(longName));";
+//            int tableUpdate = tableStmt.executeUpdate(createTable);
 
             try {
                 while (((line = br.readLine()) != null)) {
@@ -357,13 +359,13 @@ public class DBinput {
                 }
 
                 Statement tableStmt = DBconnection.getDBconnection().getConnection().createStatement();
-                String dropUsersTable = "DROP TABLE IF EXISTS users";
-                int dropUpdate = tableStmt.executeUpdate(dropUsersTable);
+                String emptyUsersTable = "TRUNCATE TABLE users";
+                int emptyUpdate = tableStmt.executeUpdate(emptyUsersTable);
 
-                String createTable = "CREATE TABLE users " +
-                        "(name VARCHAR(255), username VARCHAR(20) primary key, password VARCHAR(20), email VARCHAR(255) primary key," +
-                        "permissionLevel INT);";
-                int tableUpdate = tableStmt.executeUpdate(createTable);
+//                String createTable = "CREATE TABLE users " +
+//                        "(name VARCHAR(255), username VARCHAR(20) primary key, password VARCHAR(20), email VARCHAR(255) primary key," +
+//                        "permissionLevel INT);";
+//                int tableUpdate = tableStmt.executeUpdate(createTable);
 
                 try {
                     while (((line = br.readLine()) != null)) {
@@ -440,53 +442,61 @@ public class DBinput {
                 }
 
                 Statement tableStmt = DBconnection.getDBconnection().getConnection().createStatement();
-                String dropConferenceRequestsTable = "DROP TABLE IF EXISTS conferenceRequests";
-                int dropUpdateConferenceRequests = tableStmt.executeUpdate(dropConferenceRequestsTable);
-                String dropFlowerRequestsTable = "DROP TABLE IF EXISTS flowerRequests";
-                int dropUpdateFlowerRequests = tableStmt.executeUpdate(dropFlowerRequestsTable);
-                String dropFurnitureRequests = "DROP TABLE IF EXISTS furnitureRequests";
-                int dropUpdateFurnitureRequests = tableStmt.executeUpdate(dropFurnitureRequests);
-                String dropMealRequestsTable = "DROP TABLE IF EXISTS mealRequests";
-                int dropUpdateMealRequests = tableStmt.executeUpdate(dropMealRequestsTable);
-                String dropOfficeRequests = "DROP TABLE IF EXISTS officeRequests";
-                int dropUpdateOfficeRequests = tableStmt.executeUpdate(dropOfficeRequests);
-                String dropRequestsTable = "DROP TABLE IF EXISTS requests";
-                int dropUpdateRequests = tableStmt.executeUpdate(dropRequestsTable);
+                String emptyConferenceRequestsTable = "TRUNCATE TABLE conferenceRequests";
+                int emptyUpdateConferenceRequests = tableStmt.executeUpdate(emptyConferenceRequestsTable);
+                String emptyFlowerRequestsTable = "TRUNCATE TABLE flowerRequests";
+                int emptyUpdateFlowerRequests = tableStmt.executeUpdate(emptyFlowerRequestsTable);
+                String emptyFurnitureRequests = "TRUNCATE TABLE furnitureRequests";
+                int emptyUpdateFurnitureRequests = tableStmt.executeUpdate(emptyFurnitureRequests);
+                String emptyMealRequestsTable = "TRUNCATE TABLE mealRequests";
+                int emptyUpdateMealRequests = tableStmt.executeUpdate(emptyMealRequestsTable);
+                String emptyOfficeRequests = "TRUNCATE TABLE officeRequests";
+                int emptyUpdateOfficeRequests = tableStmt.executeUpdate(emptyOfficeRequests);
+                String emptyTranslationRequests = "TRUNCATE TABLE translationRequests";
+                int emptyUpdateTranslationRequests = tableStmt.executeUpdate(emptyTranslationRequests);
+                String emptyRequestsTable = "TRUNCATE TABLE requests";
+                int emptyUpdateRequests = tableStmt.executeUpdate(emptyRequestsTable);
 
-                String createTableRequests = "CREATE TABLE requests " +
-                        "(id INT not null primary key, employee VARCHAR(255), dateSubmitted TIMESTAMP, requestStatus VARCHAR(255), requestType VARCHAR(255)," +
-                        "locationName VARCHAR(255))";
-                int tableUpdateRequests = tableStmt.executeUpdate(createTableRequests);
+//                String createTableRequests = "CREATE TABLE requests " +
+//                        "(id INT not null primary key, employee VARCHAR(255), dateSubmitted TIMESTAMP, requestStatus VARCHAR(255), requestType VARCHAR(255)," +
+//                        "locationName VARCHAR(255))";
+//                int tableUpdateRequests = tableStmt.executeUpdate(createTableRequests);
 
-                String createTableOfficeRequests = "CREATE TABLE officeRequests " +
-                        "(id INT not null primary key references requests, item VARCHAR(255), quantity INT, type VARCHAR(255)," +
-                        "locationName VARCHAR(255))";
-                int tableUpdateOfficeRequests = tableStmt.executeUpdate(createTableOfficeRequests);
-                importOfficeRequestsFromCSV("OfficeRequests_sync", 4);
+//                String createTableTranslationRequests = "CREATE TABLE translationRequests " +
+//                        "(id INT not null primary key references requests, language VARCHAR(255) not null," +
+//                        "medicalImportance VARCHAR(255))";
+//                int tableUpdateTranslationRequests = tableStmt.executeUpdate(createTableTranslationRequests);
+                importTranslationRequestsFromCSV("TranslationRequests", 3);
 
-                String createTableMealRequests = "CREATE TABLE mealRequests " +
-                        "(id INT not null primary key references requests, orderFrom VARCHAR(255), food VARCHAR(255), drink VARCHAR(255)," +
-                        "snack VARCHAR(255))";
-                int tableUpdateMealRequests = tableStmt.executeUpdate(createTableMealRequests);
-                importMealRequestsFromCSV("MealRequests_sync", 4);
+//                String createTableOfficeRequests = "CREATE TABLE officeRequests " +
+//                        "(id INT not null primary key references requests, item VARCHAR(255), quantity INT, type VARCHAR(255)," +
+//                        "locationName VARCHAR(255))";
+//                int tableUpdateOfficeRequests = tableStmt.executeUpdate(createTableOfficeRequests);
+                importOfficeRequestsFromCSV("OfficeRequests", 3);
 
-                String createTableFurnitureRequests = "CREATE TABLE furnitureRequests " +
-                        "(id INT not null primary key references requests, type VARCHAR(255), model VARCHAR(255)," +
-                        "assembly BOOLEAN)";
-                int tableUpdateFurnitureRequests = tableStmt.executeUpdate(createTableFurnitureRequests);
-                importFurnitureRequestsFromCSV("FurnitureRequests_sync", 4);
+//                String createTableMealRequests = "CREATE TABLE mealRequests " +
+//                        "(id INT not null primary key references requests, orderFrom VARCHAR(255), food VARCHAR(255), drink VARCHAR(255)," +
+//                        "snack VARCHAR(255))";
+//                int tableUpdateMealRequests = tableStmt.executeUpdate(createTableMealRequests);
+                importMealRequestsFromCSV("MealRequests", 3);
 
-                String createTableFlowerRequests = "CREATE TABLE flowerRequests " +
-                        "(id INT not null primary key references requests, flowerType VARCHAR(255), color VARCHAR(255)," +
-                        "size VARCHAR(255), message TEXT)";
-                int tableUpdateFlowerRequests = tableStmt.executeUpdate(createTableFlowerRequests);
-                importFlowerRequestsFromCSV("FlowerRequests_sync", 4);
+//                String createTableFurnitureRequests = "CREATE TABLE furnitureRequests " +
+//                        "(id INT not null primary key references requests, type VARCHAR(255), model VARCHAR(255)," +
+//                        "assembly BOOLEAN)";
+//                int tableUpdateFurnitureRequests = tableStmt.executeUpdate(createTableFurnitureRequests);
+                importFurnitureRequestsFromCSV("FurnitureRequests", 3);
 
-                String createTableConferenceRequests = "CREATE TABLE conferenceRequests " +
-                        "(id INT not null primary key references requests, dateRequested TIMESTAMP, eventName VARCHAR(255), bookingReason VARCHAR(255)," +
-                        "duration INT)";
-                int tableUpdateConferenceRequests = tableStmt.executeUpdate(createTableConferenceRequests);
-                importConferenceRequestsFromCSV("ConferenceRequests_sync", 4);
+//                String createTableFlowerRequests = "CREATE TABLE flowerRequests " +
+//                        "(id INT not null primary key references requests, flowerType VARCHAR(255), color VARCHAR(255)," +
+//                        "size VARCHAR(255), message TEXT)";
+//                int tableUpdateFlowerRequests = tableStmt.executeUpdate(createTableFlowerRequests);
+                importFlowerRequestsFromCSV("FlowerRequests", 3);
+
+//                String createTableConferenceRequests = "CREATE TABLE conferenceRequests " +
+//                        "(id INT not null primary key references requests, dateRequested TIMESTAMP, eventName VARCHAR(255), bookingReason VARCHAR(255)," +
+//                        "duration INT)";
+//                int tableUpdateConferenceRequests = tableStmt.executeUpdate(createTableConferenceRequests);
+                importConferenceRequestsFromCSV("ConferenceRequests", 3);
 
                 try {
                     while (((line = br.readLine()) != null)) {
@@ -569,13 +579,13 @@ public class DBinput {
             }
 
             Statement tableStmt = DBconnection.getDBconnection().getConnection().createStatement();
-            String dropConferenceRequestsTable = "DROP TABLE IF EXISTS conferenceRequests";
-            int dropUpdateConferenceRequests = tableStmt.executeUpdate(dropConferenceRequestsTable);
+            String emptyConferenceRequestsTable = "TRUNCATE TABLE conferenceRequests";
+            int emptyUpdateConferenceRequests = tableStmt.executeUpdate(emptyConferenceRequestsTable);
 
-            String createTableConferenceRequests = "CREATE TABLE conferenceRequests " +
-                    "(id INT not null primary key references requests, dateRequested TIMESTAMP, eventName VARCHAR(255), bookingReason VARCHAR(255)," +
-                    "duration INT)";
-            int tableUpdateConferenceRequests = tableStmt.executeUpdate(createTableConferenceRequests);
+//            String createTableConferenceRequests = "CREATE TABLE conferenceRequests " +
+//                    "(id INT not null primary key references requests, dateRequested TIMESTAMP, eventName VARCHAR(255), bookingReason VARCHAR(255)," +
+//                    "duration INT)";
+//            int tableUpdateConferenceRequests = tableStmt.executeUpdate(createTableConferenceRequests);
 
             try {
                 while (((line = br.readLine()) != null)) {
@@ -647,13 +657,13 @@ public class DBinput {
             }
 
             Statement tableStmt = DBconnection.getDBconnection().getConnection().createStatement();
-            String dropFlowerRequestsTable = "DROP TABLE IF EXISTS flowerRequests";
-            int dropUpdateFlowerRequests = tableStmt.executeUpdate(dropFlowerRequestsTable);
+            String emptyFlowerRequestsTable = "TRUNCATE TABLE flowerRequests";
+            int emptyUpdateFlowerRequests = tableStmt.executeUpdate(emptyFlowerRequestsTable);
 
-            String createTableFlowerRequests = "CREATE TABLE flowerRequests " +
-                    "(id INT not null primary key references requests, flowerType VARCHAR(255), color VARCHAR(255)," +
-                    "size VARCHAR(255), message TEXT)";
-            int tableUpdateFlowerRequests = tableStmt.executeUpdate(createTableFlowerRequests);
+//            String createTableFlowerRequests = "CREATE TABLE flowerRequests " +
+//                    "(id INT not null primary key references requests, flowerType VARCHAR(255), color VARCHAR(255)," +
+//                    "size VARCHAR(255), message TEXT)";
+//            int tableUpdateFlowerRequests = tableStmt.executeUpdate(createTableFlowerRequests);
 
             try {
                 while (((line = br.readLine()) != null)) {
@@ -727,13 +737,13 @@ public class DBinput {
             }
 
             Statement tableStmt = DBconnection.getDBconnection().getConnection().createStatement();
-            String dropFurnitureRequestsTable = "DROP TABLE IF EXISTS furnitureRequests";
-            int dropUpdateFurnitureRequests = tableStmt.executeUpdate(dropFurnitureRequestsTable);
+            String emptyFurnitureRequestsTable = "TRUNCATE TABLE furnitureRequests";
+            int emptyUpdateFurnitureRequests = tableStmt.executeUpdate(emptyFurnitureRequestsTable);
 
-            String createTableFurnitureRequests = "CREATE TABLE furnitureRequests " +
-                    "(id INT not null primary key references requests, type VARCHAR(255), model VARCHAR(255)," +
-                    "assembly BOOLEAN)";
-            int tableUpdateFurnitureRequests = tableStmt.executeUpdate(createTableFurnitureRequests);
+//            String createTableFurnitureRequests = "CREATE TABLE furnitureRequests " +
+//                    "(id INT not null primary key references requests, type VARCHAR(255), model VARCHAR(255)," +
+//                    "assembly BOOLEAN)";
+//            int tableUpdateFurnitureRequests = tableStmt.executeUpdate(createTableFurnitureRequests);
 
             try {
                 while (((line = br.readLine()) != null)) {
@@ -801,13 +811,13 @@ public class DBinput {
             }
 
             Statement tableStmt = DBconnection.getDBconnection().getConnection().createStatement();
-            String dropMealRequestsTable = "DROP TABLE IF EXISTS mealRequests";
-            int dropUpdateMealRequests = tableStmt.executeUpdate(dropMealRequestsTable);
+            String emptyMealRequestsTable = "TRUNCATE TABLE mealRequests";
+            int emptyUpdateMealRequests = tableStmt.executeUpdate(emptyMealRequestsTable);
 
-            String createTableMealRequests = "CREATE TABLE mealRequests " +
-                    "(id INT not null primary key references requests, orderFrom VARCHAR(255), food VARCHAR(255)," +
-                    "drink VARCHAR(255), snack VARCHAR(255))";
-            int tableUpdateMealRequests = tableStmt.executeUpdate(createTableMealRequests);
+//            String createTableMealRequests = "CREATE TABLE mealRequests " +
+//                    "(id INT not null primary key references requests, orderFrom VARCHAR(255), food VARCHAR(255)," +
+//                    "drink VARCHAR(255), snack VARCHAR(255))";
+//            int tableUpdateMealRequests = tableStmt.executeUpdate(createTableMealRequests);
 
             try {
                 while (((line = br.readLine()) != null)) {
@@ -881,13 +891,13 @@ public class DBinput {
             }
 
             Statement tableStmt = DBconnection.getDBconnection().getConnection().createStatement();
-            String dropOfficeRequestsTable = "DROP TABLE IF EXISTS officeRequests";
-            int dropUpdateOfficeRequests = tableStmt.executeUpdate(dropOfficeRequestsTable);
+            String emptyOfficeRequestsTable = "TRUNCATE TABLE officeRequests";
+            int emptyUpdateOfficeRequests = tableStmt.executeUpdate(emptyOfficeRequestsTable);
 
-            String createTableOfficeRequests = "CREATE TABLE officeRequests " +
-                    "(id INT not null primary key references requests, item VARCHAR(255), quantity INT," +
-                    "type VARCHAR(255))";
-            int tableUpdateOfficeRequests = tableStmt.executeUpdate(createTableOfficeRequests);
+//            String createTableOfficeRequests = "CREATE TABLE officeRequests " +
+//                    "(id INT not null primary key references requests, item VARCHAR(255), quantity INT," +
+//                    "type VARCHAR(255))";
+//            int tableUpdateOfficeRequests = tableStmt.executeUpdate(createTableOfficeRequests);
 
             try {
                 while (((line = br.readLine()) != null)) {
@@ -923,6 +933,68 @@ public class DBinput {
         }
     }
 
+    public static void importTranslationRequestsFromCSV(String filename, int location) {
+
+        String line = "";
+        String splitBy = ",";
+
+        BufferedReader br = null;
+
+        try {
+            try {
+                br = switch (location) {
+                    case 0 -> new BufferedReader(new FileReader(filename));
+                    case 1 -> new BufferedReader(new FileReader("./" + filename + ".csv"));
+                    case 2 -> new BufferedReader(new FileReader(filename + ".csv"));
+                    case 3 -> new BufferedReader(new FileReader("./src/main/resources/CSV Files/" + filename + ".csv"));
+                    case 4 -> new BufferedReader(new FileReader("./src/main/resources/DB Sync Files/" + filename + ".csv"));
+                    default -> new BufferedReader(new FileReader("./" + filename + ".csv"));
+                };
+            } catch (FileNotFoundException e) {
+                System.out.println("Error reading the file in the method 'DBinput.importTranslationRequestsFromCSV'");
+                e.printStackTrace();
+            }
+
+            Statement tableStmt = DBconnection.getDBconnection().getConnection().createStatement();
+            String emptyTranslationRequestsTable = "TRUNCATE TABLE translationRequests";
+            int emptyUpdateTranslationRequests = tableStmt.executeUpdate(emptyTranslationRequestsTable);
+
+//            String createTableTranslationRequests = "CREATE TABLE translationRequests " +
+//                    "(id INT not null primary key references requests, language VARCHAR(255), text VARCHAR(255))";
+//            int tableUpdateTranslationRequests = tableStmt.executeUpdate(createTableTranslationRequests);
+
+            try {
+                while (((line = br.readLine()) != null)) {
+                    String[] requestValues = line.split(splitBy);
+                    if (!(requestValues[0].equals("id"))) {
+                        // System.out.println(edgeValues[0]);
+                        String rowQuery = "INSERT INTO translationRequests (id, language, medicalimportance) VALUES ("
+                                + requestValues[0]
+                                + ","
+                                + "'"
+                                + requestValues[1]
+                                + "'"
+                                + ","
+                                + "'"
+                                + requestValues[2]
+                                + "'"
+                                + ");";
+                        Statement rowStmt = DBconnection.getDBconnection().getConnection().createStatement();
+                        int rowUpdate = rowStmt.executeUpdate(rowQuery);
+                        rowStmt.close();
+                    }
+                }
+                br.close();
+            } catch (IOException e) {
+                System.out.println("Error reading the file in the method 'DBinput.importTranslationRequestsFromCSV'");
+                e.printStackTrace();
+            }
+            tableStmt.close();
+        } catch (SQLException e) {
+            System.out.println("ERROR: Query could not be executed in the method 'DBinput.importTranslationRequestsFromCSV'");
+        }
+    }
+
     /**
      * Imports the alerts from a CSV file into the database
      *
@@ -955,13 +1027,13 @@ public class DBinput {
             }
 
             Statement tableStmt = DBconnection.getDBconnection().getConnection().createStatement();
-            String dropAlertsTable = "DROP TABLE IF EXISTS alerts";
-            int dropUpdateAlerts = tableStmt.executeUpdate(dropAlertsTable);
+            String emptyAlertsTable = "TRUNCATE TABLE alerts";
+            int emptyUpdateAlerts = tableStmt.executeUpdate(emptyAlertsTable);
 
-            String createTableAlerts = "CREATE TABLE alerts " +
-                    "(id INT generated always as identity primary key, title TEXT, description TEXT, " +
-                    "created_at TIMESTAMP, employee VARCHAR(255))";
-            int tableUpdateAlerts = tableStmt.executeUpdate(createTableAlerts);
+//            String createTableAlerts = "CREATE TABLE alerts " +
+//                    "(id INT generated always as identity primary key, title TEXT, description TEXT, " +
+//                    "created_at TIMESTAMP, employee VARCHAR(255))";
+//            int tableUpdateAlerts = tableStmt.executeUpdate(createTableAlerts);
 
             try {
                 while (((line = br.readLine()) != null)) {
@@ -1029,46 +1101,79 @@ public class DBinput {
                     default -> new BufferedReader(new FileReader("./" + filename + ".csv"));
                 };
             } catch (FileNotFoundException e) {
-                System.out.println("Error reading the file in the method 'DBinput.importSignageFromCSV'");
+                System.out.println("Error reading the file in the method 'DBinput.importSignsFromCSV'");
                 e.printStackTrace();
             }
 
             Statement tableStmt = DBconnection.getDBconnection().getConnection().createStatement();
-            String dropSignageTable = "DROP TABLE IF EXISTS signs";
-            int dropUpdateSignage = tableStmt.executeUpdate(dropSignageTable);
+            String emptySignsTable = "TRUNCATE TABLE signs";
+            int emptyUpdateSigns = tableStmt.executeUpdate(emptySignsTable);
 
-            String createTableSignage = "CREATE TABLE signs (" +
-                    """
-                        signageGroup varchar(255) NOT NULL,
-                        locationName text NOT NULL DEFAULT '',
-                        direction varchar(255) NOT NULL DEFAULT 'stop here',
-                        startDate date NOT NULL DEFAULT CURRENT_DATE,
-                        endDate date,
-                        singleBlock boolean DEFAULT true,
-                        PRIMARY KEY (signageGroup, locationName, startDate))
-                    """;
-            int tableUpdateSignage = tableStmt.executeUpdate(createTableSignage);
+//            String createTableSigns = "CREATE TABLE signs (" +
+//                    """
+//                        signageGroup varchar(255) NOT NULL,
+//                        locationName text NOT NULL DEFAULT '',
+//                        direction varchar(255) NOT NULL DEFAULT 'stop here',
+//                        startDate date NOT NULL DEFAULT CURRENT_DATE,
+//                        endDate date DEFAULT NULL,
+//                        signLocation varchar(255) DEFAULT 'Info Node 19 Floor 2',
+//                        PRIMARY KEY (signageGroup, locationName, startDate))
+//                    """;
+//            int tableUpdateSigns = tableStmt.executeUpdate(createTableSigns);
 
             try {
                 while (((line = br.readLine()) != null)) {
                     String[] requestValues = line.split(splitBy);
                     if (!(requestValues[0].equals("signageGroup"))) {
                         // System.out.println(edgeValues[0]);
-                        String rowQuery = "INSERT INTO signs (signagegroup, locationname, direction, startdate, enddate, singleblock) VALUES ("
-                                + "'"
-                                + requestValues[0]
-                                + "'"
-                                + ","
-                                + requestValues[1]
-                                + ","
-                                + "'"
-                                + requestValues[2]
-                                + "'"
-                                + ","
-                                + "'"
-                                + requestValues[3]
-                                + "'"
-                                + ");";
+                        String rowQuery = "";
+                        if (requestValues[4].equals("null")) {
+                            rowQuery = "INSERT INTO signs (signagegroup, locationname, direction, startdate, enddate, signlocation) VALUES ("
+                                    + "'"
+                                    + requestValues[0]
+                                    + "'"
+                                    + ","
+                                    + requestValues[1]
+                                    + ","
+                                    + "'"
+                                    + requestValues[2]
+                                    + "'"
+                                    + ","
+                                    + "'"
+                                    + requestValues[3]
+                                    + "'"
+                                    + ","
+                                    + requestValues[4]
+                                    + ","
+                                    + "'"
+                                    + requestValues[5]
+                                    + "'"
+                                    + ");";
+                        } else {
+                            rowQuery = "INSERT INTO signs (signagegroup, locationname, direction, startdate, enddate, signlocation) VALUES ("
+                                    + "'"
+                                    + requestValues[0]
+                                    + "'"
+                                    + ","
+                                    + requestValues[1]
+                                    + ","
+                                    + "'"
+                                    + requestValues[2]
+                                    + "'"
+                                    + ","
+                                    + "'"
+                                    + requestValues[3]
+                                    + "'"
+                                    + ","
+                                    + "'"
+                                    + requestValues[4]
+                                    + "'"
+                                    + ","
+                                    + "'"
+                                    + requestValues[5]
+                                    + "'"
+                                    + ");";
+                        }
                         Statement rowStmt = DBconnection.getDBconnection().getConnection().createStatement();
                         int rowUpdate = rowStmt.executeUpdate(rowQuery);
                         rowStmt.close();
@@ -1076,13 +1181,12 @@ public class DBinput {
                 }
                 br.close();
             } catch (IOException e) {
-                System.out.println("Error reading the file in the method 'DBinput.importSignageFromCSV'");
+                System.out.println("Error reading the file in the method 'DBinput.importSignsFromCSV'");
                 e.printStackTrace();
             }
             tableStmt.close();
         } catch (SQLException e) {
-            System.out.println("ERROR: Query could not be executed in the method 'DBinput.importSignageFromCSV'");
+            System.out.println("ERROR: Query could not be executed in the method 'DBinput.importSignsFromCSV'");
         }
     }
-
 }
