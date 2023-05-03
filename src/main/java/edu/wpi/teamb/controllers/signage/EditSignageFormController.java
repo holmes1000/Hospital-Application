@@ -89,14 +89,38 @@ public class EditSignageFormController {
         originalLocation6 = location6Box.getText();
         ArrayList<String> directions = signageE.getDirectionsFromLocations(curSignage,signLocations);
         ObservableList<String> directionsObservableList = FXCollections.observableArrayList(directions);
+//        System.out.println(directionsObservableList);
+//        for (String s: direction1Box.getItems()) {
+//            System.out.println(s);
+//        }
+//        direction1Box.setValue("right");
         for (int i = 0; i < directions.size(); i++) {
+            System.out.println(directionsObservableList.get(i));
             switch (i) {
-                case 0 -> direction1Box.setValue(directions.get(i));
-                case 1 -> direction2Box.setValue(directions.get(i));
-                case 2 -> direction3Box.setValue(directions.get(i));
-                case 3 -> direction4Box.setValue(directions.get(i));
-                case 4 -> direction5Box.setValue(directions.get(i));
-                case 5 -> direction6Box.setValue(directions.get(i));
+                case 0 -> {
+                    direction1Box.setValue(directionsObservableList.get(i));
+                    Tooltip.install(direction1Box, new Tooltip("Previous direction was " + directionsObservableList.get(i)));
+                }
+                case 1 -> {
+                    direction2Box.setValue(directionsObservableList.get(i));
+                    Tooltip.install(direction2Box, new Tooltip("Previous direction was " + directionsObservableList.get(i)));
+                }
+                case 2 -> {
+                    direction3Box.setValue(directionsObservableList.get(i));
+                    Tooltip.install(direction3Box, new Tooltip("Previous direction was " + directionsObservableList.get(i)));
+                }
+                case 3 -> {
+                    direction4Box.setValue(directionsObservableList.get(i));
+                    Tooltip.install(direction4Box, new Tooltip("Previous direction was " + directionsObservableList.get(i)));
+                }
+                case 4 -> {
+                    direction5Box.setValue(directionsObservableList.get(i));
+                    Tooltip.install(direction5Box, new Tooltip("Previous direction was " + directionsObservableList.get(i)));
+                }
+                case 5 ->  {
+                    direction6Box.setValue(directionsObservableList.get(i));
+                    Tooltip.install(direction6Box, new Tooltip("Previous direction was " + directionsObservableList.get(i)));
+                }
             }
         }
     }
@@ -105,7 +129,7 @@ public class EditSignageFormController {
         ArrayList<String> signLocations = signageE.getLongNamesAlphabetical();
         ObservableList<String> signageGroupsObservableList = FXCollections.observableArrayList(signLocations);
         signLocationBox.setItems(signageGroupsObservableList);
-        signLocationBox.getSelectionModel().selectItem("Info Node 19 Floor 2");
+        signLocationBox.getSelectionModel().selectItem(signageE.getSignLocation(curSignage));
     }
 
     private void initialize_date_pickers(){
@@ -288,13 +312,17 @@ public class EditSignageFormController {
             alert.setHeaderText(null);
             alert.setContentText("Successfully edited sign named '" + signageNameBox.getText() + "'!");
             alert.showAndWait();
-            //signageController.refresh();
+            signageController.refreshAfterEdit();
             handleClose();
         }
     }
 
     void setSignageController(SignageController signageController) {
         EditSignageFormController.signageController = signageController;
+    }
+
+    public static String getCurSignage() {
+        return curSignage;
     }
 
 }

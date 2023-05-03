@@ -25,6 +25,7 @@ import org.controlsfx.control.PopOver;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collections;
 
 
@@ -122,9 +123,12 @@ public class TranslationRequestControllerI implements IRequestController {
 
     @Override
     public void handleSubmit() {
-        if (nullInputs())
-            showPopOver();
-        else {
+        if (nullInputs()) {
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Missing Required Fields");
+            alert.setContentText("Please fill out all required fields: " + nullInputsList());
+        } else {
             // Get the standard request fields
             ETranslationRequest.setEmployee(cbEmployeesToAssign.getValue());
             ETranslationRequest.setLocationName(cbLongName.getValue());
@@ -161,7 +165,7 @@ public class TranslationRequestControllerI implements IRequestController {
         if(!employee.equals("unassigned")) {
             Alert newAlert = new Alert();
             newAlert.setTitle("New Task Assigned");
-            newAlert.setDescription("You have been assigned a new furniture request to complete.");
+            newAlert.setDescription("You have been assigned a new translation request to complete.");
             newAlert.setEmployee(employee);
             newAlert.setCreated_at(new Timestamp(System.currentTimeMillis()));
             Repository.getRepository().addAlert(newAlert);
@@ -184,6 +188,23 @@ public class TranslationRequestControllerI implements IRequestController {
                 || cdMedicalInfo.getValue() == null
                 || cbEmployeesToAssign.getValue() == null
                 || cbLongName.getValue() == null;
+    }
+
+    public ArrayList<String> nullInputsList() {
+        ArrayList<String> nullInputs = new ArrayList<>();
+        if (cbLanguageSelect.getValue() == null) {
+            nullInputs.add("Language");
+        }
+        if (cdMedicalInfo.getValue() == null) {
+            nullInputs.add("Medical Info");
+        }
+        if (cbEmployeesToAssign.getValue() == null) {
+            nullInputs.add("Employee");
+        }
+        if (cbLongName.getValue() == null) {
+            nullInputs.add("Location");
+        }
+        return nullInputs;
     }
 
     @Override

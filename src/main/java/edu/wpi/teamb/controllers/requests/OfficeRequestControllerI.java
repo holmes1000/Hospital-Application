@@ -28,6 +28,7 @@ import org.controlsfx.control.PopOver;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collections;
 
 public class OfficeRequestControllerI implements IRequestController {
@@ -68,29 +69,6 @@ public class OfficeRequestControllerI implements IRequestController {
 
     @Override
     public void initBtns() {
-        spSubmit.setTooltip(new Tooltip("Enter all required fields to submit request"));
-        BooleanBinding bb = new BooleanBinding() {
-            {
-                super.bind(cbSupplyItems.valueProperty(),
-                        cbSupplyType.valueProperty(),
-                        tbSupplyQuantities.textProperty(),
-//                        txtFldNotes.textProperty(),
-                        cbEmployeesToAssign.valueProperty(),
-                        cbLongName.valueProperty());
-            }
-
-            @Override
-            protected boolean computeValue() {
-                return (cbSupplyItems.getValue() == null
-                        || cbSupplyType.getValue() == null
-                        || tbSupplyQuantities.getText().isEmpty()
-//                        || txtFldNotes.getText().isEmpty()
-                        || cbEmployeesToAssign.getValue() == null
-                        || cbLongName.getValue() == null);
-            }
-        };
-        btnSubmit.disableProperty().bind(bb);
-
         btnSubmit.setTooltip(new Tooltip("Click to submit request"));
         btnSubmit.setOnAction(e -> handleSubmit());
         btnReset.setTooltip(new Tooltip("Click to reset all fields"));
@@ -173,8 +151,11 @@ public class OfficeRequestControllerI implements IRequestController {
     @Override
     public void handleSubmit() {
         if (nullInputs()) {
-            showPopOver();
-        }else if(tbSupplyQuantities.getText().replaceAll("[a-zA-Z]", "").length() != 0){
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error");
+            alert.setContentText("Please fill out all fields: " + nullInputsList());
+        } else if(tbSupplyQuantities.getText().replaceAll("[a-zA-Z]", "").length() != 0){
             // Get the standard request fields
             EOfficeRequest.setEmployee(cbEmployeesToAssign.getValue());
             EOfficeRequest.setLocationName(cbLongName.getValue());
@@ -240,6 +221,26 @@ public class OfficeRequestControllerI implements IRequestController {
                 || cbSupplyType.getValue() == null
                 || tbSupplyQuantities.getText().isEmpty()
                 || cbLongName.getValue() == null;
+    }
+
+    public ArrayList<String> nullInputsList() {
+        ArrayList<String> nullInputs = new ArrayList<>();
+        if (cbEmployeesToAssign.getValue() == null) {
+            nullInputs.add("Employee");
+        }
+        if (cbSupplyItems.getValue() == null) {
+            nullInputs.add("Supply Item");
+        }
+        if (cbSupplyType.getValue() == null) {
+            nullInputs.add("Supply Type");
+        }
+        if (tbSupplyQuantities.getText().isEmpty()) {
+            nullInputs.add("Quantity");
+        }
+        if (cbLongName.getValue() == null) {
+            nullInputs.add("Location");
+        }
+        return nullInputs;
     }
 
     @Override

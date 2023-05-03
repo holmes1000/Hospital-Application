@@ -98,4 +98,8 @@ public class ESignage {
     public void transferSign(String oldName, Sign s) {
         Repository.getRepository().transferSign(oldName, s);
     }
+
+    public String getSignLocation(String signGroup) {
+        return Repository.getRepository().getSignLocation(signGroup);
+    }
 }

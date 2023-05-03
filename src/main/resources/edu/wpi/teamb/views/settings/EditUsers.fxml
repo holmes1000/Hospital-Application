@@ -7,6 +7,7 @@
 <?import io.github.palexdev.materialfx.controls.MFXPasswordField?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
@@ -96,21 +97,29 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Text>
-                <MFXButton fx:id="btnEditUser" layoutX="855.0" layoutY="612.0" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: f6bd38; -fx-border-color: transparent; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Edit" textFill="WHITE">
-                    <font>
-                        <Font name="System Bold" size="18.0" />
-                    </font>
-                </MFXButton>
+            <SplitPane fx:id="spEdit" layoutX="855.0" layoutY="612.0" style="-fx-background-color: transparent;">
+               <items>
+                      <MFXButton fx:id="btnEditUser" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: f6bd38; -fx-border-color: transparent; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Edit" textFill="WHITE">
+                          <font>
+                              <Font name="System Bold" size="18.0" />
+                          </font>
+                      </MFXButton>
+               </items>
+            </SplitPane>
                 <MFXButton fx:id="btnAddUser" layoutX="25.0" layoutY="479.0" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #012d5a; -fx-border-color: transparent; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Add" textFill="WHITE">
                     <font>
                         <Font name="System Bold" size="18.0" />
                     </font>
                 </MFXButton>
-                <MFXButton fx:id="btnDeleteUser" layoutX="502.0" layoutY="612.0" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #D2374A; -fx-border-color: transparent; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Delete" textFill="WHITE">
-                    <font>
-                        <Font name="System Bold" size="18.0" />
-                    </font>
-                </MFXButton>
+            <SplitPane fx:id="spDelete" layoutX="502.0" layoutY="612.0" style="-fx-background-color: transparent;">
+               <items>
+                      <MFXButton fx:id="btnDeleteUser" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #D2374A; -fx-border-color: transparent; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Delete" textFill="WHITE">
+                          <font>
+                              <Font name="System Bold" size="18.0" />
+                          </font>
+                      </MFXButton>
+               </items>
+            </SplitPane>
                 <VBox fx:id="tableVbox" layoutX="503.0" layoutY="133.0" prefHeight="460.0" prefWidth="471.0">
                     <children>
                         <TableView fx:id="tbUsers" layoutX="613.0" layoutY="117.0" onMouseClicked="#tbItemSelected" prefHeight="460.0" prefWidth="369.0" />

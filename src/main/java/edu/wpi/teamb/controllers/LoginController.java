@@ -76,14 +76,16 @@ public class LoginController {
 //        errorMsg.setText("Logged in Successful!");
       } else {
         //should never run this section unless there is a catastrophic error of some sorts
-        errorMsg.setText("Something has gone very wrong");
+        //errorMsg.setText("Something has gone very wrong");
+        submissionAlert("ERROR", "Something has gone very wrong.");
       }
     } catch (EmptyLoginCredentialsException e) {
-      errorMsg.setText("Please fill in all fields.");
+      submissionAlert("Login Error", "Please fill in all fields.");
     } catch (NullPointerException e) {
-      errorMsg.setText("Please check username and/or password.");
+      submissionAlert("Login Error", "Please check username and/or password.");
     } catch (IncorrectPasswordException e) {
-      errorMsg.setText("Please check username and/or password.");
+      //errorMsg.setText("Please check username and/or password.");
+        submissionAlert("Incorrect Password", "Please check username and/or password.");
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
@@ -125,7 +127,7 @@ public class LoginController {
     dialog.getEditor().setOnKeyTyped(e -> {
       if (loginE.verify2FAVerificationCode(Integer.parseInt(dialog.getEditor().getText()))) {
         //condition where 2-factor authentication code matched
-        errorMsg.setText("Logged in Successful!");
+        //errorMsg.setText("Logged in Successful!");
         Navigation.navigate(Screen.HOME);
         dialog.close();
       }
@@ -136,15 +138,18 @@ public class LoginController {
     if (result.isPresent()) {
       if (loginE.verify2FAVerificationCode(Integer.parseInt(dialog.getEditor().getText()))) {
         //condition where 2-factor authentication code matched
-        errorMsg.setText("Logged in Successful!");
+        //errorMsg.setText("Logged in Successful!");
         Navigation.navigate(Screen.HOME);
       } else {
         //condition where 2-factor authentication code did not match
-        errorMsg.setText("Incorrect 2-factor authentication code. Please try again.");
+        //errorMsg.setText("Incorrect 2-factor authentication code. Please try again.");
+        submissionAlert("2-Factor Authentication", "Incorrect 2-factor authentication code. Please try again.");
       }
     } else {
+      System.out.println("User closed 2FA menu");
       //condition where user canceled 2-factor authentication
-      errorMsg.setText("2-factor authentication canceled. Login failed.");
+      //errorMsg.setText("2-factor authentication canceled. Login failed.");
+      //submissionAlert("2-Factor Authentication", "2-factor authentication canceled. Login failed.");
     }
   }
 
@@ -164,5 +169,14 @@ public class LoginController {
      private String getStatus() {
       return status;
     }
+  }
+
+  void submissionAlert(String title, String message) {
+    // Create an alert
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle(title);
+    alert.setHeaderText(null);
+    alert.setContentText(message);
+    alert.showAndWait();
   }
 }

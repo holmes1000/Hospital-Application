@@ -28,6 +28,7 @@ import org.controlsfx.control.PopOver;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collections;
 
 public class MealRequestControllerI implements IRequestController{
@@ -58,22 +59,6 @@ public class MealRequestControllerI implements IRequestController{
 
     @Override
     public void initBtns() {
-        spSubmit.setTooltip(new Tooltip("Enter all required fields to submit request"));
-        BooleanBinding bb = new BooleanBinding() {
-            {
-                super.bind(cbOrderLocation.valueProperty(),
-                        cbEmployeesToAssign.valueProperty(),
-                        cbLongName.valueProperty());
-            }
-
-            @Override
-            protected boolean computeValue() {
-                return (cbOrderLocation.getValue() == null ||
-                        cbEmployeesToAssign.getValue() == null ||
-                        cbLongName.getValue() == null);
-            }
-        };
-        btnSubmit.disableProperty().bind(bb);
 
         btnSubmit.setTooltip(new Tooltip("Click to submit your request"));
         btnSubmit.setOnAction(e -> handleSubmit());
@@ -148,8 +133,12 @@ public class MealRequestControllerI implements IRequestController{
 
     @Override
     public void handleSubmit() {
-        if (nullInputs() || nullInputsFood())
-            showPopOver();
+        if (nullInputs() || nullInputsFood()) {
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error");
+            alert.setContentText("Please fill out all required fields:" + nullInputsList());
+        }
         else {
             // Get the standard request fields
             EMealRequest.setEmployee(cbEmployeesToAssign.getValue());
@@ -218,6 +207,22 @@ public class MealRequestControllerI implements IRequestController{
         return cbOrderLocation.getValue() == null
                 || cbEmployeesToAssign.getValue() == null
                 || cbLongName.getValue() == null;
+    }
+
+    public ArrayList<String> nullInputsList() {
+        ArrayList<String> nullInputs = new ArrayList<>();
+        if (cbOrderLocation.getValue() == null) {
+            nullInputs.add("Order Location");
+        }
+        if (cbEmployeesToAssign.getValue() == null) {
+            nullInputs.add("Employee to Assign");
+        }
+        if (cbLongName.getValue() == null) {
+            nullInputs.add("Location Name");
+        } if (cbAvailableMeals.getValue() == null || cbAvailableDrinks.getValue() == null || cbAvailableSnacks.getValue() == null) {
+            nullInputs.add("Food");
+        }
+        return nullInputs;
     }
 
     public boolean nullInputsFood() {

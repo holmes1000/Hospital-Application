@@ -4,16 +4,13 @@ import edu.wpi.teamb.Bapp;
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.Full.FullConferenceRequest;
 import edu.wpi.teamb.DBAccess.ORMs.Alert;
+import edu.wpi.teamb.DBAccess.ORMs.User;
 import edu.wpi.teamb.controllers.components.InfoCardController;
 import edu.wpi.teamb.entities.requests.EConferenceRequest;
 import edu.wpi.teamb.entities.requests.IRequest;
-import edu.wpi.teamb.navigation.Navigation;
-import edu.wpi.teamb.navigation.Screen;
-import edu.wpi.teamb.utils.TimeFormattingHelpers;
-import io.github.palexdev.materialfx.beans.NumberRange;
-import io.github.palexdev.materialfx.controls.*;
-import javafx.beans.InvalidationListener;
-import javafx.beans.binding.BooleanBinding;
+import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
+import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -29,15 +26,13 @@ import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
 
 import java.io.IOException;
+import java.sql.Array;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 
 
 public class ConferenceRequestControllerI implements IRequestController{
@@ -58,12 +53,22 @@ public class ConferenceRequestControllerI implements IRequestController{
     @FXML private MFXFilterComboBox<String> cbChangeStatus;
 
     private final EConferenceRequest EConferenceRequest;
+    private static User currentUser;
 
     public ConferenceRequestControllerI(){
         this.EConferenceRequest = new EConferenceRequest();
     }
+
+    public static User getCurrentUser() {
+        return currentUser;
+    }
+
+    public static void setCurrentUser(User currentUser) {
+        ConferenceRequestControllerI.currentUser = currentUser;
+    }
+
     @FXML
-    public void initialize() throws IOException, SQLException {
+    public void initialize() {
         initBtns();
         initializeFields();
 //        datePicker.setStartingYearMonth(YearMonth.from(datePicker.getCurrentDate()));
@@ -81,32 +86,6 @@ public class ConferenceRequestControllerI implements IRequestController{
 
     @Override
     public void initBtns() {
-        spSubmit.setTooltip(new Tooltip("Enter all required fields to submit request"));
-        BooleanBinding bb = new BooleanBinding() {
-            {
-                super.bind(reservationHour.valueProperty(),
-                        dateToReserve.valueProperty(),
-                        cbEmployeesToAssign.valueProperty(),
-                        eventNameTextField.textProperty(),
-                        bookingReasonTextField.textProperty(),
-                        cbDuration.valueProperty(),
-                        cbLongName.valueProperty(),
-                        tfNotes.textProperty());
-            }
-
-            @Override
-            protected boolean computeValue() {
-                return (reservationHour.getValue() == null ||
-                        dateToReserve.getValue() == null ||
-                        cbEmployeesToAssign.getValue() == null ||
-                        eventNameTextField.getText().isEmpty() ||
-                        bookingReasonTextField.getText().isEmpty() ||
-                        cbDuration.getValue() == null ||
-                        cbLongName.getValue() == null);
-            }
-        };
-        btnSubmit.disableProperty().bind(bb);
-
         btnSubmit.setTooltip(new Tooltip("Click to submit request"));
         btnSubmit.setOnAction(e -> handleSubmit());
         resetBtn.setTooltip(new Tooltip("Click to reset all fields"));
@@ -130,7 +109,7 @@ public class ConferenceRequestControllerI implements IRequestController{
     }
 
     @Override
-    public void initializeFields() throws SQLException {
+    public void initializeFields() {
         //Initialize the list of locations to direct request to via dropdown
         ObservableList<String> longNames = FXCollections.observableArrayList();
         longNames.addAll(Repository.getRepository().getLongNameByType("CONF"));
@@ -145,7 +124,11 @@ public class ConferenceRequestControllerI implements IRequestController{
         Collections.sort(employees);
         employees.add(0, "unassigned");
         cbEmployeesToAssign.setItems(employees);
-        cbEmployeesToAssign.setTooltip(new Tooltip("Select an employee who is reserving the room"));
+        cbEmployeesToAssign.selectItem(currentUser.getUsername());
+        cbEmployeesToAssign.setEditable(true);
+        cbEmployeesToAssign.setAllowEdit(false);
+        cbEmployeesToAssign.editableProperty().setValue(false);
+        cbEmployeesToAssign.setTooltip(new Tooltip("Reservation request will be under this user"));
 
         ObservableList<String> duration =
                 FXCollections.observableArrayList();
@@ -187,7 +170,13 @@ public class ConferenceRequestControllerI implements IRequestController{
     public void handleSubmit() {
         // Check if the input fields are null
         if (nullInputs()) {
-            showPopOver();
+            ArrayList<String> nullInputs = nullInputsList();
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error Submitting Request");
+            alert.setContentText("Please fill out all of the required fields: " + nullInputs);
+            alert.showAndWait();
+            return;
         }
         else {
             String startHour = reservationHour.getValue().substring(0, reservationHour.getValue().indexOf(":"));
@@ -235,6 +224,7 @@ public class ConferenceRequestControllerI implements IRequestController{
                 EConferenceRequest.submitRequest(output);
                 alertEmployee(cbEmployeesToAssign.getValue());
                 handleReset();
+                initialize();
             }
             submissionAlert();
         }
@@ -263,7 +253,6 @@ public class ConferenceRequestControllerI implements IRequestController{
         eventNameTextField.clear();
         bookingReasonTextField.clear();
         tfNotes.clear();
-        cbEmployeesToAssign.clear();
         cbLongName.clear();
     }
 
@@ -277,6 +266,25 @@ public class ConferenceRequestControllerI implements IRequestController{
                 || cbDuration.getValue() == null
                 || reservationHour.getValue() == null
                 || dateToReserve.getValue() == null;
+    }
+
+    public ArrayList<String> nullInputsList() {
+        ArrayList<String> nullInputs = new ArrayList<>();
+        if (cbEmployeesToAssign.getValue() == null) {
+            nullInputs.add("Employee");
+        } if (cbLongName.getValue() == null) {
+            nullInputs.add("Location");
+        } if (eventNameTextField.getText().isEmpty()) {
+            nullInputs.add("Event Name");
+        } if (bookingReasonTextField.getText().isEmpty()) {
+            nullInputs.add("Booking Reason");
+        } if (cbDuration.getValue() == null) {
+            nullInputs.add("Duration");
+        } if (reservationHour.getValue() == null) {
+            nullInputs.add("Start Time");
+        } if (dateToReserve.getValue() == null) {
+            nullInputs.add("Date");
+        } return nullInputs;
     }
 
     @Override

@@ -53,7 +53,7 @@
                 </MFXFilterComboBox>
                 <MFXTextField fx:id="txtFldNotes" floatingText="Special Instructions" layoutX="20.0" layoutY="300.0" prefHeight="50.0" prefWidth="450.0" textLimit="80" />
                 <MFXFilterComboBox fx:id="cbLongName" floatingText="Room Name" layoutX="20.0" layoutY="185.0" prefHeight="45.0" prefWidth="450.0" />
-            <ImageView fitHeight="276.0" fitWidth="291.0" layoutX="785.0" layoutY="116.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="365.0" fitWidth="393.0" layoutX="621.0" layoutY="63.0" pickOnBounds="true">
                <image>
                   <Image url="@../../img/servicerec/translation.JPG" />
                </image>

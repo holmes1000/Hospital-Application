@@ -61,27 +61,6 @@ public class FlowerRequestControllerI implements IRequestController {
 
     @Override
     public void initBtns() {
-        spSubmit.setTooltip(new Tooltip("Enter all required fields to submit request"));
-        BooleanBinding bb = new BooleanBinding() {
-            {
-                super.bind(cbAvailableFlowers.valueProperty(),
-                        cdAvailableColor.valueProperty(),
-                        cdAvailableType.valueProperty(),
-                        cbLongName.valueProperty(),
-                        cbEmployeesToAssign.valueProperty());
-            }
-
-            @Override
-            protected boolean computeValue() {
-                return (cbAvailableFlowers.getValue() == null ||
-                        cdAvailableColor.getValue() == null ||
-                        cdAvailableType.getValue() == null ||
-                        cbLongName.getValue() == null ||
-                        cbEmployeesToAssign.getValue() == null);
-            }
-        };
-        btnSubmit.disableProperty().bind(bb);
-
         btnSubmit.setTooltip(new Tooltip("Click to submit request"));
         btnSubmit.setOnAction(e -> handleSubmit());
         btnReset.setTooltip(new Tooltip("Click to reset the form"));
@@ -186,8 +165,13 @@ public class FlowerRequestControllerI implements IRequestController {
 
     @Override
     public void handleSubmit() {
-        if (nullInputs())
-            showPopOver();
+        if (nullInputs()) {
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error");
+            alert.setContentText("Please fill out all required fields" + nullInputsList());
+            alert.showAndWait();
+        }
         else {
             // Get the standard request fields
             EFlowerRequest.setEmployee(cbEmployeesToAssign.getValue());
@@ -255,6 +239,26 @@ public class FlowerRequestControllerI implements IRequestController {
                 || cdAvailableType.getValue() == null
                 ||  cbEmployeesToAssign.getValue() == null
                 || cbLongName.getValue() == null;
+    }
+
+    public ArrayList<String> nullInputsList() {
+        ArrayList<String> nullInputs = new ArrayList<>();
+        if (cbAvailableFlowers.getValue() == null) {
+            nullInputs.add("Flower Type");
+        }
+        if (cdAvailableColor.getValue() == null) {
+            nullInputs.add("Flower Color");
+        }
+        if (cdAvailableType.getValue() == null) {
+            nullInputs.add("Flower Size");
+        }
+        if (cbEmployeesToAssign.getValue() == null) {
+            nullInputs.add("Employee");
+        }
+        if (cbLongName.getValue() == null) {
+            nullInputs.add("Location");
+        }
+        return nullInputs;
     }
 
     @Override

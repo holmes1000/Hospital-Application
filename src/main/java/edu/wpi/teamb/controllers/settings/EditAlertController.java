@@ -7,6 +7,7 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -55,6 +56,13 @@ public class EditAlertController {
     }
 
     public void initButtons() {
+        btnSaveEdits.setOnMouseClicked(event -> handleSaveEdits());
+        ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
+            btnSaveEdits.setDisable(false);
+        };
+        tfTitle.textProperty().addListener(changeListener);
+        tfDescription.textProperty().addListener(changeListener);
+        cbEmployees.valueProperty().addListener(changeListener);
         btnSaveEdits.setTooltip(new Tooltip("Click to save your edits"));
         btnSaveEdits.setOnMouseClicked(event -> handleSaveEdits());
     }

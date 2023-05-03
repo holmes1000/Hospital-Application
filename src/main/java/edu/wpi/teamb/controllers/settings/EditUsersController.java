@@ -42,6 +42,8 @@ public class EditUsersController {
     private JFXHamburger menuBurger;
     @FXML private JFXDrawer menuDrawer;
 
+    @FXML private SplitPane spDelete;
+    @FXML private SplitPane spEdit;
     @FXML private MFXFilterComboBox<String> cbPermissionLevel;
     @FXML private MFXPasswordField textPassword;
     @FXML private MFXTextField textUsername;
@@ -97,11 +99,20 @@ public class EditUsersController {
     }
 
     public void initButtons() {
+        spEdit.setTooltip(new Tooltip("Double click a user to edit their information"));
+        spDelete.setTooltip(new Tooltip("Double click a user to delete them"));
         btnAddUser.setTooltip(new Tooltip("Click to add a new user"));
         btnEditUser.setTooltip(new Tooltip("Click to edit a user's information"));
         btnDeleteUser.setTooltip(new Tooltip("Click to delete a user"));
         btnReset.setTooltip(new Tooltip("Click to reset the fields"));
         btnBack.setTooltip(new Tooltip("Click to go back to the settings"));
+        textEmail.setTooltip(new Tooltip("Enter a valid email address"));
+        textUsername.setTooltip(new Tooltip("Enter a username (this cannot be changed later)"));
+        textName.setTooltip(new Tooltip("Enter a first and last name"));
+        textPassword.setTooltip(new Tooltip("Enter a password (at least 8 characters)"));
+        cbPermissionLevel.setTooltip(new Tooltip("Select a permission level"));
+        tbUsers.setTooltip(new Tooltip("Double click a user to edit or delete"));
+
         btnAddUser.setOnMouseClicked(event -> handleAddUser());
         btnEditUser.setOnMouseClicked(event -> {
             try {
@@ -134,7 +145,7 @@ public class EditUsersController {
             }
         };
         btnAddUser.disableProperty().bind(bb);
-
+        btnReset.setDisable(true);
         ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
             btnReset.setDisable(false);
         };
@@ -204,6 +215,7 @@ public class EditUsersController {
         {
             createAlert("Username already exists", "Please enter a different username");
         }
+        handleReset();
         initializeFields(); // Refresh the combo box
     }
 

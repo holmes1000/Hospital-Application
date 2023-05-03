@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collections;
 
 public class FurnitureRequestControllerI implements IRequestController{
@@ -71,26 +72,6 @@ public class FurnitureRequestControllerI implements IRequestController{
 
     @Override
     public void initBtns() {
-        spSubmit.setTooltip(new Tooltip("Enter all required fields to submit request"));
-        BooleanBinding bb = new BooleanBinding() {
-            {
-                super.bind(cbAvailableFurniture.valueProperty(),
-                        cdAvailableModels.valueProperty(),
-                        cdAssembly.valueProperty(),
-                        cbLongName.valueProperty(),
-                        cbEmployeesToAssign.valueProperty());
-            }
-
-            @Override
-            protected boolean computeValue() {
-                return (cbAvailableFurniture.getValue() == null ||
-                        cdAvailableModels.getValue() == null ||
-                        cdAssembly.getValue() == null ||
-                        cbLongName.getValue() == null ||
-                        cbEmployeesToAssign.getValue() == null);
-            }
-        };
-        btnSubmit.disableProperty().bind(bb);
 
         btnSubmit.setTooltip(new Tooltip("Click to submit request"));
         btnSubmit.setOnAction(e -> handleSubmit());
@@ -182,8 +163,13 @@ public class FurnitureRequestControllerI implements IRequestController{
 
     @Override
     public void handleSubmit() {
-        if (nullInputs())
-            showPopOver();
+        if (nullInputs()) {
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Null Input");
+            alert.setContentText("Please fill out all required fields:" + nullInputsList());
+            alert.showAndWait();
+        }
         else {
             // Get the standard request fields
             EFurnitureRequest.setEmployee(cbEmployeesToAssign.getValue());
@@ -256,6 +242,26 @@ public class FurnitureRequestControllerI implements IRequestController{
                 || cdAssembly.getValue() == null
                 || cbEmployeesToAssign.getValue() == null
                 || cbLongName.getValue() == null;
+    }
+
+    public ArrayList<String> nullInputsList() {
+        ArrayList<String> nullInputs = new ArrayList<>();
+        if (cbAvailableFurniture.getValue() == null) {
+            nullInputs.add("Furniture Type");
+        }
+        if (cdAvailableModels.getValue() == null) {
+            nullInputs.add("Model");
+        }
+        if (cdAssembly.getValue() == null) {
+            nullInputs.add("Assembly");
+        }
+        if (cbEmployeesToAssign.getValue() == null) {
+            nullInputs.add("Employee");
+        }
+        if (cbLongName.getValue() == null) {
+            nullInputs.add("Location");
+        }
+        return nullInputs;
     }
 
     @Override
