@@ -1,0 +1,20 @@
+signageGroup,locationName,direction,startDate,endDate,signLocation
+Shapiro 2 Screen 1 (info desk) May 23,Information,right,2023-05-01,2023-06-30,Info Node 19 Floor 2
+Shapiro 2 Screen 1 (info desk) May 23,Shapiro Admitting,right,2023-05-01,2023-06-30,Info Node 19 Floor 2
+Shapiro 2 Screen 1 (info desk) May 23,Shapiro Procedural Check-in,right,2023-05-01,2023-06-30,Info Node 19 Floor 2
+Shapiro 2 Screen 1 (info desk) May 23,Watkins Clinic A & B (this floor),left,2023-05-01,2023-06-30,Info Node 19 Floor 2
+Shapiro 2 Screen 1 (info desk) May 23,Watkins Clinic C (up to 3rd floor),left,2023-05-01,2023-06-30,Info Node 19 Floor 2
+Shapiro 2 Screen 1 (info desk) May 23,Rehabilitation Services (down to 1st floor),left,2023-05-01,2023-06-30,Info Node 19 Floor 2
+Shapiro 2 Screen 2 (Q Elevator) May 23,Watkins Clinic A & B (this floor),up,2023-05-01,2023-10-31,Info Node 19 Floor 2
+Shapiro 2 Screen 2 (Q Elevator) May 23,Watkins Clinic C (EP & Echo) (up to 3rd fl),up,2023-05-01,2023-10-31,Info Node 19 Floor 2
+Shapiro 2 Screen 2 (Q Elevator) May 23,Brigham Circle Medical Associates (up to 3rd floor),up,2023-05-01,2023-10-31,Info Node 19 Floor 2
+Shapiro 2 Screen 2 (Q Elevator) May 23,L2PRU (down to Lower Level "L2"),down,2023-05-01,2023-10-31,Info Node 19 Floor 2
+Test 2,Up,up,2023-05-02,null,Cafe Stairs
+Shapiro 2 Screen 2 (Q Elevator) Nov 23,Watkins Clinic & EP (this floor),up,2023-11-01,null,15 Francis Security Desk Floor 2
+Shapiro 2 Screen 2 (Q Elevator) Nov 23,Echocardiography (this floor),right,2023-11-01,null,15 Francis Security Desk Floor 2
+Shapiro 2 Screen 2 (Q Elevator) Nov 23,Brigham Circle Medical Associates (Hale Building),left,2023-11-01,null,15 Francis Security Desk Floor 2
+Shapiro 2 Screen 2 (Q Elevator) Nov 23,L2PRU (down to lower level "L2"),down,2023-11-01,null,15 Francis Security Desk Floor 2
+Test,Up,up,2023-05-02,null,Cafe Stairs
+Shapiro 2 Screen 1 (info desk) July 23,Shapiro Admitting,stop here,2023-07-01,null,Info Node 19 Floor 2
+Shapiro 2 Screen 1 (info desk) July 23,Shapiro Procedural Check-in,stop here,2023-07-01,null,Info Node 19 Floor 2
+Shapiro 2 Screen 1 (info desk) July 23,Information,stop here,2023-07-01,null,Info Node 19 Floor 2
