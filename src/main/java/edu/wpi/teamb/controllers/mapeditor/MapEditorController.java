@@ -805,11 +805,10 @@ public class MapEditorController {
       if (me.getButton() == MouseButton.PRIMARY && me.getClickCount() == 2) {
         node.getScene().setCursor(Cursor.DEFAULT);
         FullNode n = Repository.getRepository().getFullNode(Integer.parseInt(node.getId()));
-
         System.out.println("true x: " + n.getxCoord() );
-        System.out.println("drgged x: " + node.getLayoutX() );
-          System.out.println("true y: " + n.getyCoord() );
-            System.out.println("drgged y: " + node.getLayoutY() );
+        System.out.println("dragged x: " + node.getLayoutX() );
+        System.out.println("true y: " + n.getyCoord() );
+        System.out.println("dragged y: " + node.getLayoutY());
         n.setxCoord((int) (n.getxCoord() + node.getLayoutX()));
         n.setyCoord((int) (n.getyCoord() + node.getLayoutY()));
         try {

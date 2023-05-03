@@ -142,7 +142,6 @@ public class EditNodeMenuController {
                 break;
             }
         }
-
         System.out.println("Editing a  node with nodeID: " + fullNode.getNodeID());
         submissionAlert("Node successfully edited! Refreshing the map.");
         mapEditorController.refreshMap();
@@ -156,7 +155,6 @@ public class EditNodeMenuController {
     public void setCurrentNode(FullNode currentNode) {
         EditNodeMenuController.currentNode = currentNode;
     }
-
     void submissionAlert(String message) {
         // Create an alert
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

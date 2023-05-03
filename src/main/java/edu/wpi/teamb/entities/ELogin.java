@@ -2,6 +2,7 @@ package edu.wpi.teamb.entities;
 
 import edu.wpi.teamb.DBAccess.DAO.Repository;
 import edu.wpi.teamb.DBAccess.ORMs.User;
+import edu.wpi.teamb.controllers.requests.ConferenceRequestControllerI;
 import edu.wpi.teamb.exceptions.EmptyLoginCredentialsException;
 import edu.wpi.teamb.exceptions.IncorrectPasswordException;
 
@@ -100,6 +101,7 @@ public class ELogin {
 
     //get the user from the database
     User currentUser = (User) Repository.getRepository().getUser(username);
+    ConferenceRequestControllerI.setCurrentUser(currentUser);
     //make sure the user exists
     if (currentUser == null) {
       throw new NullPointerException("User does not exist");

@@ -80,7 +80,6 @@ public class MoveRequestControllerI implements IRequestController{
 
     @Override
     public void initBtns() {
-        spSubmit.setTooltip(new Tooltip("Enter all required fields to submit request"));
         dateMove.setDayCellFactory(picker -> new DateCell() {
             public void updateItem(LocalDate date, boolean empty) {
                 super.updateItem(date, empty);
@@ -89,21 +88,6 @@ public class MoveRequestControllerI implements IRequestController{
                 setDisable(empty || date.compareTo(today) < 0 );
             }
         });
-        BooleanBinding bb = new BooleanBinding() {
-            {
-                super.bind(cdRoomToMove.valueProperty(),
-                        cdWheretoMove.valueProperty(),
-                        dateMove.valueProperty());
-            }
-
-            @Override
-            protected boolean computeValue() {
-                return (cdRoomToMove.getValue() == null
-                        || cdWheretoMove.getValue() == null
-                        || dateMove.getValue() == null);
-            }
-        };
-        btnSubmit.disableProperty().bind(bb);
 
         btnSubmit.setTooltip(new Tooltip("Click to submit request"));
         btnSubmit.setOnAction(e -> handleSubmit());
@@ -144,8 +128,12 @@ public class MoveRequestControllerI implements IRequestController{
 
     @Override
     public void handleSubmit() {
-        if (nullInputs())
-            showPopOver();
+        if (nullInputs()) {
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error");
+            alert.setContentText("Please fill out all fields: " + nullInputsLists());
+        }
         else {
             String what = cdRoomToMove.getSelectedItem();
             Integer where = cdWheretoMove.getSelectedItem();
@@ -221,6 +209,20 @@ public class MoveRequestControllerI implements IRequestController{
     public boolean nullInputs() {
         return cdRoomToMove.getSelectedItem() == null || cdWheretoMove.getSelectedItem() == null
                 || dateMove.getValue() == null;
+    }
+
+    public ArrayList<String> nullInputsLists() {
+        ArrayList<String> nullInputs = new ArrayList<>();
+        if (cdRoomToMove.getSelectedItem() == null) {
+            nullInputs.add("Room to Move");
+        }
+        if (cdWheretoMove.getSelectedItem() == null) {
+            nullInputs.add("Where to Move");
+        }
+        if (dateMove.getValue() == null) {
+            nullInputs.add("Date");
+        }
+        return nullInputs;
     }
 
     private void moveTable() {
