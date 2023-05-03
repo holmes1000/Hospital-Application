@@ -539,6 +539,52 @@ public class DBoutput {
     }
 
     /**
+     * This method exports the TranslationRequests table into a CSV file
+     *
+     * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
+     *                 location is 2)
+     * @param location The location of the CSV file to be exported as an int --
+     *                 int location can be 1 (root folder for program),
+     *                 2 (custom location), 3
+     *                 (developer: CSV Files in package), or 4 (developer: DB Sync Files in package)
+     */
+    public static void exportTranslationRequestsToCSV(String filename, int location) {
+        try {
+            String allQuery = "SELECT * FROM translationRequests";
+            Statement allStmt = DBconnection.getDBconnection().getConnection().createStatement();
+            ResultSet allRS = allStmt.executeQuery(allQuery);
+
+            BufferedWriter bw = switch (location) {
+                case 0 -> new BufferedWriter(new FileWriter(filename));
+                case 1 -> new BufferedWriter(new FileWriter("./" + filename + ".csv"));
+                case 2 -> new BufferedWriter(new FileWriter(filename + ".csv"));
+                case 3 -> new BufferedWriter(new FileWriter("./src/main/resources/CSV Files/" + filename + ".csv"));
+                case 4 -> new BufferedWriter(new FileWriter("./src/main/resources/DB Sync Files/" + filename + ".csv"));
+                default -> throw new IllegalStateException("Unexpected value: " + location);
+            };
+
+            bw.write("id,language,medicalImportance");
+
+            while (allRS.next()) {
+                int id = allRS.getInt("id");
+                String language = allRS.getString("language");
+                String medicalImportance = allRS.getString("medicalImportance");
+
+                String line = String.format("%d,%s,%s", id, language, medicalImportance);
+
+                bw.newLine();
+                bw.write(line);
+            }
+            allStmt.close();
+            bw.close();
+        } catch (IOException e) {
+            System.err.println("ERROR: Could not write to file " + filename + " in method 'exportOfficeRequestsToCSV'");
+        } catch (SQLException e) {
+            System.err.println("ERROR: SQL query failed in method 'exportOfficeRequestsToCSV'");
+        }
+    }
+
+    /**
      * This method exports the Alerts table into a CSV file
      *
      * @param filename The name of the CSV file to be exported (excludes '.csv' extension unless
@@ -611,7 +657,7 @@ public class DBoutput {
                 default -> throw new IllegalStateException("Unexpected value: " + location);
             };
 
-            bw.write("signageGroup,locationName,direction,startDate,endDate,singleBlock");
+            bw.write("signageGroup,locationName,direction,startDate,endDate,signLocation");
 
             while (allRS.next()) {
                 String signageGroup = allRS.getString("signageGroup");
@@ -619,10 +665,15 @@ public class DBoutput {
                 String direction = allRS.getString("direction");
                 Date startDate = allRS.getDate("startDate");
                 Date endDate = allRS.getDate("endDate");
-                String singleBlock = allRS.getString("singleBlock");
+                String signLocation = allRS.getString("signLocation");
 
+                String line = "";
 
-                String line = String.format("%s,%s,%s,%s,%s,%s", signageGroup, locationName, direction, startDate.toString(), endDate.toString(), singleBlock);
+                if (endDate == null) {
+                    line = String.format("%s,%s,%s,%s,%s,%s", signageGroup, locationName, direction, startDate.toString(), "null", signLocation);
+                } else {
+                    line = String.format("%s,%s,%s,%s,%s,%s", signageGroup, locationName, direction, startDate.toString(), endDate.toString(), signLocation);
+                }
 
                 bw.newLine();
                 bw.write(line);
