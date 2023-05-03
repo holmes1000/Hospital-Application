@@ -1,11 +1,15 @@
 package edu.wpi.teamb;
 
 import com.sun.javafx.application.LauncherImpl;
+
+import edu.wpi.teamb.Game.Gapp;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
+
+import org.checkerframework.checker.units.qual.g;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -25,6 +29,8 @@ public class Bapp extends Application {
 
   @Setter @Getter private static Stage primaryStage;
   @Setter @Getter private static BorderPane rootPane;
+
+  @Setter @Getter private static Stage gameStage;
 
   @Getter private static ArrayList<Image> hospitalListOfFloors;
 
@@ -77,6 +83,26 @@ public class Bapp extends Application {
     primaryStage.show();
 
     Navigation.navigate(Screen.LOGIN);
+
+    gameStage = new Stage();
+      
+
+
+
+  }
+
+  //use to run the game
+  public static void runGapp ()
+  {
+    try {
+      
+      Gapp.Newstart(gameStage);
+    } catch (Exception e) {
+      // TODO: handle exception
+      e.printStackTrace();
+    }
+
+    //Gapp.Newstart(gamStage);
   }
 
   @Override
