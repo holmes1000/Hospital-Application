@@ -35,7 +35,7 @@
                 </Text>
                 <MFXTextField fx:id="eventNameTextField" borderGap="0.0" floatingText="Specify an Event Name" graphicTextGap="0.0" layoutX="20.0" layoutY="295.0" maxHeight="50.0" measureUnitGap="0.0" prefHeight="50.0" prefWidth="450.0" textLimit="50" />
                 <MFXTextField fx:id="bookingReasonTextField" floatingText="Specify a Reason for Booking" layoutX="20.0" layoutY="355.0" maxHeight="45.0" prefHeight="45.0" prefWidth="450.0" textLimit="150" />
-            <MFXFilterComboBox fx:id="cbEmployeesToAssign" floatingText="Select an Employee to reserve the Room" layoutX="20.0" layoutY="240.0" prefHeight="45.0" prefWidth="450.0">
+            <MFXFilterComboBox fx:id="cbEmployeesToAssign" floatingText="Reservation will be under this user" layoutX="20.0" layoutY="240.0" prefHeight="45.0" prefWidth="450.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>

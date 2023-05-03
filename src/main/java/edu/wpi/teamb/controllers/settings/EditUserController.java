@@ -56,6 +56,7 @@ public class EditUserController {
 
     public void initButtons() {
         btnSaveEdits.setTooltip(new Tooltip("Click to save edits"));
+        btnSaveEdits.setDisable(true);
         tfEmail.setTooltip(new Tooltip("Click to edit the email address"));
         tfUsername.setTooltip(new Tooltip("Username cannot be changed"));
         tfName.setTooltip(new Tooltip("Click to edit the name of the user"));

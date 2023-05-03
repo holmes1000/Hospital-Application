@@ -42,6 +42,8 @@ public class EditUsersController {
     private JFXHamburger menuBurger;
     @FXML private JFXDrawer menuDrawer;
 
+    @FXML private SplitPane spDelete;
+    @FXML private SplitPane spEdit;
     @FXML private MFXFilterComboBox<String> cbPermissionLevel;
     @FXML private MFXPasswordField textPassword;
     @FXML private MFXTextField textUsername;
@@ -97,6 +99,8 @@ public class EditUsersController {
     }
 
     public void initButtons() {
+        spEdit.setTooltip(new Tooltip("Double click a user to edit their information"));
+        spDelete.setTooltip(new Tooltip("Double click a user to delete them"));
         btnAddUser.setTooltip(new Tooltip("Click to add a new user"));
         btnEditUser.setTooltip(new Tooltip("Click to edit a user's information"));
         btnDeleteUser.setTooltip(new Tooltip("Click to delete a user"));
@@ -141,7 +145,7 @@ public class EditUsersController {
             }
         };
         btnAddUser.disableProperty().bind(bb);
-
+        btnReset.setDisable(true);
         ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
             btnReset.setDisable(false);
         };
@@ -211,6 +215,7 @@ public class EditUsersController {
         {
             createAlert("Username already exists", "Please enter a different username");
         }
+        handleReset();
         initializeFields(); // Refresh the combo box
     }
 

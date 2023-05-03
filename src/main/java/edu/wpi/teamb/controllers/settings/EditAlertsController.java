@@ -13,6 +13,7 @@ import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -131,6 +132,13 @@ public class EditAlertsController {
         btnDeleteAlert.setDisable(true);
         btnBack.setOnMouseClicked(event -> Navigation.navigate(Screen.SETTINGS));
         btnReset.setOnMouseClicked(event -> handleReset());
+        btnReset.setDisable(true);
+        ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
+            btnReset.setDisable(false);
+        };
+        textTitle.textProperty().addListener(changeListener);
+        textDescription.textProperty().addListener(changeListener);
+        cbEmployees.valueProperty().addListener(changeListener);
     }
 
     private void handleReset() {
@@ -150,6 +158,8 @@ public class EditAlertsController {
             updateTable();
             createAlert("Alert Deleted", "Alert Deleted Successfully");
         }
+        btnDeleteAlert.setDisable(true);
+        btnEditAlert.setDisable(true);
     }
 
     private void handleEditAlert() throws IOException {

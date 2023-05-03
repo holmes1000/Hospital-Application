@@ -98,16 +98,16 @@ public class AddNewSignageFormController {
                 (location6Box.getText().isEmpty() && direction6Box.getValue() != null) ||
                 (!location6Box.getText().isEmpty() && direction6Box.getValue() == null)) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("MISSING FIELDS: Location and Direction must be filled together");
+            alert.setTitle("MISSING FIELDS");
             alert.setHeaderText(null);
-            alert.setContentText("Must include a location and corresponding direction together.");
+            alert.setContentText("Location and Direction must be filled together");
         }
 
         if(signageNameBox.getText().isEmpty() || location1Box.getText().isEmpty() || direction1Box.getValue() == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("MISSING FIELDS: Sign name, Location 1 (minimum), and Direction 1 (minimum)");
+            alert.setTitle("MISSING FIELDS");
             alert.setHeaderText(null);
-            alert.setContentText("Must include a Sign name, one location, and one corresponding direction minimum.");
+            alert.setContentText("Signage Name, Location 1, and Direction 1 must be filled at least.");
             alert.showAndWait();
         } else {
             // Send to DB

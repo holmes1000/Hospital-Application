@@ -46,7 +46,7 @@
             </MFXFilterComboBox>
                         <MFXButton fx:id="btnSaveEdits" prefHeight="50.0" prefWidth="119.0" style="-fx-background-color: #012d5a; -fx-border-radius: 8px; -fx-background-radius: 8px;" text="Save" textFill="WHITE">
                             <font>
-                                <Font name="System Bold" size="12.0" />
+                                <Font name="System Bold" size="18.0" />
                             </font>
                         </MFXButton>
                     </children>
