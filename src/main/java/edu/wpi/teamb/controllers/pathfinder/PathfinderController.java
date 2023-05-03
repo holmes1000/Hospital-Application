@@ -239,18 +239,15 @@ public class PathfinderController {
           public void changed(ObservableValue<? extends ObservableMap<Integer, String>> observable, ObservableMap<Integer, String> oldValue, ObservableMap<Integer, String> newValue) {
               if (!listView.getSelectionModel().getSelectedValues().isEmpty()) {
                   String selectedLongName = listView.getSelectionModel().getSelectedValues().get(0);
-                  if(listView.getItems() != null){
-//                      Integer index = listView.getItems().indexOf(selectedLongName);
+                  int index = listView.getItems().indexOf(selectedLongName);
 //                  System.out.println(index);
-                      FullNode n = fullNodesByLongname.get(selectedLongName);
-                      String floor = n.getFloor();
-                      if (!currentFloor.equals(floor)) {
-                          switchFloor(floor);
-                      }
-                      pane.centreOnX(n.getxCoord());
-                      pane.centreOnY(n.getyCoord());
+                  FullNode n = fullNodesByID.get(nodes_by_floor.get(currentFloor).get(index).getNodeID());
+                  String floor = n.getFloor();
+                  if (!currentFloor.equals(floor)) {
+                      switchFloor(floor);
                   }
-
+                  pane.centreOnX(n.getxCoord());
+                  pane.centreOnY(n.getyCoord());
               }
               if (currentFloor.equals(firstFloorVisited) && floorsTraversed.size() >1 ) {nextFloor.setDisable(false); previousFloor.setDisable(true);}
               else if (currentFloor.equals((lastFloorVisited))&& floorsTraversed.size() >1) {nextFloor.setDisable(true); previousFloor.setDisable(false);}
