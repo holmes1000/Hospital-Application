@@ -65,6 +65,32 @@ public class Gapp extends Application {
 
     }
 
+    
+    public static void Newstart(Stage primaryStage) throws Exception {
+
+        primaryStage.setTitle("Hospital Help Desk");
+
+        Gapp.primaryStage = primaryStage;
+        primaryStage.setResizable(false);
+        URL a = Bapp.class.getResource("./views/Game/rsc/Screens/StartScn.fxml");
+
+       // add to a's path : rsc/Screens/StartScn.fxm
+
+        FXMLLoader loader = new FXMLLoader(a);
+        //loader.setLocation(c);
+        BorderPane root = loader.load();
+
+        Gapp.rootPane = root;
+
+        final Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
+        primaryStage.setScene(primaryStage.getScene());
+        primaryStage.setResizable(false);
+
+        primaryStage.show();
+
+    }
+
     /**
      * cahnge the scene to one that that path points to
      * 
