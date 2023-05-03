@@ -1031,8 +1031,7 @@ public class MapEditorController {
       floorList = Repository.getRepository().getFullNodesByFloor("L1");
       edgeGroup.getChildren().clear();
       nodeGroup.getChildren().clear();
-      draw("L1");
-      drawMoveMap(currentFloor);
+      refreshMap();
     });
     btnL2.setTooltip(new Tooltip("Lower Level 2"));
     btnL2.setOnMouseClicked(event -> {
@@ -1042,8 +1041,7 @@ public class MapEditorController {
       floorList = Repository.getRepository().getFullNodesByFloor("L2");
       edgeGroup.getChildren().clear();
       nodeGroup.getChildren().clear();
-      draw("L2");
-      drawMoveMap(currentFloor);
+      refreshMap();
     });
     btn1.setTooltip(new Tooltip("Level 1"));
     btn1.setOnMouseClicked(event -> {
@@ -1053,8 +1051,7 @@ public class MapEditorController {
       floorList = Repository.getRepository().getFullNodesByFloor("1");
       edgeGroup.getChildren().clear();
       nodeGroup.getChildren().clear();
-      draw("1");
-      drawMoveMap(currentFloor);
+      refreshMap();
     });
     btn2.setTooltip(new Tooltip("Level 2"));
     btn2.setOnMouseClicked(event -> {
@@ -1064,8 +1061,7 @@ public class MapEditorController {
       floorList = Repository.getRepository().getFullNodesByFloor("2");
       edgeGroup.getChildren().clear();
       nodeGroup.getChildren().clear();
-      draw("2");
-      drawMoveMap(currentFloor);
+      refreshMap();
     });
     btn3.setTooltip(new Tooltip("Level 3"));
     btn3.setOnMouseClicked(event -> {
@@ -1075,8 +1071,7 @@ public class MapEditorController {
       floorList = Repository.getRepository().getFullNodesByFloor("3");
       edgeGroup.getChildren().clear();
       nodeGroup.getChildren().clear();
-      draw("3");
-      drawMoveMap(currentFloor);
+      refreshMap();
     });
   }
 
