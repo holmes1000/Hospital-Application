@@ -22,7 +22,7 @@
             <Font size="20.0" />
          </font>
       </Text>
-      <Text fill="WHITE" layoutX="30.0" layoutY="619.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Special Thanks to Brigham and Women’s Hospital and their representative, Andrew Shinn, for their time and input. The Brigham &amp; Women’s Hospital mapsand data used in this application are copyrighted and provided for the sole use ofeducational purposes." wrappingWidth="1071.0335083007812">
+      <Text fill="WHITE" layoutX="30.0" layoutY="619.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Special Thanks to Brigham and Women’s Hospital and their representative, Andrew Shinn, for their time and input. The Brigham &amp; Women’s Hospital maps and data used in this application are copyrighted and provided for the sole use of educational purposes." wrappingWidth="1071.0335083007812">
          <font>
             <Font name="System Bold" size="24.0" />
          </font>
