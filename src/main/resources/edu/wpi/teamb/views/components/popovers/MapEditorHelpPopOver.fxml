@@ -20,7 +20,7 @@
                   <Font size="13.0" />
                </font>
             </Text>
-            <Text fx:id="text3" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit a node: click 'Node', click 'Edit Node', click the node to edit, drag it, double click it, submit" wrappingWidth="475.9999999046322">
+            <Text fx:id="text3" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit a node: click 'Node', click 'Edit Node', click the node to edit, drag it, submit" wrappingWidth="475.9999999046322">
                <VBox.margin>
                   <Insets bottom="5.0" />
                </VBox.margin>
