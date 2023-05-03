@@ -71,7 +71,18 @@ public class SignDAOImpl implements IDAO {
     @Override
     public void update(Object object) {
         Sign s = (Sign) object;
-        updateSign(s);
+        boolean locationNameChanged = false;
+        String oldName = null;
+//        for (Sign sign : signs) {
+//            if (sign.getSignageGroup().equals(s.getSignageGroup())) {
+//                locationNameChanged = !sign.getLocationName().equals(s.getLocationName());
+//            }
+//        }
+//        if (locationNameChanged) {
+//            updateSignageGroup(s);
+//        } else {
+//
+//        }
         signs.set(signs.indexOf(s), s);
     }
 
@@ -98,13 +109,36 @@ public class SignDAOImpl implements IDAO {
     public void updateSign(Sign s) {
         String[] cols = { "locationName", "direction", "startDate", "endDate", "signLocation" };
         String[] values = {s.getLocationName(), s.getDirection(), String.valueOf(s.getStartDate()), String.valueOf(s.getEndDate()), s.getSignLocation()};
+
         DButils.updateRow("signs", cols, values, "signagegroup = '" + s.getSignageGroup() + "' AND locationName = '" + s.getLocationName() + "'");
+        for (Sign sign : signs) {
+            if (sign.getSignageGroup().equals(s.getSignageGroup())) {
+                if (sign.getLocationName().equals(s.getLocationName())) {
+                    sign.setLocationName(s.getLocationName());
+                    sign.setDirection(s.getDirection());
+                    sign.setStartDate(s.getStartDate());
+                    sign.setEndDate(s.getEndDate());
+                    sign.setSignLocation(s.getSignLocation());
+                }
+            }
+        }
     }
 
     public void transferSign(String oldName, Sign s) {
         String[] cols = { "signageGroup", "locationName", "direction", "startDate", "endDate", "signLocation" };
         String[] values = {s.getSignageGroup(), s.getLocationName(), s.getDirection(), String.valueOf(s.getStartDate()), String.valueOf(s.getEndDate()), s.getSignLocation()};
         DButils.updateRow("signs", cols, values, "signagegroup = '" + s.getSignageGroup() + "' AND locationName = '" + oldName + "'");
+        for (Sign sign : signs) {
+            if (sign.getSignageGroup().equals(s.getSignageGroup())) {
+                if (sign.getLocationName().equals(oldName)) {
+                    sign.setLocationName(s.getLocationName());
+                    sign.setDirection(s.getDirection());
+                    sign.setStartDate(s.getStartDate());
+                    sign.setEndDate(s.getEndDate());
+                    sign.setSignLocation(s.getSignLocation());
+                }
+            }
+        }
     }
 
     public void updateSignageGroup(Sign s) {
@@ -182,6 +216,15 @@ public class SignDAOImpl implements IDAO {
         for (Sign s : signs) {
             if (s.getSignageGroup().equals(signageGroup)) {
                 return s.getEndDate();
+            }
+        }
+        return null;
+    }
+
+    public String getSignLocation(String signageGroup) {
+        for (Sign s : signs) {
+            if (s.getSignageGroup().equals(signageGroup)) {
+                return s.getSignLocation();
             }
         }
         return null;

@@ -77,7 +77,7 @@ public class SignageController {
       init_signage_form_btn();
       signVbox.getChildren().clear();
 //      vboxImage.getChildren().clear();
-      loadPageBasedOnGroup("Shapiro 2 Screen 1 (info desk) May 23");
+      loadPageBasedOnGroup(signageE.getAllSigns().get(0).getSignageGroup());
 
       this.stackPaneMapView = new StackPane(); // no longer @FXML
       // Used for nodes
@@ -376,6 +376,14 @@ public class SignageController {
         cbLocation.getItems().clear();
         initializeFields();
     }
+
+    void refreshAfterEdit(){
+        refresh();
+        cbLocation.setValue(EditSignageFormController.getCurSignage());
+        signVbox.getChildren().clear();
+        loadPageBasedOnGroup(cbLocation.getValue());
+    }
+
     void refreshComboBox() {
         HashSet<String> signageGroups = signageE.getSignageGroups();
         //convert the hashset to an arrayList

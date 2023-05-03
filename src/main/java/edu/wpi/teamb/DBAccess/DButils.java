@@ -97,6 +97,9 @@ public class DButils {
         try {
             Statement stmt = DBconnection.getDBconnection().getConnection().createStatement();
             String query = "UPDATE teamb." + table + " SET " + strArray2UpdateFormat(columns, value) + " WHERE " + cond;
+            //testing
+            System.out.println(query);
+            //testing
             stmt.executeUpdate(query);
         } catch (SQLException e) {
             System.err.println("ERROR Query Failed in method 'DButils.updateRow': " + e.getMessage());
@@ -154,6 +157,9 @@ public class DButils {
             Statement stmt = c.createStatement();
             String update = "INSERT INTO teamb."  + table + " (" + strArray2InsertFormatCol(columns) + ") VALUES ("
                     + strArray2InsertFormat(value) + ")";
+            //testing
+            System.out.println(update);
+            //testing
             stmt.executeUpdate(update);
             c.commit();
         } catch (SQLException e) {
@@ -237,7 +243,8 @@ public class DButils {
             }
             formattedStr += arr[i];
             if (i != arr.length - 1) {
-                if (arr[i+1].equals("null")) formattedStr += "',";
+                if (arr[i+1] == null) formattedStr += "',";
+                else if (arr[i+1].equals("null")) formattedStr += "',";
                 else formattedStr += "','";
             } else {
                 formattedStr += "'";

@@ -953,6 +953,13 @@ public class Repository {
         return date;
     }
 
+    public String getSignLocation(String signageGroup) {
+        String location = signDAO.getSignLocation(signageGroup);
+        dbConnection.closeDBconnection();
+        dbConnection.forceClose();
+        return location;
+    }
+
     //TODO DBinput methods
 
     /**
