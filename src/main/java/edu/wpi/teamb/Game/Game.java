@@ -166,7 +166,8 @@ public class Game {
         gc.setFont(new Font("Arial", 30));
         gc.fillText("Time Lasted: "+NumberFormat.getInstance().format(timeController.gettotalTime()/60)+" seconds", canvas.getWidth()/2-150, canvas.getHeight()/2+50);
         //text under that saying now many poeple served (score)
-        gc.fillText("People Served: "+player.getScore()+" people", canvas.getWidth()/2-150, canvas.getHeight()/2+100);
+
+        //gc.fillText("People Served: "+player.getScore()+" people", canvas.getWidth()/2-150, canvas.getHeight()/2+100);
     }
     /**
      * stops the game
