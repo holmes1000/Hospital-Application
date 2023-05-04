@@ -10,6 +10,7 @@ import edu.wpi.teamb.DBAccess.ORMs.Node;
 import edu.wpi.teamb.DBAccess.ORMs.Sign;
 import edu.wpi.teamb.controllers.NavDrawerController;
 import edu.wpi.teamb.entities.DefaultStart;
+import edu.wpi.teamb.entities.ELogin;
 import edu.wpi.teamb.entities.ESignage;
 import edu.wpi.teamb.navigation.Navigation;
 import edu.wpi.teamb.navigation.Screen;
@@ -65,6 +66,7 @@ public class SignageController {
     @FXML private VBox vboxActivateNav1;
     private boolean navLoaded;
     private FullNode centerNode;
+    ELogin.PermissionLevel adminTest;
 
 
 
@@ -108,6 +110,13 @@ public class SignageController {
       RemoveSignageController removeSignageFormController = new RemoveSignageController();
       removeSignageFormController.setSignageController(this);
       displayMap();
+
+      adminTest = ELogin.getLogin().getPermissionLevel();
+      if (adminTest != ELogin.PermissionLevel.ADMIN) {
+          btnAddSignageForm.setVisible(false);
+          btnEditSigns.setVisible(false);
+          btnRemoveSign.setVisible(false);
+      }
 
   }
 
