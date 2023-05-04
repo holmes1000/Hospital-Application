@@ -23,7 +23,7 @@ public class ELogin {
    */
   private ELogin() {
     // need empty private constructor to prevent multiple instantiation
-    this.emailE = EEmail.getEEmail();
+//    this.emailE = EEmail.getEEmail();
   }
 
   /**

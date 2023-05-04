@@ -69,11 +69,12 @@ public class LoginController {
     try {
       if (loginE.checkLogin(textUsername.getText(), textPassword.getText())) {
         // if login is successful, then send 2FA email
-        loginE.send2FAEmail();
+//        loginE.send2FAEmail();
         //perform 2Factor Authentication
         //if successful, perform2FactorAuthentication() will handle navigate to home page
-        perform2FactorAuthentication();
+//        perform2FactorAuthentication();
 //        errorMsg.setText("Logged in Successful!");
+        Navigation.navigate(Screen.HOME);
       } else {
         //should never run this section unless there is a catastrophic error of some sorts
         //errorMsg.setText("Something has gone very wrong");
